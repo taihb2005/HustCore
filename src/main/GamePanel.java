@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         hehe = o[0];
+        System.out.println("Hello World");
 
 
         //test = sprite.getSpriteArray();
