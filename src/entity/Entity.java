@@ -7,16 +7,18 @@ import java.awt.*;
 
 public abstract class Entity {
 
-    protected float x , y;
+    protected float posX , posY;
+    protected int speed;
     protected Sprite entity_sprite;
 
     final protected Animation animator;
 
 
-    public Entity(Sprite entity_sprite , float x , float y)
+    public Entity(Sprite entity_sprite , float x , float y , int speed)
     {
-        this.x = x;
-        this.y = y;
+        this.posX = x;
+        this.posY = y;
+        this.speed = speed;
         this.entity_sprite = entity_sprite;
 
         animator = new Animation();

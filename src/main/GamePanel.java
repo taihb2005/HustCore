@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
-    private Player player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+    private Player player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
 
 
     Thread gameThread;
@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void loadCharacter()
     {
-        player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+        //player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
     }
 
     public void startGameThread() {
