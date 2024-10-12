@@ -36,7 +36,7 @@ public class Animation {
         }
     }
 
-    public void setDelay(int delay){this.ani_Speed = delay;};
+    public void setAnimationSpeed(int speed){this.ani_Speed = speed;};
 
     public int getCurrentFrames(){return currentFrames;};
     public BufferedImage[] getAni_sprite(){return ani_sprite;};

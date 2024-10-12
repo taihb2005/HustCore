@@ -3,29 +3,34 @@ package main;
 // awt library
 import entity.Player;
 import graphics.Sprite;
+import tile.MapManager;
+import tile.MapParser;
 
 import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
 
+import tile.MapManager;
+
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
 
-    final private int originalTileSize = 16; // A character usually has 16x16 size
-    final private int scale = 3; // Use to scale the objects which appear on the screen
-    final private int tileSize = originalTileSize * scale;
+    final static public int originalTileSize = 16; // A character usually has 16x16 size
+    final static public int scale = 3; // Use to scale the objects which appear on the screen
+    final static public int tileSize = originalTileSize * scale;
 
-    final private int maxWindowCols = 16;
-    final private int maxWindowRows = 12;
+    final static public int maxWindowCols = 16;
+    final static public int maxWindowRows = 12;
 
-    final private int windowWidth = maxWindowCols * tileSize;
-    final private int windowHeight = maxWindowRows * tileSize;
-    ;
+    final static public int windowWidth = maxWindowCols * tileSize;
+    final static public int windowHeight = maxWindowRows * tileSize;
+
+    final static public MapParser mapParser = new MapParser();
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
-    private Player player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
+    final private Player player1 ;
 
 
     Thread gameThread;
@@ -38,11 +43,25 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+
+
+        player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
+        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
     }
 
     public void loadCharacter()
     {
         //player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+    }
+
+    public void loadSound()
+    {
+
+    }
+
+    public void loadMusic()
+    {
+
     }
 
     public void startGameThread() {
@@ -90,6 +109,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Set custom drawing color and draw shapes
         g2.setColor(Color.BLACK);
+        MapManager.getGameMap("map_test").render(g2);
 
         player1.render(g2);
 

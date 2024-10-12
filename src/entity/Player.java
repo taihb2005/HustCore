@@ -69,6 +69,7 @@ public class Player extends Entity{
         handlePosition();
 
         handleAnimationState();
+
         animator.update();
         currentFrames = animator.getCurrentFrames();
     }
