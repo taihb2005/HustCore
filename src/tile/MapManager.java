@@ -18,4 +18,12 @@ public class MapManager {
         return mapRef.get(id);
     }
 
+
+    public static void dispose()
+    {
+        mapRef.clear();
+    }
+
+
+
 }

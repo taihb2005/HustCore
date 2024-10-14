@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * tileSize;
     final static public int windowHeight = maxWindowRows * tileSize;
 
-    final static public MapParser mapParser = new MapParser();
+    //final static public MapParser mapParser = new MapParser();
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
@@ -46,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
         player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
-        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+        MapParser.loadMap( "map_test" ,"res/tile/map_test_2.tmx");
     }
 
     public void loadCharacter()
@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
+
 
     @Override
     public void run() {
@@ -95,6 +96,8 @@ public class GamePanel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
+
+        MapManager.dispose();
     }
 
     public void update() {

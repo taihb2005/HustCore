@@ -27,13 +27,6 @@ public class Player extends Entity{
 
     private String dir;
 
-    private float dx;
-    private float dy;
-
-    private float acceleration;
-    private float force;
-
-
     private BufferedImage[][] player_sprite;
 
     private int currentAnimationState;

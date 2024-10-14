@@ -46,10 +46,15 @@ public class TileLayer extends  Layer{
                     tileCol = ts.getNumCols() - 1;
                 }
 
+                int tileWidth = ts.getTileWidth();
+                int tileHeight = ts.getTileHeight();
 
-                g2.drawImage(ts.getTileSetSprite().getSubimage(tileCol * 16, tileRow * 16 ,
-                             ts.getTileWidth()  , ts.getTileHeight()) ,
-                          j * ts.getTileHeight() , i * ts.getTileWidth()  , null);
+//                g2.drawImage(ts.getTileSetSprite().getSubimage(tileCol * ts.getTileWidth(), tileRow * ts.getTileHeight() ,
+//                             ts.getTileWidth()  , ts.getTileHeight()) ,
+//                          j * ts.getTileHeight() , i * ts.getTileWidth()  , null);
+
+                g2.drawImage(ts.getTileSetSprite() , j * tileWidth , i * tileHeight , j * tileWidth + tileWidth , i * tileHeight + tileHeight,
+                        tileCol * tileWidth , tileRow * tileHeight , tileCol * tileWidth + tileWidth , tileRow * tileHeight + tileHeight , null);
 
             }
         }

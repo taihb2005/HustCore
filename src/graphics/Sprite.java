@@ -46,6 +46,8 @@ public class Sprite {
         spriteCols = SPRITESHEET.getWidth() / w; //get number of cols of the sprite sheet
         spriteRows = SPRITESHEET.getHeight() / h; // get the number of rows of the sprite sheet
 
+        loadSpriteArray();
+
     }
 
     public BufferedImage loadFile(String filepath)  //load the sprite
