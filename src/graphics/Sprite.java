@@ -5,6 +5,12 @@ import main.GamePanel;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+ /*
+    This class uses for handle character sprite like running , attacking, dying,...
+    all goes into one big png file which contains multiple sprite. It's convenient to
+    animate later in the Animation class where we will dive further into behaviors of
+    characters.
+ */
 
 public class Sprite {
     final private BufferedImage SPRITESHEET;
@@ -16,7 +22,7 @@ public class Sprite {
     final private int spriteCols;
     final private int spriteRows;
 
-    public Sprite(String filepath)
+    public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
         this.w = 16 * 3; //original tile size
         this.h = 16 * 3; //original tile size
@@ -37,12 +43,14 @@ public class Sprite {
 
         SPRITESHEET = loadFile(filepath);
 
-        spriteCols = SPRITESHEET.getWidth() / w; //get number of col of the spritesheet
-        spriteRows = SPRITESHEET.getHeight() / h; // get the number of rows of the spritesheet
+        spriteCols = SPRITESHEET.getWidth() / w; //get number of cols of the sprite sheet
+        spriteRows = SPRITESHEET.getHeight() / h; // get the number of rows of the sprite sheet
+
+        loadSpriteArray();
 
     }
 
-    public BufferedImage loadFile(String filepath)
+    public BufferedImage loadFile(String filepath)  //load the sprite
     {
         BufferedImage sprite = null;
         try{
@@ -54,7 +62,7 @@ public class Sprite {
         return sprite;
     }
 
-    public void loadSpriteArray()
+    public void loadSpriteArray() //load the sprite into 2-dimensional arrays
     {
         spriteArray = new BufferedImage[spriteRows][spriteCols];
         for(int i = 0; i < spriteRows ; i++)
@@ -64,11 +72,14 @@ public class Sprite {
         }
     }
 
-    private BufferedImage getSprite(int x , int y)
+    public BufferedImage getSprite(int x , int y) //get sub image from the sprite, at the position x , y from the img
     {
         return SPRITESHEET.getSubimage(y * h , x * w , w , h);
     }
 
+
+
+    //setter and getter method
     public BufferedImage getSpriteSheet(){return SPRITESHEET;};
     public BufferedImage[] getSpriteArrayRow(int i){return spriteArray[i];};
     public BufferedImage[][] getSpriteArray(){return spriteArray;};
