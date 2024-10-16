@@ -7,7 +7,7 @@ import java.awt.*;
 
 public abstract class Entity {
 
-    protected float posX , posY;
+    public float worldX, worldY;
     protected int speed;
     protected Sprite entity_sprite;
 
@@ -16,8 +16,8 @@ public abstract class Entity {
 
     public Entity(Sprite entity_sprite , float x , float y , int speed)
     {
-        this.posX = x;
-        this.posY = y;
+        this.worldX = x;
+        this.worldY = y;
         this.speed = speed;
         this.entity_sprite = entity_sprite;
 
