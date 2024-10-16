@@ -41,4 +41,3 @@ public class Animation {
     public int getCurrentFrames(){return currentFrames;};
     public BufferedImage[] getAni_sprite(){return ani_sprite;};
 }
-
