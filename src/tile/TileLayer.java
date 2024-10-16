@@ -53,21 +53,12 @@ public class TileLayer extends  Layer{
 
                 int worldX = j*tileWidth;
                 int worldY = i*tileHeight;
-                int screenX = (int) (worldX - player1.worldX + player1.screenX);
-                int screenY = (int) (worldY - player1.worldY + player1.screenY);
-                if((worldX + 6* tileWidth > player1.worldX -player1.screenX)&&
-                        (worldX -6* tileWidth < player1.worldX +player1.screenX)
-                &&(worldY + 6*tileHeight > player1.worldY -player1.screenY) &&(worldY - 6*tileHeight < player1.worldY +player1.screenY)) {
-                    System.out.println(screenX);
-//                g2.drawImage(ts.getTileSetSprite().getSubimage(tileCol * ts.getTileWidth(), tileRow * ts.getTileHeight() ,
-//                             ts.getTileWidth()  , ts.getTileHeight()) ,
-//                          j * ts.getTileHeight() , i * ts.getTileWidth()  , null);
-
-                    g2.drawImage(ts.getTileSetSprite(), screenX, screenY, screenX + tileWidth
-                            , screenY + tileHeight,
-                            tileCol * tileWidth, tileRow * tileHeight, tileCol * tileWidth + tileWidth
-                            , tileRow * tileHeight +  tileHeight, null);
-                }
+                int screenX = (int) (worldX - player1.worldX + player1.drawX);
+                int screenY = (int) (worldY - player1.worldY + player1.drawY);
+                g2.drawImage(ts.getTileSetSprite(), screenX, screenY, screenX + tileWidth
+                        , screenY + tileHeight,
+                        tileCol * tileWidth, tileRow * tileHeight, tileCol * tileWidth + tileWidth
+                        , tileRow * tileHeight +  tileHeight, null);
 
             }
         }

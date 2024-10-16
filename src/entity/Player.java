@@ -25,7 +25,8 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    public final int screenX, screenY;
+    public final int screenX, screenY; //Biến của camera
+    public float drawX, drawY;
 
     private String dir;
 
@@ -70,11 +71,23 @@ public class Player extends Entity{
         currentFrames = animator.getCurrentFrames();
     }
 
-
     @Override
     public void render(Graphics2D g2)
     {
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)screenX , (int)screenY , 48 * 2 , 48 * 2, null);
+        drawX = worldX;
+        drawY = worldY;
+        if (worldX >= screenX && worldX <= 16*tileSize - screenX) {
+            drawX = screenX;
+        }
+        else if (worldX > 16*tileSize - screenX) drawX = worldX - 16*tileSize + screenX*2;
+        if (worldY >= screenY && worldY <= 16*tileSize - screenY) {
+            drawY = screenY;
+        }
+        else if (worldY > 16*tileSize - screenY) drawY = worldY - 16*tileSize + screenY*2;
+        System.out.println(drawY+" "+screenY+" "+(16*tileSize));
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
+                (int)drawX , (int)drawY , 48 * 2 , 48 * 2, null);
+
     }
 
     private void keyInput()
@@ -113,16 +126,20 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            worldY -= speed;
+            if (worldY - speed >= -tileSize) worldY -= speed;
+            else worldY = -tileSize;
         } else if(down && isRunning)
         {
-            worldY += speed;
+            if (worldY + speed <= 15*tileSize) worldY += speed;
+            else worldY = 15*tileSize;
         } else if(left && isRunning)
         {
-            worldX -= speed;
+            if (worldX - speed >= -tileSize) worldX -= speed;
+            else worldX = -tileSize;
         } else if(right && isRunning)
         {
-            worldX += speed;
+            if (worldX + speed <= 15*tileSize) worldX += speed;
+            else worldX = 15*tileSize;
         }
     }
 }
