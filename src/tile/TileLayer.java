@@ -55,9 +55,9 @@ public class TileLayer extends  Layer{
                 int worldY = i*tileHeight;
                 int screenX = (int) (worldX - player1.worldX + player1.screenX);
                 int screenY = (int) (worldY - player1.worldY + player1.screenY);
-                if((worldX + 5.5* tileWidth > player1.worldX -player1.screenX)&&
-                        (worldX -5.5* tileWidth < player1.worldX +player1.screenX)
-                &&(worldY + 5.5*tileHeight > player1.worldY -player1.screenY) &&(worldY - 5.5*tileHeight < player1.worldY +player1.screenY)) {
+                if((worldX + 6* tileWidth > player1.worldX -player1.screenX)&&
+                        (worldX -6* tileWidth < player1.worldX +player1.screenX)
+                &&(worldY + 6*tileHeight > player1.worldY -player1.screenY) &&(worldY - 6*tileHeight < player1.worldY +player1.screenY)) {
                     System.out.println(screenX);
 //                g2.drawImage(ts.getTileSetSprite().getSubimage(tileCol * ts.getTileWidth(), tileRow * ts.getTileHeight() ,
 //                             ts.getTileWidth()  , ts.getTileHeight()) ,
