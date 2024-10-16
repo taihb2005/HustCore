@@ -5,7 +5,7 @@ import graphics.Sprite;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static main.GamePanel.keyHandler;
+import static main.GamePanel.*;
 
 public class Player extends Entity{
 
@@ -25,6 +25,8 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
+    public final int screenX, screenY;
+
     private String dir;
 
     private BufferedImage[][] player_sprite;
@@ -33,11 +35,12 @@ public class Player extends Entity{
     private int currentFrames;
 
 
-    public Player(Sprite entity_sprite, int x, int y , int speed) {
+    public Player(Sprite entity_sprite, int x, int y, int speed) {
         super(entity_sprite, x, y , speed);
 
         currentFrames = 0;
-
+        screenX = windowWidth/2 - tileSize;
+        screenY = windowHeight/2 - tileSize;
         up = down = left = right = false;
         dir = "down";
 
@@ -71,7 +74,7 @@ public class Player extends Entity{
     @Override
     public void render(Graphics2D g2)
     {
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)posX , (int)posY , 48 * 2 , 48 * 2, null);
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)screenX , (int)screenY , 48 * 2 , 48 * 2, null);
     }
 
     private void keyInput()
@@ -110,16 +113,16 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            posY -= speed;
+            worldY -= speed;
         } else if(down && isRunning)
         {
-            posY += speed;
+            worldY += speed;
         } else if(left && isRunning)
         {
-            posX -= speed;
+            worldX -= speed;
         } else if(right && isRunning)
         {
-            posX += speed;
+            worldX += speed;
         }
     }
 }

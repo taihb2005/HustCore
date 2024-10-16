@@ -3,6 +3,8 @@ package tile;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static main.GamePanel.player1;
+
 public class TileLayer extends  Layer{
 
     private int [][] tileLayerData;
@@ -49,12 +51,19 @@ public class TileLayer extends  Layer{
                 int tileWidth = ts.getTileWidth();
                 int tileHeight = ts.getTileHeight();
 
+                int worldX = j*tileWidth;
+                int worldY = i*tileHeight;
+                int screenX = (int) (worldX - player1.worldX + player1.screenX);
+                int screenY = (int) (worldY - player1.worldY + player1.screenY);
+                System.out.println(screenX);
 //                g2.drawImage(ts.getTileSetSprite().getSubimage(tileCol * ts.getTileWidth(), tileRow * ts.getTileHeight() ,
 //                             ts.getTileWidth()  , ts.getTileHeight()) ,
 //                          j * ts.getTileHeight() , i * ts.getTileWidth()  , null);
 
-                g2.drawImage(ts.getTileSetSprite() , j * tileWidth , i * tileHeight , j * tileWidth + tileWidth , i * tileHeight + tileHeight,
-                        tileCol * tileWidth , tileRow * tileHeight , tileCol * tileWidth + tileWidth , tileRow * tileHeight + tileHeight , null);
+                g2.drawImage(ts.getTileSetSprite() , screenX, screenY, screenX + tileWidth
+                        , screenY + tileHeight,
+                        tileCol * tileWidth , tileRow * tileHeight , tileCol * tileWidth + tileWidth
+                        , tileRow * tileHeight + tileHeight , null);
 
             }
         }

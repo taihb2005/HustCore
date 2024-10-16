@@ -26,11 +26,12 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * tileSize;
     final static public int windowHeight = maxWindowRows * tileSize;
 
+
     //final static public MapParser mapParser = new MapParser();
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
-    final private Player player1 ;
+    static public Player player1 ;
 
 
     Thread gameThread;
@@ -103,7 +104,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         player1.update();
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
