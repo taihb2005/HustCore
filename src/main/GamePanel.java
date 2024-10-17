@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
 
-        player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
+        player1 = new Player(new Sprite("/entity/player/player.png") , 0 , 0 , 5);
         MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
         currentMap = MapManager.getGameMap("map_test");
     }

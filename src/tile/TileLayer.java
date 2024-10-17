@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static main.GamePanel.player1;
-import static main.GamePanel.scale;
+import static main.GamePanel.*;
+import static main.GamePanel.tileSize;
 
 public class TileLayer extends  Layer{
 
@@ -46,15 +46,26 @@ public class TileLayer extends  Layer{
                 if(tileLayerData[i][j] == null) continue;
 
                 Tile tile = tileLayerData[i][j];
-
                 int worldX = j * tileWidth;
                 int worldY = i * tileHeight;
 
-                int screenX = (int) (worldX - player1.worldX + player1.screenX);
-                int screenY = (int) (worldY - player1.worldY + player1.screenY);
+                // toa do cuoi cung cua tile tren man hinh, truong hop dau tien la khi tile nam gan goc toa do
+                int screenX = (int) worldX;
+                int screenY = (int) worldY;
 
-                Camera cam = player1.getCam();
+                // truong hop thu hai, khi tile nam o khu vuc giua thi screenX va screenY thay doi
+                // them if vao thay vi screenX = worldX - player1.worldX + player1.drawX de tranh map bi giat
+                if (player1.worldX >= player1.screenX && player1.worldX <= currentMap.getMapWidth() - player1.screenX-2*tileSize) screenX -= player1.worldX - player1.drawX;
+                if (player1.worldY >= player1.screenY && player1.worldY <= currentMap.getMapHeight() - player1.screenY-2*tileSize) screenY -= player1.worldY - player1.drawY;
 
+                // truong hop thu ba, khi tile nam o gan goc doi dien goc toa do
+                if (player1.worldX > currentMap.getMapWidth() - player1.screenX-2*tileSize) screenX -= (currentMap.getMapWidth() - 2*tileSize - 2* player1.screenX);
+                if (player1.worldY > currentMap.getMapHeight() - player1.screenY-2*tileSize) screenY -= (currentMap.getMapHeight() -2*tileSize - 2* player1.screenY);
+
+                // giam bot so tile can ve trong 1 frame
+                if((worldX + 10*tileWidth > player1.worldX -player1.screenX)&&
+                        (worldX - 10*tileWidth < player1.worldX +player1.screenX)
+                        &&(worldY + 8*tileHeight > player1.worldY -player1.screenY) &&(worldY - 8*tileHeight < player1.worldY +player1.screenY))
                 g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
             }
         }

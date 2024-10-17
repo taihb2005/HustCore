@@ -14,6 +14,7 @@ public class Player extends Entity{
     final int IDLE_RIGHT = 1;
     final int IDLE_LEFT = 2;
     final int IDLE_UP = 3;
+    public float drawX, drawY;
 
     final int RUNNING_DOWN = 4;
     final int RUNNING_RIGHT = 5;
@@ -26,7 +27,7 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    public final int screenX, screenY;
+    public final float screenX, screenY;
     //public float drawX, drawY;
 
     private String dir;
@@ -81,7 +82,27 @@ public class Player extends Entity{
     @Override
     public void render(Graphics2D g2)
     {
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)screenX , (int)screenY , 48 * 2 , 48 * 2, null);
+        drawX = worldX; // toa do cuoi cung tren man hinh, khi nhan vat o gan goc toa do thi drawX = worldX
+        drawY = worldY;
+
+        // nhan vat o khu vuc giua thi drawX nam o chinh giua
+        if (worldX >= screenX && worldX <= currentMap.getMapWidth() - screenX-2*tileSize) {
+            drawX = screenX;
+        }
+        // nhan vat o goc thi can chinh drawX nam o goc
+        else if (worldX >= currentMap.getMapWidth() - screenX-2*tileSize)
+            drawX = screenX + (worldX - (currentMap.getMapWidth() - screenX-2*tileSize));
+
+        // tuong tu voi drawY
+        if (worldY >= screenY && worldY <= currentMap.getMapHeight() - screenY-2*tileSize) {
+            drawY = screenY;
+        }
+        else if (worldY > currentMap.getMapHeight() - screenY-2*tileSize) {
+            drawY = screenY + (worldY - (currentMap.getMapHeight() - screenY-2*tileSize));
+        }
+
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
+                (int)drawX , (int)drawY , 48 * 2 , 48 * 2, null);
     }
 
     private void keyInput()
@@ -120,16 +141,20 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            worldY -= speed;
+            if (worldY - speed >= -tileSize) worldY -= speed;
+            else worldY = -tileSize;
         } else if(down && isRunning)
         {
-            worldY += speed;
+            if (worldY + speed <= currentMap.getMapHeight()-tileSize*2) worldY += speed;
+            else worldY = currentMap.getMapHeight()-tileSize*2;
         } else if(left && isRunning)
         {
-            worldX -= speed;
+            if (worldX - speed >= -tileSize/2) worldX -= speed;
+            else worldX = -tileSize/2;
         } else if(right && isRunning)
         {
-            worldX += speed;
+            if (worldX + speed <= currentMap.getMapWidth()-tileSize*1.5) worldX += speed;
+            else worldX = (float) (currentMap.getMapWidth()-tileSize*1.5);
         }
     }
 
