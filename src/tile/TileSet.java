@@ -26,7 +26,7 @@ public class TileSet {
     {
         this.firstID = firstID;
         this.lastID = lastID;
-        this.tileWidth = tileWidth;
+        this.tileWidth = tileWidth ;
         this.tileHeight = tileHeight;
         this.numRows = numRows;
         this.numCols = numCols;
