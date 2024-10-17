@@ -1,5 +1,6 @@
 package tile;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,6 +11,8 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import static main.GamePanel.scale;
 
 
 public class MapParser {
@@ -31,8 +34,8 @@ public class MapParser {
             int tilewidth  , tileheight , numrows , numcols ;
 
             Element root = doc.getDocumentElement();
-            tilewidth = Integer.parseInt(root.getAttribute("tilewidth"));
-            tileheight = Integer.parseInt(root.getAttribute("tileheight"));
+            tilewidth = Integer.parseInt(root.getAttribute("tilewidth")) ;
+            tileheight = Integer.parseInt(root.getAttribute("tileheight")) ;
             numrows = Integer.parseInt(root.getAttribute("height"));
             numcols = Integer.parseInt(root.getAttribute("width"));
 
@@ -56,10 +59,8 @@ public class MapParser {
                 String visible = eElement.getAttribute("visible");
                 boolean isVisible = visible.equals("1");
                 String data = eElement.getElementsByTagName("data").item(0).getTextContent();
-                //System.out.print("-----------------------\n" + data);
                 mp.map.add(parseTileLayer(data , numrows , numcols , isVisible , tilesetlist));
             }
-
 
             MapManager.appendGameMap(id , mp);
 
@@ -78,6 +79,7 @@ public class MapParser {
 
         // Initialize the 2D array
         int[][] array = new int[numRows][numCols];
+        BufferedImage [][] arrayOfImage = new BufferedImage[numRows][numCols];
 
         // Populate the 2D array
         for (int i = 0; i < numRows; i++) {
@@ -89,7 +91,6 @@ public class MapParser {
 
         return new TileLayer(numRows , numCols , array , isVisible , tilesetlist);
     }
-
 
 
 

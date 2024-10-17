@@ -1,6 +1,7 @@
 package entity;
 
 import graphics.Sprite;
+import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,10 +27,13 @@ public class Player extends Entity{
     private boolean right;
 
     public final int screenX, screenY;
+    //public float drawX, drawY;
 
     private String dir;
 
-    private BufferedImage[][] player_sprite;
+    final private Camera playerCam = new Camera(worldX + 48 , worldY + 48);
+
+    final private BufferedImage[][] player_sprite;
 
     private int currentAnimationState;
     private int currentFrames;
@@ -65,6 +69,9 @@ public class Player extends Entity{
         handlePosition();
 
         handleAnimationState();
+
+        playerCam.setposX(worldX + 48);
+        playerCam.setposY(worldY + 48);
 
         animator.update();
         currentFrames = animator.getCurrentFrames();
@@ -125,4 +132,6 @@ public class Player extends Entity{
             worldX += speed;
         }
     }
+
+    public Camera getCam(){return playerCam;};
 }
