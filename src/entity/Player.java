@@ -25,7 +25,7 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    public final int screenX, screenY; //Biến của camera
+    public final int screenX, screenY;
     public float drawX, drawY;
 
     private String dir;
@@ -84,7 +84,6 @@ public class Player extends Entity{
             drawY = screenY;
         }
         else if (worldY > 16*tileSize - screenY) drawY = worldY - 16*tileSize + screenY*2;
-        System.out.println(drawY+" "+screenY+" "+(16*tileSize));
         g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
                 (int)drawX , (int)drawY , 48 * 2 , 48 * 2, null);
 
