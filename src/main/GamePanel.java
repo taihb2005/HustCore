@@ -13,6 +13,7 @@ import java.awt.*;
 import javax.swing.JPanel;
 
 import tile.MapManager;
+import util.Camera;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -38,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
+    Camera camera = new Camera(windowWidth, windowHeight, tileSize);
 
     public GamePanel() {
         // Set the size of the window and background color
@@ -117,9 +119,9 @@ public class GamePanel extends JPanel implements Runnable {
         // Set custom drawing color and draw shapes
         g2.setColor(Color.BLACK);
 
-        currentMap.render(g2);
+        currentMap.render(g2, camera);
 
-        player1.render(g2);
+        player1.render(g2, camera);
 
 
         g2.dispose();

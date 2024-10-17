@@ -1,5 +1,6 @@
 package tile;
 
+
 import util.Camera;
 
 import java.awt.*;
@@ -21,6 +22,7 @@ public class TileLayer extends  Layer{
 
     final private int tileWidth;
     final private int tileHeight;
+    private Camera camera;
 
     public TileLayer(int numrows , int numcols  , int [][] data , boolean isVisible , ArrayList<TileSet> tileSetList)
     {
@@ -37,7 +39,7 @@ public class TileLayer extends  Layer{
 
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, Camera camera) {
 
         for(int i = 0 ; i < numRows ; i++)
         {
@@ -49,18 +51,8 @@ public class TileLayer extends  Layer{
                 int worldX = j * tileWidth;
                 int worldY = i * tileHeight;
 
-                // toa do cuoi cung cua tile tren man hinh, truong hop dau tien la khi tile nam gan goc toa do
-                int screenX = (int) worldX;
-                int screenY = (int) worldY;
-
-                // truong hop thu hai, khi tile nam o khu vuc giua thi screenX va screenY thay doi
-                // them if vao thay vi screenX = worldX - player1.worldX + player1.drawX de tranh map bi giat
-                if (player1.worldX >= player1.screenX && player1.worldX <= currentMap.getMapWidth() - player1.screenX-2*tileSize) screenX -= player1.worldX - player1.drawX;
-                if (player1.worldY >= player1.screenY && player1.worldY <= currentMap.getMapHeight() - player1.screenY-2*tileSize) screenY -= player1.worldY - player1.drawY;
-
-                // truong hop thu ba, khi tile nam o gan goc doi dien goc toa do
-                if (player1.worldX > currentMap.getMapWidth() - player1.screenX-2*tileSize) screenX -= (currentMap.getMapWidth() - 2*tileSize - 2* player1.screenX);
-                if (player1.worldY > currentMap.getMapHeight() - player1.screenY-2*tileSize) screenY -= (currentMap.getMapHeight() -2*tileSize - 2* player1.screenY);
+                int screenX = (int) worldX-camera.distanceX(player1.worldX);
+                int screenY = (int) worldY-camera.distanceY(player1.worldY);
 
                 // giam bot so tile can ve trong 1 frame
                 if((worldX + 10*tileWidth > player1.worldX -player1.screenX)&&

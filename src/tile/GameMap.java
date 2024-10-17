@@ -1,5 +1,7 @@
 package tile;
 
+import util.Camera;
+
 import java.awt.*;
 import java.util.ArrayList;
 import static main.GamePanel.scale;
@@ -21,10 +23,10 @@ public class GameMap {
         this.mapHeight = mapHeight * scale;
     }
 
-    public void render(Graphics2D g2)
+    public void render(Graphics2D g2, Camera camera)
     {
         for (Layer layer : map) {
-            layer.render(g2);
+            layer.render(g2, camera);
         }
     }
 

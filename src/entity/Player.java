@@ -1,12 +1,12 @@
 package entity;
 
 import graphics.Sprite;
-import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.*;
+import util.Camera;
 
 public class Player extends Entity{
 
@@ -28,11 +28,9 @@ public class Player extends Entity{
     private boolean right;
 
     public final float screenX, screenY;
-    //public float drawX, drawY;
 
     private String dir;
 
-    final private Camera playerCam = new Camera(worldX + 48 , worldY + 48);
 
     final private BufferedImage[][] player_sprite;
 
@@ -71,38 +69,26 @@ public class Player extends Entity{
 
         handleAnimationState();
 
-        playerCam.setposX(worldX + 48);
-        playerCam.setposY(worldY + 48);
+
 
         animator.update();
         currentFrames = animator.getCurrentFrames();
     }
 
+    @Override
+    public void render(Graphics2D g2) {
+
+    }
+
 
     @Override
-    public void render(Graphics2D g2)
+    public void render(Graphics2D g2, Camera camera)
     {
-        drawX = worldX; // toa do cuoi cung tren man hinh, khi nhan vat o gan goc toa do thi drawX = worldX
-        drawY = worldY;
-
-        // nhan vat o khu vuc giua thi drawX nam o chinh giua
-        if (worldX >= screenX && worldX <= currentMap.getMapWidth() - screenX-2*tileSize) {
-            drawX = screenX;
-        }
-        // nhan vat o goc thi can chinh drawX nam o goc
-        else if (worldX >= currentMap.getMapWidth() - screenX-2*tileSize)
-            drawX = screenX + (worldX - (currentMap.getMapWidth() - screenX-2*tileSize));
-
-        // tuong tu voi drawY
-        if (worldY >= screenY && worldY <= currentMap.getMapHeight() - screenY-2*tileSize) {
-            drawY = screenY;
-        }
-        else if (worldY > currentMap.getMapHeight() - screenY-2*tileSize) {
-            drawY = screenY + (worldY - (currentMap.getMapHeight() - screenY-2*tileSize));
-        }
-
+        drawX = camera.worldToScreenX(worldX);
+        drawY = camera.worldToScreenY(worldY);
+        System.out.println(drawX + " " + drawY);
         g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
-                (int)drawX , (int)drawY , 48 * 2 , 48 * 2, null);
+                (int)drawX , (int)drawY , 48*2, 48*2, null);
     }
 
     private void keyInput()
@@ -157,6 +143,4 @@ public class Player extends Entity{
             else worldX = (float) (currentMap.getMapWidth()-tileSize*1.5);
         }
     }
-
-    public Camera getCam(){return playerCam;};
 }
