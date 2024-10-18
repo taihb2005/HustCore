@@ -1,4 +1,6 @@
-package tile;
+package map;
+
+import tile.TileSet;
 
 import java.awt.*;
 import java.util.ArrayList;
