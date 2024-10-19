@@ -1,7 +1,10 @@
-package tile;
+package map;
+
+import tile.TileSet;
 
 import java.awt.*;
 import java.util.ArrayList;
+import static main.GamePanel.scale;
 
 public class GameMap {
 
@@ -16,8 +19,8 @@ public class GameMap {
         map = new ArrayList<>();
         tileSetList = new ArrayList<>();
 
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        this.mapWidth = mapWidth * scale;
+        this.mapHeight = mapHeight * scale;
     }
 
     public void render(Graphics2D g2)

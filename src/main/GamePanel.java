@@ -3,6 +3,7 @@ package main;
 // awt library
 import entity.Player;
 import graphics.Sprite;
+import tile.GameMap;
 import tile.MapManager;
 import tile.MapParser;
 
@@ -33,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     static public Player player1 ;
 
+    public static GameMap currentMap;
 
     Thread gameThread;
 
@@ -48,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
         MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+        currentMap = MapManager.getGameMap("map_test");
     }
 
     public void loadCharacter()
@@ -113,7 +116,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Set custom drawing color and draw shapes
         g2.setColor(Color.BLACK);
-        MapManager.getGameMap("map_test").render(g2);
+
+        currentMap.render(g2);
 
         player1.render(g2);
 

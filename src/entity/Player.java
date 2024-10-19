@@ -25,8 +25,7 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    public final int screenX, screenY; //Biến của camera
-    public float drawX, drawY;
+    public final int screenX, screenY;
 
     private String dir;
 
@@ -71,23 +70,11 @@ public class Player extends Entity{
         currentFrames = animator.getCurrentFrames();
     }
 
+
     @Override
     public void render(Graphics2D g2)
     {
-        drawX = worldX;
-        drawY = worldY;
-        if (worldX >= screenX && worldX <= 16*tileSize - screenX) {
-            drawX = screenX;
-        }
-        else if (worldX > 16*tileSize - screenX) drawX = worldX - 16*tileSize + screenX*2;
-        if (worldY >= screenY && worldY <= 16*tileSize - screenY) {
-            drawY = screenY;
-        }
-        else if (worldY > 16*tileSize - screenY) drawY = worldY - 16*tileSize + screenY*2;
-        System.out.println(drawY+" "+screenY+" "+(16*tileSize));
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
-                (int)drawX , (int)drawY , 48 * 2 , 48 * 2, null);
-
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)screenX , (int)screenY , 48 * 2 , 48 * 2, null);
     }
 
     private void keyInput()
@@ -113,7 +100,7 @@ public class Player extends Entity{
             dir = "down";
         } else if(left && isRunning)
         {
-            curreentAnimationStateeeeeee = RUNNING_LEFT;
+            currentAnimationState = RUNNING_LEFT;
             dir = "left";
         } else if(right && isRunning)
         {
@@ -126,20 +113,16 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            if (worldY -weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee speed >= -tileSize) worldY -= speed;
-    aaaaae sss ssssssssssbbbbbbbsssss        else worldY = -tileSize;
- e a      } else if(down && isRunning)
-        {s
-            if (worldY + speed <= 15*tileSize) worldY += speed;
-            else worldY = 12*tileSize;
+            worldY -= speed;
+        } else if(down && isRunning)
+        {
+            worldY += speed;
         } else if(left && isRunning)
         {
-            if (weeeeeeworldX - speed >= -tileSize) worldX -= speed;
-s            elsse worldX = -tileSize;
+            worldX -= speed;
         } else if(right && isRunning)
-        {weee
-            if (worldX + speed <= 15*tileSize) worldX += speed;
-eweeeeee  w          else worldX =s 1e2*tileSize;
-w   s     }s
+        {
+            worldX += speed;
+        }
     }
 }
