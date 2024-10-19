@@ -58,7 +58,7 @@ public class TileLayer extends  Layer{
                 if((worldX + 10*tileWidth > player1.worldX -player1.screenX)&&
                         (worldX - 10*tileWidth < player1.worldX +player1.screenX)
                         &&(worldY + 8*tileHeight > player1.worldY -player1.screenY) &&(worldY - 8*tileHeight < player1.worldY +player1.screenY))
-                g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
+                    g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
             }
         }
 
