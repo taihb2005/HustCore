@@ -86,7 +86,7 @@ public class Player extends Entity{
     {
         drawX = camera.worldToScreenX(worldX);
         drawY = camera.worldToScreenY(worldY);
-        System.out.println(drawX + " " + drawY);
+        camera.update((int)worldX, (int)worldY, currentMap.getMapWidth(), currentMap.getMapHeight());
         g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
                 (int)drawX , (int)drawY , 48*2, 48*2, null);
     }
