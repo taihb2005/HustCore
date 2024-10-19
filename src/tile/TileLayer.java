@@ -1,25 +1,28 @@
 package tile;
 
-import map.Layer;
+
+import util.Camera;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-import static main.GamePanel.player1;
-import static main.GamePanel.scale;
+import static main.GamePanel.*;
+import static main.GamePanel.tileSize;
 
-public class TileLayer extends Layer {
+public class TileLayer extends  Layer{
 
     private Tile[][] tileLayerData;
     final private ArrayList<TileSet> tileSetList;
+
 
     final private int numCols;
     final private int numRows;
 
     final private int tileWidth;
     final private int tileHeight;
+    private Camera camera;
 
-    public TileLayer(int numrows , int numcols  , int [][] data , ArrayList<TileSet> tileSetList)
+    public TileLayer(int numrows , int numcols  , int [][] data , boolean isVisible , ArrayList<TileSet> tileSetList)
     {
         super();
         this.numRows = numrows;
@@ -33,11 +36,16 @@ public class TileLayer extends Layer {
 
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, Camera camera) {
+    //Gioi han tile can ve
+        int startCols = Math.max((int)(player1.worldX - player1.screenX) / tileWidth - 10, 0);
+        int endCols = Math.min((int)(player1.worldX + player1.screenX) / tileWidth + 10, numCols);
 
-        for(int i = 0 ; i < numRows ; i++)
+        int startRows = Math.max((int)(player1.worldY - player1.screenY) / tileHeight - 8, 0);
+        int endRows = Math.min((int)(player1.worldY + player1.screenY) / tileHeight + 8, numRows);
+        for(int i = startRows ; i < endRows ; i++)
         {
-            for(int j = 0 ; j < numCols ; j++)
+            for(int j = startCols ; j < endCols ; j++)
             {
                 if(tileLayerData[i][j] == null) continue;
 
@@ -46,8 +54,9 @@ public class TileLayer extends Layer {
                 int worldX = j * tileWidth;
                 int worldY = i * tileHeight;
 
-                int screenX = (int) (worldX - player1.worldX + player1.screenX);
-                int screenY = (int) (worldY - player1.worldY + player1.screenY);
+                int screenX = (int) worldX- camera.distanceX(player1.worldX);
+                int screenY = (int) worldY - camera.distanceY(player1.worldY);
+
 
                 g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
             }
@@ -110,4 +119,4 @@ public class TileLayer extends Layer {
         }
     }
 
-}
+

@@ -1,6 +1,6 @@
-package map;
+package tile;
 
-import tile.TileSet;
+import util.Camera;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class GameMap {
         this.mapHeight = mapHeight * scale;
     }
 
-    public void render(Graphics2D g2)
+    public void render(Graphics2D g2, Camera camera)
     {
         for (Layer layer : map) {
-            layer.render(g2);
+            layer.render(g2, camera);
         }
     }
 
@@ -43,4 +43,5 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
+
 }

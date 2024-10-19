@@ -1,12 +1,14 @@
 package entity;
 
-import graphics.Animation;
 import graphics.Sprite;
+import util.Camera;
+import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.*;
+import util.Camera;
 
 public class Player extends Entity{
 
@@ -14,6 +16,7 @@ public class Player extends Entity{
     final int IDLE_RIGHT = 1;
     final int IDLE_LEFT = 2;
     final int IDLE_UP = 3;
+    public float drawX, drawY;
 
     final int RUNNING_DOWN = 4;
     final int RUNNING_RIGHT = 5;
@@ -26,10 +29,10 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    public final int screenX, screenY;
-    //public float drawX, drawY;
+    public final float screenX, screenY;
 
     private String dir;
+
 
     final private BufferedImage[][] player_sprite;
 
@@ -69,15 +72,27 @@ public class Player extends Entity{
 
         handleAnimationState();
 
+
+
         animator.update();
         currentFrames = animator.getCurrentFrames();
     }
 
 
     @Override
-    public void render(Graphics2D g2)
+    public void render(Graphics2D g2) {
+
+    }
+
+
+    @Override
+    public void render(Graphics2D g2, Camera camera)
     {
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)screenX , (int)screenY , 48 * 2 , 48 * 2, null);
+        drawX = camera.worldToScreenX(worldX);
+        drawY = camera.worldToScreenY(worldY);
+        camera.update((int)worldX, (int)worldY, currentMap.getMapWidth(), currentMap.getMapHeight());
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
+                (int)drawX , (int)drawY , 48*2, 48*2, null);
     }
 
     private void keyInput()
@@ -116,17 +131,22 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            worldY -= speed;
+            if (worldY - speed >= -tileSize) worldY -= speed;
+            else worldY = -tileSize;
         } else if(down && isRunning)
         {
-            worldY += speed;
+            if (worldY + speed <= currentMap.getMapHeight()-tileSize*2) worldY += speed;
+            else worldY = currentMap.getMapHeight()-tileSize*2;
         } else if(left && isRunning)
         {
-            worldX -= speed;
+            if (worldX - speed >= -tileSize/2) worldX -= speed;
+            else worldX = -tileSize/2;
         } else if(right && isRunning)
         {
-            worldX += speed;
+            if (worldX + speed <= currentMap.getMapWidth()-tileSize*1.5) worldX += speed;
+            else worldX = (float) (currentMap.getMapWidth()-tileSize*1.5);
         }
     }
+
 
 }
