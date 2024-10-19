@@ -56,10 +56,7 @@ public class TileLayer extends  Layer{
                 int worldX = j * tileWidth;
                 int worldY = i * tileHeight;
 
-                int screenX = (int) worldX- camera.distanceX(player1.worldX);
-                int screenY = (int) worldY - camera.distanceY(player1.worldY);
-
-                g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
+                g2.drawImage(tile.getTileImg() , (int) worldX- camera.getX()  , (int) worldY - camera.getY()  , tileWidth , tileHeight  , null );
             }
         }
 
