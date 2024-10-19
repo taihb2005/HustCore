@@ -1,10 +1,14 @@
 package tile;
 
-import graphics.Sprite;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
+import java.util.*;
+import java.util.List;
 
 public class TileSet {
 
@@ -19,6 +23,9 @@ public class TileSet {
     private String imgPath;
 
     private BufferedImage tileSetSprite;
+
+    HashMap<Integer , Rectangle> objects = new HashMap<>();
+
 
     public TileSet(int firstID , int lastID , int tileWidth ,
                    int tileHeight , int numRows ,
@@ -36,13 +43,29 @@ public class TileSet {
         loadTileSheet(imgPath);
     };
 
+    public TileSet(int firstID , int lastID , int tileWidth ,
+                   int tileHeight , int numRows ,
+                   int numCols , HashMap<Integer , Rectangle> objects ,String imgPath)
+    {
+        this.firstID = firstID;
+        this.lastID = lastID;
+        this.tileWidth = tileWidth ;
+        this.tileHeight = tileHeight;
+        this.numRows = numRows;
+        this.numCols = numCols;
+        this.numTiles = lastID - firstID + 1;
+        this.objects = objects;
+        this.imgPath = imgPath;
+
+        loadTileSheet(imgPath);
+    };
+
     private void loadTileSheet(String imgPath)
     {
-        String trueFilePath = "/tile/" + imgPath + ".png";
         tileSetSprite = null;
         try
         {
-            tileSetSprite = ImageIO.read(getClass().getResourceAsStream(trueFilePath));
+            tileSetSprite = ImageIO.read(getClass().getResourceAsStream(imgPath));
         } catch(Exception e)
         {
             System.out.println("Cannot find path: " + imgPath);

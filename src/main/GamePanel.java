@@ -1,18 +1,18 @@
 package main;
 
 // awt library
+import entity.Entity;
 import entity.Player;
 import graphics.Sprite;
-import tile.GameMap;
-import tile.MapManager;
-import tile.MapParser;
+import map.GameMap;
+import map.MapManager;
+import map.MapParser;
 
 import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
 
-import tile.MapManager;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -31,8 +31,10 @@ public class GamePanel extends JPanel implements Runnable {
     //final static public MapParser mapParser = new MapParser();
 
     final static public KeyHandler keyHandler = new KeyHandler();
+    final public AssetSetter assetSetter = new AssetSetter(this);
 
     static public Player player1 ;
+    public Entity[] obj = new Entity[10];
 
     public static GameMap currentMap;
 
@@ -49,8 +51,9 @@ public class GamePanel extends JPanel implements Runnable {
 
 
         player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
-        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+        MapParser.loadMap( "map_test" ,"res/map/map_test.tmx");
         currentMap = MapManager.getGameMap("map_test");
+        assetSetter.setObject();
     }
 
     public void loadCharacter()
@@ -67,6 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
     {
 
     }
+
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -114,7 +118,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        // Set custom drawing color and draw shapes
         g2.setColor(Color.BLACK);
 
         currentMap.render(g2);

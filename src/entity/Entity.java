@@ -11,8 +11,7 @@ public abstract class Entity {
     protected int speed;
     protected Sprite entity_sprite;
 
-    final protected Animation animator;
-
+    public Entity(){};
 
     public Entity(Sprite entity_sprite , float x , float y , int speed)
     {
@@ -20,8 +19,6 @@ public abstract class Entity {
         this.worldY = y;
         this.speed = speed;
         this.entity_sprite = entity_sprite;
-
-        animator = new Animation();
 
     }
 

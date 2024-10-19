@@ -1,20 +1,17 @@
 package tile;
 
-import util.Camera;
+import map.Layer;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static main.GamePanel.player1;
 import static main.GamePanel.scale;
 
-public class TileLayer extends  Layer{
+public class TileLayer extends Layer {
 
     private Tile[][] tileLayerData;
     final private ArrayList<TileSet> tileSetList;
-
-    private boolean isVisible;
 
     final private int numCols;
     final private int numRows;
@@ -22,12 +19,11 @@ public class TileLayer extends  Layer{
     final private int tileWidth;
     final private int tileHeight;
 
-    public TileLayer(int numrows , int numcols  , int [][] data , boolean isVisible , ArrayList<TileSet> tileSetList)
+    public TileLayer(int numrows , int numcols  , int [][] data , ArrayList<TileSet> tileSetList)
     {
         super();
         this.numRows = numrows;
         this.numCols = numcols;
-        this.isVisible = isVisible;
         this.tileSetList = tileSetList;
         this.tileWidth = tileSetList.get(0).getTileWidth() * scale;
         this.tileHeight = tileSetList.get(0).getTileHeight() * scale;
@@ -52,8 +48,6 @@ public class TileLayer extends  Layer{
 
                 int screenX = (int) (worldX - player1.worldX + player1.screenX);
                 int screenY = (int) (worldY - player1.worldY + player1.screenY);
-
-                Camera cam = player1.getCam();
 
                 g2.drawImage(tile.getTileImg() , screenX  , screenY  , tileWidth , tileHeight  , null );
             }
@@ -116,6 +110,4 @@ public class TileLayer extends  Layer{
         }
     }
 
-    public void setVisible(boolean isVisible){this.isVisible = isVisible;};
-    public boolean getVisible(){return isVisible;};
 }
