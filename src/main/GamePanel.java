@@ -31,7 +31,6 @@ public class GamePanel extends JPanel implements Runnable {
     //final static public MapParser mapParser = new MapParser();
 
     final static public KeyHandler keyHandler = new KeyHandler();
-    final public AssetSetter assetSetter = new AssetSetter(this);
 
     static public Player player1 ;
     public Entity[] obj = new Entity[10];
@@ -53,7 +52,6 @@ public class GamePanel extends JPanel implements Runnable {
         player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
         MapParser.loadMap( "map_test" ,"res/map/map_test.tmx");
         currentMap = MapManager.getGameMap("map_test");
-        assetSetter.setObject();
     }
 
     public void loadCharacter()
