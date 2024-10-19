@@ -1,54 +1,61 @@
-package tile;
+package main;
 
-import util.Camera;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import java.awt.*;
-import java.util.ArrayList;
-import static main.GamePanel.scale;
+public class KeyHandler implements KeyListener{
 
-public class GameMap {
+    private boolean upPressed , downPressed , rightPressed , leftPressed;
 
-    private int mapWidth;
-    private int mapHeight;
+    final private int down = 0;
+    final private int right = 1;
+    final private int left = 2;
+    final private int up = 3;
 
-    ArrayList<TileSet> tileSetList;
-    ArrayList<Layer> map;
+    private String direction;
 
-    public GameMap(int mapWidth , int mapHeight)
+    public KeyHandler()
     {
-        map = new ArrayList<>();
-        tileSetList = new ArrayList<>();
 
-        this.mapWidth = mapWidth * scale;
-        this.mapHeight = mapHeight * scale;
     }
 
-    public void render(Graphics2D g2, Camera camera)
-    {
-        for (Layer layer : map) {
-            layer.render(g2, camera);
+    public boolean getUpstate(){return upPressed;};
+    public boolean getDownstate(){return downPressed;};
+    public boolean getRightstate(){return rightPressed;};
+    public boolean getLeftstate(){return leftPressed;};
+
+
+    public String getDirection(){return direction;};
+
+
+    @Override
+    public void keyTyped(KeyEvent e){
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+
+        switch(keyCode)
+        {
+            case KeyEvent.VK_S: downPressed = true; direction = "down"; break;
+            case KeyEvent.VK_A: leftPressed = true; direction = "left"; break;
+            case KeyEvent.VK_D: rightPressed = true; direction = "right"; break;
+            case KeyEvent.VK_W: upPressed = true; direction = "up"; break;
         }
     }
 
-    public void update()
-    {
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
 
+        switch (keyCode)
+        {
+            case KeyEvent.VK_S: downPressed = false; break;
+            case KeyEvent.VK_A: leftPressed = false; break;
+            case KeyEvent.VK_D: rightPressed = false; break;
+            case KeyEvent.VK_W: upPressed = false; break;
+        }
     }
-
-    public void setMapWidth(int mapWidth) {
-        this.mapWidth = mapWidth;
-    }
-
-    public void setMapHeight(int mapHeight) {
-        this.mapHeight = mapHeight;
-    }
-
-    public int getMapWidth() {
-        return mapWidth;
-    }
-
-    public int getMapHeight() {
-        return mapHeight;
-    }
-
 }
