@@ -55,10 +55,11 @@ public class TileLayer extends  Layer{
                 int worldY = i*tileHeight;
                 int screenX = (int) (worldX - player1.worldX + player1.drawX);
                 int screenY = (int) (worldY - player1.worldY + player1.drawY);
-                g2.drawImage(ts.getTileSetSprite(), screenX, screenY, screenX + tileWidth
-                        , screenY + tileHeight,
-                        tileCol * tileWidth, tileRow * tileHeight, tileCol * tileWidth + tileWidth
-                        , tileRow * tileHeight +  tileHeight, null);
+
+                    g2.drawImage(ts.getTileSetSprite(), screenX, screenY, screenX + tileWidth
+                            , screenY + tileHeight,
+                            tileCol * tileWidth, tileRow * tileHeight, tileCol * tileWidth + tileWidth
+                            , tileRow * tileHeight + tileHeight, null);
 
             }
         }

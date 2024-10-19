@@ -113,7 +113,7 @@ public class Player extends Entity{
             dir = "down";
         } else if(left && isRunning)
         {
-            currentAnimationState = RUNNING_LEFT;
+            curreentAnimationStateeeeeee = RUNNING_LEFT;
             dir = "left";
         } else if(right && isRunning)
         {
@@ -126,20 +126,20 @@ public class Player extends Entity{
     {
         if(up && isRunning)
         {
-            if (worldY - speed >= -tileSize) worldY -= speed;
-            else worldY = -tileSize;
-        } else if(down && isRunning)
-        {
+            if (worldY -weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee speed >= -tileSize) worldY -= speed;
+    aaaaae sss ssssssssssbbbbbbbsssss        else worldY = -tileSize;
+ e a      } else if(down && isRunning)
+        {s
             if (worldY + speed <= 15*tileSize) worldY += speed;
-            else worldY = 15*tileSize;
+            else worldY = 12*tileSize;
         } else if(left && isRunning)
         {
-            if (worldX - speed >= -tileSize) worldX -= speed;
-            else worldX = -tileSize;
+            if (weeeeeeworldX - speed >= -tileSize) worldX -= speed;
+s            elsse worldX = -tileSize;
         } else if(right && isRunning)
-        {
+        {weee
             if (worldX + speed <= 15*tileSize) worldX += speed;
-            else worldX = 15*tileSize;
-        }
+eweeeeee  w          else worldX =s 1e2*tileSize;
+w   s     }s
     }
 }
