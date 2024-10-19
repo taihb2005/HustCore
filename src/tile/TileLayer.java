@@ -51,8 +51,8 @@ public class TileLayer extends  Layer{
                 int worldX = j * tileWidth;
                 int worldY = i * tileHeight;
 
-                int screenX = (int) worldX-camera.distanceX(player1.worldX);
-                int screenY = (int) worldY-camera.distanceY(player1.worldY);
+                int screenX = (int) worldX-camera.getX();
+                int screenY = (int) worldY-camera.getY();
 
                 // giam bot so tile can ve trong 1 frame
                 if((worldX + 10*tileWidth > player1.worldX -player1.screenX)&&
