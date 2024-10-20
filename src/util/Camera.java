@@ -20,8 +20,8 @@ public class Camera {
 
     public void update(int playerX, int playerY, int worldWidth, int worldHeight) {
         // Camera bám theo nhân vật (playerX, playerY) nhưng vẫn giới hạn trong biên của map
-        this.x = Math.max(0, Math.min(playerX - windowWidth / 2, worldWidth - windowWidth));
-        this.y = Math.max(0, Math.min(playerY - windowHeight / 2, worldHeight - windowHeight));
+        this.x = Math.max(0, Math.min(playerX - windowWidth / 2 + tileSize, worldWidth - windowWidth));
+        this.y = Math.max(0, Math.min(playerY - windowHeight / 2 + tileSize, worldHeight - windowHeight));
     }
 
     public int getX() {
