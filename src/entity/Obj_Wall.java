@@ -1,26 +1,22 @@
 package entity;
 
-import graphics.Sprite;
-
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-import static main.GamePanel.player1;
-import static main.GamePanel.tileSize;
+import entity.Entity;
+import graphics.Sprite;
+import util.Camera;
 
 public class Obj_Wall extends Entity{
-    private String name;
-    private Rectangle solidArea;
 
-    public Obj_Wall()
+    private BufferedImage objectImage;
+
+    public Obj_Wall(BufferedImage objectImage , Rectangle solidArea)
     {
-        super();
-        name = "wall";
-        try
-        {
-            entity_sprite = new Sprite("/tile/wall01.png");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.objectImage = objectImage;
+        this.solidArea = solidArea;
+        solidAreaDefaultX = solidArea.x ;
+        solidAreaDefaultY = solidArea.y ;
     }
 
     @Override
@@ -30,9 +26,14 @@ public class Obj_Wall extends Entity{
 
     @Override
     public void render(Graphics2D g2) {
-        int screenX = (int) (worldX - player1.worldX + player1.screenX);
-        int screenY = (int) (worldY - player1.worldY + player1.screenY);
 
-        g2.drawImage(entity_sprite.getSpriteSheet() , screenX , screenY , tileSize , tileSize , null);
     }
+
+    @Override
+    public void render(Graphics2D g2, Camera camera) {
+        g2.drawImage(objectImage , worldX - camera.getX(), worldY - camera.getY(), 64 , 64  , null );
+//        g2.setColor(Color.RED);
+//        g2.fillRect(worldX + solidArea.x - camera.getX(), worldY + solidArea.y  - camera.getY(), solidArea.width  , solidArea.height );
+    }
+
 }

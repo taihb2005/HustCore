@@ -21,8 +21,8 @@ public class Sprite {
     public int w;
     public int h;
 
-    final private int spriteCols;
-    final private int spriteRows;
+    private final int spriteCols;
+    private final int spriteRows;
 
     public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
@@ -51,6 +51,7 @@ public class Sprite {
         loadSpriteArray();
 
     }
+
 
     public BufferedImage loadFile(String filepath)  //load the sprite
     {

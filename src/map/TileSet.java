@@ -1,14 +1,10 @@
-package tile;
+package map;
 
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.List;
 
 public class TileSet {
 
@@ -20,7 +16,7 @@ public class TileSet {
     final private int numCols;
     final private int numTiles;
 
-    private String imgPath;
+    private final String imgPath;
 
     private BufferedImage tileSetSprite;
 
@@ -33,8 +29,8 @@ public class TileSet {
     {
         this.firstID = firstID;
         this.lastID = lastID;
-        this.tileWidth = tileWidth ;
-        this.tileHeight = tileHeight;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight ;
         this.numRows = numRows;
         this.numCols = numCols;
         this.numTiles = lastID - firstID + 1;
@@ -65,7 +61,7 @@ public class TileSet {
         tileSetSprite = null;
         try
         {
-            tileSetSprite = ImageIO.read(getClass().getResourceAsStream(imgPath));
+            tileSetSprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/"+ imgPath)));
         } catch(Exception e)
         {
             System.out.println("Cannot find path: " + imgPath);

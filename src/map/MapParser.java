@@ -8,11 +8,11 @@ import java.util.HashMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import tile.TileLayer;
-import tile.TileSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import static main.GamePanel.scale;
 
 
 public class MapParser {
@@ -36,7 +36,7 @@ public class MapParser {
             int tilewidth  , tileheight , numrows , numcols ;
 
             tilewidth = Integer.parseInt(root.getAttribute("tilewidth")) ;
-            tileheight = Integer.parseInt(root.getAttribute("tileheight")) ;
+            tileheight = Integer.parseInt(root.getAttribute("tileheight"));
             numrows = Integer.parseInt(root.getAttribute("height"));
             numcols = Integer.parseInt(root.getAttribute("width"));
 
@@ -58,9 +58,9 @@ public class MapParser {
             {
                 Element eElement = (Element) list.item(i);
                 String data = eElement.getElementsByTagName("data").item(0).getTextContent();
-                mp.map.add(parseTileLayer(data , numrows , numcols , tilesetlist));
+                mp.map.add(parseTileLayer(data , numrows , numcols , tilesetlist , mp));
             }
-
+            mp.parseObject(mp.map.get(1));
             MapManager.appendGameMap(id , mp);
 
         } catch(Exception e)
@@ -70,7 +70,7 @@ public class MapParser {
         }
     }
 
-    private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist)
+    private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist , GameMap mp)
     {
         String[] values = data.trim().split(",");
 
@@ -87,7 +87,7 @@ public class MapParser {
             }
         }
 
-        return new TileLayer(numRows , numCols , array , tilesetlist);
+        return new TileLayer(numRows , numCols , array , tilesetlist , mp);
     }
 
 
@@ -151,7 +151,6 @@ public class MapParser {
             //LẤY RA ĐƯỜNG DẪN CỦA ẢNH TRONG TILESET
             NodeList list_tmp = doc.getElementsByTagName("image");
             Element element_tmp = (Element) list_tmp.item(0);
-            //Element element_tmp = (Element) doc.getElementsByTagName("image");
             String tilename = element_tmp.getAttribute("source");
 
             //LẤY RA NHỮNG Ô CÓ OBJECT VÀ CHO VÀO HASHMAP

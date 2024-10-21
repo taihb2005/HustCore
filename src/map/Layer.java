@@ -1,10 +1,12 @@
-package tile;
+package map;
 
 import util.Camera;
 
 import java.awt.*;
 
 public abstract class Layer {
+
+
 
     public Layer(){}
 

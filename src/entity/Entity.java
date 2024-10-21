@@ -8,19 +8,26 @@ import java.awt.*;
 
 public abstract class Entity {
 
-    public float worldX, worldY;
-    protected int speed;
-    protected Sprite entity_sprite;
+    public int worldX, worldY;
+    public String direction;
+    public int speed;
+
+    public boolean collisionOn = false;
+
+    protected int width;
+    protected int height;
+
+    public Rectangle solidArea;
+    public int solidAreaDefaultX = 0;
+    public int solidAreaDefaultY = 0;
 
     public Entity(){};
 
-    public Entity(Sprite entity_sprite , float x , float y , int speed)
+    public Entity(int x , int y , int speed)
     {
         this.worldX = x;
         this.worldY = y;
         this.speed = speed;
-        this.entity_sprite = entity_sprite;
-
     }
 
 

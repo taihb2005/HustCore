@@ -7,6 +7,7 @@ import graphics.Sprite;
 import map.GameMap;
 import map.MapManager;
 import map.MapParser;
+import util.Camera;
 
 import java.awt.*;
 
@@ -27,13 +28,10 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * tileSize;
     final static public int windowHeight = maxWindowRows * tileSize;
 
-
-    //final static public MapParser mapParser = new MapParser();
+    Camera camera = new Camera(windowWidth, windowHeight, tileSize);
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
-    static public Player player1 ;
-    public Entity[] obj = new Entity[10];
 
     public static GameMap currentMap;
 
@@ -48,15 +46,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
 
-
-        player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
-        MapParser.loadMap( "map_test" ,"res/map/map_test.tmx");
-        currentMap = MapManager.getGameMap("map_test");
+        loadMap();
     }
 
-    public void loadCharacter()
+    private void loadMap()
     {
-        //player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+        MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
+        currentMap = MapManager.getGameMap("map_test");
     }
 
     public void loadSound()
@@ -107,7 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player1.update();
+        currentMap.update();
     }
 
     @Override
@@ -118,10 +114,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         g2.setColor(Color.BLACK);
 
-        currentMap.render(g2);
-
-        player1.render(g2);
-
+        currentMap.render(g2 , camera);
 
         g2.dispose();
     }
