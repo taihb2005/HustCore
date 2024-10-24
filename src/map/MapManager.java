@@ -1,4 +1,4 @@
-package tile;
+package map;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,5 +17,13 @@ public class MapManager {
     {
         return mapRef.get(id);
     }
+
+
+    public static void dispose()
+    {
+        mapRef.clear();
+    }
+
+
 
 }

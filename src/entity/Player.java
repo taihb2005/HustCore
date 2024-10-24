@@ -1,13 +1,18 @@
 package entity;
 
 import graphics.Sprite;
+import map.GameMap;
+import util.Camera;
+import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static main.GamePanel.keyHandler;
+import static main.GamePanel.*;
 
 public class Player extends Entity{
+
+    GameMap mp;
 
     final int IDLE_DOWN = 0;
     final int IDLE_RIGHT = 1;
@@ -25,13 +30,8 @@ public class Player extends Entity{
     private boolean left;
     private boolean right;
 
-    private String dir;
-
-    private float dx;
-    private float dy;
-
-    private float acceleration;
-    private float force;
+    public int drawX, drawY;
+    public final int screenX, screenY;
 
 
     private BufferedImage[][] player_sprite;
@@ -39,35 +39,53 @@ public class Player extends Entity{
     private int currentAnimationState;
     private int currentFrames;
 
+    final protected Animation animator = new Animation();
 
-    public Player(Sprite entity_sprite, int x, int y , int speed) {
-        super(entity_sprite, x, y , speed);
+    public Player(GameMap mp) {
+        super();
+        this.mp = mp;
+        width = 48 * 2;
+        height = 48 * 2;
 
-        currentFrames = 0;
+        solidArea = new Rectangle(42 , 72 , 14 , 9);
+        solidAreaDefaultX = 42;
+        solidAreaDefaultY = 72;
+
+        screenX = windowWidth/2 - tileSize;
+        screenY = windowHeight/2 - tileSize;
+
+        getPlayerImages();
+        setDefaultValue();
+    }
+
+    private void setDefaultValue()
+    {
+        worldX = 500;
+        worldY = 500;
+        speed = 5;
 
         up = down = left = right = false;
-        dir = "down";
+        direction = "down";
 
-        player_sprite = entity_sprite.getSpriteArray();
-
+        currentFrames = 0;
         currentAnimationState = IDLE_DOWN; //Initial set to down animation
         animator.setAnimationState(player_sprite[IDLE_DOWN] , 5);
     }
 
+    private void getPlayerImages()
+    {
+        player_sprite = new Sprite("/entity/player/player.png").getSpriteArray();
+    }
+
+
+
     @Override
     public void update()
     {
-        switch(dir)
-        {
-            case "up" : currentAnimationState = IDLE_UP ; break;
-            case "down": currentAnimationState = IDLE_DOWN ; break;
-            case "left": currentAnimationState = IDLE_LEFT ; break;
-            case "right": currentAnimationState = IDLE_RIGHT; break;
-        }
+        handleDirection();
         keyInput();
-
+        handleCollsion();
         handlePosition();
-
         handleAnimationState();
 
         animator.update();
@@ -76,9 +94,21 @@ public class Player extends Entity{
 
 
     @Override
-    public void render(Graphics2D g2)
+    public void render(Graphics2D g2) {
+
+    }
+
+
+    @Override
+    public void render(Graphics2D g2, Camera camera)
     {
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] , (int)posX , (int)posY , 48 * 2 , 48 * 2, null);
+        drawX = camera.worldToScreenX(worldX);
+        drawY = camera.worldToScreenY(worldY);
+        camera.update(worldX, worldY, currentMap.getMapWidth(), currentMap.getMapHeight());
+        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
+                drawX , drawY, width, height, null);
+//        g2.setColor(Color.BLUE);
+//        g2.fillRect(drawX + solidArea.x, drawY + solidArea.y, solidArea.width, solidArea.height);
     }
 
     private void keyInput()
@@ -96,37 +126,58 @@ public class Player extends Entity{
         if(up && isRunning)
         {
             currentAnimationState = RUNNING_UP;
-            dir = "up";
+            direction = "up";
 
         } else if(down && isRunning)
         {
             currentAnimationState = RUNNING_DOWN;
-            dir = "down";
+            direction = "down";
         } else if(left && isRunning)
         {
             currentAnimationState = RUNNING_LEFT;
-            dir = "left";
+            direction = "left";
         } else if(right && isRunning)
         {
             currentAnimationState = RUNNING_RIGHT;
-            dir = "right";
+            direction = "right";
         }
+    }
+
+    private void handleDirection()
+    {
+        switch(direction)
+        {
+            case "up" : currentAnimationState = IDLE_UP ; break;
+            case "down": currentAnimationState = IDLE_DOWN ; break;
+            case "left": currentAnimationState = IDLE_LEFT ; break;
+            case "right": currentAnimationState = IDLE_RIGHT; break;
+        }
+    }
+
+    private void handleCollsion(){
+        collisionOn = false;
+        int objTndex = mp.cChecker.checkObjectCollision(this , true);
     }
 
     private void handlePosition()
     {
-        if(up && isRunning)
-        {
-            posY -= speed;
-        } else if(down && isRunning)
-        {
-            posY += speed;
-        } else if(left && isRunning)
-        {
-            posX -= speed;
-        } else if(right && isRunning)
-        {
-            posX += speed;
+
+        if(!collisionOn) {
+            if (up && isRunning) {
+                if (worldY - speed >= -tileSize) worldY -= speed;
+                else worldY = -tileSize;
+            } else if (down && isRunning) {
+                if (worldY + speed <= currentMap.getMapHeight() - tileSize * 2) worldY += speed;
+                else worldY = currentMap.getMapHeight() - tileSize * 2;
+            } else if (left && isRunning) {
+                if (worldX - speed >= -tileSize / 2) worldX -= speed;
+                else worldX = -tileSize / 2;
+            } else if (right && isRunning) {
+                if (worldX + speed <= currentMap.getMapWidth() - tileSize * 2) worldX += speed;
+                else worldX = (int) (currentMap.getMapWidth() - tileSize * 2);
+            }
         }
     }
+
+
 }

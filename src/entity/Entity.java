@@ -2,31 +2,36 @@ package entity;
 
 import graphics.Sprite;
 import graphics.Animation;
+import util.Camera;
 
 import java.awt.*;
 
 public abstract class Entity {
 
-    protected float posX , posY;
-    protected int speed;
-    protected Sprite entity_sprite;
+    public int worldX, worldY;
+    public String direction;
+    public int speed;
 
-    final protected Animation animator;
+    public boolean collisionOn = false;
 
+    protected int width;
+    protected int height;
 
-    public Entity(Sprite entity_sprite , float x , float y , int speed)
+    public Rectangle solidArea;
+    public int solidAreaDefaultX = 0;
+    public int solidAreaDefaultY = 0;
+
+    public Entity(){};
+
+    public Entity(int x , int y , int speed)
     {
-        this.posX = x;
-        this.posY = y;
+        this.worldX = x;
+        this.worldY = y;
         this.speed = speed;
-        this.entity_sprite = entity_sprite;
-
-        animator = new Animation();
-
     }
 
 
     public abstract void update();
     public abstract void render(Graphics2D g2);
-
+    public abstract void render(Graphics2D g2, Camera camera);
 }

@@ -1,17 +1,19 @@
 package main;
 
 // awt library
+import entity.Entity;
 import entity.Player;
 import graphics.Sprite;
-import tile.MapManager;
-import tile.MapParser;
+import map.GameMap;
+import map.MapManager;
+import map.MapParser;
+import util.Camera;
 
 import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
 
-import tile.MapManager;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -26,12 +28,12 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * tileSize;
     final static public int windowHeight = maxWindowRows * tileSize;
 
-    final static public MapParser mapParser = new MapParser();
+    Camera camera = new Camera(windowWidth, windowHeight, tileSize);
 
     final static public KeyHandler keyHandler = new KeyHandler();
 
-    final private Player player1 ;
 
+    public static GameMap currentMap;
 
     Thread gameThread;
 
@@ -44,14 +46,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
 
-
-        player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
-        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+        loadMap();
     }
 
-    public void loadCharacter()
+    private void loadMap()
     {
-        //player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+        MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
+        currentMap = MapManager.getGameMap("map_test");
     }
 
     public void loadSound()
@@ -64,10 +65,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
+
 
     @Override
     public void run() {
@@ -95,24 +98,23 @@ public class GamePanel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
+
+        MapManager.dispose();
     }
 
     public void update() {
-        player1.update();
+        currentMap.update();
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
 
-        // Set custom drawing color and draw shapes
         g2.setColor(Color.BLACK);
-        MapManager.getGameMap("map_test").render(g2);
 
-        player1.render(g2);
-
+        currentMap.render(g2 , camera);
 
         g2.dispose();
     }
