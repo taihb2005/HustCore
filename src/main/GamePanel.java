@@ -1,9 +1,6 @@
 package main;
 
 // awt library
-import entity.Entity;
-import entity.Player;
-import graphics.Sprite;
 import map.GameMap;
 import map.MapManager;
 import map.MapParser;
@@ -13,7 +10,6 @@ import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
-
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -25,15 +21,14 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int maxWindowCols = 16;
     final static public int maxWindowRows = 12;
 
-    final static public int windowWidth = maxWindowCols * tileSize;
-    final static public int windowHeight = maxWindowRows * tileSize;
+    final static public int windowWidth = maxWindowCols * 64;
+    final static public int windowHeight = maxWindowRows * 64;
 
-    Camera camera = new Camera(windowWidth, windowHeight, tileSize);
+    final public KeyHandler keyHandler = new KeyHandler(this);
+    public static Camera camera = new Camera();
+    public GameMap currentMap;
 
-    final static public KeyHandler keyHandler = new KeyHandler();
-
-
-    public static GameMap currentMap;
+    public GameState gameState;
 
     Thread gameThread;
 
@@ -53,20 +48,18 @@ public class GamePanel extends JPanel implements Runnable {
     {
         MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
         currentMap = MapManager.getGameMap("map_test");
-    }
-
-    public void loadSound()
-    {
+        camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
 
     }
 
-    public void loadMusic()
+    public void setup()
     {
-
+        currentMap.playMusic(0);
     }
 
 
     public void startGameThread() {
+        gameState = GameState.PLAY_STATE;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -75,47 +68,55 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
-        //loadCharacter();
+        double drawInterval = (double) 1000000000 /FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        //long timer = 0;
+        //int drawCount = 0;
 
-        double drawInterval = (double) 1000000000 / FPS;
-        double nextDrawTime = System.nanoTime() + drawInterval;
 
-        while (gameThread != null) {
-            update();   // Update the game state
-            repaint();  // Repaint the panel
+        while(gameThread != null)
+        {
+            currentTime = System.nanoTime();
 
-            try {
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime /= 1000000;
-
-                if (remainingTime < 0) {
-                    remainingTime = 0;
-                }
-
-                Thread.sleep((long) remainingTime);
-                nextDrawTime += drawInterval;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            delta += (currentTime - lastTime) / drawInterval;
+            //timer += currentTime - lastTime;
+            lastTime = currentTime;
+            if(delta >= 1)
+            {
+                update();
+                repaint();
+//                drawToTempScreen(); //FOR FULL SCREEN - Draw everything to the buffered image
+//                drawToScreen();     //FOR FULL SCREEN - Draw the buffered image to the screen
+                delta--;
+                //drawCount++;
             }
+
         }
 
         MapManager.dispose();
     }
 
     public void update() {
-        currentMap.update();
+        if(gameState == GameState.PLAY_STATE) {
+            currentMap.update();
+        }
+
+        if(gameState == GameState.PAUSE_STATE)
+        {
+            //do nothing
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.BLACK);
-
-        currentMap.render(g2 , camera);
-
+        currentMap.render(g2);
         g2.dispose();
+
     }
+
 }

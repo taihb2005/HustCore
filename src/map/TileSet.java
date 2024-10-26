@@ -1,6 +1,5 @@
 package map;
 
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +19,7 @@ public class TileSet {
 
     private BufferedImage tileSetSprite;
 
-    HashMap<Integer , Rectangle> objects = new HashMap<>();
+    HashMap<Integer , Rectangle[]> objects = new HashMap<>();
 
 
     public TileSet(int firstID , int lastID , int tileWidth ,
@@ -41,7 +40,7 @@ public class TileSet {
 
     public TileSet(int firstID , int lastID , int tileWidth ,
                    int tileHeight , int numRows ,
-                   int numCols , HashMap<Integer , Rectangle> objects ,String imgPath)
+                   int numCols , HashMap<Integer , Rectangle[]> objects ,String imgPath)
     {
         this.firstID = firstID;
         this.lastID = lastID;

@@ -1,10 +1,11 @@
 package graphics;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class Animation {
-    public BufferedImage[] ani_sprite;
+public class Animation{
+    public ArrayList<BufferedImage> ani_sprite;
 
     private int frameCounts;
     private int currentFrames;
@@ -17,14 +18,15 @@ public class Animation {
         ani_Tick = 0;
     }
 
-    public void setAnimationState(BufferedImage[] frame , int ani_Speed)
+    public void setAnimationState(BufferedImage[] frame ,int ani_Speed)
     {
         this.ani_Tick = 0;
-        this.ani_sprite = frame;
+        this.ani_sprite = new ArrayList<>(Arrays.asList(frame));
         this.ani_Speed = ani_Speed;
-        this.frameCounts = frame.length;
+        this.frameCounts = ani_sprite.size();
         this.currentFrames = 0;
     }
+
 
     public void update()
     {
@@ -36,8 +38,7 @@ public class Animation {
         }
     }
 
-    public void setAnimationSpeed(int speed){this.ani_Speed = speed;};
-
-    public int getCurrentFrames(){return currentFrames;};
-    public BufferedImage[] getAni_sprite(){return ani_sprite;};
+    public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
+    public int getCurrentFrames(){return currentFrames;}
+    public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
 }
