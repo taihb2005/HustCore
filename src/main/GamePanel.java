@@ -46,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
         player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100 , 5);
-        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+        MapParser.loadMap( "map_test" ,"res/tile/map_test_2.tmx");
     }
 
     public void loadCharacter()
