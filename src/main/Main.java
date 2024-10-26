@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 public class Main
 {
-    public static void main(String arg[])
+    public static void main(String [] arg)
     {
         JFrame gameWindow = new JFrame();
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,6 +17,8 @@ public class Main
 
         gameWindow.setLocationRelativeTo(null);
         gameWindow.setVisible(true);
+
+        //gamePanel.setup();
 
         gamePanel.startGameThread();
     }

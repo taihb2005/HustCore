@@ -5,28 +5,16 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
 
-    private boolean upPressed , downPressed , rightPressed , leftPressed;
+    GamePanel gp;
+    public static boolean upPressed;
+    public static boolean downPressed;
+    public static boolean rightPressed;
+    public static boolean leftPressed;
 
-    final private int down = 0;
-    final private int right = 1;
-    final private int left = 2;
-    final private int up = 3;
-
-    private String direction;
-
-    public KeyHandler()
+    public KeyHandler(GamePanel gp)
     {
-
+        this.gp = gp;
     }
-
-    public boolean getUpstate(){return upPressed;};
-    public boolean getDownstate(){return downPressed;};
-    public boolean getRightstate(){return rightPressed;};
-    public boolean getLeftstate(){return leftPressed;};
-
-
-    public String getDirection(){return direction;};
-
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -37,12 +25,35 @@ public class KeyHandler implements KeyListener{
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        switch(keyCode)
+        if(keyCode == KeyEvent.VK_S)
         {
-            case KeyEvent.VK_S: downPressed = true; direction = "down"; break;
-            case KeyEvent.VK_A: leftPressed = true; direction = "left"; break;
-            case KeyEvent.VK_D: rightPressed = true; direction = "right"; break;
-            case KeyEvent.VK_W: upPressed = true; direction = "up"; break;
+            downPressed = true;
+        }
+
+        if(keyCode == KeyEvent.VK_W)
+        {
+            upPressed = true;
+        }
+
+        if(keyCode == KeyEvent.VK_D)
+        {
+            rightPressed = true;
+        }
+
+        if(keyCode == KeyEvent.VK_A)
+        {
+            leftPressed = true;
+        }
+
+        if(keyCode == KeyEvent.VK_ESCAPE)
+        {
+            if(gp.gameState == GameState.PLAY_STATE)
+            {
+                gp.gameState = GameState.PAUSE_STATE;
+            } else if(gp.gameState == GameState.PAUSE_STATE)
+            {
+                gp.gameState = GameState.PLAY_STATE;
+            }
         }
     }
 
@@ -59,4 +70,3 @@ public class KeyHandler implements KeyListener{
         }
     }
 }
-
