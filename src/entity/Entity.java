@@ -3,6 +3,7 @@ package entity;
 import java.awt.*;
 
 public abstract class Entity {
+    public String name;
 
     public int worldX, worldY;
     public int newWorldX , newWorldY;

@@ -24,6 +24,7 @@ public class GameMap {
 
     public ArrayList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
     public ArrayList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public ArrayList<Entity> npc;
     public ArrayList<Entity> objList;
 
     public Player player = new Player(this);

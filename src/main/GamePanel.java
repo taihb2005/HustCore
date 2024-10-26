@@ -21,8 +21,8 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int maxWindowCols = 16;
     final static public int maxWindowRows = 12;
 
-    final static public int windowWidth = maxWindowCols * 64;
-    final static public int windowHeight = maxWindowRows * 64;
+    final static public int windowWidth = maxWindowCols * 48;
+    final static public int windowHeight = maxWindowRows * 48;
 
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
@@ -116,7 +116,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         currentMap.render(g2);
         g2.dispose();
-
     }
 
 }

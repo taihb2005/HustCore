@@ -73,7 +73,7 @@ public class Player extends Entity {
         worldY = 500;
         newWorldX = worldX;
         newWorldY = worldY;
-        speed = 5;
+        speed = 3;
 
         up = down = left = right = false;
         direction = "right";
@@ -176,16 +176,24 @@ public class Player extends Entity {
     {
         collisionOn = false;
         if (up && isRunning) {
-            newWorldY -= speed;
+            if(right){newWorldX += 1; newWorldY -= 1;} else
+            if(left){newWorldX -= 1 ; newWorldY -= 1;} else
+                if(!down) newWorldY -= speed;
         }
         if (down && isRunning) {
-            newWorldY += speed;
+            if(right){newWorldX += 1; newWorldY += 1;} else
+            if(left){newWorldX -= 1 ; newWorldY += 1;} else
+            if(!up) newWorldY += speed;
         }
         if (left && isRunning) {
-            newWorldX -= speed;
+            if(up){newWorldX -= 1; newWorldY -= 1;} else
+            if(down){newWorldX -= 1 ; newWorldY +=1;} else
+            if(!right) newWorldX -= speed;
         }
         if (right && isRunning) {
-            newWorldX += speed;
+            if(up){newWorldX += 1; newWorldY -= 1;} else
+            if(down){newWorldX += 1 ; newWorldY += 1;} else
+            if(!left) newWorldX += speed;
         }
 
         mp.cChecker.checkCollisionWithInactiveObject(this);
