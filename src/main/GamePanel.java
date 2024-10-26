@@ -32,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
+    UI ui;
 
     public GamePanel() {
         // Set the size of the window and background color
@@ -40,6 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        ui = new UI(this);
 
         loadMap();
     }
@@ -115,7 +117,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
+        ui.render(g2);
         g2.dispose();
     }
-
 }
