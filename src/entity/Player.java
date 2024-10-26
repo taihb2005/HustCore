@@ -1,146 +1,205 @@
 package entity;
 
 import graphics.Sprite;
+import main.GamePanel;
+import main.KeyHandler;
+import map.GameMap;
+import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static main.GamePanel.*;
-import util.Camera;
+import main.GamePanel.*;
 
-public class Player extends Entity{
+public class Player extends Entity {
 
-    final int IDLE_DOWN = 0;
-    final int IDLE_RIGHT = 1;
-    final int IDLE_LEFT = 2;
-    final int IDLE_UP = 3;
-    public float drawX, drawY;
+    GameMap mp;
+    final int IDLE = 0;
+    final int RUN = 1;
+    final int TALK = 2;
+    final int SHOOT = 3;
+    final int RELOAD = 4;
+    final int DEATH = 5;
 
-    final int RUNNING_DOWN = 4;
-    final int RUNNING_RIGHT = 5;
-    final int RUNNING_LEFT = 6;
-    final int RUNNING_UP = 7;
+    final int RIGHT = 0;
+    final int LEFT = 1;
+
+    private int PREVIOUS_ACTION;
+    private int CURRENT_ACTION;
+    private int CURRENT_DIRECTION;
 
     private boolean isRunning;
+    private boolean isShooting;
+    private boolean isReloading;
+    private boolean isDying;
+
     private boolean up;
     private boolean down;
     private boolean left;
     private boolean right;
+    private boolean shoot;
+    private boolean die;
+    
+    public final int screenX, screenY;
 
-    public final float screenX, screenY;
+    private BufferedImage[][][] player_gun = new BufferedImage[7][][];;
+    private BufferedImage[][][] player_nogun = new BufferedImage[7][][];
 
-    private String dir;
-
-
-    final private BufferedImage[][] player_sprite;
-
-    private int currentAnimationState;
-    private int currentFrames;
+    private int CURRENT_FRAME;
 
 
-    public Player(Sprite entity_sprite, int x, int y, int speed) {
-        super(entity_sprite, x, y , speed);
+    final protected Animation animator = new Animation();
 
-        currentFrames = 0;
-        screenX = windowWidth/2 - tileSize;
-        screenY = windowHeight/2 - tileSize;
-        up = down = left = right = false;
-        dir = "down";
+    public Player(GameMap mp) {
+        super();
+        this.mp = mp;
+        width = 64;
+        height = 64;
 
-        player_sprite = entity_sprite.getSpriteArray();
+        solidArea1 = new Rectangle(27 , 53 , 13 , 6);
+        solidAreaDefaultX1 = 27;
+        solidAreaDefaultY1 = 53;
 
-        currentAnimationState = IDLE_DOWN; //Initial set to down animation
-        animator.setAnimationState(player_sprite[IDLE_DOWN] , 5);
+        screenX = GamePanel.windowWidth/2 - 32;
+        screenY = GamePanel.windowHeight/2 - 32;
+
+        getPlayerImages();
+        setDefaultValue();
     }
+
+    private void setDefaultValue()
+    {
+        worldX = 500;
+        worldY = 500;
+        newWorldX = worldX;
+        newWorldY = worldY;
+        speed = 5;
+
+        up = down = left = right = false;
+        direction = "right";
+        CURRENT_DIRECTION = RIGHT;
+        PREVIOUS_ACTION = IDLE;
+        CURRENT_ACTION = IDLE;
+        CURRENT_FRAME = 0;
+        animator.setAnimationState(player_gun[IDLE][RIGHT] , 5);
+    }
+
+    private void getPlayerImages()
+    {
+        player_gun[IDLE]   = new Sprite("/entity/player/idle_gun_blue.png"   , width , height).getSpriteArray();
+        player_gun[TALK]   = new Sprite("/entity/player/talk_gun_blue.png"   , width , height).getSpriteArray();
+        player_gun[RUN]    = new Sprite("/entity/player/run_gun_blue.png"    , width , height).getSpriteArray();
+        player_gun[SHOOT]  = new Sprite("/entity/player/shoot_gun_blue.png"  , width , height).getSpriteArray();
+        player_gun[RELOAD] = new Sprite("/entity/player/reload_gun_blue.png" , width , height).getSpriteArray();
+        player_gun[DEATH]  = new Sprite("/entity/player/death_blue.png"      , width , height).getSpriteArray();
+    }
+
 
     @Override
     public void update()
     {
-        switch(dir)
-        {
-            case "up" : currentAnimationState = IDLE_UP ; break;
-            case "down": currentAnimationState = IDLE_DOWN ; break;
-            case "left": currentAnimationState = IDLE_LEFT ; break;
-            case "right": currentAnimationState = IDLE_RIGHT; break;
-        }
         keyInput();
-
         handlePosition();
-
+        changeDirection();
+        //handleCollision();
         handleAnimationState();
-
-
-
         animator.update();
-        currentFrames = animator.getCurrentFrames();
-    }
-
-    @Override
-    public void render(Graphics2D g2) {
-
+        CURRENT_FRAME = animator.getCurrentFrames();
     }
 
 
     @Override
-    public void render(Graphics2D g2, Camera camera)
+    public void render(Graphics2D g2)
     {
-        drawX = camera.worldToScreenX(worldX);
-        drawY = camera.worldToScreenY(worldY);
-        camera.update((int)worldX, (int)worldY, currentMap.getMapWidth(), currentMap.getMapHeight());
-        g2.drawImage(player_sprite[currentAnimationState][currentFrames] ,
-                (int)drawX , (int)drawY , 48*2, 48*2, null);
+        g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
+                     worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
+                     width, height, null);
     }
 
     private void keyInput()
     {
-        up = keyHandler.getUpstate();
-        down = keyHandler.getDownstate();
-        left = keyHandler.getLeftstate();
-        right = keyHandler.getRightstate();
+        up    = KeyHandler.upPressed;
+        down  = KeyHandler.downPressed;
+        left  = KeyHandler.leftPressed;
+        right = KeyHandler.rightPressed;
 
         isRunning = up | down | left | right;
     }
 
     private void handleAnimationState()
     {
-        if(up && isRunning)
+        if(isRunning)
         {
-            currentAnimationState = RUNNING_UP;
-            dir = "up";
+            CURRENT_ACTION = RUN;
+            if(left)
+            {
+                direction = "left";
+            } else if(right)
+            {
+                direction = "right";
+            }
+        } else
+        {
+            animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
+            CURRENT_ACTION = IDLE;
+            PREVIOUS_ACTION = IDLE;
+        }
 
-        } else if(down && isRunning)
+        if(PREVIOUS_ACTION != CURRENT_ACTION)
         {
-            currentAnimationState = RUNNING_DOWN;
-            dir = "down";
-        } else if(left && isRunning)
+            PREVIOUS_ACTION = CURRENT_ACTION;
+            if(isRunning)
+            {
+                animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
+            }
+        }
+        //System.out.println(frameCounts);
+
+    }
+
+    private void changeDirection()
+    {
+        switch(direction)
         {
-            currentAnimationState = RUNNING_LEFT;
-            dir = "left";
-        } else if(right && isRunning)
-        {
-            currentAnimationState = RUNNING_RIGHT;
-            dir = "right";
+            case "left" : CURRENT_DIRECTION = LEFT; break;
+            case "right": CURRENT_DIRECTION = RIGHT; break;
         }
     }
+
+//    private void handleCollision(){
+//        collisionOn = false;
+//        onlyChangeDirection = false;
+//        mp.cChecker.checkObjectCollsion(this);
+//    }
 
     private void handlePosition()
     {
-        if(up && isRunning)
-        {
-            if (worldY - speed >= -tileSize) worldY -= speed;
-            else worldY = -tileSize;
-        } else if(down && isRunning)
-        {
-            if (worldY + speed <= currentMap.getMapHeight()-tileSize*2) worldY += speed;
-            else worldY = currentMap.getMapHeight()-tileSize*2;
-        } else if(left && isRunning)
-        {
-            if (worldX - speed >= -tileSize/2) worldX -= speed;
-            else worldX = -tileSize/2;
-        } else if(right && isRunning)
-        {
-            if (worldX + speed <= currentMap.getMapWidth()-tileSize*1.5) worldX += speed;
-            else worldX = (float) (currentMap.getMapWidth()-tileSize*1.5);
+        collisionOn = false;
+        if (up && isRunning) {
+            newWorldY -= speed;
         }
+        if (down && isRunning) {
+            newWorldY += speed;
+        }
+        if (left && isRunning) {
+            newWorldX -= speed;
+        }
+        if (right && isRunning) {
+            newWorldX += speed;
+        }
+
+        mp.cChecker.checkCollisionWithInactiveObject(this);
+
+        if(!collisionOn)
+        {
+            worldX = newWorldX;
+            worldY = newWorldY;
+        }
+        newWorldX = worldX;
+        newWorldY = worldY;
+
+        GamePanel.camera.centerOn(worldX , worldY);
     }
+
+
 }

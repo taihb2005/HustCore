@@ -5,6 +5,8 @@ import main.GamePanel;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+import static main.GamePanel.tileSize;
+
  /*
     This class uses for handle character sprite like running , attacking, dying,...
     all goes into one big png file which contains multiple sprite. It's convenient to
@@ -19,13 +21,13 @@ public class Sprite {
     public int w;
     public int h;
 
-    final private int spriteCols;
-    final private int spriteRows;
+    private final int spriteCols;
+    private final int spriteRows;
 
     public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
-        this.w = 16 * 3; //original tile size
-        this.h = 16 * 3; //original tile size
+        this.w = tileSize; //original tile size
+        this.h = tileSize; //original tile size
 
         SPRITESHEET = loadFile(filepath);
 
@@ -49,6 +51,7 @@ public class Sprite {
         loadSpriteArray();
 
     }
+
 
     public BufferedImage loadFile(String filepath)  //load the sprite
     {
