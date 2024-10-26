@@ -1,19 +1,15 @@
 package main;
 
 // awt library
-import entity.Player;
-import graphics.Sprite;
-import tile.GameMap;
-import tile.MapManager;
-import tile.MapParser;
+import map.GameMap;
+import map.MapManager;
+import map.MapParser;
+import util.Camera;
 
 import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
-
-import tile.MapManager;
-import util.Camera;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -25,21 +21,18 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int maxWindowCols = 16;
     final static public int maxWindowRows = 12;
 
-    final static public int windowWidth = maxWindowCols * tileSize;
-    final static public int windowHeight = maxWindowRows * tileSize;
+    final static public int windowWidth = maxWindowCols * 64;
+    final static public int windowHeight = maxWindowRows * 64;
 
+    final public KeyHandler keyHandler = new KeyHandler(this);
+    public static Camera camera = new Camera();
+    public GameMap currentMap;
 
-    //final static public MapParser mapParser = new MapParser();
-
-    final static public KeyHandler keyHandler = new KeyHandler();
-
-    static public Player player1 ;
-
-    public static GameMap currentMap;
+    public GameState gameState;
 
     Thread gameThread;
 
-    Camera camera = new Camera(windowWidth, windowHeight, tileSize);
+    UI ui;
 
     public GamePanel() {
         // Set the size of the window and background color
@@ -48,29 +41,27 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        ui = new UI(this);
 
+        loadMap();
+    }
 
-        player1 = new Player(new Sprite("/entity/player/player.png") , 0 , 0 , 5);
-        MapParser.loadMap( "map_test" ,"res/tile/map_test.tmx");
+    private void loadMap()
+    {
+        MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
         currentMap = MapManager.getGameMap("map_test");
+        camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
+
     }
 
-    public void loadCharacter()
+    public void setup()
     {
-        //player1 = new Player(new Sprite("/entity/player/player.png") , 100 , 100);
+        currentMap.playMusic(0);
     }
 
-    public void loadSound()
-    {
-
-    }
-
-    public void loadMusic()
-    {
-
-    }
 
     public void startGameThread() {
+        gameState = GameState.PLAY_STATE;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -79,51 +70,54 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
-        //loadCharacter();
+        double drawInterval = (double) 1000000000 /FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        //long timer = 0;
+        //int drawCount = 0;
 
-        double drawInterval = (double) 1000000000 / FPS;
-        double nextDrawTime = System.nanoTime() + drawInterval;
 
-        while (gameThread != null) {
-            update();   // Update the game state
-            repaint();  // Repaint the panel
+        while(gameThread != null)
+        {
+            currentTime = System.nanoTime();
 
-            try {
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime /= 1000000;
-
-                if (remainingTime < 0) {
-                    remainingTime = 0;
-                }
-
-                Thread.sleep((long) remainingTime);
-                nextDrawTime += drawInterval;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            delta += (currentTime - lastTime) / drawInterval;
+            //timer += currentTime - lastTime;
+            lastTime = currentTime;
+            if(delta >= 1)
+            {
+                update();
+                repaint();
+//                drawToTempScreen(); //FOR FULL SCREEN - Draw everything to the buffered image
+//                drawToScreen();     //FOR FULL SCREEN - Draw the buffered image to the screen
+                delta--;
+                //drawCount++;
             }
+
         }
 
         MapManager.dispose();
     }
 
     public void update() {
-        player1.update();
+        if(gameState == GameState.PLAY_STATE) {
+            currentMap.update();
+        }
+
+        if(gameState == GameState.PAUSE_STATE)
+        {
+            //do nothing
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D) g;
 
-        // Set custom drawing color and draw shapes
-        g2.setColor(Color.BLACK);
-
-        currentMap.render(g2, camera);
-
-        player1.render(g2, camera);
-
-
+        currentMap.render(g2);
+        ui.render(g2);
         g2.dispose();
     }
 }
