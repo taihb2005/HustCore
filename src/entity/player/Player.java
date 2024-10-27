@@ -1,5 +1,6 @@
-package entity;
+package entity.player;
 
+import entity.Entity;
 import graphics.Sprite;
 import main.GamePanel;
 import main.KeyHandler;
@@ -8,8 +9,6 @@ import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-import main.GamePanel.*;
 
 public class Player extends Entity {
 
@@ -69,8 +68,8 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        worldX = 500;
-        worldY = 500;
+        worldX = 1466;
+        worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
         speed = 3;
@@ -188,7 +187,7 @@ public class Player extends Entity {
         if (left && isRunning) {
             if(up){newWorldX -= 1; newWorldY -= 1;} else
             if(down){newWorldX -= 1 ; newWorldY +=1;} else
-            if(!right) newWorldX -= speed;
+                if(!right) newWorldX -= speed;
         }
         if (right && isRunning) {
             if(up){newWorldX += 1; newWorldY -= 1;} else

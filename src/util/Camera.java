@@ -1,9 +1,5 @@
 package util;
 
-import entity.Player;
-
-import static main.GamePanel.*;
-
 public class Camera {
     private int x, y; // Top-left corner of the camera
     private int viewportWidth;

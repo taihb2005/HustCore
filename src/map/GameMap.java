@@ -1,9 +1,9 @@
 package map;
 
 import entity.Entity;
-import entity.Obj_Wall;
-import entity.Player;
-import main.GamePanel;
+import entity.object.Obj_Wall;
+import entity.player.Player;
+import main.KeyHandler;
 import util.CollisionHandler;
 
 import java.awt.*;
@@ -11,9 +11,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static main.GamePanel.camera;
+
 
 public class GameMap {
 
+    int drawTimeFrameCount = 2000;
+    int frameCount = 0;
+
+    public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public Sound sound = new Sound();
 
@@ -39,6 +45,8 @@ public class GameMap {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
+        setter.setObject();
+
     }
 
     public void render(Graphics2D g2)
@@ -63,10 +71,52 @@ public class GameMap {
             }
         });
 
+        long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList) mapObject.render(g2);
         mapLayer.get(3).render(g2); //Decor layer
+
+        long currenttime = System.nanoTime();
+        long drawTime = currenttime - lasttime;
+
+        //DEBUG MENU
+        if(KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HỆN THỊ TỌA ĐỘ CỦA NHÂN VẬT
+        {
+            frameCount++;
+            if (frameCount >= drawTimeFrameCount) {
+                frameCount = 0;
+                drawTime = currenttime - lasttime;
+            }
+            g2.setColor(Color.white);
+            int x = 10;
+            int y = 20;
+            int lineHeight = 20;
+            g2.setFont(new Font("Arial", Font.PLAIN, 14));
+            g2.drawString("WorldX: " + player.worldX, x, y);
+            g2.drawString("WorldY: " + player.worldY, x, y + lineHeight);
+            g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
+            g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
+            g2.drawString("Draw time: " + drawTime, x, y + lineHeight * 4);
+        }
+
+        //DEBUG HITBOX
+        if(KeyHandler.showHitbox)  // NHẤN F4 ĐỂ HIỂN THỊ HITBOX CỦA TẤT CẢ CÁC OBJECT
+        {
+            g2.setColor(Color.YELLOW);
+            g2.setStroke(new BasicStroke(1));
+            for(Entity e : objList)
+            {
+                if(e != null)
+                {
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY() , e.solidArea1.width , e.solidArea1.height);
+                    if(e.solidArea2 != null)
+                    {
+                        g2.drawRect(e.solidAreaDefaultX2 + e.worldX - camera.getX(), e.solidAreaDefaultY2 + e.worldY - camera.getY() , e.solidArea2.width , e.solidArea2.height);
+                    }
+                }
+            }
+        }
 
         for(int i = 0 ; i < objList.size() ; i++)
         {
@@ -76,7 +126,13 @@ public class GameMap {
 
     public void update()
     {
-        player.update();
+        for(Entity e : objList)
+        {
+            if(e != null )
+            {
+                e.update();
+            }
+        }
     }
 
     public void parseWallObject(TileLayer layer){

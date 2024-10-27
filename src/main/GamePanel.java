@@ -117,7 +117,8 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
-        ui.render(g2);
+        //ui.render(g2);
+
         g2.dispose();
     }
 }

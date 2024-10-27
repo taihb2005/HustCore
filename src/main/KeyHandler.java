@@ -10,6 +10,8 @@ public class KeyHandler implements KeyListener{
     public static boolean downPressed;
     public static boolean rightPressed;
     public static boolean leftPressed;
+    public static boolean showDebugMenu = false;
+    public static boolean showHitbox = false;
 
     public KeyHandler(GamePanel gp)
     {
@@ -55,6 +57,16 @@ public class KeyHandler implements KeyListener{
                 gp.gameState = GameState.PLAY_STATE;
             }
         }
+        if(keyCode == KeyEvent.VK_F3)
+        {
+            showDebugMenu = !showDebugMenu;
+        }
+
+        if(keyCode == KeyEvent.VK_F4)
+        {
+            showHitbox = !showHitbox;
+        }
+
     }
 
     @Override

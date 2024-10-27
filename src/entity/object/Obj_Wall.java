@@ -1,11 +1,13 @@
-package entity;
+package entity.object;
+
+import entity.Entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.camera;
 
-public class Obj_Wall extends Entity{
+public class Obj_Wall extends Entity {
 
     private final BufferedImage objectImage;
     public final String name = "wall";

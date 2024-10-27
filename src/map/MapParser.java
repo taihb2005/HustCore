@@ -69,6 +69,7 @@ public class MapParser {
         }
     }
 
+
     private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist , GameMap mp)
     {
         String[] values = data.trim().split(",");

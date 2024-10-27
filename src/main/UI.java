@@ -13,23 +13,22 @@ public class UI {
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
-    double textSpeed = 0.1;            // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
+    double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
 
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
             InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
+            assert is != null;
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
         // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
         // DEMO
-        startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
+        //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
     }
     public void startDialogue(String dialogue) {
         currentDialogue = dialogue;
@@ -41,7 +40,7 @@ public class UI {
     public void drawDialogueScreen() {
         int x = tileSize*2;
         int y = tileSize/2;
-        int width = gp.getWidth() - tileSize*4;
+        int width = gp.getWidth() - tileSize * 4;
         int height = tileSize*4;
 
         drawSubWindow(x, y, width, height);
@@ -58,7 +57,7 @@ public class UI {
         // Vẽ đoạn hội thoại từng dòng
         x += tileSize;
         y += tileSize;
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         for (String line : displayedText.split("\n")) { // splits dialogue until "\n" as a line
             g2.drawString(line, x, y);
             y += 40;

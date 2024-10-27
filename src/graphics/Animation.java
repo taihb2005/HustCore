@@ -38,6 +38,11 @@ public class Animation{
         }
     }
 
+    public void once()
+    {
+
+    }
+
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
     public int getCurrentFrames(){return currentFrames;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
