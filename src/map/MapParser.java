@@ -12,8 +12,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static main.GamePanel.scale;
-
 
 public class MapParser {
 
@@ -58,9 +56,10 @@ public class MapParser {
             {
                 Element eElement = (Element) list.item(i);
                 String data = eElement.getElementsByTagName("data").item(0).getTextContent();
-                mp.map.add(parseTileLayer(data , numrows , numcols , tilesetlist , mp));
+                mp.mapLayer.add(parseTileLayer(data , numrows , numcols , tilesetlist , mp));
             }
-            mp.parseObject(mp.map.get(1));
+
+            mp.parseWallObject(mp.mapLayer.get(2));
             MapManager.appendGameMap(id , mp);
 
         } catch(Exception e)
@@ -69,6 +68,7 @@ public class MapParser {
             e.printStackTrace();
         }
     }
+
 
     private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist , GameMap mp)
     {
@@ -90,8 +90,6 @@ public class MapParser {
         return new TileLayer(numRows , numCols , array , tilesetlist , mp);
     }
 
-
-
     private static TileSet getTileSet(Element eElement)
     {
 
@@ -104,7 +102,6 @@ public class MapParser {
             return parsePNGfile(eElement);
 
     }
-
 
     private static TileSet parsePNGfile(Element eElement)
     {
@@ -156,24 +153,28 @@ public class MapParser {
             //LẤY RA NHỮNG Ô CÓ OBJECT VÀ CHO VÀO HASHMAP
             NodeList list = doc.getElementsByTagName("tile");
 
-            HashMap<Integer , Rectangle> object = new HashMap<>();
+            HashMap<Integer , Rectangle[]> object = new HashMap<>();
+            Rectangle[][] objList = new Rectangle[list.getLength()][2];
             for(int i = 0 ; i < list.getLength() ; i++)
             {
-                Element element = (Element) list.item(i);
-                int tileID = Integer.parseInt(element.getAttribute("id"));
+                Element tileElement = (Element) list.item(i);
+                int tileID = Integer.parseInt(tileElement.getAttribute("id"));
 
-                NodeList tmp = doc.getElementsByTagName("object");
-                Element element1 = (Element) tmp.item(0);
+                NodeList objectGroupList = tileElement.getElementsByTagName("object");
+                for(int k = 0; k < objectGroupList.getLength() ; k++) {
+                    Element element1 = (Element) objectGroupList.item(k);
 
-                int x = Integer.parseInt(element1.getAttribute("x"));
-                int y = Integer.parseInt(element1.getAttribute("y"));
-                int width = Integer.parseInt(element1.getAttribute("width"));
-                int height = Integer.parseInt(element1.getAttribute("height"));
+                    int x = Integer.parseInt(element1.getAttribute("x"));
+                    int y = Integer.parseInt(element1.getAttribute("y"));
+                    int width = Integer.parseInt(element1.getAttribute("width"));
+                    int height = Integer.parseInt(element1.getAttribute("height"));
 
-                object.put(tileID , new Rectangle(x , y , width , height));
+                    objList[i][k] = new Rectangle(x , y , width , height);
+                }
+                object.put(tileID , objList[i]);
             }
 
-            tileSet = new TileSet(firstid , lastid , tilewidth ,tileheight ,numrows , numcols ,  object,tilename);
+            tileSet = new TileSet(firstid , lastid , tilewidth ,tileheight ,numrows , numcols , object ,tilename);
 
         } catch(Exception e)
         {

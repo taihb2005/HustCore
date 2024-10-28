@@ -1,27 +1,28 @@
 package entity;
 
-import graphics.Sprite;
-import graphics.Animation;
-import util.Camera;
-
 import java.awt.*;
 
 public abstract class Entity {
+    public String name;
 
     public int worldX, worldY;
+    public int newWorldX , newWorldY;
     public String direction;
     public int speed;
 
     public boolean collisionOn = false;
 
-    protected int width;
-    protected int height;
+    public int width;
+    public int height;
 
-    public Rectangle solidArea;
-    public int solidAreaDefaultX = 0;
-    public int solidAreaDefaultY = 0;
+    public Rectangle solidArea1;
+    public Rectangle solidArea2;
+    public int solidAreaDefaultX1 = 0;
+    public int solidAreaDefaultY1 = 0;
+    public int solidAreaDefaultX2 = 0;
+    public int solidAreaDefaultY2 = 0;
 
-    public Entity(){};
+    public Entity(){}
 
     public Entity(int x , int y , int speed)
     {
@@ -33,5 +34,4 @@ public abstract class Entity {
 
     public abstract void update();
     public abstract void render(Graphics2D g2);
-    public abstract void render(Graphics2D g2, Camera camera);
 }

@@ -1,47 +1,25 @@
 package util;
 
-import static main.GamePanel.*;
-
 public class Camera {
-    public int offsetX, offsetY;
-    // toa do cua camera
-    public int x;
-    public int y;
+    private int x, y; // Top-left corner of the camera
+    private int viewportWidth;
+    private int viewportHeight; // Size of the viewport (visible area)
+    private int mapWidth;
+    private int mapHeight; // Size of the map
 
-    // vi tri chinh giua man hinh cua Camera
-    private final int midX;
-    private final int midY;
-
-
-    public Camera(int windowWidth, int windowHeight, int tileSize) {
-        this.midX = windowWidth / 2 - tileSize;
-        this.midY = windowHeight / 2 - tileSize;
+    public Camera(){
+        this.x = 0;
+        this.y = 0;
     }
 
-    public void update(int playerX, int playerY, int worldWidth, int worldHeight) {
-        // Camera bám theo nhân vật (playerX, playerY) nhưng vẫn giới hạn trong biên của map
-        this.x = Math.max(0, Math.min(playerX - windowWidth / 2 + tileSize, worldWidth - windowWidth));
-        this.y = Math.max(0, Math.min(playerY - windowHeight / 2 + tileSize, worldHeight - windowHeight));
+    public Camera(int viewportWidth, int viewportHeight, int mapWidth, int mapHeight) {
+        this.viewportWidth = viewportWidth;
+        this.viewportHeight = viewportHeight;
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+        this.x = 0;
+        this.y = 0;
     }
-
-
-    // Tính toán vị trí đối tượng trên màn hình dựa trên vị trí trong thế giới
-    public int worldToScreenX(int worldX) {
-        if (worldX >= midX && worldX <= currentMap.getMapWidth() - midX - 2 * tileSize)
-            return midX;
-        if (worldX >= currentMap.getMapWidth() - midX - 2 * tileSize)
-            return (midX + (worldX - (currentMap.getMapWidth() - midX - 2 * tileSize)));
-        return worldX;
-    }
-
-    public int worldToScreenY(int worldY) {
-        if (worldY >= midY && worldY <= currentMap.getMapWidth() - midY - 2 * tileSize)
-            return midY;
-        if (worldY >= currentMap.getMapWidth() - midY-2*tileSize)
-            return midY + (worldY - (currentMap.getMapWidth() - midY - 2 * tileSize));
-        return worldY;
-    }
-
 
     public int getX() {
         return x;
@@ -50,4 +28,35 @@ public class Camera {
     public int getY() {
         return y;
     }
+
+    public void setCamera(int mapWidth , int mapHeight)
+    {
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+    }
+
+    public void setCamera(int viewportWidth , int viewportHeight , int mapWidth , int mapHeight)
+    {
+        this.viewportWidth = viewportWidth;
+        this.viewportHeight = viewportHeight;
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+    }
+
+    public void centerOn(int targetX, int targetY) {
+        x = targetX - viewportWidth / 2 + 32;
+        y = targetY - viewportHeight / 2 + 32;
+
+        clamp();
+    }
+
+    private void clamp() {
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+
+        if (x + viewportWidth > mapWidth) x = mapWidth - viewportWidth;
+        if (y + viewportHeight > mapHeight) y = mapHeight - viewportHeight;
+
+    }
+
 }

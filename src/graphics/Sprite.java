@@ -77,7 +77,7 @@ public class Sprite {
 
     public BufferedImage getSprite(int x , int y) //get sub image from the sprite, at the position x , y from the img
     {
-        return SPRITESHEET.getSubimage(y * h , x * w , w , h);
+        return SPRITESHEET.getSubimage(y * w , x * h , w , h);
     }
 
 
