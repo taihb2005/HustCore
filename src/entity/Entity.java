@@ -31,6 +31,20 @@ public abstract class Entity {
         this.speed = speed;
     }
 
+    public void setDefaultSolidArea()
+    {
+        if(solidArea1 != null)
+        {
+            solidAreaDefaultX1 = solidArea1.x;
+            solidAreaDefaultY1 = solidArea1.y;
+        }
+
+        if(solidArea2 != null)
+        {
+            solidAreaDefaultX2 = solidArea2.x;
+            solidAreaDefaultY2 = solidArea2.y;
+        }
+    }
 
     public abstract void update();
     public abstract void render(Graphics2D g2);

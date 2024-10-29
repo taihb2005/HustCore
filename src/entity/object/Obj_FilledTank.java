@@ -13,29 +13,29 @@ public class Obj_FilledTank extends Entity {
     final private BufferedImage[] obj_filledTank;
     final private Animation obj_animator_filledTank;
     private int currentFrames = 0;
+    public int type;
 
     public static String name = "filled_tank";
 
-    public Obj_FilledTank()
+    public Obj_FilledTank(int type)
     {
         super();
         super.width = 64;
-        super.height = 96;
-        obj_animator_filledTank = new Animation();
-        obj_filledTank = new Sprite("/entity/object/filledtank_id1.png" , width , height).getSpriteArrayRow(0);
-        obj_animator_filledTank.setAnimationState(obj_filledTank , 7);
+        super.height = 128;
+        this.type = type;
 
-        solidArea1 = new Rectangle(12 , 48 , 42 , 34);
-        solidAreaDefaultX1 = 12;
-        solidAreaDefaultY1 = 48;
-        solidArea2 = new Rectangle(20 , 83 , 26 , 6 );
-        solidAreaDefaultX2 = 20;
-        solidAreaDefaultY2 = 83;
+        obj_animator_filledTank = new Animation();
+        obj_filledTank = new Sprite("/entity/object/filledtank_id" + type + ".png", width , height).getSpriteArrayRow(0);
+        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
+
+        setDefault();
     }
 
     private void setDefault()
     {
-
+        solidArea1 = new Rectangle(12 , 58 , 42 , 36);
+        solidArea2 = new Rectangle(17 , 95 , 32 , 12 );
+        super.setDefaultSolidArea();
     }
 
     @Override

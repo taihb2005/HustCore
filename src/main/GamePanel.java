@@ -87,8 +87,8 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
             if(delta >= 1)
             {
-                update();
                 repaint();
+                update();
 //                drawToTempScreen(); //FOR FULL SCREEN - Draw everything to the buffered image
 //                drawToScreen();     //FOR FULL SCREEN - Draw the buffered image to the screen
                 delta--;
@@ -97,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
 
-        MapManager.dispose();
+        dispose();
     }
 
     public void update() {
@@ -120,5 +120,13 @@ public class GamePanel extends JPanel implements Runnable {
         //ui.render(g2);
 
         g2.dispose();
+    }
+
+    private void dispose()
+    {
+        MapManager.dispose();
+        currentMap.inactiveObj.clear();
+        currentMap.objList.clear();
+        currentMap.npc.clear();
     }
 }

@@ -68,7 +68,7 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        worldX = 1466;
+        worldX = 1300;
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
