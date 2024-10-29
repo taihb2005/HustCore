@@ -87,8 +87,8 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
             if(delta >= 1)
             {
-                repaint();
                 update();
+                repaint();
 //                drawToTempScreen(); //FOR FULL SCREEN - Draw everything to the buffered image
 //                drawToScreen();     //FOR FULL SCREEN - Draw the buffered image to the screen
                 delta--;

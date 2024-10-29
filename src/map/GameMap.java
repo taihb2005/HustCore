@@ -7,20 +7,13 @@ import main.KeyHandler;
 import util.CollisionHandler;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ListIterator;
+import java.util.*;
+import java.util.List;
 
 import static main.GamePanel.camera;
 
 
 public class GameMap {
-
-    int gabageCollectorCounts = 600;
-    int frame = 0;
-    int frameCount = 0;
-
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public Sound sound = new Sound();
@@ -33,7 +26,7 @@ public class GameMap {
     public ArrayList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
     public ArrayList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
     public ArrayList<Entity> npc;
-    public ArrayList<Entity> objList;
+    public LinkedList<Entity> objList;
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
@@ -42,7 +35,7 @@ public class GameMap {
         mapLayer    = new ArrayList<>();
         inactiveObj = new ArrayList<>();
         activeObj   = new ArrayList<>();
-        objList     = new ArrayList<>();
+        objList     = new LinkedList<>(List.of());
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
@@ -54,9 +47,9 @@ public class GameMap {
     public void render(Graphics2D g2)
     {
         objList.add(player);
-        for (int i = 0; i < inactiveObj.size(); i++) {
-            if (inactiveObj.get(i) != null)
-                objList.add(inactiveObj.get(i));
+        for (Entity entity : inactiveObj) {
+            if (entity != null)
+                objList.add(entity);
         }
 
         Collections.sort(objList, new Comparator<Entity>() {
