@@ -28,7 +28,7 @@ public class UI {
 
         // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
         // DEMO
-        //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
+        startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
     }
     public void startDialogue(String dialogue) {
         currentDialogue = dialogue;

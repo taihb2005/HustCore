@@ -74,7 +74,9 @@ public class GameMap {
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
-        for (Entity mapObject : objList) mapObject.render(g2);
+        for (int i = 0; i < objList.size(); i++) {
+            objList.get(i).render(g2);
+        }
         mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
