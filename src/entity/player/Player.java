@@ -1,6 +1,7 @@
 package entity.player;
 
 import entity.Entity;
+import entity.projecttile;
 import graphics.Sprite;
 import main.GamePanel;
 import main.KeyHandler;
@@ -9,6 +10,7 @@ import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player extends Entity {
 
@@ -41,8 +43,11 @@ public class Player extends Entity {
     
     public final int screenX, screenY;
 
-    private BufferedImage[][][] player_gun = new BufferedImage[7][][];;
-    private BufferedImage[][][] player_nogun = new BufferedImage[7][][];
+    private BufferedImage[][][] player_gun = new BufferedImage[8][][];;
+    private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
+    private BufferedImage bullet;
+
+    private ArrayList<projecttile> projecttiles = new ArrayList<projecttile>();
 
     private int CURRENT_FRAME;
 
@@ -61,6 +66,8 @@ public class Player extends Entity {
 
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
+
+        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();
 
         getPlayerImages();
         setDefaultValue();
