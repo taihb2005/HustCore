@@ -33,7 +33,7 @@ public class AssetSetter {
         mp.inactiveObj.add(desk_no1);
 
         Obj_Chair chair_no1 = new Obj_Chair(1);
-        chair_no1.worldX = 1527 ; chair_no1.worldY = 1563;
+        chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
         mp.inactiveObj.add(chair_no1);
     }
 
