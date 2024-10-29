@@ -130,13 +130,18 @@ public class Player extends Entity {
         right = KeyHandler.rightPressed;
         shoot = KeyHandler.shootPressed;
 
+        if (KeyHandler.shootPressed) {
+            isShooting = true;
+            animator.playOnce();
+        }
+
         isRunning = up | down | left | right;
-        isShooting = shoot;
+        //isShooting = shoot;
     }
 
     private void handleAnimationState()
     {
-        if(isShooting) {
+        if(isShooting && animator.isPlaying()) {
             CURRENT_ACTION = SHOOT;
             //animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 5);
         }else if(isRunning)
@@ -167,6 +172,10 @@ public class Player extends Entity {
             {
                 animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 7);
             }
+        }
+
+        if (!animator.isPlaying()) {
+            isShooting = false;
         }
         //System.out.println(frameCounts);
 
