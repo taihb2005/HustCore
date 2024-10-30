@@ -68,7 +68,7 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        worldX = 1300;
+        worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
@@ -122,12 +122,25 @@ public class Player extends Entity {
         left  = KeyHandler.leftPressed;
         right = KeyHandler.rightPressed;
 
+        //RUN
         isRunning = up | down | left | right;
+
+        //SHOOT
+        if (KeyHandler.shootPressed) {
+            if(!isRunning)
+            {
+                isShooting = true;
+                animator.playOnce();
+            }
+        }
     }
 
     private void handleAnimationState()
     {
-        if(isRunning)
+        if(isShooting && !isRunning && animator.isPlaying()) {
+            CURRENT_ACTION = SHOOT;
+
+        }else if(isRunning && !animator.isPlaying())
         {
             CURRENT_ACTION = RUN;
             if(left)
@@ -151,7 +164,17 @@ public class Player extends Entity {
             {
                 animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
             }
+            if(isShooting && !isRunning)
+            {
+                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
+                animator.playOnce();
+            }
         }
+
+        if (!animator.isPlaying()) {
+            isShooting = false;
+        }
+
         //System.out.println(frameCounts);
 
     }
@@ -174,28 +197,29 @@ public class Player extends Entity {
     private void handlePosition()
     {
         collisionOn = false;
-        if (up && isRunning) {
+        if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
             if(left){newWorldX -= 1 ; newWorldY -= 1;} else
                 if(!down) newWorldY -= speed;
         }
-        if (down && isRunning) {
+        if (down && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY += 1;} else
             if(left){newWorldX -= 1 ; newWorldY += 1;} else
             if(!up) newWorldY += speed;
         }
-        if (left && isRunning) {
+        if (left && isRunning && !isShooting) {
             if(up){newWorldX -= 1; newWorldY -= 1;} else
             if(down){newWorldX -= 1 ; newWorldY +=1;} else
                 if(!right) newWorldX -= speed;
         }
-        if (right && isRunning) {
+        if (right && isRunning && !isShooting) {
             if(up){newWorldX += 1; newWorldY -= 1;} else
             if(down){newWorldX += 1 ; newWorldY += 1;} else
             if(!left) newWorldX += speed;
         }
 
         mp.cChecker.checkCollisionWithInactiveObject(this);
+        int npcIndex = mp.cChecker.checkInteractWithNpc(this , true);
 
         if(!collisionOn)
         {

@@ -1,5 +1,6 @@
 package map;
 
+import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 
 public class AssetSetter {
@@ -39,6 +40,9 @@ public class AssetSetter {
 
     public void setNpc()
     {
-
+        Npc_CorruptedHustStudent npc1 = new Npc_CorruptedHustStudent(mp);
+        npc1.worldX = 1300;
+        npc1.worldY = 1700;
+        mp.npc.add(npc1);
     }
 }

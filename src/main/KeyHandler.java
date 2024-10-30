@@ -12,6 +12,7 @@ public class KeyHandler implements KeyListener{
     public static boolean leftPressed;
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
+    public static boolean shootPressed;
 
     public KeyHandler(GamePanel gp)
     {
@@ -27,6 +28,10 @@ public class KeyHandler implements KeyListener{
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
+        if(keyCode == KeyEvent.VK_ENTER)
+        {
+            shootPressed = true;
+        }
         if(keyCode == KeyEvent.VK_S)
         {
             downPressed = true;
@@ -79,6 +84,7 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_A: leftPressed = false; break;
             case KeyEvent.VK_D: rightPressed = false; break;
             case KeyEvent.VK_W: upPressed = false; break;
+            case KeyEvent.VK_ENTER: shootPressed = false; break;
         }
     }
 }

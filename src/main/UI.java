@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static main.GamePanel.tileSize;
+import static main.GamePanel.*;
 
 public class UI {
     private final GamePanel gp;
@@ -57,7 +57,6 @@ public class UI {
         // Vẽ đoạn hội thoại từng dòng
         x += tileSize;
         y += tileSize;
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         for (String line : displayedText.split("\n")) { // splits dialogue until "\n" as a line
             g2.drawString(line, x, y);
             y += 40;
@@ -75,9 +74,49 @@ public class UI {
         g2.drawRoundRect(x, y, width, height, 25, 25);
     }
     // Hàm vẽ thử
+    public void draw()
+    {
+        if(gp.gameState == GameState.PLAY_STATE)
+        {
+
+        }
+        if(gp.gameState == GameState.PAUSE_STATE)
+        {
+            drawPausedScreen();
+        }
+    }
+
+    private void drawPausedScreen()
+    {
+        g2.setColor(new Color(0 , 0 , 0 , 100));
+        g2.fillRoundRect(0, 0, windowWidth, windowHeight , 0 , 0);
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
+        g2.setColor(Color.WHITE);
+        String text = "PAUSED";
+        int x = getXforCenteredText(text);
+        int y = windowHeight / 2;
+        g2.drawString(text , x , y );
+    }
+
+    public int getXforCenteredText(String text)
+    {
+        int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        int x = windowWidth / 2 - length / 2;
+        return x;
+    }
+
     public void render(Graphics2D g2) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
-        drawDialogueScreen();
+        if(gp.gameState == GameState.PLAY_STATE)
+        {
+
+        }
+        if(gp.gameState == GameState.PAUSE_STATE)
+        {
+            drawPausedScreen();
+        }
     }
+
+    public Font getFont(){return joystix;};
 
 }

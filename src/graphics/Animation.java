@@ -13,6 +13,9 @@ public class Animation{
     private int ani_Speed;
     private int ani_Tick;
 
+    private boolean playOnce;
+
+
     public Animation()
     {
         ani_Tick = 0;
@@ -30,6 +33,10 @@ public class Animation{
 
     public void update()
     {
+        if (playOnce && currentFrames == frameCounts - 1) {
+            playOnce = false;
+            return;
+        }
         ani_Tick++;
         if(ani_Tick >= ani_Speed)
         {
@@ -38,9 +45,14 @@ public class Animation{
         }
     }
 
-    public void once()
-    {
+    public boolean isPlaying() {
+        return playOnce;
+    }
 
+    public void playOnce(){
+        playOnce = true;
+        ani_Tick = 0;
+        currentFrames = 0;
     }
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}

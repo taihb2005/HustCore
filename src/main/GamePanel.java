@@ -26,9 +26,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
-    public GameMap currentMap;
+    public static GameState gameState;
 
-    public GameState gameState;
+    public GameMap currentMap;
 
     Thread gameThread;
 
@@ -41,7 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        ui = new UI(this);
+        this.ui = new UI(this);
 
         loadMap();
     }
@@ -103,11 +103,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if(gameState == GameState.PLAY_STATE) {
             currentMap.update();
-        }
-
+        } else
         if(gameState == GameState.PAUSE_STATE)
         {
-            //do nothing
+
         }
     }
 
@@ -117,10 +116,12 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
+        ui.render(g2);
         //ui.render(g2);
 
         g2.dispose();
     }
+
 
     private void dispose()
     {
