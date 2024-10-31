@@ -3,12 +3,14 @@ package entity.player;
 import entity.Entity;
 import graphics.Sprite;
 import main.GamePanel;
+import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.security.Key;
 
 public class Player extends Entity {
 
@@ -31,6 +33,8 @@ public class Player extends Entity {
     private boolean isShooting;
     private boolean isReloading;
     private boolean isDying;
+
+    private boolean attackCanceled;
 
     private boolean up;
     private boolean down;
@@ -74,6 +78,7 @@ public class Player extends Entity {
         newWorldY = worldY;
         speed = 3;
 
+        attackCanceled = false;
         up = down = left = right = false;
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
@@ -125,19 +130,22 @@ public class Player extends Entity {
         //RUN
         isRunning = up | down | left | right;
 
+        if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
+            if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
         //SHOOT
-        if (KeyHandler.shootPressed) {
-            if(!isRunning)
-            {
-                isShooting = true;
-                animator.playOnce();
+        if (KeyHandler.enterPressed) {
+            if(!attackCanceled) {
+                if (!isRunning) {
+                    isShooting = true;
+                    animator.playOnce();
+                }
             }
         }
     }
 
     private void handleAnimationState()
     {
-        if(isShooting && !isRunning && animator.isPlaying()) {
+        if(isShooting && !isRunning && animator.isPlaying() && !attackCanceled) {
             CURRENT_ACTION = SHOOT;
 
         }else if(isRunning && !animator.isPlaying())
@@ -196,6 +204,8 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
+        int index = mp.cChecker.checkInteractWithNpc(this , true);
+        interactNpc(index);
         collisionOn = false;
         if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
@@ -219,7 +229,7 @@ public class Player extends Entity {
         }
 
         mp.cChecker.checkCollisionWithInactiveObject(this);
-        int npcIndex = mp.cChecker.checkInteractWithNpc(this , true);
+        mp.cChecker.checkCollisionWithNpc(this , true);
 
         if(!collisionOn)
         {
@@ -232,5 +242,17 @@ public class Player extends Entity {
         GamePanel.camera.centerOn(worldX , worldY);
     }
 
+    private void interactNpc(int index)
+    {
+        if(index != -1)
+        {
+            attackCanceled = true;
+            if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
+                KeyHandler.enterPressed = false;
+                GamePanel.gameState = GameState.DIALOGUE_STATE;
+                mp.npc.get(index).talk();
+            }
+        }
+    }
 
 }

@@ -1,8 +1,12 @@
 package main;
 
+import entity.Entity;
+import entity.npc.Npc_CorruptedHustStudent;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Key;
 
 import static main.GamePanel.*;
 
@@ -16,11 +20,14 @@ public class UI {
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
 
+    int dialogueCount;
+
+    public Entity npc;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
             InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
-            assert is != null;
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -38,22 +45,44 @@ public class UI {
     }
 
     public void drawDialogueScreen() {
-        int x = tileSize*2;
-        int y = tileSize/2;
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        int x = tileSize * 2;
+        int y = tileSize / 2;
         int width = gp.getWidth() - tileSize * 4;
-        int height = tileSize*4;
+        int height = tileSize * 4;
 
-        drawSubWindow(x, y, width, height);
+        if(npc.dialogues[npc.dialogueIndex] != null) {
+            currentDialogue = npc.dialogues[npc.dialogueIndex];
+            drawSubWindow(x, y, width, height);
 
-        frameCounter++;
-        if (frameCounter > textSpeed) {
-            frameCounter = 0;
-            if (textIndex < currentDialogue.length()) {
-                // Cập nhật displayedText theo từng ký tự
-                displayedText += currentDialogue.charAt(textIndex);
-                textIndex++;
+            frameCounter++;
+            if (frameCounter > textSpeed) {
+                frameCounter = 0;
+                if (textIndex < currentDialogue.length()) {
+                    // Cập nhật displayedText theo từng ký tự
+                    displayedText += currentDialogue.charAt(textIndex);
+                    textIndex++;
+                }
+            }
+            if(KeyHandler.enterPressed)
+            {
+                textIndex = 0;
+                displayedText = "";
+                if(gameState == GameState.DIALOGUE_STATE )
+                {
+                    npc.dialogueIndex++;
+                    KeyHandler.enterPressed = false;
+                }
+            }
+        }else //If no text is in the array
+        {
+            npc.dialogueIndex--;
+            if(gameState == GameState.DIALOGUE_STATE)
+            {
+                gameState = GameState.PLAY_STATE;
             }
         }
+
         // Vẽ đoạn hội thoại từng dòng
         x += tileSize;
         y += tileSize;
@@ -61,6 +90,7 @@ public class UI {
             g2.drawString(line, x, y);
             y += 40;
         }
+
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
@@ -74,17 +104,6 @@ public class UI {
         g2.drawRoundRect(x, y, width, height, 25, 25);
     }
     // Hàm vẽ thử
-    public void draw()
-    {
-        if(gp.gameState == GameState.PLAY_STATE)
-        {
-
-        }
-        if(gp.gameState == GameState.PAUSE_STATE)
-        {
-            drawPausedScreen();
-        }
-    }
 
     private void drawPausedScreen()
     {
@@ -107,11 +126,11 @@ public class UI {
 
     public void render(Graphics2D g2) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
-        if(gp.gameState == GameState.PLAY_STATE)
+        if(gameState == GameState.DIALOGUE_STATE)
         {
-
+            drawDialogueScreen();
         }
-        if(gp.gameState == GameState.PAUSE_STATE)
+        if(gameState == GameState.PAUSE_STATE)
         {
             drawPausedScreen();
         }

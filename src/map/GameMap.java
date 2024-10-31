@@ -26,19 +26,19 @@ public class GameMap {
 
     public ArrayList<TileLayer> mapLayer;
 
-    public ArrayList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
-    public ArrayList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public ArrayList<Entity> npc;
-    public LinkedList<Entity> objList;
+    public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
+    public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public LinkedList<Entity> npc;         //Danh sách npc ở trên map
+    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , npc,...
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new ArrayList<>();
-        activeObj   = new ArrayList<>();
-        npc         = new ArrayList<>();
+        inactiveObj = new LinkedList<>(List.of());
+        activeObj   = new LinkedList<>(List.of());
+        npc         = new LinkedList<>(List.of());
         objList     = new LinkedList<>(List.of());
 
         this.mapWidth = mapWidth;
@@ -51,7 +51,7 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE) {
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
             objList.add(player);
             for (Entity entity : inactiveObj) {
                 if (entity != null)
@@ -130,13 +130,15 @@ public class GameMap {
 
     public void update()
     {
-        for (Entity obj : objList) {
-            if (obj != null) {
-                obj.update();
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+            for (Entity obj : objList) {
+                if (obj != null) {
+                    obj.update();
+                }
             }
-        }
 
-        objList.clear();
+            objList.clear();
+        }
 
     }
 

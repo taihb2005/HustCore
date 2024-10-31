@@ -2,10 +2,15 @@ package entity.object;
 
 import entity.Actable;
 import entity.Entity;
+import map.GameMap;
 
 import java.awt.*;
 
 public class Obj_Door extends Entity implements Actable {
+    public Obj_Door() {
+
+    }
+
     public void move() {
 
     }

@@ -16,6 +16,7 @@ import static main.GamePanel.camera;
 public class Npc_CorruptedHustStudent extends Entity implements Actable {
     GameMap mp;
 
+    //NPC STATS
     final int IDLE_TYPE1 = 1;
     final int IDLE_TYPE2 = 2;
     final int TALK = 3;
@@ -27,23 +28,24 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private int CURRENT_ACTION;
     private int CURRENT_DIRECTION;
 
+    //NPC IMAGE
     private final BufferedImage[][][] npc_corruptedStudent_sprite = new BufferedImage[4][][];
     private final BufferedImage[][][] npc_corruptedStudentGlowing_sprite = new BufferedImage[4][][];
     private BufferedImage[][][] currentSprite;
     private final Animation npc_animator_corruptedStudent;
 
+    //NPC BOOLEAN
     private boolean isTalking;
     private boolean isIdling;
     private int CURRENT_FRAME;
 
+    //NPC RNG
     private final int DESIRED_RNG = 50;
-
     private int randomNumerFrames = 500;
     private int frameRandom = 0;
     private int rng = 0;
     private final Random generator = new Random();
 
-    public Rectangle interactionDetectionArea;
 
     public Npc_CorruptedHustStudent(GameMap mp)
     {
@@ -56,6 +58,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
         getNpcImage();
         setDefault();
+        setDialogue();
 
     }
 
@@ -73,6 +76,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private void setDefault()
     {
         CURRENT_DIRECTION = RIGHT;
+        direction = "right";
 
         CURRENT_ACTION = IDLE_TYPE1;
         PREVIOUS_ACTION = IDLE_TYPE1;
@@ -83,9 +87,10 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
         solidArea1 = new Rectangle(20 , 40 , 30 , 14);
         solidArea2 = new Rectangle(27 , 54 , 18 , 7);
+        interactionDetectionArea = new Rectangle(5 , 41 , 58 , 12);
         super.setDefaultSolidArea();
 
-        interactionDetectionArea = new Rectangle(8 , 11 , 56 , 56);
+        dialogueIndex = 0;
     }
 
     @Override
@@ -110,7 +115,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     private void changeEffect()
     {
-        if(collisionOn) currentSprite = npc_corruptedStudentGlowing_sprite; else
+        if(isInteracting) currentSprite = npc_corruptedStudentGlowing_sprite; else
             currentSprite = npc_corruptedStudent_sprite;
     }
 
@@ -133,8 +138,27 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         if (!npc_animator_corruptedStudent.isPlaying()) isIdling = false;
 
     }
+
+    private void changeDirection()
+    {
+        switch (direction){
+            case "left" : CURRENT_DIRECTION = LEFT; break;
+            case "right": CURRENT_DIRECTION = RIGHT; break;
+        }
+    }
+
+    private void facePlayer()
+    {
+        switch(mp.player.direction)
+        {
+            case "right" : direction = "left"; break;
+            case "left"  : direction = "right"; break;
+        }
+    }
+
     @Override
     public void move() {
+
     }
 
     @Override
@@ -144,7 +168,12 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void talk() {
-
+        facePlayer();
+        if(dialogues[dialogueIndex] == null)
+        {
+            dialogueIndex = 0;
+        }
+        startDialogue(this);
     }
 
     @Override
@@ -161,10 +190,11 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     public void update() {
         changeEffect();
         handleRNG();
+        changeDirection();
         handleAnimationState();
         npc_animator_corruptedStudent.update();
         CURRENT_FRAME = npc_animator_corruptedStudent.getCurrentFrames();
-        collisionOn = false;
+        isInteracting = false;
     }
 
     @Override
