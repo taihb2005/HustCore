@@ -3,12 +3,14 @@ package entity.player;
 import entity.Entity;
 import graphics.Sprite;
 import main.GamePanel;
+import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.security.Key;
 
 public class Player extends Entity {
 
@@ -31,6 +33,8 @@ public class Player extends Entity {
     private boolean isShooting;
     private boolean isReloading;
     private boolean isDying;
+
+    private boolean attackCanceled;
 
     private boolean up;
     private boolean down;
@@ -68,12 +72,13 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        worldX = 1300;
+        worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
         speed = 3;
 
+        attackCanceled = false;
         up = down = left = right = false;
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
@@ -122,12 +127,28 @@ public class Player extends Entity {
         left  = KeyHandler.leftPressed;
         right = KeyHandler.rightPressed;
 
+        //RUN
         isRunning = up | down | left | right;
+
+        if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
+            if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
+        //SHOOT
+        if (KeyHandler.enterPressed) {
+            if(!attackCanceled) {
+                if (!isRunning) {
+                    isShooting = true;
+                    animator.playOnce();
+                }
+            }
+        }
     }
 
     private void handleAnimationState()
     {
-        if(isRunning)
+        if(isShooting && !isRunning && animator.isPlaying() && !attackCanceled) {
+            CURRENT_ACTION = SHOOT;
+
+        }else if(isRunning && !animator.isPlaying())
         {
             CURRENT_ACTION = RUN;
             if(left)
@@ -151,7 +172,17 @@ public class Player extends Entity {
             {
                 animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
             }
+            if(isShooting && !isRunning)
+            {
+                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
+                animator.playOnce();
+            }
         }
+
+        if (!animator.isPlaying()) {
+            isShooting = false;
+        }
+
         //System.out.println(frameCounts);
 
     }
@@ -173,29 +204,32 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
+        int index = mp.cChecker.checkInteractWithNpc(this , true);
+        interactNpc(index);
         collisionOn = false;
-        if (up && isRunning) {
+        if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
             if(left){newWorldX -= 1 ; newWorldY -= 1;} else
                 if(!down) newWorldY -= speed;
         }
-        if (down && isRunning) {
+        if (down && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY += 1;} else
             if(left){newWorldX -= 1 ; newWorldY += 1;} else
             if(!up) newWorldY += speed;
         }
-        if (left && isRunning) {
+        if (left && isRunning && !isShooting) {
             if(up){newWorldX -= 1; newWorldY -= 1;} else
             if(down){newWorldX -= 1 ; newWorldY +=1;} else
                 if(!right) newWorldX -= speed;
         }
-        if (right && isRunning) {
+        if (right && isRunning && !isShooting) {
             if(up){newWorldX += 1; newWorldY -= 1;} else
             if(down){newWorldX += 1 ; newWorldY += 1;} else
             if(!left) newWorldX += speed;
         }
 
         mp.cChecker.checkCollisionWithInactiveObject(this);
+        mp.cChecker.checkCollisionWithNpc(this , true);
 
         if(!collisionOn)
         {
@@ -208,5 +242,17 @@ public class Player extends Entity {
         GamePanel.camera.centerOn(worldX , worldY);
     }
 
+    private void interactNpc(int index)
+    {
+        if(index != -1)
+        {
+            attackCanceled = true;
+            if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
+                KeyHandler.enterPressed = false;
+                GamePanel.gameState = GameState.DIALOGUE_STATE;
+                mp.npc.get(index).talk();
+            }
+        }
+    }
 
 }

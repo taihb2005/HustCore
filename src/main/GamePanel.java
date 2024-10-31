@@ -26,13 +26,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
-    public GameMap currentMap;
+    public static GameState gameState;
 
-    public GameState gameState;
+    public GameMap currentMap;
 
     Thread gameThread;
 
-    UI ui;
+    public static UI ui;
 
     public GamePanel() {
         // Set the size of the window and background color
@@ -101,13 +101,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE) {
             currentMap.update();
-        }
-
+        } else
         if(gameState == GameState.PAUSE_STATE)
         {
-            //do nothing
+
         }
     }
 
@@ -121,6 +120,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         g2.dispose();
     }
+
 
     private void dispose()
     {

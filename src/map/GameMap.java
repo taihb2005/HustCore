@@ -3,6 +3,8 @@ package map;
 import entity.Entity;
 import entity.object.Obj_Wall;
 import entity.player.Player;
+import main.GamePanel;
+import main.GameState;
 import main.KeyHandler;
 import util.CollisionHandler;
 
@@ -14,6 +16,7 @@ import static main.GamePanel.camera;
 
 
 public class GameMap {
+
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public Sound sound = new Sound();
@@ -23,57 +26,72 @@ public class GameMap {
 
     public ArrayList<TileLayer> mapLayer;
 
-    public ArrayList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
-    public ArrayList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public ArrayList<Entity> npc;
-    public LinkedList<Entity> objList;
+    public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
+    public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public LinkedList<Entity> npc;         //Danh sách npc ở trên map
+    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , npc,...
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new ArrayList<>();
-        activeObj   = new ArrayList<>();
+        inactiveObj = new LinkedList<>(List.of());
+        activeObj   = new LinkedList<>(List.of());
+        npc         = new LinkedList<>(List.of());
         objList     = new LinkedList<>(List.of());
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
         setter.setObject();
+        setter.setNpc();
 
     }
 
     public void render(Graphics2D g2)
     {
-        objList.add(player);
-        for (Entity entity : inactiveObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
-
-        Collections.sort(objList, new Comparator<Entity>() {
-            @Override
-            public int compare(Entity e1, Entity e2) {
-                int index;
-                if (e1.worldY == e2.worldY) {
-                    index = Integer.compare(e1.worldX, e2.worldX);
-                } else
-                    index = Integer.compare(e1.worldY, e2.worldY);
-                return index;
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+            objList.add(player);
+            for (Entity entity : inactiveObj) {
+                if (entity != null)
+                    objList.add(entity);
             }
-        });
+
+            for(Entity entity : npc)
+            {
+                if(entity != null)
+                {
+                    objList.add(entity);
+                }
+            }
+
+            //System.out.println(npc.get(0) == null);
+
+            Collections.sort(objList, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity e1, Entity e2) {
+                    int index;
+                    if (e1.worldY == e2.worldY) {
+                        index = Integer.compare(e1.worldX, e2.worldX);
+                    } else
+                        index = Integer.compare(e1.worldY, e2.worldY);
+                    return index;
+                }
+            });
+        }
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
-        for (int i = 0; i < objList.size(); i++) {
-            objList.get(i).render(g2);
+        for (Entity mapObject : objList)
+        {
+            if(mapObject != null) mapObject.render(g2);
         }
         mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
-        long drawTime = currenttime - lasttime;
+        long drawTime;
 
         //DEBUG MENU
         if (KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HỆN THỊ TỌA ĐỘ CỦA NHÂN VẬT
@@ -112,13 +130,15 @@ public class GameMap {
 
     public void update()
     {
-//        d
-        for(int i = 0 ; i < objList.size() ; i++){
-            if(objList.get(i) != null)
-                objList.get(i).update();
-        }
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+            for (Entity obj : objList) {
+                if (obj != null) {
+                    obj.update();
+                }
+            }
 
-        objList.clear();
+            objList.clear();
+        }
 
     }
 
