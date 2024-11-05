@@ -50,6 +50,11 @@ public class Player extends Entity {
 
     private int CURRENT_FRAME;
 
+    public int maxHP = 100;
+    public int currentHP = 100;
+
+    public int maxMana = 100;
+    public int currentMana = 100;
 
     final protected Animation animator = new Animation();
 
@@ -206,6 +211,11 @@ public class Player extends Entity {
     {
         int index = mp.cChecker.checkInteractWithNpc(this , true);
         interactNpc(index);
+
+        //DEMO HP
+        updateHP(index);
+        System.out.println(currentHP);
+
         collisionOn = false;
         if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
@@ -255,4 +265,9 @@ public class Player extends Entity {
         }
     }
 
+    //DEMO
+    private void updateHP(int index) {
+        if (index != -1) currentHP = Math.max(0,currentHP-1);
+        if (currentHP == 0) GamePanel.gameState = GameState.PAUSE_STATE;
+    }
 }

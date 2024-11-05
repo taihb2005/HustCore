@@ -46,7 +46,7 @@ public class AssetSetter {
         npc1.dialogues[0] = "Xin chào!";
         npc1.dialogues[1] = "Nhìn bạn trông quen lắm mà \ntôi không nhận ra ai...";
         npc1.dialogues[2] = "Anyway, nơi này đã từng là \nmột Đại học danh giá của Việt Nam\n" +
-                            "bằng một thế lực nào đó mà \nmọi người biến thành robot hết!";
+                            "bằng một thế lực nào đó mà \nmọi người biến thành hồ ly tinh hết!";
         npc1.dialogues[3] = "Những sinh viên ở đây để bị \nbiến thành những con robot giống\n" +
                             "nhau. Cơ mà để phân biệt được \nthì chỉ còn cách dựa vào giọng.";
         npc1.dialogues[4] = "Chúng minh cũng muốn biến lại \nnhư cũ lắm nhưng đó là điều khó.";

@@ -2,8 +2,11 @@ package main;
 
 import entity.Entity;
 import entity.npc.Npc_CorruptedHustStudent;
+import entity.player.Player;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
@@ -22,8 +25,9 @@ public class UI {
 
     int dialogueCount;
 
-    public Entity npc;
+    private BufferedImage hpFrame, manaFrame;
 
+    public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -33,6 +37,17 @@ public class UI {
             e.printStackTrace();
         }
 
+        try {
+            hpFrame = ImageIO.read(getClass().getResourceAsStream("/ui/hpFrame.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            manaFrame = ImageIO.read(getClass().getResourceAsStream("/ui/manaFrame.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
         // DEMO
         startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
@@ -124,8 +139,13 @@ public class UI {
         return x;
     }
 
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, Player player) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        if(gameState == GameState.PLAY_STATE)
+        {
+            drawHPBar(g2, 70, windowHeight-80, player.currentHP, player.maxHP);
+            drawManaBar(g2,70 , windowHeight-40, player.currentMana, player.maxMana);
+        }
         if(gameState == GameState.DIALOGUE_STATE)
         {
             drawDialogueScreen();
@@ -138,4 +158,27 @@ public class UI {
 
     public Font getFont(){return joystix;};
 
+    public void drawHPBar(Graphics2D g2, int x, int y, int currentHP, int maxHP) {
+        int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
+        int hpBarHeight = 12;   // Chiều cao của thanh HP
+        int currentHPWidth = (int)((double)currentHP / maxHP * fullHPWidth);
+        // Vẽ nền (màu xám) cho thanh HP
+        g2.drawImage(hpFrame, x-52, y-8, 251, 28, null);
+
+        // Vẽ thanh HP hiện tại (màu đỏ)
+        g2.setColor(Color.RED);
+        g2.fillRect(x, y, currentHPWidth, hpBarHeight);
+    }
+
+    public void drawManaBar(Graphics2D g2, int x, int y, int currentMana, int maxMana) {
+        int fullManaWidth = 63;  // Chiều dài tối đa của thanh HP
+        int ManaBarHeight = 12;   // Chiều cao của thanh HP
+        int currentHPWidth = (int)((double)currentMana / maxMana * fullManaWidth);
+        // Vẽ nền (màu xám) cho thanh Mana
+        g2.drawImage(manaFrame, x-52, y-8, 139, 28, null);
+
+        // Vẽ thanh HP hiện tại (màu xanh)
+        g2.setColor(Color.BLUE);
+        g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+    }
 }
