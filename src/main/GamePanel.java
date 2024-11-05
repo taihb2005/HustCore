@@ -18,12 +18,13 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int scale = 3; // Use to scale the objects which appear on the screen
     final static public int tileSize = originalTileSize * scale;
 
-    final static public int maxWindowCols = 16;
+    final static public int maxWindowCols = 20;
     final static public int maxWindowRows = 12;
 
     final static public int windowWidth = maxWindowCols * 48;
     final static public int windowHeight = maxWindowRows * 48;
 
+    public static Sound sound = new Sound();
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
@@ -56,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup()
     {
-        currentMap.playMusic(0);
+        playMusic(0);
     }
 
 
@@ -119,6 +120,22 @@ public class GamePanel extends JPanel implements Runnable {
         ui.render(g2);
 
         g2.dispose();
+    }
+
+    public void playMusic(int index)
+    {
+        sound.setFile(index);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic(int index)
+    {
+        sound.stop();
+    }
+    public void playSoundEffect(int index)
+    {
+        sound.setFile(index);
+        sound.play();
     }
 
 

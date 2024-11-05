@@ -1,7 +1,5 @@
 package entity;
 
-import map.GameMap;
-
 import java.awt.*;
 import static main.GamePanel.ui;
 
@@ -15,6 +13,8 @@ public abstract class Entity {
 
     public boolean collisionOn = false;
     public  boolean isInteracting = false;
+    public boolean isOpening = false;
+    public boolean canbeDestroyed;
 
     public int width;
     public int height;
@@ -26,6 +26,11 @@ public abstract class Entity {
     public int solidAreaDefaultY1 = 0;
     public int solidAreaDefaultX2 = 0;
     public int solidAreaDefaultY2 = 0;
+
+    public boolean up;
+    public boolean down;
+    public boolean left;
+    public boolean right;
 
     public String[] dialogues = new String[8];
 
@@ -58,11 +63,18 @@ public abstract class Entity {
 
     public void startDialogue(Entity entity)
     {
-        ui.npc = entity;
+        ui.target = entity;
     }
 
 
     public void talk(){};
     public abstract void update();
     public abstract void render(Graphics2D g2);
+    public void dispose()
+    {
+        solidArea1 = null;
+        solidArea2 = null;
+        interactionDetectionArea = null;
+        dialogues = null;
+    }
 }

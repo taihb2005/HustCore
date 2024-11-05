@@ -1,5 +1,6 @@
 package map;
 
+import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 
@@ -36,6 +37,10 @@ public class AssetSetter {
         Obj_Chair chair_no1 = new Obj_Chair(1);
         chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
         mp.inactiveObj.add(chair_no1);
+
+        Obj_Door small_door = new Obj_Door(Obj_Door.SMALL_DOOR , 1);
+        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+        mp.activeObj.add(small_door);
     }
 
     public void setNpc()
@@ -62,5 +67,15 @@ public class AssetSetter {
         npc2.dialogues[1] = "Nơi này rất nguy hiểm.\n Nó đầy rẫy những con robot cảnh vệ...";
         npc2.dialogues[2] = "Chúc bạn may mắn sống sót trở \nvề...";
         mp.npc.add(npc2);
+    }
+
+    public void setEnemy()
+    {
+        Mon_Spectron sptr = new Mon_Spectron(mp);
+        sptr.worldX = 1400;
+        sptr.worldY = 1800;
+        sptr.newWorldX = 1400;
+        sptr.newWorldY = 1800;
+        mp.onAirEnemy.add(sptr);
     }
 }

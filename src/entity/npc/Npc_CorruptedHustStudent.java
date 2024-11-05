@@ -4,6 +4,8 @@ import entity.Actable;
 import entity.Entity;
 import graphics.Animation;
 import graphics.Sprite;
+import main.GamePanel;
+import main.GameState;
 import map.GameMap;
 
 import java.awt.*;
@@ -115,14 +117,16 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     private void changeEffect()
     {
+        if(GamePanel.gameState == GameState.PLAY_STATE ) isTalking = false;
         if(isInteracting) currentSprite = npc_corruptedStudentGlowing_sprite; else
             currentSprite = npc_corruptedStudent_sprite;
     }
 
     private void handleAnimationState() {
-        if (isIdling && npc_animator_corruptedStudent.isPlaying()) {
-            CURRENT_ACTION = IDLE_TYPE2;
-        } else {
+        if (isIdling && npc_animator_corruptedStudent.isPlaying()) CURRENT_ACTION = IDLE_TYPE2;
+        else
+        if (isTalking) CURRENT_ACTION = TALK;
+        else{
             CURRENT_ACTION = IDLE_TYPE1;
             PREVIOUS_ACTION = IDLE_TYPE1;
             npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE1][CURRENT_ACTION] , 5);
@@ -130,9 +134,8 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
         if (PREVIOUS_ACTION != CURRENT_ACTION) {
             PREVIOUS_ACTION = CURRENT_ACTION;
-            if (isIdling) {
-                npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE2][CURRENT_DIRECTION], 14);
-            }
+            if (isIdling && !isTalking) npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE2][CURRENT_DIRECTION], 14);
+            if (isTalking) npc_animator_corruptedStudent.setAnimationState(currentSprite[TALK][CURRENT_DIRECTION] , 30);
         }
 
         if (!npc_animator_corruptedStudent.isPlaying()) isIdling = false;
@@ -168,11 +171,9 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void talk() {
+        isTalking = true;
         facePlayer();
-        if(dialogues[dialogueIndex] == null)
-        {
-            dialogueIndex = 0;
-        }
+        if(dialogues[dialogueIndex] == null) dialogueIndex = 0;
         startDialogue(this);
     }
 

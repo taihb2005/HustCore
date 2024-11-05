@@ -36,20 +36,15 @@ public class Player extends Entity {
 
     private boolean attackCanceled;
 
-    private boolean up;
-    private boolean down;
-    private boolean left;
-    private boolean right;
     private boolean shoot;
     private boolean die;
     
     public final int screenX, screenY;
 
-    private BufferedImage[][][] player_gun = new BufferedImage[7][][];;
-    private BufferedImage[][][] player_nogun = new BufferedImage[7][][];
+    private final BufferedImage[][][] player_gun = new BufferedImage[7][][];;
+    private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
 
     private int CURRENT_FRAME;
-
 
     final protected Animation animator = new Animation();
 
@@ -151,13 +146,8 @@ public class Player extends Entity {
         }else if(isRunning && !animator.isPlaying())
         {
             CURRENT_ACTION = RUN;
-            if(left)
-            {
-                direction = "left";
-            } else if(right)
-            {
-                direction = "right";
-            }
+            if(left) direction = "left";
+            else if(right) direction = "right";
         } else
         {
             animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
@@ -168,10 +158,7 @@ public class Player extends Entity {
         if(PREVIOUS_ACTION != CURRENT_ACTION)
         {
             PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning)
-            {
-                animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
-            }
+            if(isRunning) animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
             if(isShooting && !isRunning)
             {
                 animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
@@ -179,12 +166,7 @@ public class Player extends Entity {
             }
         }
 
-        if (!animator.isPlaying()) {
-            isShooting = false;
-        }
-
-        //System.out.println(frameCounts);
-
+        if (!animator.isPlaying()) isShooting = false;
     }
 
     private void changeDirection()
@@ -204,8 +186,8 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
-        int index = mp.cChecker.checkInteractWithNpc(this , true);
-        interactNpc(index);
+        interactNpc(mp.cChecker.checkInteractWithNpc(this , true));
+        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
         if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
@@ -230,6 +212,8 @@ public class Player extends Entity {
 
         mp.cChecker.checkCollisionWithInactiveObject(this);
         mp.cChecker.checkCollisionWithNpc(this , true);
+        mp.cChecker.checkCollisionWithActiveObject(this);
+        //mp.cChecker.checkCollisionWithOnGroundEnemy(this);
 
         if(!collisionOn)
         {
@@ -251,6 +235,18 @@ public class Player extends Entity {
                 KeyHandler.enterPressed = false;
                 GamePanel.gameState = GameState.DIALOGUE_STATE;
                 mp.npc.get(index).talk();
+            }
+        }
+    }
+
+    private void interactObject(int index)
+    {
+        if(index != -1){
+            attackCanceled = true;
+            if(KeyHandler.enterPressed)
+            {
+                KeyHandler.enterPressed = false;
+                mp.activeObj.get(index).isOpening = true;
             }
         }
     }

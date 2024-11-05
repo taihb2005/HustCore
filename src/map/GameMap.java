@@ -6,6 +6,7 @@ import entity.player.Player;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
+import main.Sound;
 import util.CollisionHandler;
 
 import java.awt.*;
@@ -28,8 +29,10 @@ public class GameMap {
 
     public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
     public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public LinkedList<Entity> npc;         //Danh sách npc ở trên map
-    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , npc,...
+    public LinkedList<Entity> npc;         //Danh sách target ở trên map
+    public LinkedList<Entity> onAirEnemy;  //Danh sách kẻ địch bay
+    public LinkedList<Entity> onGroundEnemy;//Danh sách kẻ địch trên mặt đất
+    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
@@ -39,6 +42,8 @@ public class GameMap {
         inactiveObj = new LinkedList<>(List.of());
         activeObj   = new LinkedList<>(List.of());
         npc         = new LinkedList<>(List.of());
+        onAirEnemy  = new LinkedList<>(List.of());
+        onGroundEnemy = new LinkedList<>(List.of());
         objList     = new LinkedList<>(List.of());
 
         this.mapWidth = mapWidth;
@@ -46,7 +51,7 @@ public class GameMap {
 
         setter.setObject();
         setter.setNpc();
-
+        setter.setEnemy();
     }
 
     public void render(Graphics2D g2)
@@ -54,6 +59,11 @@ public class GameMap {
         if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
             objList.add(player);
             for (Entity entity : inactiveObj) {
+                if (entity != null)
+                    objList.add(entity);
+            }
+
+            for (Entity entity : activeObj) {
                 if (entity != null)
                     objList.add(entity);
             }
@@ -66,7 +76,16 @@ public class GameMap {
                 }
             }
 
-            //System.out.println(npc.get(0) == null);
+            for(Entity entity : onAirEnemy)
+            {
+                if(entity != null)
+                {
+                    objList.add(entity);
+                }
+            }
+
+
+            //System.out.println(target.get(0) == null);
 
             Collections.sort(objList, new Comparator<Entity>() {
                 @Override
@@ -125,21 +144,27 @@ public class GameMap {
             }
         }
 
-
     }
 
     public void update()
     {
         if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
-            for (Entity obj : objList) {
-                if (obj != null) {
-                    obj.update();
+
+            //UPDATE ENTITY
+            for(Entity obj : objList) if(objList != null) obj.update();
+
+            for(Entity entity: activeObj)
+            {
+                if(entity != null)
+                {
+                    if(entity.canbeDestroyed) {
+                        entity.dispose();
+                        activeObj.remove(entity);
+                    }
                 }
             }
-
             objList.clear();
         }
-
     }
 
     public void parseWallObject(TileLayer layer){
@@ -170,20 +195,5 @@ public class GameMap {
         return mapHeight;
     }
 
-    public void playMusic(int index)
-    {
-        sound.setFile(index);
-        sound.play();
-        sound.loop();
-    }
-    public void stopMusic(int index)
-    {
-        sound.stop();
-    }
-    public void playSoundEffect(int index)
-    {
-        sound.setFile(index);
-        sound.play();
-    }
 
 }

@@ -1,12 +1,10 @@
 package main;
 
 import entity.Entity;
-import entity.npc.Npc_CorruptedHustStudent;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Key;
 
 import static main.GamePanel.*;
 
@@ -22,7 +20,7 @@ public class UI {
 
     int dialogueCount;
 
-    public Entity npc;
+    public Entity target;
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -51,8 +49,8 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(npc.dialogues[npc.dialogueIndex] != null) {
-            currentDialogue = npc.dialogues[npc.dialogueIndex];
+        if(target.dialogues[target.dialogueIndex] != null) {
+            currentDialogue = target.dialogues[target.dialogueIndex];
             drawSubWindow(x, y, width, height);
 
             frameCounter++;
@@ -60,6 +58,7 @@ public class UI {
                 frameCounter = 0;
                 if (textIndex < currentDialogue.length()) {
                     // Cập nhật displayedText theo từng ký tự
+                    gp.playSoundEffect(1);
                     displayedText += currentDialogue.charAt(textIndex);
                     textIndex++;
                 }
@@ -70,13 +69,13 @@ public class UI {
                 displayedText = "";
                 if(gameState == GameState.DIALOGUE_STATE )
                 {
-                    npc.dialogueIndex++;
+                    target.dialogueIndex++;
                     KeyHandler.enterPressed = false;
                 }
             }
-        }else //If no text is in the array
+        }else
         {
-            npc.dialogueIndex--;
+            target.dialogueIndex--;
             if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
