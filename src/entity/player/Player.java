@@ -67,7 +67,7 @@ public class Player extends Entity {
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
 
-        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();
+        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();    
 
         getPlayerImages();
         setDefaultValue();
@@ -170,7 +170,7 @@ public class Player extends Entity {
             }
             if(isShooting)
             {
-                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 7);
+                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 4);
             }
         }
 
