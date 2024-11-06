@@ -1,13 +1,12 @@
 package entity.player;
 
 import entity.Entity;
-import entity.projecttile;
+import entity.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
 import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class Player extends Entity {
     private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
     private BufferedImage bullet;
 
-    private ArrayList<projecttile> projecttiles = new ArrayList<projecttile>();
+    private ArrayList<Projectile> Projectiles = new ArrayList<>();
 
     private int CURRENT_FRAME;
 
@@ -111,6 +110,11 @@ public class Player extends Entity {
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();
+
+        Projectiles.removeIf(single_projectile -> !single_projectile.active);
+        for (Projectile single_projectile : Projectiles) {
+            single_projectile.update();
+        }
     }
 
 
@@ -120,6 +124,10 @@ public class Player extends Entity {
         g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
                      worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
                      width, height, null);
+
+        for (Projectile single_projectile : Projectiles) {
+            single_projectile.render(g2);
+        }
     }
 
     private void keyInput()
@@ -133,10 +141,21 @@ public class Player extends Entity {
         if (KeyHandler.shootPressed) {
             isShooting = true;
             animator.playOnce();
+            shootProjectile();
         }
 
         isRunning = up | down | left | right;
         //isShooting = shoot;
+    }
+
+    private void shootProjectile() {
+        int startX = worldX + width / 2;
+        int startY = worldY + height / 2;
+        int speed = 5; // chỉnh sau
+        int direction = (CURRENT_DIRECTION == RIGHT) ? 1 : 0;
+        BufferedImage bulletImage = bullet;
+        Projectile newProjectile = new Projectile(startX, startY, speed, direction, bulletImage);
+        Projectiles.add(newProjectile);
     }
 
     private void handleAnimationState()
