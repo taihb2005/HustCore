@@ -12,10 +12,18 @@ import java.util.Random;
 
 import static main.GamePanel.camera;
 
+/*
+Mô tả:
++Di chuyển: Di chuyển một cách ngẫu nhiên trên bản đồ
++Tấn công: Tấn công một cách ngẫu nhiên
++Kĩ năng: Có thể bay qua các vật thể một cách dễ dàng
+*/
+
 public class Mon_Spectron extends Entity implements Actable {
 
-    GameMap mp;
     public static String trait = "fly";
+
+    GameMap mp;
     final private int IDLE = 0;
     final private int RUN = 1;
     final private int SHOOT = 2;
@@ -157,8 +165,8 @@ public class Mon_Spectron extends Entity implements Actable {
         if(left && isRunning) newWorldX = worldX - speed;
         if(right && isRunning) newWorldX = worldX + speed;
 
-        mp.cChecker.checkCollisionWithInactiveObject(this);
-        mp.cChecker.checkCollisionWithActiveObject(this);
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
 
         if(!collisionOn)
         {

@@ -42,9 +42,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        loadMap();
         ui = new UI(this);
 
-        loadMap();
     }
 
     private void loadMap()
@@ -141,8 +141,6 @@ public class GamePanel extends JPanel implements Runnable {
     private void dispose()
     {
         MapManager.dispose();
-        currentMap.inactiveObj.clear();
-        currentMap.objList.clear();
-        currentMap.npc.clear();
+
     }
 }

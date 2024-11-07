@@ -5,20 +5,20 @@ import static main.GamePanel.ui;
 
 public abstract class Entity {
     public String name;
-
+    //POSITION
     public int worldX, worldY;
     public int newWorldX , newWorldY;
     public String direction;
     public int speed;
-
+    //BOOLEAN
     public boolean collisionOn = false;
     public  boolean isInteracting = false;
     public boolean isOpening = false;
     public boolean canbeDestroyed;
-
+    //SPRITE SIZE
     public int width;
     public int height;
-
+    //SOLID AREA
     public Rectangle solidArea1;
     public Rectangle solidArea2;
     public Rectangle interactionDetectionArea;
@@ -26,6 +26,13 @@ public abstract class Entity {
     public int solidAreaDefaultY1 = 0;
     public int solidAreaDefaultX2 = 0;
     public int solidAreaDefaultY2 = 0;
+
+    //CHARACTER STATUS
+    public int maxHP;
+    public int currentHP;
+    public int maxMana;
+    public int currentMana;
+    public int invincibleCounter = 0;  //Thời gian bất tử
 
     public boolean up;
     public boolean down;

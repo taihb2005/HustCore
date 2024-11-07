@@ -27,24 +27,25 @@ public class GameMap {
 
     public ArrayList<TileLayer> mapLayer;
 
-    public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
-    public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public LinkedList<Entity> npc;         //Danh sách target ở trên map
-    public LinkedList<Entity> onAirEnemy;  //Danh sách kẻ địch bay
-    public LinkedList<Entity> onGroundEnemy;//Danh sách kẻ địch trên mặt đất
-    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
+    public int inactiveObjIndex = 0;
+    public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
+    public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public Entity [] npc;         //Danh sách target ở trên map
+    public Entity [] onAirEnemy;  //Danh sách kẻ địch bay
+    public Entity [] onGroundEnemy;//Danh sách kẻ địch trên mặt đất
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new LinkedList<>(List.of());
-        activeObj   = new LinkedList<>(List.of());
-        npc         = new LinkedList<>(List.of());
-        onAirEnemy  = new LinkedList<>(List.of());
-        onGroundEnemy = new LinkedList<>(List.of());
-        objList     = new LinkedList<>(List.of());
+        inactiveObj = new Entity[100];
+        activeObj   = new Entity[100];
+        npc         = new Entity[100];
+        onAirEnemy  = new Entity[100];
+        onGroundEnemy = new Entity[100];
+        objList     = new ArrayList<>();
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
@@ -143,7 +144,7 @@ public class GameMap {
                 }
             }
         }
-
+        objList.clear();
     }
 
     public void update()
@@ -151,19 +152,18 @@ public class GameMap {
         if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
 
             //UPDATE ENTITY
-            for(Entity obj : objList) if(objList != null) obj.update();
-
-            for(Entity entity: activeObj)
-            {
-                if(entity != null)
-                {
-                    if(entity.canbeDestroyed) {
-                        entity.dispose();
-                        activeObj.remove(entity);
-                    }
+            for(int i = 0 ; i < activeObj.length ; i++){
+                if(activeObj[i] != null){
+                    if(activeObj[i].canbeDestroyed) activeObj[i] = null;
                 }
             }
-            objList.clear();
+            for(Entity entity : inactiveObj) if(entity != null) entity.update();
+            for(Entity entity : activeObj) if(entity != null) entity.update();
+            for(Entity entity : npc) if(entity != null) entity.update();
+            for(Entity entity : onAirEnemy) if(entity != null) entity.update();
+            for(Entity entity : onGroundEnemy) if(entity != null) entity.update();
+            player.update();
+
         }
     }
 
@@ -180,8 +180,8 @@ public class GameMap {
                 Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
                 wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
                 wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                inactiveObj.add(wall);
-
+                inactiveObj[inactiveObjIndex] = wall;
+                inactiveObjIndex++;
             }
         }
     }

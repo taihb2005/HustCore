@@ -43,16 +43,12 @@ public class Player extends Entity {
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];;
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
+    final protected Animation animator = new Animation();
 
     private int CURRENT_FRAME;
 
-    public int maxHP = 100;
-    public int currentHP = 100;
-
-    public int maxMana = 100;
-    public int currentMana = 100;
-
-    final protected Animation animator = new Animation();
+    //PLAYER STATUS
+    private final int invincibleDuration = 120;
 
     public Player(GameMap mp) {
         super();
@@ -73,6 +69,11 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
+        maxHP = 100;
+        currentHP = 100;
+        maxMana = 100;
+        currentMana = 100;
+
         worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
@@ -192,13 +193,6 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
-        int index = mp.cChecker.checkInteractWithNpc(this , true);
-        interactNpc(index);
-
-        //DEMO HP
-        updateHP(index);
-        System.out.println(currentHP);
-
         interactNpc(mp.cChecker.checkInteractWithNpc(this , true));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
@@ -223,10 +217,9 @@ public class Player extends Entity {
             if(!left) newWorldX += speed;
         }
 
-        mp.cChecker.checkCollisionWithInactiveObject(this);
-        mp.cChecker.checkCollisionWithNpc(this , true);
-        mp.cChecker.checkCollisionWithActiveObject(this);
-        //mp.cChecker.checkCollisionWithOnGroundEnemy(this);
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
 
         if(!collisionOn)
         {
@@ -247,7 +240,7 @@ public class Player extends Entity {
             if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 GamePanel.gameState = GameState.DIALOGUE_STATE;
-                mp.npc.get(index).talk();
+                mp.npc[index].talk();
             }
         }
     }
@@ -259,7 +252,7 @@ public class Player extends Entity {
             if(KeyHandler.enterPressed)
             {
                 KeyHandler.enterPressed = false;
-                mp.activeObj.get(index).isOpening = true;
+                mp.activeObj[index].isOpening = true;
             }
         }
     }
@@ -267,6 +260,6 @@ public class Player extends Entity {
     //DEMO
     private void updateHP(int index) {
         if (index != -1) currentHP = Math.max(0,currentHP-1);
-        if (currentHP == 0) GamePanel.gameState = GameState.PAUSE_STATE;
+        if (currentHP == 0) GamePanel.gameState = GameState.LOSE_STATE;
     }
 }
