@@ -3,21 +3,19 @@ package map;
 import entity.Entity;
 import entity.object.Obj_Wall;
 import entity.player.Player;
+import main.GamePanel;
+import main.GameState;
 import main.KeyHandler;
 import util.CollisionHandler;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
+import java.util.List;
 
 import static main.GamePanel.camera;
 
 
 public class GameMap {
-
-    int drawTimeFrameCount = 2000;
-    int frameCount = 0;
 
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
@@ -28,66 +26,77 @@ public class GameMap {
 
     public ArrayList<TileLayer> mapLayer;
 
-    public ArrayList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
-    public ArrayList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public ArrayList<Entity> npc;
-    public ArrayList<Entity> objList;
+    public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
+    public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public LinkedList<Entity> npc;         //Danh sách npc ở trên map
+    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , npc,...
 
+    private long startTime = System.nanoTime();
     public Player player = new Player(this);
-
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new ArrayList<>();
-        activeObj   = new ArrayList<>();
-        objList     = new ArrayList<>();
+        inactiveObj = new LinkedList<>(List.of());
+        activeObj   = new LinkedList<>(List.of());
+        npc         = new LinkedList<>(List.of());
+        objList     = new LinkedList<>(List.of());
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
         setter.setObject();
+        setter.setNpc();
 
     }
 
     public void render(Graphics2D g2)
     {
-        objList.add(player);
-        for(int i = 0 ; i < inactiveObj.size() ; i++)
-        {
-            if(inactiveObj.get(i) != null)
-                objList.add(inactiveObj.get(i));
-        }
-
-        Collections.sort(objList, new Comparator<Entity>() {
-            @Override
-            public int compare(Entity e1, Entity e2) {
-                int index;
-                if(e1.worldY == e2.worldY)
-                {
-                    index = Integer.compare(e1.worldX , e2.worldX);
-                } else
-                    index = Integer.compare(e1.worldY , e2.worldY);
-                return index;
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+            objList.add(player);
+            for (Entity entity : inactiveObj) {
+                if (entity != null)
+                    objList.add(entity);
             }
-        });
+
+            for(Entity entity : npc)
+            {
+                if(entity != null)
+                {
+                    objList.add(entity);
+                }
+            }
+
+            //System.out.println(npc.get(0) == null);
+
+            Collections.sort(objList, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity e1, Entity e2) {
+                    int index;
+                    if (e1.worldY == e2.worldY) {
+                        index = Integer.compare(e1.worldX, e2.worldX);
+                    } else
+                        index = Integer.compare(e1.worldY, e2.worldY);
+                    return index;
+                }
+            });
+        }
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
-        for (Entity mapObject : objList) mapObject.render(g2);
+        for (Entity mapObject : objList)
+        {
+            if(mapObject != null) mapObject.render(g2);
+        }
         mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
-        long drawTime = currenttime - lasttime;
+        long drawTime;
 
         //DEBUG MENU
-        if(KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HỆN THỊ TỌA ĐỘ CỦA NHÂN VẬT
+        if (KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HỆN THỊ TỌA ĐỘ CỦA NHÂN VẬT
         {
-            frameCount++;
-            if (frameCount >= drawTimeFrameCount) {
-                frameCount = 0;
-                drawTime = currenttime - lasttime;
-            }
+            drawTime = currenttime - lasttime;
             g2.setColor(Color.white);
             int x = 10;
             int y = 20;
@@ -98,41 +107,39 @@ public class GameMap {
             g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
             g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
             g2.drawString("Draw time: " + drawTime, x, y + lineHeight * 4);
+            g2.drawString("Time has passed: " + (System.nanoTime() - startTime) / 1000000000 , x , y + lineHeight * 5);
         }
 
         //DEBUG HITBOX
-        if(KeyHandler.showHitbox)  // NHẤN F4 ĐỂ HIỂN THỊ HITBOX CỦA TẤT CẢ CÁC OBJECT
+        if (KeyHandler.showHitbox)  // NHẤN F4 ĐỂ HIỂN THỊ HITBOX CỦA TẤT CẢ CÁC OBJECT
         {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(1));
-            for(Entity e : objList)
-            {
-                if(e != null)
-                {
-                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY() , e.solidArea1.width , e.solidArea1.height);
-                    if(e.solidArea2 != null)
-                    {
-                        g2.drawRect(e.solidAreaDefaultX2 + e.worldX - camera.getX(), e.solidAreaDefaultY2 + e.worldY - camera.getY() , e.solidArea2.width , e.solidArea2.height);
+            for (Entity e : objList) {
+                if (e != null) {
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                    if (e.solidArea2 != null) {
+                        g2.drawRect(e.solidAreaDefaultX2 + e.worldX - camera.getX(), e.solidAreaDefaultY2 + e.worldY - camera.getY(), e.solidArea2.width, e.solidArea2.height);
                     }
                 }
             }
         }
 
-        for(int i = 0 ; i < objList.size() ; i++)
-        {
-            objList.remove(i);
-        }
+
     }
 
     public void update()
     {
-        for(Entity e : objList)
-        {
-            if(e != null )
-            {
-                e.update();
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+            for (Entity obj : objList) {
+                if (obj != null) {
+                    obj.update();
+                }
             }
+
+            objList.clear();
         }
+
     }
 
     public void parseWallObject(TileLayer layer){

@@ -15,12 +15,6 @@ public class Animation{
 
     private boolean playOnce;
 
-    public void playOnce(){
-        playOnce = true;
-        ani_Tick = 0;
-        currentFrames = 0;
-    }
-
     public Animation()
     {
         ani_Tick = 0;
@@ -54,9 +48,10 @@ public class Animation{
         return playOnce;
     }
 
-    public void once()
-    {
-
+    public void playOnce(){
+        playOnce = true;
+        ani_Tick = 0;
+        currentFrames = 0;
     }
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
