@@ -120,6 +120,10 @@ public class UI {
     }
     // Hàm vẽ thử
 
+    public void drawTileScreen(){
+
+    }
+
     private void drawPausedScreen()
     {
         g2.setColor(new Color(0 , 0 , 0 , 100));

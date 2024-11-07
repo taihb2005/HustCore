@@ -56,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup()
     {
+        gameState = GameState.MENU_STATE;
         currentMap.playMusic(0);
     }
 
@@ -114,10 +115,16 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        currentMap.render(g2);
-        ui.render(g2, currentMap.player);
+        if(gameState == GameState.MENU_STATE){
 
-        g2.dispose();
+        }
+        else {
+            currentMap.render(g2);
+            ui.render(g2, currentMap.player);
+
+            g2.dispose();
+        }
+
     }
 
 
