@@ -2,8 +2,9 @@ package entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
-public abstract class projecttile extends Entity{
+public class Projectile extends Entity{
 
     public int x,y;
     public int speed;
@@ -12,10 +13,8 @@ public abstract class projecttile extends Entity{
     private BufferedImage Sprite;
 
 
-    public projecttile(int x, int y, int speed, int direction, BufferedImage Sprite) {
-        this.x = x;
-        this.y = y;
-        this.speed = speed;
+    public Projectile(int x, int y, int speed, int direction, BufferedImage Sprite) {
+        super(x, y, speed);
         this.direction = direction;
         this.Sprite = Sprite;
         this.active = true;
@@ -33,9 +32,10 @@ public abstract class projecttile extends Entity{
             active = false;
         }
     }
-    public void render(Graphics g) {
-        g.drawImage(Sprite, x, y, null);
+    public void render(Graphics2D g) {
+        if (active) {
+            g.drawImage(Sprite, x, y, null);
+        }
     }
-
 
 }

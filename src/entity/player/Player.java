@@ -1,7 +1,7 @@
 package entity.player;
 
 import entity.Entity;
-import entity.projecttile;
+import entity.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
 import main.KeyHandler;
@@ -47,7 +47,7 @@ public class Player extends Entity {
     private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
     private BufferedImage bullet;
 
-    private ArrayList<projecttile> projecttiles = new ArrayList<projecttile>();
+    private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
     private int CURRENT_FRAME;
 
@@ -111,6 +111,12 @@ public class Player extends Entity {
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();
+
+        projectiles.removeIf(b -> !b.active);
+            for (Projectile single_projectile : projectiles) {
+                single_projectile.update();
+
+    }
     }
 
 
@@ -120,6 +126,10 @@ public class Player extends Entity {
         g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
                      worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
                      width, height, null);
+
+        for (Projectile single_projectile : projectiles) {
+            single_projectile.render(g2);
+        }
     }
 
     private void keyInput()
@@ -133,10 +143,22 @@ public class Player extends Entity {
         if (KeyHandler.shootPressed) {
             isShooting = true;
             animator.playOnce();
+            shootProjectile();
         }
 
         isRunning = up | down | left | right;
         //isShooting = shoot;
+    }
+
+    public void shootProjectile() {
+        int startX = worldX + width / 2;
+        int startY = worldY + width / 2;
+        int speed = 5;
+        int direction = (CURRENT_DIRECTION == RIGHT) ? 1 : 0;
+        BufferedImage bulletImage = bullet;
+        Projectile newProjectile = new Projectile(startX, startY, speed, direction, bulletImage);
+        projectiles.add(newProjectile);
+
     }
 
     private void handleAnimationState()
