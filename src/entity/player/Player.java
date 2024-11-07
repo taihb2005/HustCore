@@ -12,6 +12,7 @@ import graphics.Animation;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.security.Key;
 
 public class Player extends Entity {
 
@@ -37,17 +38,13 @@ public class Player extends Entity {
 
     private boolean attackCanceled;
 
-    private boolean up;
-    private boolean down;
-    private boolean left;
-    private boolean right;
     private boolean shoot;
     private boolean die;
     
     public final int screenX, screenY;
 
-    private BufferedImage[][][] player_gun = new BufferedImage[8][][];;
-    private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
+    private final BufferedImage[][][] player_gun = new BufferedImage[7][][];;
+    private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
     private BufferedImage bullet;
 
     private ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); // chứa các viên đạn
@@ -56,6 +53,9 @@ public class Player extends Entity {
 
 
     final protected Animation animator = new Animation();
+
+    //PLAYER STATUS
+    private final int invincibleDuration = 120;
 
     public Player(GameMap mp) {
         super();
@@ -69,7 +69,6 @@ public class Player extends Entity {
 
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
-        bullet = new Sprite("/entity/player/projectile_id1.png", width, height).getSpriteSheet();
 
         getPlayerImages();
         setDefaultValue();
@@ -77,6 +76,11 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
+        maxHP = 100;
+        currentHP = 100;
+        maxMana = 100;
+        currentMana = 100;
+
         worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
@@ -102,6 +106,7 @@ public class Player extends Entity {
         player_gun[RELOAD] = new Sprite("/entity/player/reload_gun_blue.png" , width , height).getSpriteArray();
         player_gun[DEATH]  = new Sprite("/entity/player/death_blue.png"      , width , height).getSpriteArray();
     }
+
 
     @Override
     public void update()
@@ -147,7 +152,8 @@ public class Player extends Entity {
         if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
             if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
         //SHOOT
-        if (KeyHandler.enterPressed && !attackCanceled) {
+        if (KeyHandler.enterPressed) {
+            if(!attackCanceled) {
                 if (!isRunning) {
                     isShooting = true;
                     animator.playOnce();
@@ -176,7 +182,6 @@ public class Player extends Entity {
             animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION], 6);
             animator.playOnce();
         }
-
     }
 
     private void handleAnimationState()
@@ -187,13 +192,8 @@ public class Player extends Entity {
         }else if(isRunning && !animator.isPlaying())
         {
             CURRENT_ACTION = RUN;
-            if(left)
-            {
-                direction = "left";
-            } else if(right)
-            {
-                direction = "right";
-            }
+            if(left) direction = "left";
+            else if(right) direction = "right";
         } else
         {
             animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
@@ -204,10 +204,7 @@ public class Player extends Entity {
         if(PREVIOUS_ACTION != CURRENT_ACTION)
         {
             PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning)
-            {
-                animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
-            }
+            if(isRunning) animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
             if(isShooting && !isRunning)
             {
                 animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
@@ -215,12 +212,7 @@ public class Player extends Entity {
             }
         }
 
-        if (!animator.isPlaying()) {
-            isShooting = false;
-        }
-
-        //System.out.println(frameCounts);
-
+        if (!animator.isPlaying()) isShooting = false;
     }
 
     private void changeDirection()
@@ -240,8 +232,8 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
-        int index = mp.cChecker.checkInteractWithNpc(this , true);
-        interactNpc(index);
+        interactNpc(mp.cChecker.checkInteractWithNpc(this , true));
+        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
         if (up && isRunning && !isShooting) {
             if(right){newWorldX += 1; newWorldY -= 1;} else
@@ -264,8 +256,9 @@ public class Player extends Entity {
             if(!left) newWorldX += speed;
         }
 
-        mp.cChecker.checkCollisionWithInactiveObject(this);
-        mp.cChecker.checkCollisionWithNpc(this , true);
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
 
         if(!collisionOn)
         {
@@ -286,9 +279,26 @@ public class Player extends Entity {
             if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 GamePanel.gameState = GameState.DIALOGUE_STATE;
-                mp.npc.get(index).talk();
+                mp.npc[index].talk();
             }
         }
     }
 
+    private void interactObject(int index)
+    {
+        if(index != -1){
+            attackCanceled = true;
+            if(KeyHandler.enterPressed)
+            {
+                KeyHandler.enterPressed = false;
+                mp.activeObj[index].isOpening = true;
+            }
+        }
+    }
+
+    //DEMO
+    private void updateHP(int index) {
+        if (index != -1) currentHP = Math.max(0,currentHP-1);
+        if (currentHP == 0) GamePanel.gameState = GameState.LOSE_STATE;
+    }
 }

@@ -1,17 +1,19 @@
 package main;
 
 import entity.Entity;
-import entity.npc.Npc_CorruptedHustStudent;
+import entity.player.Player;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Key;
 
 import static main.GamePanel.*;
 
 public class UI {
     private final GamePanel gp;
+    public Player player;
     Graphics2D g2;
     Font joystix;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
@@ -22,10 +24,14 @@ public class UI {
 
     int dialogueCount;
 
-    public Entity npc;
+    public Entity target;
 
+    private BufferedImage hpFrame, manaFrame;
+
+    public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
+        this.player = gp.currentMap.player;
         try {
             InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -33,6 +39,17 @@ public class UI {
             e.printStackTrace();
         }
 
+        try {
+            hpFrame = ImageIO.read(getClass().getResourceAsStream("/ui/hpFrame.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            manaFrame = ImageIO.read(getClass().getResourceAsStream("/ui/manaFrame.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
         // DEMO
         //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
@@ -51,8 +68,8 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(npc.dialogues[npc.dialogueIndex] != null) {
-            currentDialogue = npc.dialogues[npc.dialogueIndex];
+        if(target.dialogues[target.dialogueIndex] != null) {
+            currentDialogue = target.dialogues[target.dialogueIndex];
             drawSubWindow(x, y, width, height);
 
             frameCounter++;
@@ -60,6 +77,7 @@ public class UI {
                 frameCounter = 0;
                 if (textIndex < currentDialogue.length()) {
                     // Cập nhật displayedText theo từng ký tự
+                    gp.playSoundEffect(1);
                     displayedText += currentDialogue.charAt(textIndex);
                     textIndex++;
                 }
@@ -70,13 +88,13 @@ public class UI {
                 displayedText = "";
                 if(gameState == GameState.DIALOGUE_STATE )
                 {
-                    npc.dialogueIndex++;
+                    target.dialogueIndex++;
                     KeyHandler.enterPressed = false;
                 }
             }
-        }else //If no text is in the array
+        }else
         {
-            npc.dialogueIndex--;
+            target.dialogueIndex--;
             if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
@@ -124,18 +142,68 @@ public class UI {
         return x;
     }
 
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, Player player) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        if(gameState == GameState.PLAY_STATE)
+        {
+            drawHPBar();
+            drawManaBar();
+        }
         if(gameState == GameState.DIALOGUE_STATE)
         {
             drawDialogueScreen();
+            drawHPBar();
+            drawManaBar();
         }
         if(gameState == GameState.PAUSE_STATE)
         {
+            drawHPBar();
+            drawManaBar();
             drawPausedScreen();
+        }
+        if(gameState == GameState.LOSE_STATE)
+        {
+            drawGameOverScreen();
         }
     }
 
     public Font getFont(){return joystix;};
 
+    public void drawHPBar() {
+        int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
+        int hpBarHeight = 12;   // Chiều cao của thanh HP
+        int x = 70;
+        int y = windowHeight - 80;
+        int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
+        // Vẽ nền (màu xám) cho thanh HP
+        g2.drawImage(hpFrame, x-52, y-8, 251, 28, null);
+
+        // Vẽ thanh HP hiện tại (màu đỏ)
+        g2.setColor(Color.RED);
+        g2.fillRect(x, y , currentHPWidth, hpBarHeight);
+    }
+
+    public void drawManaBar() {
+        int fullManaWidth = 63;  // Chiều dài tối đa của thanh HP
+        int ManaBarHeight = 12;   // Chiều cao của thanh HP
+        int x = 70;
+        int y = windowHeight - 45;
+        int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
+        // Vẽ nền (màu xám) cho thanh Mana
+        g2.drawImage(manaFrame, x-52, y-8, 139, 28, null);
+
+        // Vẽ thanh HP hiện tại (màu xanh)
+        g2.setColor(Color.BLUE);
+        g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+    }
+
+    public void drawGameOverScreen()
+    {
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
+        g2.setColor(Color.WHITE);
+        String text = "You sucked";
+        int x = getXforCenteredText(text);
+        int y = windowWidth / 2;
+        g2.drawString(text , x , y);
+    }
 }

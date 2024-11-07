@@ -18,12 +18,13 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int scale = 3; // Use to scale the objects which appear on the screen
     final static public int tileSize = originalTileSize * scale;
 
-    final static public int maxWindowCols = 16;
+    final static public int maxWindowCols = 20;
     final static public int maxWindowRows = 12;
 
     final static public int windowWidth = maxWindowCols * 48;
     final static public int windowHeight = maxWindowRows * 48;
 
+    public static Sound sound = new Sound();
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
@@ -41,9 +42,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        loadMap();
         ui = new UI(this);
 
-        loadMap();
     }
 
     private void loadMap()
@@ -56,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup()
     {
-        currentMap.playMusic(0);
+        playMusic(0);
     }
 
 
@@ -106,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable {
         } else
         if(gameState == GameState.PAUSE_STATE)
         {
-
         }
     }
 
@@ -116,17 +116,31 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
-        ui.render(g2);
+        ui.render(g2, currentMap.player);
 
         g2.dispose();
+    }
+
+    public void playMusic(int index)
+    {
+        sound.setFile(index);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic(int index)
+    {
+        sound.stop();
+    }
+    public void playSoundEffect(int index)
+    {
+        sound.setFile(index);
+        sound.play();
     }
 
 
     private void dispose()
     {
         MapManager.dispose();
-        currentMap.inactiveObj.clear();
-        currentMap.objList.clear();
-        currentMap.npc.clear();
+
     }
 }
