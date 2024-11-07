@@ -50,7 +50,7 @@ public class Player extends Entity {
     private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
     private BufferedImage bullet;
 
-    private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+    private ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); // chứa các viên đạn
 
     private int CURRENT_FRAME;
 
@@ -69,8 +69,7 @@ public class Player extends Entity {
 
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
-
-        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();
+        bullet = new Sprite("/entity/player/projectile_id1.png", width, height).getSpriteSheet();
 
         getPlayerImages();
         setDefaultValue();
@@ -103,7 +102,6 @@ public class Player extends Entity {
         player_gun[RELOAD] = new Sprite("/entity/player/reload_gun_blue.png" , width , height).getSpriteArray();
         player_gun[DEATH]  = new Sprite("/entity/player/death_blue.png"      , width , height).getSpriteArray();
     }
-
 
     @Override
     public void update()
@@ -149,26 +147,35 @@ public class Player extends Entity {
         if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
             if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
         //SHOOT
-        if (KeyHandler.enterPressed) {
-            if(!attackCanceled) {
+        if (KeyHandler.enterPressed && !attackCanceled) {
                 if (!isRunning) {
                     isShooting = true;
                     animator.playOnce();
                     shootProjectile();
                 }
-            }
         }
         //isShooting = shoot;
     }
 
     public void shootProjectile() {
-        int startX = worldX + width / 2;
-        int startY = worldY + width / 2;
-        int speed = 5;
-        int direction = (CURRENT_DIRECTION == RIGHT) ? 1 : 0;
-        BufferedImage bulletImage = bullet;
-        Projectile newProjectile = new Projectile(startX, startY, speed, direction, bulletImage);
-        projectiles.add(newProjectile);
+        if (animator.isPlaying()) { // đang bắn
+            int startX = worldX;
+            int startY = worldY;
+            if (CURRENT_DIRECTION == RIGHT) {
+                startX += width;
+            }
+            else {
+                startX -= width;
+            }
+            int speed = 5;
+            int direction = (CURRENT_DIRECTION == RIGHT) ? 1 : 0;
+            BufferedImage bulletImage = bullet;
+            Projectile newProjectile = new Projectile(startX, startY, speed, direction, bulletImage);
+            projectiles.add(newProjectile);
+
+            animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION], 6);
+            animator.playOnce();
+        }
 
     }
 

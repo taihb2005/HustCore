@@ -31,11 +31,11 @@ public class Projectile extends Entity{
         if (x < 0 || x > shootingArea.width ){
             active = false;
         }
+        System.out.println("Bullet Position: x = " + x + ", y = " + y);
     }
     public void render(Graphics2D g) {
         if (active) {
-            g.drawImage(Sprite, x, y, null);
+            g.drawImage(Sprite, x, y , null);
         }
     }
-
 }
