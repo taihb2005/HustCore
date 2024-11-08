@@ -1,7 +1,6 @@
 package main;
 
 import entity.Entity;
-import entity.npc.Npc_CorruptedHustStudent;
 import entity.player.Player;
 
 import javax.imageio.ImageIO;
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Key;
 
 import static main.GamePanel.*;
 
@@ -22,10 +20,14 @@ public class UI {
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
-
+    int subState = 0;
     int dialogueCount;
 
+    public int commandNum = 0;
+
     private BufferedImage hpFrame, manaFrame;
+
+    private BufferedImage titleBackground;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -45,6 +47,12 @@ public class UI {
 
         try {
             manaFrame = ImageIO.read(getClass().getResourceAsStream("/ui/manaFrame.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/titleBackground.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,8 +128,9 @@ public class UI {
     }
     // Hàm vẽ thử
 
-    public void drawTileScreen(){
-
+    public void drawTitleScreen(){
+        g2.drawImage(manaFrame, 0, 0, 139, 28, null);
+        g2.drawImage(titleBackground, 0, 0, windowWidth, windowHeight, null);
     }
 
     private void drawPausedScreen()
@@ -150,13 +159,18 @@ public class UI {
             drawHPBar(g2, 70, windowHeight-80, player.currentHP, player.maxHP);
             drawManaBar(g2,70 , windowHeight-40, player.currentMana, player.maxMana);
         }
-        if(gameState == GameState.DIALOGUE_STATE)
+        else if(gameState == GameState.MENU_STATE)
+        {
+            drawTitleScreen();
+        }
+        else if(gameState == GameState.DIALOGUE_STATE)
         {
             drawDialogueScreen();
         }
-        if(gameState == GameState.PAUSE_STATE)
+        else if(gameState == GameState.PAUSE_STATE)
         {
             drawPausedScreen();
+            drawOptionsScreen();
         }
     }
 
@@ -185,4 +199,47 @@ public class UI {
         g2.setColor(Color.BLUE);
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
     }
+
+    public void drawOptionsScreen() {
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(32F));
+
+        // SUB WINDOW
+
+        int frameX = gp.tileSize * 4;
+        int frameY = gp.tileSize;
+        int frameWidth = gp.tileSize * 8;
+        int frameHeight = gp.tileSize * 10;
+
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        switch(subState) {
+            case 0: options_top(frameX, frameY); break;
+        }
+    }
+    public void options_top(int frameX, int frameY) {
+        int textX, textY;
+
+        // TITLE
+        String text = "Options";
+        textX = getXforCenteredText(text);
+        textY = frameY + tileSize;
+        g2.drawString(text, textX, textY);
+
+        // VOLUME
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Volume", textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX-25, textY);
+        }
+        // RESET
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Reset", textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX-25, textY);
+        }
+    }
 }
+

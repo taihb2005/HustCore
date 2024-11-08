@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void startGameThread() {
-        gameState = GameState.PLAY_STATE;
+        gameState = GameState.MENU_STATE;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -115,15 +115,10 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if(gameState == GameState.MENU_STATE){
+        currentMap.render(g2);
+        ui.render(g2, currentMap.player);
 
-        }
-        else {
-            currentMap.render(g2);
-            ui.render(g2, currentMap.player);
-
-            g2.dispose();
-        }
+        g2.dispose();
 
     }
 

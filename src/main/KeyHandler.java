@@ -28,6 +28,13 @@ public class KeyHandler implements KeyListener{
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
+        if (GamePanel.gameState == GameState.MENU_STATE) {
+            if (keyCode == KeyEvent.VK_SPACE) {
+                GamePanel.gameState = GameState.PLAY_STATE;
+                System.out.println("Chuyển sang PLAY_STATE");
+            }
+        }
+
         if(GamePanel.gameState == GameState.PLAY_STATE) {
             if (keyCode == KeyEvent.VK_S) {
                 downPressed = true;
@@ -62,7 +69,29 @@ public class KeyHandler implements KeyListener{
         } else
         if(GamePanel.gameState == GameState.PAUSE_STATE)
         {
-            if(keyCode == KeyEvent.VK_ESCAPE) GamePanel.gameState = GameState.PLAY_STATE;
+            if(keyCode == KeyEvent.VK_ESCAPE)
+                GamePanel.gameState = GameState.PLAY_STATE;
+
+            // FOR OPTIONS
+            int maxCommandNum = 0;
+            switch(GamePanel.ui.subState) {
+                case 0: maxCommandNum = 1;
+            }
+
+            if(keyCode == KeyEvent.VK_W)
+            {
+                GamePanel.ui.commandNum--;
+                if (GamePanel.ui.commandNum < 0) {
+                    GamePanel.ui.commandNum = maxCommandNum;
+                }
+            }
+            if(keyCode == KeyEvent.VK_S)
+            {
+                GamePanel.ui.commandNum++;
+                if (GamePanel.ui.commandNum > maxCommandNum) {
+                    GamePanel.ui.commandNum = 0;
+                }
+            }
         } else
         if(GamePanel.gameState == GameState.DIALOGUE_STATE)
         {

@@ -81,6 +81,7 @@ public class Player extends Entity {
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
+        currentHP = maxHP;
         speed = 3;
 
         attackCanceled = false;
@@ -214,7 +215,6 @@ public class Player extends Entity {
 
         //DEMO HP
         updateHP(index);
-        System.out.println(currentHP);
 
         collisionOn = false;
         if (up && isRunning && !isShooting) {
@@ -268,6 +268,9 @@ public class Player extends Entity {
     //DEMO
     private void updateHP(int index) {
         if (index != -1) currentHP = Math.max(0,currentHP-1);
-        if (currentHP == 0) GamePanel.gameState = GameState.PAUSE_STATE;
+        if (currentHP == 0) {
+            GamePanel.gameState = GameState.MENU_STATE;
+            setDefaultValue();
+        };
     }
 }
