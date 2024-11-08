@@ -16,6 +16,7 @@ public class Animation{
     private boolean playOnce;
     private boolean playFinished;
 
+
     public Animation()
     {
         ani_Tick = 0;
@@ -59,6 +60,5 @@ public class Animation{
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
     public int getCurrentFrames(){return currentFrames;}
-    public boolean isPlayFinished(){return playFinished;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
 }

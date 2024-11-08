@@ -50,7 +50,7 @@ public class Obj_Door extends Entity implements Actable {
         this.prev_state = state;
         this.canbeDestroyed = false;
         this.isOpening = false;
-        if(state == 0) isOpened = false; else isOpened = true;
+        isOpened = state != 0;
         obj_door_sprite = new BufferedImage[2][];
         obj_door = new Animation();
 

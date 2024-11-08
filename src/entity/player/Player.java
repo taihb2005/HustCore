@@ -1,7 +1,9 @@
 package entity.player;
 
 import entity.Entity;
-import entity.Projectile;
+import entity.projectile.Obj_BasicProjectile;
+import entity.projectile.Obj_GreenBullet;
+import entity.projectile.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
 import main.GameState;
@@ -12,7 +14,6 @@ import graphics.Animation;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.security.Key;
 
 public class Player extends Entity {
 
@@ -45,17 +46,14 @@ public class Player extends Entity {
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];;
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
-    private BufferedImage bullet;
-
-    private ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); // chứa các viên đạn
 
     private int CURRENT_FRAME;
-
+    private int SHOOT_INTERVAL ;
 
     final protected Animation animator = new Animation();
 
     //PLAYER STATUS
-    private final int invincibleDuration = 120;
+    private final int invincibleDuration = 90;
 
     public Player(GameMap mp) {
         super();
@@ -76,16 +74,17 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        maxHP = 100;
-        currentHP = 100;
-        maxMana = 100;
-        currentMana = 100;
+        projectile = new Obj_BasicProjectile(mp);
+        SHOOT_INTERVAL = projectile.maxHP + 10;
+        level = 1;
+        set();
 
         worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
         speed = 3;
+
 
         attackCanceled = false;
         up = down = left = right = false;
@@ -108,36 +107,6 @@ public class Player extends Entity {
     }
 
 
-    @Override
-    public void update()
-    {
-        keyInput();
-        handlePosition();
-        changeDirection();
-        //handleCollision();
-        handleAnimationState();
-        animator.update();
-        CURRENT_FRAME = animator.getCurrentFrames();
-
-        projectiles.removeIf(b -> !b.active);
-            for (Projectile single_projectile : projectiles) {
-                single_projectile.update();
-
-    }
-    }
-
-
-    @Override
-    public void render(Graphics2D g2)
-    {
-        g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
-                     worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
-                     width, height, null);
-
-        for (Projectile single_projectile : projectiles) {
-            single_projectile.render(g2);
-        }
-    }
 
     private void keyInput()
     {
@@ -153,40 +122,33 @@ public class Player extends Entity {
             if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
         //SHOOT
         if (KeyHandler.enterPressed) {
-            if(!attackCanceled) {
-                if (!isRunning) {
-                    isShooting = true;
-                    animator.playOnce();
-                    shootProjectile();
-                }
+            if (!attackCanceled && !isRunning && shootAvailableCounter == SHOOT_INTERVAL) {
+                isShooting = true;
+                shootProjectile();
+            }
         }
         //isShooting = shoot;
     }
 
-    public void shootProjectile() {
-        if (animator.isPlaying()) { // đang bắn
-            int startX = worldX;
-            int startY = worldY;
-            if (CURRENT_DIRECTION == RIGHT) {
-                startX += width;
+    private void shootProjectile() {
+        if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL){
+            mp.gp.playSoundEffect(2);
+            projectile.set(worldX , worldY , direction , true , this);
+            for(int i = 0; i < mp.projectiles.length; i++)
+            {
+                if(mp.projectiles[i] == null)
+                {
+                    mp.projectiles[i] = projectile;
+                    break;
+                }
             }
-            else {
-                startX -= width;
-            }
-            int speed = 5;
-            int direction = (CURRENT_DIRECTION == RIGHT) ? 1 : 0;
-            BufferedImage bulletImage = bullet;
-            Projectile newProjectile = new Projectile(startX, startY, speed, direction, bulletImage);
-            projectiles.add(newProjectile);
-
-            animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION], 6);
-            animator.playOnce();
+            shootAvailableCounter = 0;
         }
     }
 
     private void handleAnimationState()
     {
-        if(isShooting && !isRunning && animator.isPlaying() && !attackCanceled) {
+        if(isShooting && !isRunning  && !attackCanceled ) {
             CURRENT_ACTION = SHOOT;
 
         }else if(isRunning && !animator.isPlaying())
@@ -211,8 +173,7 @@ public class Player extends Entity {
                 animator.playOnce();
             }
         }
-
-        if (!animator.isPlaying()) isShooting = false;
+        if (!animator.isPlaying() && isShooting) isShooting = false;
     }
 
     private void changeDirection()
@@ -232,7 +193,9 @@ public class Player extends Entity {
 
     private void handlePosition()
     {
+        isInteracting = false;
         interactNpc(mp.cChecker.checkInteractWithNpc(this , true));
+        updateHP(mp.cChecker.checkInteractWithNpc(this , true));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
         if (up && isRunning && !isShooting) {
@@ -271,11 +234,27 @@ public class Player extends Entity {
         GamePanel.camera.centerOn(worldX , worldY);
     }
 
+    private void handleStatus(){
+        if(shootAvailableCounter < SHOOT_INTERVAL){
+            shootAvailableCounter++;
+        }
+        if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
+
+        if(isInvincible){
+            invincibleCounter++;
+            if(invincibleCounter >= invincibleDuration){
+                invincibleCounter = 0;
+                isInvincible = false;
+            }
+        }
+    }
+
     private void interactNpc(int index)
     {
         if(index != -1)
         {
             attackCanceled = true;
+            isInteracting = true;
             if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 GamePanel.gameState = GameState.DIALOGUE_STATE;
@@ -288,6 +267,7 @@ public class Player extends Entity {
     {
         if(index != -1){
             attackCanceled = true;
+            isInteracting = true;
             if(KeyHandler.enterPressed)
             {
                 KeyHandler.enterPressed = false;
@@ -296,9 +276,84 @@ public class Player extends Entity {
         }
     }
 
+    public void damageEnemy(int index){
+        if(index != -1){
+            projectile.active = false;
+            if(!isInvincible) {
+                mp.enemy[index].currentHP -= damage;
+                mp.enemy[index].isInvincible = true;
+                System.out.println("Hit! Deal " + damage + " damage to the enemy!");
+            }
+            if(mp.enemy[index].currentHP <= 0){
+                mp.enemy[index].currentHP = 0;
+                mp.enemy[index].isDying = true;
+            }
+        }
+    }
+
     //DEMO
     private void updateHP(int index) {
-        if (index != -1) currentHP = Math.max(0,currentHP-1);
+        if (index != -1)
+            if(!isInvincible) {
+                isInvincible = true;
+                currentHP = Math.max(0, currentHP - 1);
+            }
         if (currentHP == 0) GamePanel.gameState = GameState.LOSE_STATE;
+    }
+
+    @Override
+    public void set(){
+        setDamage();
+        setDefense();
+        setMaxHP();
+        setMaxMana();
+    }
+
+    private void setDamage(){
+        damage = projectile.base_damage + projectile.base_damage * level;
+    }
+    private void setDefense(){
+        defense = level * 10;
+    }
+    private void setMaxHP(){
+        maxHP = 100 + (level - 1) * 20;
+        currentHP = maxHP;
+    }
+    private void setMaxMana(){
+        maxMana = 50 + (level - 1) * 10;
+        currentMana = maxMana;
+    }
+    public void checkForLevelUp(){
+
+    }
+
+    @Override
+    public void update()
+    {
+        keyInput();
+        handlePosition();
+        handleStatus();
+        changeDirection();
+        //handleCollision();
+        handleAnimationState();
+        animator.update();
+        CURRENT_FRAME = animator.getCurrentFrames();
+
+    }
+
+
+    @Override
+    public void render(Graphics2D g2)
+    {
+        if(isInvincible && !isDying){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.6f));
+        }
+        g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
+                worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
+                width, height, null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
+        g2.setFont(GamePanel.ui.joystix.deriveFont(Font.PLAIN, 19));
+        g2.setColor(Color.WHITE);
+        g2.drawString("Shoot interval: " + shootAvailableCounter , 10 , 30);
     }
 }

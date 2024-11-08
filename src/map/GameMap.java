@@ -18,9 +18,9 @@ import static main.GamePanel.camera;
 
 public class GameMap {
 
+    public GamePanel gp;
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
-    public Sound sound = new Sound();
 
     private final int mapWidth;
     private final int mapHeight;
@@ -31,8 +31,8 @@ public class GameMap {
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
     public Entity [] npc;         //Danh sách target ở trên map
-    public Entity [] onAirEnemy;  //Danh sách kẻ địch bay
-    public Entity [] onGroundEnemy;//Danh sách kẻ địch trên mặt đất
+    public Entity [] enemy;
+    public Entity [] projectiles;
     public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
 
     private long startTime = System.nanoTime();
@@ -43,8 +43,8 @@ public class GameMap {
         inactiveObj = new Entity[100];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
-        onAirEnemy  = new Entity[100];
-        onGroundEnemy = new Entity[100];
+        enemy       = new Entity[100];
+        projectiles = new Entity[100];
         objList     = new ArrayList<>();
 
         this.mapWidth = mapWidth;
@@ -77,7 +77,7 @@ public class GameMap {
                 }
             }
 
-            for(Entity entity : onAirEnemy)
+            for(Entity entity : enemy)
             {
                 if(entity != null)
                 {
@@ -107,6 +107,10 @@ public class GameMap {
         for (Entity mapObject : objList)
         {
             if(mapObject != null) mapObject.render(g2);
+        }
+        for(Entity projectile : projectiles)
+        {
+            if(projectile != null) projectile.render(g2);
         }
         mapLayer.get(3).render(g2); //Decor layer
 
@@ -143,6 +147,11 @@ public class GameMap {
                     }
                 }
             }
+            for(Entity e : projectiles){
+                if(e != null){
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                }
+            }
         }
         objList.clear();
     }
@@ -157,11 +166,21 @@ public class GameMap {
                     if(activeObj[i].canbeDestroyed) activeObj[i] = null;
                 }
             }
+            for(int i = 0 ; i < enemy.length ; i++){
+                if(enemy[i] != null){
+                    if(enemy[i].canbeDestroyed) enemy[i] = null;
+                }
+            }
+            for(int i = 0 ; i < projectiles.length ; i++){
+                if(projectiles[i] != null){
+                    if(!projectiles[i].active) projectiles[i] = null;
+                }
+            }
             for(Entity entity : inactiveObj) if(entity != null) entity.update();
             for(Entity entity : activeObj) if(entity != null) entity.update();
             for(Entity entity : npc) if(entity != null) entity.update();
-            for(Entity entity : onAirEnemy) if(entity != null) entity.update();
-            for(Entity entity : onGroundEnemy) if(entity != null) entity.update();
+            for(Entity entity : enemy) if(entity != null) entity.update();
+            for(Entity entity : projectiles) if(entity != null) entity.update();
             player.update();
 
         }

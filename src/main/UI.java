@@ -15,7 +15,7 @@ public class UI {
     private final GamePanel gp;
     public Player player;
     Graphics2D g2;
-    Font joystix;
+    public Font joystix;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị

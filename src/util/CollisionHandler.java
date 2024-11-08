@@ -61,6 +61,37 @@ public class CollisionHandler {
         return index;
     };
 
+    public int checkEntityForDamge(Entity entity , Entity [] list){
+        int index = -1;
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null) {
+                int newSolidAreaX1 = entity.worldX + entity.solidArea1.x;
+                int newSolidAreaY1 = entity.worldY + entity.solidArea1.y;
+                Rectangle tmp1 = new Rectangle(list[i].worldX + list[i].hitbox.x , list[i].worldY + list[i].hitbox.y,
+                        list[i].hitbox.width , list[i].hitbox.height);
+                Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
+
+                if(tmp.intersects(tmp1)) {
+                    index = i;
+                    break;
+                }
+
+//                if(list[i].solidArea2 != null)
+//                {
+//                    Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
+//                            list[i].solidArea2.width , list[i].solidArea2.height);
+//                    if(tmp.intersects(tmp2)) {
+//                        index = i;
+//                        break;
+//                    }
+//
+//                }
+            }
+        }
+
+        return index;
+    }
+
 
     public void checkCollisionWithEntity(Entity entity , Entity [] list)
     {
