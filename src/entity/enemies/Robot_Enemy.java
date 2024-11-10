@@ -78,6 +78,11 @@ public class Robot_Enemy extends Entity implements Actable {
     }
 
     @Override
+    public void attack() {
+
+    }
+
+    @Override
     public void loot() {
 
     }

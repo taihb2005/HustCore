@@ -7,7 +7,7 @@ public class Obj_GreenBullet extends Projectile{
 
     public Obj_GreenBullet(GameMap mp) {
         super(mp);
-        String name = "Green Bullet";
+        name = "Green Bullet";
         width = 64;
         height = 64;
         maxHP = 80;

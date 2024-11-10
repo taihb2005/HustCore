@@ -1,12 +1,12 @@
 package entity.projectile;
 
 import entity.Entity;
+import entity.object.Obj_Wall;
 import graphics.Animation;
 import map.GameMap;
 
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
-import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
@@ -14,7 +14,6 @@ public class Projectile extends Entity {
 
     GameMap mp;
     Entity user;
-    public String name;
     protected static int RIGHT = 0;
     protected static int LEFT = 1;
     protected static int UP = 2;
@@ -64,9 +63,11 @@ public class Projectile extends Entity {
 
     public void update() {
         if(user == mp.player){
-            int index = mp.cChecker.checkEntityForDamge(this , mp.enemy);
+            int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
            //System.out.println(index);
             mp.player.damageEnemy(index);
+        } else{
+
         }
         switch (direction)
         {
@@ -74,6 +75,16 @@ public class Projectile extends Entity {
             case "left"  : worldX -= speed ; break;
             case "up"    : worldY -= speed ; break;
             case "down"  : worldY += speed; break;
+        }
+        newWorldX = worldX;
+        newWorldY = worldY;
+
+        int i = mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        if(i != -1)
+        {
+            if(mp.inactiveObj[i].name.equals("Wall")) {
+                active = false;
+            }
         }
 
         currentHP--;

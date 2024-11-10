@@ -4,7 +4,6 @@ import entity.Entity;
 import map.GameMap;
 
 import java.awt.*;
-import java.util.LinkedList;
 
 public class CollisionHandler {
 
@@ -61,7 +60,7 @@ public class CollisionHandler {
         return index;
     };
 
-    public int checkEntityForDamge(Entity entity , Entity [] list){
+    public int checkEntityForDamage(Entity entity , Entity [] list){
         int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null) {
@@ -93,8 +92,9 @@ public class CollisionHandler {
     }
 
 
-    public void checkCollisionWithEntity(Entity entity , Entity [] list)
+    public int checkCollisionWithEntity(Entity entity , Entity [] list)
     {
+        int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null) {
 
@@ -104,16 +104,27 @@ public class CollisionHandler {
                         list[i].solidArea1.width , list[i].solidArea1.height);
                 Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
 
-                if(tmp.intersects(tmp1)) entity.collisionOn = true;
+                if(tmp.intersects(tmp1)) {
+                    entity.collisionOn = true;
+                    index = i;
+                    if(list[i].solidArea2 == null) break;
+                }
 
                 if(list[i].solidArea2 != null)
                 {
                     Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
                             list[i].solidArea2.width , list[i].solidArea2.height);
-                    if(tmp.intersects(tmp2)) entity.collisionOn = true;
+                    if(tmp.intersects(tmp2)) {
+                        entity.collisionOn = true;
+                        index = i;
+                        break;
+                    }
 
                 }
             }
         }
+        return index;
     }
+
+
 }

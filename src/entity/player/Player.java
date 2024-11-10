@@ -19,7 +19,7 @@ public class Player extends Entity {
 
     GameMap mp;
     final int IDLE = 0;
-    final int RUN = 1;
+    final int RUN  = 1;
     final int TALK = 2;
     final int SHOOT = 3;
     final int RELOAD = 4;
@@ -48,7 +48,7 @@ public class Player extends Entity {
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
 
     private int CURRENT_FRAME;
-    private int SHOOT_INTERVAL ;
+    public int SHOOT_INTERVAL ;
 
     final protected Animation animator = new Animation();
 
@@ -61,9 +61,9 @@ public class Player extends Entity {
         width = 64;
         height = 64;
 
+        hitbox = new Rectangle(20 , 35 , 16 , 24);
         solidArea1 = new Rectangle(27 , 53 , 13 , 6);
-        solidAreaDefaultX1 = 27;
-        solidAreaDefaultY1 = 53;
+        setDefaultSolidArea();
 
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
@@ -84,7 +84,6 @@ public class Player extends Entity {
         newWorldX = worldX;
         newWorldY = worldY;
         speed = 3;
-
 
         attackCanceled = false;
         up = down = left = right = false;
@@ -195,7 +194,6 @@ public class Player extends Entity {
     {
         isInteracting = false;
         interactNpc(mp.cChecker.checkInteractWithNpc(this , true));
-        updateHP(mp.cChecker.checkInteractWithNpc(this , true));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
         if (up && isRunning && !isShooting) {
@@ -279,7 +277,7 @@ public class Player extends Entity {
     public void damageEnemy(int index){
         if(index != -1){
             projectile.active = false;
-            if(!isInvincible) {
+            if(!mp.enemy[index].isInvincible) {
                 mp.enemy[index].currentHP -= damage;
                 mp.enemy[index].isInvincible = true;
                 System.out.println("Hit! Deal " + damage + " damage to the enemy!");
@@ -291,13 +289,17 @@ public class Player extends Entity {
         }
     }
 
+    public void receiveDamage(){
+
+    }
+
     //DEMO
-    private void updateHP(int index) {
-        if (index != -1)
-            if(!isInvincible) {
-                isInvincible = true;
-                currentHP = Math.max(0, currentHP - 1);
-            }
+    private void updateHP() {
+        receiveDamage();
+        if(!isInvincible) {
+            isInvincible = true;
+            currentHP = Math.max(0, currentHP - 1);
+        }
         if (currentHP == 0) GamePanel.gameState = GameState.LOSE_STATE;
     }
 
@@ -310,7 +312,8 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        damage = projectile.base_damage + projectile.base_damage * level;
+        strength = level - 1;
+        damage = projectile.base_damage + strength * level;
     }
     private void setDefense(){
         defense = level * 10;
@@ -334,7 +337,7 @@ public class Player extends Entity {
         handlePosition();
         handleStatus();
         changeDirection();
-        //handleCollision();
+        updateHP();
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();

@@ -28,6 +28,7 @@ public class Obj_Door extends Entity implements Actable {
 
     public Obj_Door(int type , int id) {
         super();
+        name = "Door";
         this.type = type;
         this.id = id;
         this.state = 0;
@@ -44,6 +45,7 @@ public class Obj_Door extends Entity implements Actable {
 
     public Obj_Door(int type , int id , int state) {
         super();
+        name = "Door";
         this.type = type;
         this.id = id;
         this.state = state;
@@ -122,6 +124,11 @@ public class Obj_Door extends Entity implements Actable {
             dialogueIndex = 0;
         }
         startDialogue(this);
+    }
+
+    @Override
+    public void attack() {
+
     }
 
     public void loot() {

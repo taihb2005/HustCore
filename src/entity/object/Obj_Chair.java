@@ -9,13 +9,13 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 
 public class Obj_Chair extends Entity {
-    public static String name = "chair";
     private final BufferedImage obj_chair;
     public int type;
 
     public Obj_Chair(int type)
     {
         super();
+        name = "Chair";
         super.width = 64;
         super.height = 64;
 

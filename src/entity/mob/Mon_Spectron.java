@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Actable;
 import entity.Entity;
+import entity.projectile.Obj_BasicGreenProjectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
@@ -38,11 +39,15 @@ public class Mon_Spectron extends Entity implements Actable {
 
     private boolean isRunning;
     private boolean isShooting;
+    private boolean isIdle;
 
     final private BufferedImage [][][] mon_spectron = new BufferedImage[4][][];
     final private Animation mon_animator_spectron = new Animation();
 
     private int actionLockCounter = 0;
+    private int attackLockCounter = 0;
+    private int changeDirCounter = 120;
+    private int shootInterval = 120;
 
     private int CURRENT_FRAME;
 
@@ -67,7 +72,8 @@ public class Mon_Spectron extends Entity implements Actable {
 
     private void setDefault()
     {
-        invincibleDuration = 60; // 1s
+        projectile = new Obj_BasicGreenProjectile(mp);
+        invincibleDuration = 40; // 1s
         maxHP = 40;
         this.currentHP = maxHP;
         speed = 1;
@@ -115,12 +121,22 @@ public class Mon_Spectron extends Entity implements Actable {
 
     private void handleAnimationState()
     {
-        if(isRunning && !isDying) CURRENT_ACTION = RUN;else
-        if(isDying) CURRENT_ACTION = DIE; else
+        if(isRunning && !isDying) {
+            isIdle = false;
+            CURRENT_ACTION = RUN;
+        }
+        else
+        if(isShooting && !isDying){
+            isIdle = false;
+            CURRENT_ACTION = SHOOT;
+        } else
+        if(isDying) {
+            isIdle = false;
+            CURRENT_ACTION = DIE;
+        } else
         {
-            mon_animator_spectron.setAnimationState(mon_spectron[IDLE][CURRENT_DIRECTION] , 10);
+            isIdle = true;
             CURRENT_ACTION = IDLE;
-            PREVIOUS_ACTION = IDLE;
         }
 
         if(PREVIOUS_ACTION != CURRENT_ACTION)
@@ -131,8 +147,19 @@ public class Mon_Spectron extends Entity implements Actable {
                 mon_animator_spectron.setAnimationState(mon_spectron[DIE][CURRENT_DIRECTION] , 15);
                 mon_animator_spectron.playOnce();
             }
+            if(isShooting){
+                mon_animator_spectron.setAnimationState(mon_spectron[SHOOT][CURRENT_DIRECTION] , 20);
+                mon_animator_spectron.playOnce();
+            }
+            if(isIdle){
+                mon_animator_spectron.setAnimationState(mon_spectron[IDLE][CURRENT_DIRECTION] , 10);
+            }
         }
 
+        if(!mon_animator_spectron.isPlaying() && isShooting){
+            attack();
+            isShooting = false;
+        }
         if(!mon_animator_spectron.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
@@ -142,19 +169,27 @@ public class Mon_Spectron extends Entity implements Actable {
 
     private void setAction()
     {
+        //SPEED
+        if(currentHP <= 15){
+            speed = 2;
+            changeDirCounter = 60;
+            shootInterval = 60;
+        }
+        //MOVE
         actionLockCounter++;
-
-        if(actionLockCounter == 120 && !isDying)
+        if(actionLockCounter >= changeDirCounter && !isDying && !isShooting)
         {
             up = down = left = right = false;
             Random random = new Random();
             int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
             if(i <= 25)
             {
+                direction = "up";
                 up = true;
             }
             if(i>25 && i <= 50)
             {
+                direction = "down";
                 down = true;
             }
             if(i>50 && i <= 75)
@@ -168,14 +203,39 @@ public class Mon_Spectron extends Entity implements Actable {
                 right = true;
             }
             actionLockCounter = 0; // reset
+            isRunning = !isShooting;
         }
-        isRunning = true;
 
+        //ATTACK
+        attackLockCounter++;
+        if(attackLockCounter >= shootInterval){
+            Random gen = new Random();
+            int i = gen.nextInt(100) + 1;
+            if(i >= 75 && i < 100){
+                isShooting = true;
+                isRunning = false;
+            }
+            attackLockCounter= 0;
+        }
+
+        //INVINCIBLE
         if(isInvincible){
             invincibleCounter++;
             if(invincibleCounter >= invincibleDuration){
                 invincibleCounter = 0;
                 isInvincible = false;
+            }
+        }
+    }
+
+    public void attack() {
+        projectile.set(worldX , worldY , direction , true , this);
+        for(int i = 0; i < mp.projectiles.length; i++)
+        {
+            if(mp.projectiles[i] == null)
+            {
+                mp.projectiles[i] = projectile;
+                break;
             }
         }
     }

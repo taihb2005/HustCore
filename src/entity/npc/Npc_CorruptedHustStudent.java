@@ -178,6 +178,11 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     }
 
     @Override
+    public void attack() {
+
+    }
+
+    @Override
     public void loot() {
 
     }

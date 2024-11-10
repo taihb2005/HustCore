@@ -4,7 +4,7 @@ import entity.Entity;
 
 import java.awt.*;
 
-public class Mon_Shooter extends Entity {
+public class Monster extends Entity {
     @Override
     public void update() {
 
