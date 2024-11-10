@@ -144,7 +144,7 @@ public class UI {
         g2.fillRoundRect(0, 0, windowWidth, windowHeight , 0 , 0);
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
         g2.setColor(Color.WHITE);
-        String text = "PAUSED";
+        String text = "";
         int x = getXforCenteredText(text);
         int y = windowHeight / 2;
         g2.drawString(text , x , y );
@@ -246,25 +246,45 @@ public class UI {
     }
     public void options_top(int frameX, int frameY) {
         int textX, textY;
-
+        Font codeFont = new Font("Consolas", Font.PLAIN, 20);  // Thử với Consolas
+        g2.setFont(codeFont);
         // TITLE
         String text = "Options";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
 
-        // VOLUME
+        // MUSIC
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Volume", textX, textY);
+        g2.drawString("Music", textX, textY);
+        g2.drawString(String.valueOf(sound.volumePercentage), textX + 200, textY);
         if (commandNum == 0) {
             g2.drawString(">", textX-25, textY);
         }
-        // RESET
+
+        // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Reset", textX, textY);
+        g2.drawString("SE", textX, textY);
+        g2.drawString(String.valueOf(sound.volumePercentage), textX + 200, textY);
         if (commandNum == 1) {
+            g2.drawString(">", textX-25, textY);
+        }
+
+        // RETRY
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Retry", textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX-25, textY);
+        }
+
+        // EXIT
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Exit", textX, textY);
+        if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
         }
     }

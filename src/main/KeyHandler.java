@@ -75,7 +75,7 @@ public class KeyHandler implements KeyListener{
             // FOR OPTIONS
             int maxCommandNum = 0;
             switch(GamePanel.ui.subState) {
-                case 0: maxCommandNum = 1;
+                case 0: maxCommandNum = 3;
             }
 
             if(keyCode == KeyEvent.VK_W)
@@ -92,8 +92,37 @@ public class KeyHandler implements KeyListener{
                     GamePanel.ui.commandNum = 0;
                 }
             }
-        } else
-        if(GamePanel.gameState == GameState.DIALOGUE_STATE)
+            if(keyCode == KeyEvent.VK_A)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.sound.volumePercentage > 0) {
+                        GamePanel.sound.volumePercentage-=10;
+                        GamePanel.sound.checkVolume(GamePanel.sound.volumePercentage);
+                    }
+                }
+            }
+            if(keyCode == KeyEvent.VK_D)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.sound.volumePercentage < 100) {
+                        GamePanel.sound.volumePercentage+=10;
+                        GamePanel.sound.checkVolume(GamePanel.sound.volumePercentage);
+                    }
+                }
+            }
+            if(keyCode == KeyEvent.VK_ENTER)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 2) {
+                        GamePanel.gameState = GameState.MENU_STATE;
+                    }
+                    if (GamePanel.ui.commandNum == 3) {
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+        else if(GamePanel.gameState == GameState.DIALOGUE_STATE)
         {
             if(keyCode == KeyEvent.VK_ENTER)
             {
@@ -102,9 +131,9 @@ public class KeyHandler implements KeyListener{
         } else
         if(GamePanel.gameState == GameState.LOSE_STATE)
         {
-            if(keyCode == KeyEvent.VK_ENTER)
+            if(keyCode == KeyEvent.VK_SPACE)
             {
-                //do nothing
+                GamePanel.gameState = GameState.MENU_STATE;
             }
         }
 

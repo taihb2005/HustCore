@@ -43,6 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
+        setup();
         currentMap.gp = this;
         ui = new UI(this);
 
