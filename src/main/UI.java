@@ -13,8 +13,9 @@ import static main.GamePanel.*;
 
 public class UI {
     private final GamePanel gp;
+    public Player player;
     Graphics2D g2;
-    Font joystix;
+    public Font joystix;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -25,6 +26,8 @@ public class UI {
 
     public int commandNum = 0;
 
+    public Entity target;
+
     private BufferedImage hpFrame, manaFrame;
 
     private BufferedImage titleBackground;
@@ -32,6 +35,7 @@ public class UI {
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
+        this.player = gp.currentMap.player;
         try {
             InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -58,7 +62,7 @@ public class UI {
         }
         // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
         // DEMO
-        startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
+        //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
     }
     public void startDialogue(String dialogue) {
         currentDialogue = dialogue;
@@ -74,8 +78,8 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(npc.dialogues[npc.dialogueIndex] != null) {
-            currentDialogue = npc.dialogues[npc.dialogueIndex];
+        if(target.dialogues[target.dialogueIndex] != null) {
+            currentDialogue = target.dialogues[target.dialogueIndex];
             drawSubWindow(x, y, width, height);
 
             frameCounter++;
@@ -83,6 +87,7 @@ public class UI {
                 frameCounter = 0;
                 if (textIndex < currentDialogue.length()) {
                     // Cập nhật displayedText theo từng ký tự
+                    gp.playSoundEffect(1);
                     displayedText += currentDialogue.charAt(textIndex);
                     textIndex++;
                 }
@@ -93,13 +98,13 @@ public class UI {
                 displayedText = "";
                 if(gameState == GameState.DIALOGUE_STATE )
                 {
-                    npc.dialogueIndex++;
+                    target.dialogueIndex++;
                     KeyHandler.enterPressed = false;
                 }
             }
-        }else //If no text is in the array
+        }else
         {
-            npc.dialogueIndex--;
+            target.dialogueIndex--;
             if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
@@ -156,8 +161,8 @@ public class UI {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
         if(gameState == GameState.PLAY_STATE)
         {
-            drawHPBar(g2, 70, windowHeight-80, player.currentHP, player.maxHP);
-            drawManaBar(g2,70 , windowHeight-40, player.currentMana, player.maxMana);
+            drawHPBar();
+            drawManaBar();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -166,38 +171,60 @@ public class UI {
         else if(gameState == GameState.DIALOGUE_STATE)
         {
             drawDialogueScreen();
+            drawHPBar();
+            drawManaBar();
         }
         else if(gameState == GameState.PAUSE_STATE)
         {
+            drawHPBar();
+            drawManaBar();
             drawPausedScreen();
             drawOptionsScreen();
+        }
+        if(gameState == GameState.LOSE_STATE)
+        {
+            drawGameOverScreen();
         }
     }
 
     public Font getFont(){return joystix;};
 
-    public void drawHPBar(Graphics2D g2, int x, int y, int currentHP, int maxHP) {
+    public void drawHPBar() {
         int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
         int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int currentHPWidth = (int)((double)currentHP / maxHP * fullHPWidth);
+        int x = 70;
+        int y = windowHeight - 80;
+        int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
         // Vẽ nền (màu xám) cho thanh HP
         g2.drawImage(hpFrame, x-52, y-8, 251, 28, null);
 
         // Vẽ thanh HP hiện tại (màu đỏ)
         g2.setColor(Color.RED);
-        g2.fillRect(x, y, currentHPWidth, hpBarHeight);
+        g2.fillRect(x, y , currentHPWidth, hpBarHeight);
     }
 
-    public void drawManaBar(Graphics2D g2, int x, int y, int currentMana, int maxMana) {
+    public void drawManaBar() {
         int fullManaWidth = 63;  // Chiều dài tối đa của thanh HP
         int ManaBarHeight = 12;   // Chiều cao của thanh HP
-        int currentHPWidth = (int)((double)currentMana / maxMana * fullManaWidth);
+        int x = 70;
+        int y = windowHeight - 45;
+        int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
         // Vẽ nền (màu xám) cho thanh Mana
         g2.drawImage(manaFrame, x-52, y-8, 139, 28, null);
 
         // Vẽ thanh HP hiện tại (màu xanh)
         g2.setColor(Color.BLUE);
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+    }
+
+    public void drawGameOverScreen()
+    {
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
+        g2.setColor(Color.WHITE);
+        String text = "You sucked";
+        int x = getXforCenteredText(text);
+        int y = windowWidth / 2;
+        g2.drawString(text , x , y);
     }
 
     public void drawOptionsScreen() {

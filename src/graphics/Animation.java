@@ -14,6 +14,7 @@ public class Animation{
     private int ani_Tick;
 
     private boolean playOnce;
+    private boolean playFinished;
 
 
     public Animation()
@@ -35,6 +36,7 @@ public class Animation{
     {
         if (playOnce && currentFrames == frameCounts - 1) {
             playOnce = false;
+            playFinished = true;
             return;
         }
         ani_Tick++;
@@ -51,6 +53,7 @@ public class Animation{
 
     public void playOnce(){
         playOnce = true;
+        playFinished = false;
         ani_Tick = 0;
         currentFrames = 0;
     }

@@ -99,6 +99,13 @@ public class KeyHandler implements KeyListener{
             {
                 enterPressed = true;
             }
+        } else
+        if(GamePanel.gameState == GameState.LOSE_STATE)
+        {
+            if(keyCode == KeyEvent.VK_ENTER)
+            {
+                //do nothing
+            }
         }
 
     }

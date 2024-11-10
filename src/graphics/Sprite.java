@@ -26,8 +26,8 @@ public class Sprite {
 
     public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
-        this.w = tileSize; //original tile size
-        this.h = tileSize; //original tile size
+        this.w = 64; //original tile size
+        this.h = 64; //original tile size
 
         SPRITESHEET = loadFile(filepath);
 

@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * 48;
     final static public int windowHeight = maxWindowRows * 48;
 
+    public static Sound sound = new Sound();
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
@@ -41,9 +42,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        loadMap();
+        currentMap.gp = this;
         ui = new UI(this);
 
-        loadMap();
     }
 
     private void loadMap()
@@ -56,8 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup()
     {
-        gameState = GameState.MENU_STATE;
-        currentMap.playMusic(0);
+        playMusic(0);
     }
 
 
@@ -119,15 +120,28 @@ public class GamePanel extends JPanel implements Runnable {
         ui.render(g2, currentMap.player);
 
         g2.dispose();
+    }
 
+    public void playMusic(int index)
+    {
+        sound.setFile(index);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic(int index)
+    {
+        sound.stop();
+    }
+    public void playSoundEffect(int index)
+    {
+        sound.setFile(index);
+        sound.play();
     }
 
 
     private void dispose()
     {
         MapManager.dispose();
-        currentMap.inactiveObj.clear();
-        currentMap.objList.clear();
-        currentMap.npc.clear();
+
     }
 }
