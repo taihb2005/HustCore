@@ -1,15 +1,18 @@
 package entity;
 
+import main.GamePanel;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Projectile extends Entity{
 
-    public int x,y;
     public int speed;
     public int direction;
     public boolean active;
     private BufferedImage Sprite;
+    private int width, height;
+    public Rectangle shootingArea;
 
 
     public Projectile(int x, int y, int speed, int direction, BufferedImage Sprite) {
@@ -18,22 +21,25 @@ public class Projectile extends Entity{
         this.Sprite = Sprite;
         this.active = true;
         shootingArea = new Rectangle(32, 32, 64, 128);
+        this.width = 16;
+        this.height = 16;
     }
 
 
     public void update() {
         if (direction == 0) {
-            x -= speed;
+            worldX-= speed;
         } else{
-            x += speed;
+            worldX += speed;
         }
-        if (x < 0 || x > shootingArea.width ){
+        shootingArea.setLocation(worldX, worldY);
+        if (worldX < 0 || worldX > shootingArea.width ){
             active = false;
         }
     }
     public void render(Graphics2D g) {
         if (active) {
-            g.drawImage(Sprite, x, y, null);
+            g.drawImage(Sprite, worldX - GamePanel.camera.getX(), worldY - GamePanel.camera.getY(), width,height, null);
         }
     }
 }

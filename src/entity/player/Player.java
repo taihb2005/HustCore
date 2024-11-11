@@ -66,7 +66,7 @@ public class Player extends Entity {
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
 
-        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();    
+        bullet = new Sprite("/entity/projectile_id1.png",width, height).getSpriteSheet();
 
         getPlayerImages();
         setDefaultValue();
@@ -145,7 +145,7 @@ public class Player extends Entity {
         }
 
         isRunning = up | down | left | right;
-        //isShooting = shoot;
+        isShooting = shoot;
     }
 
     private void shootProjectile() {

@@ -21,11 +21,7 @@ public abstract class Entity {
 
     public Rectangle solidArea1;
     public Rectangle solidArea2;
-<<<<<<< HEAD
-    public Rectangle shootingArea;
-=======
     public Rectangle interactionDetectionArea;
->>>>>>> 17fb25b8173f6cae191ce757bab79a78717fdc8e
     public int solidAreaDefaultX1 = 0;
     public int solidAreaDefaultY1 = 0;
     public int solidAreaDefaultX2 = 0;
