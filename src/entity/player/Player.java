@@ -280,7 +280,7 @@ public class Player extends Entity {
     private void shootProjectile() {
         checkForMana();
         if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
-            mp.gp.playSoundEffect(2);
+            mp.gp.playSE(2);
             projectile.set(worldX , worldY , direction , true , this);
             Obj_BasicProjectile tmp = (Obj_BasicProjectile) projectile;
             tmp.setHitbox();
@@ -390,7 +390,7 @@ public class Player extends Entity {
             exp = nextLevelUp;
             nextLevelUp += 30;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            mp.gp.playSoundEffect(3);
+            mp.gp.playSE(3);
             dialogues[0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
             startDialogue(this);
         }
