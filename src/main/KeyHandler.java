@@ -31,7 +31,6 @@ public class KeyHandler implements KeyListener{
         if (GamePanel.gameState == GameState.MENU_STATE) {
             if (keyCode == KeyEvent.VK_SPACE) {
                 GamePanel.gameState = GameState.PLAY_STATE;
-                System.out.println("Chuyển sang PLAY_STATE");
             }
         }
 
@@ -112,7 +111,7 @@ public class KeyHandler implements KeyListener{
                         GamePanel.music.volumePercentage+=10;
                         GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
                     }
-                    if (GamePanel.ui.commandNum == 0 && GamePanel.se.volumePercentage < 100) {
+                    if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage < 100) {
                         GamePanel.se.volumePercentage+=10;
                         GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
                     }
@@ -125,7 +124,7 @@ public class KeyHandler implements KeyListener{
                         GamePanel.gameState = GameState.MENU_STATE;
                     }
                     if (GamePanel.ui.commandNum == 3) {
-                        System.exit(0);
+                        GamePanel.gameState = GameState.MENU_STATE;
                     }
                 }
             }
