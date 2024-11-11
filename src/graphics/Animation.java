@@ -13,6 +13,10 @@ public class Animation{
     private int ani_Speed;
     private int ani_Tick;
 
+    private boolean playOnce;
+    private boolean playFinished;
+
+
     public Animation()
     {
         ani_Tick = 0;
@@ -30,12 +34,28 @@ public class Animation{
 
     public void update()
     {
+        if (playOnce && currentFrames == frameCounts - 1) {
+            playOnce = false;
+            playFinished = true;
+            return;
+        }
         ani_Tick++;
         if(ani_Tick >= ani_Speed)
         {
             ani_Tick = 0;
             currentFrames = (currentFrames + 1) % frameCounts;
         }
+    }
+
+    public boolean isPlaying() {
+        return playOnce;
+    }
+
+    public void playOnce(){
+        playOnce = true;
+        playFinished = false;
+        ani_Tick = 0;
+        currentFrames = 0;
     }
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}

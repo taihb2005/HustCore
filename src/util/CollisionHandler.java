@@ -4,6 +4,7 @@ import entity.Entity;
 import map.GameMap;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 public class CollisionHandler {
 
@@ -13,38 +14,106 @@ public class CollisionHandler {
         this.mp = mp;
     }
 
-
-    public void checkCollisionWithInactiveObject(Entity entity) {
-        for (int i = 0; i < mp.inactiveObj.size(); i++) {
-            if (mp.inactiveObj.get(i) != null) {
-
-                mp.inactiveObj.get(i).solidArea1.x = mp.inactiveObj.get(i).worldX + mp.inactiveObj.get(i).solidArea1.x;
-                mp.inactiveObj.get(i).solidArea1.y = mp.inactiveObj.get(i).worldY + mp.inactiveObj.get(i).solidArea1.y;
+    public int checkInteractWithActiveObject(Entity entity , boolean isPlayer)
+    {
+        int index = -1;
+        for (int i = 0; i < mp.activeObj.length; i++) {
+            if (mp.activeObj[i] != null) {
 
                 int newSolidAreaX1 = entity.newWorldX + entity.solidArea1.x;
                 int newSolidAreaY1 = entity.newWorldY + entity.solidArea1.y;
+                Rectangle tmp1 = new Rectangle(mp.activeObj[i].worldX + mp.activeObj[i].interactionDetectionArea.x, mp.activeObj[i].worldY + mp.activeObj[i].interactionDetectionArea.y,
+                        mp.activeObj[i].interactionDetectionArea.width, mp.activeObj[i].interactionDetectionArea.height);
+                Rectangle tmp = new Rectangle(newSolidAreaX1, newSolidAreaY1, entity.solidArea1.width, entity.solidArea1.height);
+
+                if (tmp.intersects(tmp1)) {
+                    if(isPlayer) {
+                        mp.activeObj[i].isInteracting = true;
+                        index = i;
+                    }
+                    break;
+                }
+            }
+        }
+        return index;
+    }
+
+    public int checkInteractWithNpc(Entity entity , boolean isPlayer){
+        int index = -1;
+        for (int i = 0; i < mp.npc.length; i++) {
+            if (mp.npc[i] != null) {
+
+                int newSolidAreaX1 = entity.newWorldX + entity.solidArea1.x;
+                int newSolidAreaY1 = entity.newWorldY + entity.solidArea1.y;
+                Rectangle tmp1 = new Rectangle(mp.npc[i].worldX + mp.npc[i].interactionDetectionArea.x, mp.npc[i].worldY + mp.npc[i].interactionDetectionArea.y,
+                        mp.npc[i].interactionDetectionArea.width, mp.npc[i].interactionDetectionArea.height);
+                Rectangle tmp = new Rectangle(newSolidAreaX1, newSolidAreaY1, entity.solidArea1.width, entity.solidArea1.height);
+
+                if (tmp.intersects(tmp1)) {
+                    if(isPlayer) {
+                        mp.npc[i].isInteracting = true;
+                        index = i;
+                    }
+                    break;
+                }
+            }
+        }
+        return index;
+    };
+
+    public int checkEntityForDamge(Entity entity , Entity [] list){
+        int index = -1;
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null) {
+                int newSolidAreaX1 = entity.worldX + entity.solidArea1.x;
+                int newSolidAreaY1 = entity.worldY + entity.solidArea1.y;
+                Rectangle tmp1 = new Rectangle(list[i].worldX + list[i].hitbox.x , list[i].worldY + list[i].hitbox.y,
+                        list[i].hitbox.width , list[i].hitbox.height);
                 Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
 
-                if(tmp.intersects(mp.inactiveObj.get(i).solidArea1)) entity.collisionOn = true;
+                if(tmp.intersects(tmp1)) {
+                    index = i;
+                    break;
+                }
 
-                mp.inactiveObj.get(i).solidArea1.x = mp.inactiveObj.get(i).solidAreaDefaultX1;
-                mp.inactiveObj.get(i).solidArea1.y = mp.inactiveObj.get(i).solidAreaDefaultY1;
+//                if(list[i].solidArea2 != null)
+//                {
+//                    Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
+//                            list[i].solidArea2.width , list[i].solidArea2.height);
+//                    if(tmp.intersects(tmp2)) {
+//                        index = i;
+//                        break;
+//                    }
+//
+//                }
+            }
+        }
 
-                if(mp.inactiveObj.get(i).solidArea2 != null)
+        return index;
+    }
+
+
+    public void checkCollisionWithEntity(Entity entity , Entity [] list)
+    {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null) {
+
+                int newSolidAreaX1 = entity.newWorldX + entity.solidArea1.x;
+                int newSolidAreaY1 = entity.newWorldY + entity.solidArea1.y;
+                Rectangle tmp1 = new Rectangle(list[i].worldX + list[i].solidArea1.x , list[i].worldY + list[i].solidArea1.y,
+                        list[i].solidArea1.width , list[i].solidArea1.height);
+                Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
+
+                if(tmp.intersects(tmp1)) entity.collisionOn = true;
+
+                if(list[i].solidArea2 != null)
                 {
-                    mp.inactiveObj.get(i).solidArea2.x = mp.inactiveObj.get(i).worldX + mp.inactiveObj.get(i).solidArea2.x;
-                    mp.inactiveObj.get(i).solidArea2.y = mp.inactiveObj.get(i).worldY + mp.inactiveObj.get(i).solidArea2.y;
+                    Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
+                            list[i].solidArea2.width , list[i].solidArea2.height);
+                    if(tmp.intersects(tmp2)) entity.collisionOn = true;
 
-                    if(tmp.intersects(mp.inactiveObj.get(i).solidArea2)) entity.collisionOn = true;
-
-                    mp.inactiveObj.get(i).solidArea2.x = mp.inactiveObj.get(i).solidAreaDefaultX2;
-                    mp.inactiveObj.get(i).solidArea2.y = mp.inactiveObj.get(i).solidAreaDefaultY2;
                 }
             }
         }
     }
-
-    public void checkCollisionWithActiveObject(Entity entity , boolean isPlayer){};
-
-
 }

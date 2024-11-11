@@ -1,16 +1,20 @@
-package entity;
+package entity.object;
+
+import entity.Entity;
+import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.camera;
 
-public class Obj_Wall extends Entity{
-
+public class Obj_Wall extends Entity {
     private final BufferedImage objectImage;
+    public final String name = "wall";
 
     public Obj_Wall(BufferedImage objectImage , Rectangle[] solidAreaList)
     {
+        super();
         this.objectImage = objectImage;
         this.solidArea1 = solidAreaList[0];
         solidAreaDefaultX1 = solidArea1.x ;

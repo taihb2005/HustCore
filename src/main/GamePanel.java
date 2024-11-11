@@ -21,18 +21,20 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int maxWindowCols = 16;
     final static public int maxWindowRows = 12;
 
-    final static public int windowWidth = maxWindowCols * 64;
-    final static public int windowHeight = maxWindowRows * 64;
+    final static public int windowWidth = maxWindowCols * 48;
+    final static public int windowHeight = maxWindowRows * 48;
 
+    public static Sound music = new Sound();
+    public static Sound se = new Sound();
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
-    public GameMap currentMap;
+    public static GameState gameState;
 
-    public GameState gameState;
+    public GameMap currentMap;
 
     Thread gameThread;
 
-    UI ui;
+    public static UI ui;
 
     public GamePanel() {
         // Set the size of the window and background color
@@ -41,9 +43,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        loadMap();
+        setup();
+        currentMap.gp = this;
         ui = new UI(this);
 
-        loadMap();
     }
 
     private void loadMap()
@@ -56,12 +60,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setup()
     {
-        currentMap.playMusic(0);
+        playMusic(0);
+        se.setFile(1);
     }
 
 
     public void startGameThread() {
-        gameState = GameState.PLAY_STATE;
+        gameState = GameState.MENU_STATE;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -97,17 +102,15 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
 
-        MapManager.dispose();
+        dispose();
     }
 
     public void update() {
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE) {
             currentMap.update();
-        }
-
+        } else
         if(gameState == GameState.PAUSE_STATE)
         {
-            //do nothing
         }
     }
 
@@ -117,7 +120,31 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
-        ui.render(g2);
+        ui.render(g2, currentMap.player);
+
         g2.dispose();
+    }
+
+    public void playMusic(int index)
+    {
+        music.setFile(index);
+        music.play();
+        music.loop();
+    }
+    public void stopMusic(int index)
+    {
+        music.stop();
+    }
+    public void playSE(int index)
+    {
+        se.setFile(index);
+        se.play();
+    }
+
+
+    private void dispose()
+    {
+        MapManager.dispose();
+
     }
 }
