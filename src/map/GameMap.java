@@ -57,7 +57,7 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE || GamePanel.gameState == GameState.LEVELUP_STATE) {
             objList.add(player);
             for (Entity entity : inactiveObj) {
                 if (entity != null)
@@ -152,6 +152,12 @@ public class GameMap {
                     g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
                 }
             }
+            g2.setColor(Color.RED);
+            for(Entity e : objList){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
         }
         objList.clear();
     }
@@ -205,6 +211,14 @@ public class GameMap {
         }
     }
 
+    public void dispose(){
+        Arrays.fill(inactiveObj, null);
+        Arrays.fill(activeObj, null);
+        Arrays.fill(npc, null);
+        Arrays.fill(enemy, null);
+        Arrays.fill(projectiles, null);
+        objList.clear();
+    }
 
     public int getMapWidth() {
         return mapWidth;

@@ -35,25 +35,24 @@ public class Player extends Entity {
     private boolean isRunning;
     private boolean isShooting;
     private boolean isReloading;
-    private boolean isDying;
+    private boolean isDying = false;
 
     private boolean attackCanceled;
-
-    private boolean shoot;
-    private boolean die;
-    
     public final int screenX, screenY;
 
-    private final BufferedImage[][][] player_gun = new BufferedImage[7][][];;
+    private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
 
     private int CURRENT_FRAME;
     public int SHOOT_INTERVAL ;
+    public int nextLevelUp = 30;
 
     final protected Animation animator = new Animation();
 
     //PLAYER STATUS
     private final int invincibleDuration = 90;
+    private final int manaHealInterval = 180;
+    private int manaHealCounter = 0;
 
     public Player(GameMap mp) {
         super();
@@ -61,7 +60,7 @@ public class Player extends Entity {
         width = 64;
         height = 64;
 
-        hitbox = new Rectangle(20 , 35 , 16 , 24);
+        hitbox = new Rectangle(23 , 35 , 16 , 24);
         solidArea1 = new Rectangle(27 , 53 , 13 , 6);
         setDefaultSolidArea();
 
@@ -74,9 +73,11 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
+        projectile_name = "Basic Projectile";
         projectile = new Obj_BasicProjectile(mp);
-        SHOOT_INTERVAL = projectile.maxHP + 10;
+        SHOOT_INTERVAL = projectile.maxHP + 5;
         level = 1;
+        exp = 0;
         set();
 
         worldX = 1400;
@@ -109,6 +110,7 @@ public class Player extends Entity {
 
     private void keyInput()
     {
+        if(isDying) KeyHandler.disableKey();
         up    = KeyHandler.upPressed;
         down  = KeyHandler.downPressed;
         left  = KeyHandler.leftPressed;
@@ -126,35 +128,21 @@ public class Player extends Entity {
                 shootProjectile();
             }
         }
-        //isShooting = shoot;
-    }
 
-    private void shootProjectile() {
-        if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL){
-            mp.gp.playSoundEffect(2);
-            projectile.set(worldX , worldY , direction , true , this);
-            for(int i = 0; i < mp.projectiles.length; i++)
-            {
-                if(mp.projectiles[i] == null)
-                {
-                    mp.projectiles[i] = projectile;
-                    break;
-                }
-            }
-            shootAvailableCounter = 0;
-        }
+        //isShooting = shoot;
     }
 
     private void handleAnimationState()
     {
         if(isShooting && !isRunning  && !attackCanceled ) {
             CURRENT_ACTION = SHOOT;
-
-        }else if(isRunning && !animator.isPlaying())
+        }else if(isRunning)
         {
             CURRENT_ACTION = RUN;
             if(left) direction = "left";
             else if(right) direction = "right";
+        } else if(isDying){
+            CURRENT_ACTION = DEATH;
         } else
         {
             animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
@@ -171,8 +159,16 @@ public class Player extends Entity {
                 animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
                 animator.playOnce();
             }
+            if(isDying){
+                animator.setAnimationState(player_gun[DEATH][CURRENT_DIRECTION] , 15);
+                animator.playOnce();
+            }
         }
-        if (!animator.isPlaying() && isShooting) isShooting = false;
+        if ((!animator.isPlaying() && isShooting) || isRunning) isShooting = false;
+        if (!animator.isPlaying() && isDying){
+            isDying = false;
+            GamePanel.gameState = GameState.LOSE_STATE;
+        }
     }
 
     private void changeDirection()
@@ -184,11 +180,6 @@ public class Player extends Entity {
         }
     }
 
-//    private void handleCollision(){
-//        collisionOn = false;
-//        onlyChangeDirection = false;
-//        mp.cChecker.checkObjectCollsion(this);
-//    }
 
     private void handlePosition()
     {
@@ -229,7 +220,9 @@ public class Player extends Entity {
         newWorldX = worldX;
         newWorldY = worldY;
 
-        GamePanel.camera.centerOn(worldX , worldY);
+        if(isShooting){
+            GamePanel.camera.cameraShake(worldX , worldY);
+        } else GamePanel.camera.centerOn(worldX , worldY);
     }
 
     private void handleStatus(){
@@ -274,6 +267,25 @@ public class Player extends Entity {
         }
     }
 
+    private void shootProjectile() {
+        checkForMana();
+        if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
+            mp.gp.playSoundEffect(2);
+            projectile.set(worldX , worldY , direction , true , this);
+            currentMana -= projectile.manaCost;
+            updateMana();
+            for(int i = 0; i < mp.projectiles.length; i++)
+            {
+                if(mp.projectiles[i] == null)
+                {
+                    mp.projectiles[i] = projectile;
+                    break;
+                }
+            }
+            shootAvailableCounter = 0;
+        }
+    }
+
     public void damageEnemy(int index){
         if(index != -1){
             projectile.active = false;
@@ -283,25 +295,56 @@ public class Player extends Entity {
                 System.out.println("Hit! Deal " + damage + " damage to the enemy!");
             }
             if(mp.enemy[index].currentHP <= 0){
+                exp += mp.enemy[index].expDrop;
+                System.out.println("Current exp: " + exp);
                 mp.enemy[index].currentHP = 0;
-                mp.enemy[index].isDying = true;
+                mp.enemy[index].die();
+                checkForLevelUp();
             }
         }
     }
 
-    public void receiveDamage(){
-
+    public void receiveDamage(Projectile proj , Entity attacker){
+        currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
     }
 
     //DEMO
     private void updateHP() {
-        receiveDamage();
-        if(!isInvincible) {
-            isInvincible = true;
-            currentHP = Math.max(0, currentHP - 1);
+        if(currentHP < 0) currentHP = 0;
+        if (currentHP == 0) {
+            isRunning = false;
+            isDying = true;
         }
-        if (currentHP == 0) GamePanel.gameState = GameState.LOSE_STATE;
     }
+
+    private void updateMana(){
+        if(currentMana > maxMana) currentMana = maxMana;
+        if(currentMana < 0) currentMana = 0;
+    }
+
+    private void checkForMana(){
+        if(!hasResource() && isShooting){
+            isShooting = false;
+            GamePanel.gameState = GameState.DIALOGUE_STATE;
+            dialogues[0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
+            startDialogue(this);
+            KeyHandler.enterPressed = false;
+        }
+    }
+
+    private void healMana(){
+        manaHealCounter++;
+        if(manaHealCounter >= manaHealInterval){
+            manaHealCounter = 0;
+            currentMana += 10;
+        }
+        updateMana();
+    }
+
+    public boolean hasResource(){
+        return currentMana >= projectile.manaCost;
+    }
+
 
     @Override
     public void set(){
@@ -313,21 +356,31 @@ public class Player extends Entity {
 
     private void setDamage(){
         strength = level - 1;
-        damage = projectile.base_damage + strength * level;
+        damage = projectile.base_damage + strength * level ;
     }
     private void setDefense(){
-        defense = level * 10;
+        defense = level * 2;
     }
     private void setMaxHP(){
         maxHP = 100 + (level - 1) * 20;
         currentHP = maxHP;
     }
     private void setMaxMana(){
-        maxMana = 50 + (level - 1) * 10;
+        maxMana = 100 + (level - 1) * 15;
         currentMana = maxMana;
     }
     public void checkForLevelUp(){
-
+        if(exp >= nextLevelUp)
+        {
+            level++;
+            set();
+            exp = nextLevelUp;
+            nextLevelUp += 30;
+            GamePanel.gameState = GameState.DIALOGUE_STATE;
+            mp.gp.playSoundEffect(3);
+            dialogues[0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            startDialogue(this);
+        }
     }
 
     @Override
@@ -338,6 +391,7 @@ public class Player extends Entity {
         handleStatus();
         changeDirection();
         updateHP();
+        healMana();
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();

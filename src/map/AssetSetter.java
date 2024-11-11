@@ -106,5 +106,78 @@ public class AssetSetter {
         sptr3.newWorldX = 1600;
         sptr3.newWorldY = 1800;
         mp.enemy[index] = sptr3;
+        index++;
+
+        Mon_Spectron sptr4 = new Mon_Spectron(mp);
+        sptr4.worldX = 1600;
+        sptr4.worldY = 1800;
+        sptr4.newWorldX = 1600;
+        sptr4.newWorldY = 1800;
+        mp.enemy[index] = sptr4;
+        index++;
+
+        Mon_Spectron sptr5 = new Mon_Spectron(mp);
+        sptr5.worldX = 1600;
+        sptr5.worldY = 1800;
+        sptr5.newWorldX = 1600;
+        sptr5.newWorldY = 1800;
+        mp.enemy[index] = sptr5;
+        index++;
+
+        Mon_Spectron sptr6 = new Mon_Spectron(mp);
+        sptr6.worldX = 1600;
+        sptr6.worldY = 1800;
+        sptr6.newWorldX = 1600;
+        sptr6.newWorldY = 1800;
+        mp.enemy[index] = sptr6;
+        index++;
+
+        Mon_Spectron sptr7 = new Mon_Spectron(mp);
+        sptr7.worldX = 1600;
+        sptr7.worldY = 1800;
+        sptr7.newWorldX = 1600;
+        sptr7.newWorldY = 1800;
+        mp.enemy[index] = sptr7;
+        index++;
+
+        Mon_Spectron sptr8 = new Mon_Spectron(mp);
+        sptr8.worldX = 1600;
+        sptr8.worldY = 1800;
+        sptr8.newWorldX = 1600;
+        sptr8.newWorldY = 1800;
+        mp.enemy[index] = sptr8;
+        index++;
+
+        Mon_Spectron sptr9 = new Mon_Spectron(mp);
+        sptr9.worldX = 1600;
+        sptr9.worldY = 1800;
+        sptr9.newWorldX = 1600;
+        sptr9.newWorldY = 1800;
+        mp.enemy[index] = sptr9;
+        index++;
+
+        Mon_Spectron sptr10 = new Mon_Spectron(mp);
+        sptr10.worldX = 1600;
+        sptr10.worldY = 1800;
+        sptr10.newWorldX = 1600;
+        sptr10.newWorldY = 1800;
+        mp.enemy[index] = sptr10;
+        index++;
+
+        Mon_Spectron sptr11 = new Mon_Spectron(mp);
+        sptr11.worldX = 1600;
+        sptr11.worldY = 1800;
+        sptr11.newWorldX = 1600;
+        sptr11.newWorldY = 1800;
+        mp.enemy[index] = sptr11;
+        index++;
+
+        Mon_Spectron sptr12 = new Mon_Spectron(mp);
+        sptr12.worldX = 1600;
+        sptr12.worldY = 1800;
+        sptr12.newWorldX = 1600;
+        sptr12.newWorldY = 1800;
+        mp.enemy[index] = sptr12;
+        index++;
     }
 }

@@ -1,6 +1,9 @@
 package entity;
 
+import entity.projectile.Obj_BasicGreenProjectile;
+import entity.projectile.Obj_BasicProjectile;
 import entity.projectile.Projectile;
+import map.GameMap;
 
 import java.awt.*;
 import static main.GamePanel.ui;
@@ -43,13 +46,18 @@ public abstract class Entity {
     public int strength;
     public int defense;
     public int damage;
-    public Projectile projectile;
+    public String projectile_name;
+    public Projectile projectile ;
     public int shootAvailableCounter = 0;
     public int invincibleCounter = 0;
     public int invincibleDuration;//Thời gian bất tử
 
     //PROJECTILE STATUS
+    public int manaCost;
     public boolean active;
+
+    //ENEMY STATUS
+    public int expDrop = 0;
 
     public boolean up;
     public boolean down;
@@ -93,6 +101,10 @@ public abstract class Entity {
 
     public void talk(){};
     public void set(){};
+    public void die(){
+        isDying = true;
+        hitbox = new Rectangle(0 , 0 , 0 ,0);
+    }
     public abstract void update();
     public abstract void render(Graphics2D g2);
     public void dispose()
@@ -102,4 +114,5 @@ public abstract class Entity {
         interactionDetectionArea = null;
         dialogues = null;
     }
+
 }

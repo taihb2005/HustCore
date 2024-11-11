@@ -103,10 +103,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE) {
+        if(gameState == GameState.PLAY_STATE ) {
             currentMap.update();
         } else
-        if(gameState == GameState.PAUSE_STATE)
+        if(gameState == GameState.PAUSE_STATE )
         {
         }
     }
@@ -117,7 +117,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
-        ui.render(g2, currentMap.player);
+        ui.render(g2);
 
         g2.dispose();
     }

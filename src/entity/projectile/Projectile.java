@@ -67,7 +67,12 @@ public class Projectile extends Entity {
            //System.out.println(index);
             mp.player.damageEnemy(index);
         } else{
-
+            boolean contactPlayer = mp.cChecker.checkPlayer(this);
+            if(!mp.player.isInvincible && contactPlayer){
+                active = false;
+                mp.player.receiveDamage(this , user);
+                mp.player.isInvincible = true;
+            }
         }
         switch (direction)
         {

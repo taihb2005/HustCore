@@ -43,7 +43,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     //NPC RNG
     private final int DESIRED_RNG = 50;
-    private int randomNumerFrames = 500;
+    private final int randomNumerFrames = 500;
     private int frameRandom = 0;
     private int rng = 0;
     private final Random generator = new Random();

@@ -5,5 +5,6 @@ public enum GameState {
      PLAY_STATE,
      PAUSE_STATE,
      DIALOGUE_STATE,
+     LEVELUP_STATE,
      LOSE_STATE
 }

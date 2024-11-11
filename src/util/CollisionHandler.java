@@ -58,33 +58,22 @@ public class CollisionHandler {
             }
         }
         return index;
-    };
+    }
 
     public int checkEntityForDamage(Entity entity , Entity [] list){
         int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null) {
-                int newSolidAreaX1 = entity.worldX + entity.solidArea1.x;
-                int newSolidAreaY1 = entity.worldY + entity.solidArea1.y;
+                int newSolidAreaX1 = entity.worldX + entity.hitbox.x;
+                int newSolidAreaY1 = entity.worldY + entity.hitbox.y;
                 Rectangle tmp1 = new Rectangle(list[i].worldX + list[i].hitbox.x , list[i].worldY + list[i].hitbox.y,
                         list[i].hitbox.width , list[i].hitbox.height);
-                Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
+                Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.hitbox.width , entity.hitbox.height);
 
                 if(tmp.intersects(tmp1)) {
                     index = i;
                     break;
                 }
-
-//                if(list[i].solidArea2 != null)
-//                {
-//                    Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
-//                            list[i].solidArea2.width , list[i].solidArea2.height);
-//                    if(tmp.intersects(tmp2)) {
-//                        index = i;
-//                        break;
-//                    }
-//
-//                }
             }
         }
 
@@ -126,5 +115,12 @@ public class CollisionHandler {
         return index;
     }
 
+    public boolean checkPlayer(Entity entity){
+        int newHitBoxX = entity.hitbox.x + entity.worldX;
+        int newHitBoxY = entity.hitbox.y + entity.worldY;
+        Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);
+        Rectangle tmp2 = new Rectangle(mp.player.hitbox.x + mp.player.worldX , mp.player.hitbox.y + mp.player.worldY , mp.player.hitbox.width , mp.player.hitbox.height);
+        return tmp2.intersects(tmp1);
+    }
 
 }

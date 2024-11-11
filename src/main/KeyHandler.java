@@ -94,4 +94,14 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_ENTER: enterPressed = false; break;
         }
     }
+
+    public static void disableKey(){
+        upPressed = false;
+        downPressed = false;
+        rightPressed = false;
+        leftPressed = false;
+        enterPressed = false;
+        showHitbox = false;
+        showDebugMenu = false;
+    }
 }

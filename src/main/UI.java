@@ -95,7 +95,7 @@ public class UI {
         }else
         {
             target.dialogueIndex--;
-            if(gameState == GameState.DIALOGUE_STATE)
+            if(gameState == GameState.DIALOGUE_STATE  )
             {
                 gameState = GameState.PLAY_STATE;
             }
@@ -142,7 +142,7 @@ public class UI {
         return x;
     }
 
-    public void render(Graphics2D g2, Player player) {
+    public void render(Graphics2D g2) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
         if(gameState == GameState.PLAY_STATE)
         {
@@ -155,16 +155,20 @@ public class UI {
             drawHPBar();
             drawManaBar();
         }
+        if(gameState == GameState.LEVELUP_STATE){
+            drawDialogueScreen();
+        }
         if(gameState == GameState.PAUSE_STATE)
         {
             drawHPBar();
             drawManaBar();
             drawPausedScreen();
         }
-        if(gameState == GameState.LOSE_STATE)
-        {
+        if(gameState == GameState.LOSE_STATE){
+            gp.currentMap.dispose();
             drawGameOverScreen();
         }
+
     }
 
     public Font getFont(){return joystix;};
@@ -197,13 +201,22 @@ public class UI {
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
     }
 
+    public void drawLevelUpWindow(){
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        int x = tileSize * 2;
+        int y = tileSize / 2;
+        int width = gp.getWidth() - tileSize * 4;
+        int height = tileSize * 4;
+        drawSubWindow(x , y , width , height);
+    }
+
     public void drawGameOverScreen()
     {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
         g2.setColor(Color.WHITE);
         String text = "You sucked";
         int x = getXforCenteredText(text);
-        int y = windowWidth / 2;
+        int y = windowHeight / 2;
         g2.drawString(text , x , y);
     }
 }

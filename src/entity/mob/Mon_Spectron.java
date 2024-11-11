@@ -21,9 +21,6 @@ Mô tả:
 */
 
 public class Mon_Spectron extends Entity implements Actable {
-
-    public static String trait = "fly";
-
     GameMap mp;
     final private int IDLE = 0;
     final private int RUN = 1;
@@ -50,6 +47,7 @@ public class Mon_Spectron extends Entity implements Actable {
     private int shootInterval = 120;
 
     private int CURRENT_FRAME;
+    private int lastHP;
 
     public Mon_Spectron(GameMap mp)
     {
@@ -75,8 +73,11 @@ public class Mon_Spectron extends Entity implements Actable {
         projectile = new Obj_BasicGreenProjectile(mp);
         invincibleDuration = 40; // 1s
         maxHP = 40;
-        this.currentHP = maxHP;
+        currentHP = maxHP;
+        lastHP = currentHP;
         speed = 1;
+
+        expDrop = 10;
 
         solidArea1 = new Rectangle(20 , 19 , 26 , 15);
         hitbox = new Rectangle(20 , 8 , 27 , 32);
@@ -144,7 +145,7 @@ public class Mon_Spectron extends Entity implements Actable {
             PREVIOUS_ACTION = CURRENT_ACTION;
             if(isRunning) mon_animator_spectron.setAnimationState(mon_spectron[RUN][CURRENT_DIRECTION] , 10);
             if(isDying){
-                mon_animator_spectron.setAnimationState(mon_spectron[DIE][CURRENT_DIRECTION] , 15);
+                mon_animator_spectron.setAnimationState(mon_spectron[DIE][CURRENT_DIRECTION] , 10);
                 mon_animator_spectron.playOnce();
             }
             if(isShooting){
@@ -182,12 +183,12 @@ public class Mon_Spectron extends Entity implements Actable {
             up = down = left = right = false;
             Random random = new Random();
             int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if(i <= 25)
+            if(i <= 28)
             {
                 direction = "up";
                 up = true;
             }
-            if(i>25 && i <= 50)
+            if(i>28 && i <= 50)
             {
                 direction = "down";
                 down = true;
@@ -197,7 +198,7 @@ public class Mon_Spectron extends Entity implements Actable {
                 direction = "left";
                 left = true;
             }
-            if(i>75 && i <= 100)
+            if(i>75 && i < 100)
             {
                 direction = "right";
                 right = true;
@@ -207,15 +208,24 @@ public class Mon_Spectron extends Entity implements Actable {
         }
 
         //ATTACK
-        attackLockCounter++;
-        if(attackLockCounter >= shootInterval){
-            Random gen = new Random();
-            int i = gen.nextInt(100) + 1;
-            if(i >= 75 && i < 100){
-                isShooting = true;
-                isRunning = false;
+        if(lastHP > currentHP){
+            lastHP = currentHP;
+            reactForDamage();
+            isShooting = true;
+            isRunning = false;
+            if(isDying) isShooting = false;
+        } else {
+            if(isShooting && isDying) isShooting = false;
+            attackLockCounter++;
+            if (attackLockCounter >= shootInterval && !isDying) {
+                Random gen = new Random();
+                int i = gen.nextInt(100) + 1;
+                if (i >= 75 && i < 100) {
+                    isShooting = true;
+                    isRunning = false;
+                }
+                attackLockCounter = 0;
             }
-            attackLockCounter= 0;
         }
 
         //INVINCIBLE
@@ -240,6 +250,13 @@ public class Mon_Spectron extends Entity implements Actable {
         }
     }
 
+    public void reactForDamage(){
+        switch (mp.player.projectile.direction){
+            case "right": direction = "left"; left = true ; break;
+            case "left" : direction = "right"; right = true ; break;
+        }
+    }
+
     public void move() {
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
@@ -258,6 +275,7 @@ public class Mon_Spectron extends Entity implements Actable {
         newWorldX = worldX;
         newWorldY = worldY;
     }
+
 
 
     @Override
