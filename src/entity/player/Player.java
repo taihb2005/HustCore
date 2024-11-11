@@ -27,6 +27,8 @@ public class Player extends Entity {
 
     final int RIGHT = 0;
     final int LEFT = 1;
+    final int DOWN = 2;
+    final int UP = 3;
 
     private int PREVIOUS_ACTION;
     private int CURRENT_ACTION;
@@ -139,8 +141,7 @@ public class Player extends Entity {
         }else if(isRunning)
         {
             CURRENT_ACTION = RUN;
-            if(left) direction = "left";
-            else if(right) direction = "right";
+            switchDirection();
         } else if(isDying){
             CURRENT_ACTION = DEATH;
         } else
@@ -177,7 +178,16 @@ public class Player extends Entity {
         {
             case "left" : CURRENT_DIRECTION = LEFT; break;
             case "right": CURRENT_DIRECTION = RIGHT; break;
+            case "up"   : CURRENT_DIRECTION = UP; break;
+            case "down" : CURRENT_DIRECTION = DOWN ; break;
         }
+    }
+
+    private void switchDirection(){
+        if(left) direction = "left";
+        else if(right) direction = "right";
+        else if(up) direction = "up";
+        else if(down) direction = "down";
     }
 
 
@@ -272,6 +282,9 @@ public class Player extends Entity {
         if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
             mp.gp.playSoundEffect(2);
             projectile.set(worldX , worldY , direction , true , this);
+            Obj_BasicProjectile tmp = (Obj_BasicProjectile) projectile;
+            tmp.setHitbox();
+            projectile = tmp;
             currentMana -= projectile.manaCost;
             updateMana();
             for(int i = 0; i < mp.projectiles.length; i++)

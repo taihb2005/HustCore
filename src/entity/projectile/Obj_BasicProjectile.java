@@ -15,8 +15,9 @@ public class Obj_BasicProjectile extends Projectile{
         speed = 10;
         base_damage = 10;
         manaCost = 10;
-        solidArea1 = new Rectangle(24 , 32 + 12, 16 , 2);
-        hitbox = new Rectangle(24 , 32 + 12, 16 , 2);
+        direction = "right";
+        hitbox = new Rectangle(24 , 32 , 16 , 2);
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();
         getImage();
@@ -26,5 +27,13 @@ public class Obj_BasicProjectile extends Projectile{
     private void getImage()
     {
         projectile_sprite = new Sprite("/entity/projectile/player_basic_projectile.png").getSpriteArray();
+    }
+
+    public void setHitbox(){
+        switch(direction){
+            case "up"   : hitbox = new Rectangle(18 , 15, 2 , 16) ; break;
+            case "down"     : hitbox = new Rectangle(43 , 27,2 , 16) ; break;
+            default       : hitbox = new Rectangle(24 , 44, 16 , 2); break;
+        }
     }
 }

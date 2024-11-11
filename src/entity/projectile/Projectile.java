@@ -100,7 +100,7 @@ public class Projectile extends Entity {
     }
     public void render(Graphics2D g2) {
         if (active) {
-            g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX()  , worldY - camera.getY() + 12  ,
+            g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() ,
                          width , height , null);
         }
     }

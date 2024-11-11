@@ -158,6 +158,11 @@ public class GameMap {
                     if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
                 }
             }
+            for(Entity e : projectiles){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
         }
         objList.clear();
     }

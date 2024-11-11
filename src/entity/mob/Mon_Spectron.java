@@ -75,6 +75,7 @@ public class Mon_Spectron extends Entity implements Actable {
         maxHP = 40;
         currentHP = maxHP;
         lastHP = currentHP;
+        strength = 20;
         speed = 1;
 
         expDrop = 10;
@@ -254,6 +255,8 @@ public class Mon_Spectron extends Entity implements Actable {
         switch (mp.player.projectile.direction){
             case "right": direction = "left"; left = true ; break;
             case "left" : direction = "right"; right = true ; break;
+            case "up"   : direction = "down" ; down = true; break;
+            case "down" : direction = "up"   ; up = true; break;
         }
     }
 
