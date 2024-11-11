@@ -24,7 +24,8 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int windowWidth = maxWindowCols * 48;
     final static public int windowHeight = maxWindowRows * 48;
 
-    public static Sound sound = new Sound();
+    public static Sound music = new Sound();
+    public static Sound se = new Sound();
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
@@ -60,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setup()
     {
         playMusic(0);
+        se.setFile(1);
     }
 
 
@@ -125,18 +127,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playMusic(int index)
     {
-        sound.setFile(index);
-        sound.play();
-        sound.loop();
+        music.setFile(index);
+        music.play();
+        music.loop();
     }
     public void stopMusic(int index)
     {
-        sound.stop();
+        music.stop();
     }
-    public void playSoundEffect(int index)
+    public void playSE(int index)
     {
-        sound.setFile(index);
-        sound.play();
+        se.setFile(index);
+        se.play();
     }
 
 

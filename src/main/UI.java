@@ -87,7 +87,7 @@ public class UI {
                 frameCounter = 0;
                 if (textIndex < currentDialogue.length()) {
                     // Cập nhật displayedText theo từng ký tự
-                    gp.playSoundEffect(1);
+                    gp.playSE(1);
                     displayedText += currentDialogue.charAt(textIndex);
                     textIndex++;
                 }
@@ -258,7 +258,7 @@ public class UI {
         textX = frameX + tileSize;
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
-        g2.drawString(String.valueOf(sound.volumePercentage), textX + 200, textY);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 200, textY);
         if (commandNum == 0) {
             g2.drawString(">", textX-25, textY);
         }
@@ -267,7 +267,7 @@ public class UI {
         textX = frameX + tileSize;
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
-        g2.drawString(String.valueOf(sound.volumePercentage), textX + 200, textY);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 200, textY);
         if (commandNum == 1) {
             g2.drawString(">", textX-25, textY);
         }

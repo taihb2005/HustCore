@@ -2,8 +2,6 @@ package entity.player;
 
 import entity.Entity;
 import entity.projectile.Obj_BasicProjectile;
-import entity.projectile.Obj_GreenBullet;
-import entity.projectile.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
 import main.GameState;
@@ -13,7 +11,6 @@ import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Player extends Entity {
 
@@ -132,7 +129,7 @@ public class Player extends Entity {
 
     private void shootProjectile() {
         if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL){
-            mp.gp.playSoundEffect(2);
+            mp.gp.playSE(2);
             projectile.set(worldX , worldY , direction , true , this);
             for(int i = 0; i < mp.projectiles.length; i++)
             {

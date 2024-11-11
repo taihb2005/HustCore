@@ -95,18 +95,26 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_A)
             {
                 if (GamePanel.ui.subState == 0) {
-                    if (GamePanel.ui.commandNum == 0 && GamePanel.sound.volumePercentage > 0) {
-                        GamePanel.sound.volumePercentage-=10;
-                        GamePanel.sound.checkVolume(GamePanel.sound.volumePercentage);
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage > 0) {
+                        GamePanel.music.volumePercentage-=10;
+                        GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
+                    }
+                    if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage > 0) {
+                        GamePanel.se.volumePercentage-=10;
+                        GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
                     }
                 }
             }
             if(keyCode == KeyEvent.VK_D)
             {
                 if (GamePanel.ui.subState == 0) {
-                    if (GamePanel.ui.commandNum == 0 && GamePanel.sound.volumePercentage < 100) {
-                        GamePanel.sound.volumePercentage+=10;
-                        GamePanel.sound.checkVolume(GamePanel.sound.volumePercentage);
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage < 100) {
+                        GamePanel.music.volumePercentage+=10;
+                        GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
+                    }
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.se.volumePercentage < 100) {
+                        GamePanel.se.volumePercentage+=10;
+                        GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
                     }
                 }
             }
