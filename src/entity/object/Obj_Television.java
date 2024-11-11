@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 
 public class Obj_Television extends Entity {
-    public static String name = "television";
     private final BufferedImage[] obj_televisionOn;
     private final Animation obj_animator_television;
     private int currentFrames = 0;
@@ -18,6 +17,7 @@ public class Obj_Television extends Entity {
 
     public Obj_Television(int type) {
         super();
+        name = "Television";
         super.width = 128;
         super.height = 48;
 

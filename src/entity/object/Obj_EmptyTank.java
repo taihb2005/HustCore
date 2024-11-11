@@ -9,11 +9,11 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 
 public class Obj_EmptyTank extends Entity {
-    public static String name = "empty_tank";
     private final BufferedImage obj_emptyTank;
 
     public Obj_EmptyTank(){
         super();
+        name = "Empty Tank";
         super.width = 64;
         super.height = 128;
 

@@ -1,5 +1,7 @@
 package util;
 
+import java.util.Random;
+
 public class Camera {
     private int x, y; // Top-left corner of the camera
     private int viewportWidth;
@@ -56,7 +58,17 @@ public class Camera {
 
         if (x + viewportWidth > mapWidth) x = mapWidth - viewportWidth;
         if (y + viewportHeight > mapHeight) y = mapHeight - viewportHeight;
+    }
 
+    public void cameraShake(int targetX , int targetY){
+        Random amplitude_generator = new Random();
+        int offsetX = -2 + amplitude_generator.nextInt(5);
+        int offsetY = -2 + amplitude_generator.nextInt(5);
+
+        x = targetX - viewportWidth / 2 + 32 + offsetX;
+        y = targetY - viewportHeight / 2 + 32 + offsetY;
+
+        clamp();
     }
 
 }

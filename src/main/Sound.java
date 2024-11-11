@@ -1,6 +1,5 @@
-package map;
+package main;
 
-import java.io.IOException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
@@ -13,7 +12,10 @@ public class Sound {
 
     public Sound()
     {
-        soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
+        //soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
+        soundURL[1] = getClass().getResource("/sound/speak.wav");
+        soundURL[2] = getClass().getResource("/sound/shoot.wav");
+        soundURL[3] = getClass().getResource("/sound/levelup.wav");
     }
 
     public void setFile(int index)  {

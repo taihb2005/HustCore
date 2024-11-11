@@ -5,7 +5,7 @@ public interface Actable {
     void set();
     void setDialogue();
     void talk();
+    void attack();
     void loot();
     void pathFinding();
-    void dispose();
 }

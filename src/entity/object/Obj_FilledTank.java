@@ -15,11 +15,11 @@ public class Obj_FilledTank extends Entity {
     private int currentFrames = 0;
     public int type;
 
-    public static String name = "filled_tank";
 
     public Obj_FilledTank(int type)
     {
         super();
+        name = "Filled Tank";
         super.width = 64;
         super.height = 128;
         this.type = type;

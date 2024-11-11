@@ -6,6 +6,7 @@ import entity.player.Player;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
+import main.Sound;
 import util.CollisionHandler;
 
 import java.awt.*;
@@ -17,43 +18,53 @@ import static main.GamePanel.camera;
 
 public class GameMap {
 
+    public GamePanel gp;
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
-    public Sound sound = new Sound();
 
     private final int mapWidth;
     private final int mapHeight;
 
     public ArrayList<TileLayer> mapLayer;
 
-    public LinkedList<Entity> inactiveObj; //Danh sách objects không tương tác được ở trên map
-    public LinkedList<Entity> activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public LinkedList<Entity> npc;         //Danh sách npc ở trên map
-    public LinkedList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , npc,...
+    public int inactiveObjIndex = 0;
+    public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
+    public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
+    public Entity [] npc;         //Danh sách target ở trên map
+    public Entity [] enemy;
+    public Entity [] projectiles;
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
 
     private long startTime = System.nanoTime();
     public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new LinkedList<>(List.of());
-        activeObj   = new LinkedList<>(List.of());
-        npc         = new LinkedList<>(List.of());
-        objList     = new LinkedList<>(List.of());
+        inactiveObj = new Entity[100];
+        activeObj   = new Entity[100];
+        npc         = new Entity[100];
+        enemy       = new Entity[100];
+        projectiles = new Entity[100];
+        objList     = new ArrayList<>();
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
         setter.setObject();
         setter.setNpc();
-
+        setter.setEnemy();
     }
 
     public void render(Graphics2D g2)
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE || GamePanel.gameState == GameState.LEVELUP_STATE) {
             objList.add(player);
             for (Entity entity : inactiveObj) {
+                if (entity != null)
+                    objList.add(entity);
+            }
+
+            for (Entity entity : activeObj) {
                 if (entity != null)
                     objList.add(entity);
             }
@@ -66,7 +77,16 @@ public class GameMap {
                 }
             }
 
-            //System.out.println(npc.get(0) == null);
+            for(Entity entity : enemy)
+            {
+                if(entity != null)
+                {
+                    objList.add(entity);
+                }
+            }
+
+
+            //System.out.println(target.get(0) == null);
 
             Collections.sort(objList, new Comparator<Entity>() {
                 @Override
@@ -87,6 +107,10 @@ public class GameMap {
         for (Entity mapObject : objList)
         {
             if(mapObject != null) mapObject.render(g2);
+        }
+        for(Entity projectile : projectiles)
+        {
+            if(projectile != null) projectile.render(g2);
         }
         mapLayer.get(3).render(g2); //Decor layer
 
@@ -123,23 +147,54 @@ public class GameMap {
                     }
                 }
             }
+            for(Entity e : projectiles){
+                if(e != null){
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                }
+            }
+            g2.setColor(Color.RED);
+            for(Entity e : objList){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
+            for(Entity e : projectiles){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
         }
-
-
+        objList.clear();
     }
 
     public void update()
     {
         if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
-            for (Entity obj : objList) {
-                if (obj != null) {
-                    obj.update();
+
+            //UPDATE ENTITY
+            for(int i = 0 ; i < activeObj.length ; i++){
+                if(activeObj[i] != null){
+                    if(activeObj[i].canbeDestroyed) activeObj[i] = null;
                 }
             }
+            for(int i = 0 ; i < enemy.length ; i++){
+                if(enemy[i] != null){
+                    if(enemy[i].canbeDestroyed) enemy[i] = null;
+                }
+            }
+            for(int i = 0 ; i < projectiles.length ; i++){
+                if(projectiles[i] != null){
+                    if(!projectiles[i].active) projectiles[i] = null;
+                }
+            }
+            for(Entity entity : inactiveObj) if(entity != null) entity.update();
+            for(Entity entity : activeObj) if(entity != null) entity.update();
+            for(Entity entity : npc) if(entity != null) entity.update();
+            for(Entity entity : enemy) if(entity != null) entity.update();
+            for(Entity entity : projectiles) if(entity != null) entity.update();
+            player.update();
 
-            objList.clear();
         }
-
     }
 
     public void parseWallObject(TileLayer layer){
@@ -155,12 +210,20 @@ public class GameMap {
                 Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
                 wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
                 wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                inactiveObj.add(wall);
-
+                inactiveObj[inactiveObjIndex] = wall;
+                inactiveObjIndex++;
             }
         }
     }
 
+    public void dispose(){
+        Arrays.fill(inactiveObj, null);
+        Arrays.fill(activeObj, null);
+        Arrays.fill(npc, null);
+        Arrays.fill(enemy, null);
+        Arrays.fill(projectiles, null);
+        objList.clear();
+    }
 
     public int getMapWidth() {
         return mapWidth;
@@ -170,20 +233,5 @@ public class GameMap {
         return mapHeight;
     }
 
-    public void playMusic(int index)
-    {
-        sound.setFile(index);
-        sound.play();
-        sound.loop();
-    }
-    public void stopMusic(int index)
-    {
-        sound.stop();
-    }
-    public void playSoundEffect(int index)
-    {
-        sound.setFile(index);
-        sound.play();
-    }
 
 }
