@@ -112,7 +112,7 @@ public class KeyHandler implements KeyListener{
                         GamePanel.music.volumePercentage+=10;
                         GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
                     }
-                    if (GamePanel.ui.commandNum == 0 && GamePanel.se.volumePercentage < 100) {
+                    if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage < 100) {
                         GamePanel.se.volumePercentage+=10;
                         GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
                     }
