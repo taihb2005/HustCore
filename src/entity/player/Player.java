@@ -139,38 +139,36 @@ public class Player extends Entity {
         }
     }
 
-    private void keyInput()
-    {
-        up    = KeyHandler.upPressed;
-        down  = KeyHandler.downPressed;
-        left  = KeyHandler.leftPressed;
+    private void keyInput() {
+        up = KeyHandler.upPressed;
+        down = KeyHandler.downPressed;
+        left = KeyHandler.leftPressed;
         right = KeyHandler.rightPressed;
 
         //RUN
         isRunning = up | down | left | right;
 
-        if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
-            if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
+        if (GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false;
+        else if (GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
         //SHOOT
         if (KeyHandler.enterPressed) {
-            if(!attackCanceled) {
+            if (!attackCanceled) {
                 if (!isRunning) {
                     isShooting = true;
                     animator.playOnce();
                     shootProjectile();
                 }
+            }
+            //isShooting = shoot;
         }
-        //isShooting = shoot;
     }
-
-    public void shootProjectile() {
+        public void shootProjectile () {
         if (animator.isPlaying()) { // đang bắn
             int startX = worldX;
             int startY = worldY;
             if (CURRENT_DIRECTION == RIGHT) {
                 startX += width;
-            }
-            else {
+            } else {
                 startX -= width;
             }
             int speed = 5;
@@ -184,38 +182,34 @@ public class Player extends Entity {
         }
     }
 
-    private void handleAnimationState()
-    {
-        if(isShooting && !isRunning && animator.isPlaying() && !attackCanceled) {
-            CURRENT_ACTION = SHOOT;
+        private void handleAnimationState ()
+        {
+            if (isShooting && !isRunning && animator.isPlaying() && !attackCanceled) {
+                CURRENT_ACTION = SHOOT;
 
-        }else if(isRunning && !animator.isPlaying())
-        {
-            CURRENT_ACTION = RUN;
-            if(left) direction = "left";
-            else if(right) direction = "right";
-        } else
-        {
-            animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
-            CURRENT_ACTION = IDLE;
-            PREVIOUS_ACTION = IDLE;
-        }
-
-        if(PREVIOUS_ACTION != CURRENT_ACTION)
-        {
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning) animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
-            if(isShooting && !isRunning)
-            {
-                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
-                animator.playOnce();
+            } else if (isRunning && !animator.isPlaying()) {
+                CURRENT_ACTION = RUN;
+                if (left) direction = "left";
+                else if (right) direction = "right";
+            } else {
+                animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION], 5);
+                CURRENT_ACTION = IDLE;
+                PREVIOUS_ACTION = IDLE;
             }
+
+            if (PREVIOUS_ACTION != CURRENT_ACTION) {
+                PREVIOUS_ACTION = CURRENT_ACTION;
+                if (isRunning) animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION], 10);
+                if (isShooting && !isRunning) {
+                    animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION], 6);
+                    animator.playOnce();
+                }
+            }
+
+            if (!animator.isPlaying()) isShooting = false;
         }
 
-        if (!animator.isPlaying()) isShooting = false;
-    }
-
-    private void changeDirection()
+        private void changeDirection()
     {
         switch(direction)
         {
