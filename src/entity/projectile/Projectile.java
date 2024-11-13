@@ -1,8 +1,9 @@
 package entity.projectile;
 
+import entity.Effect;
 import entity.Entity;
-import entity.object.Obj_Wall;
 import graphics.Animation;
+import main.GamePanel;
 import map.GameMap;
 
 import java.awt.image.BufferedImage;
@@ -25,6 +26,8 @@ public class Projectile extends Entity {
     protected int CURRENT_FRAME;
 
     public int base_damage;
+    public Effect effectType;
+    public int slowDuration;
 
     public Projectile(GameMap mp)
     {
@@ -61,6 +64,26 @@ public class Projectile extends Entity {
         };
     }
 
+    public void setSolidArea(){
+        solidArea1 = hitbox;
+    }
+
+    public boolean checkOppositeDirection(Entity e2){
+        boolean check1 = direction.equals("right") & e2.direction.equals("left");
+        boolean check2 = direction.equals("left") & e2.direction.equals("right");
+        boolean check3 = direction.equals("up") & e2.direction.equals("down");
+        boolean check4 = direction.equals("down") & e2.direction.equals("up");
+        return check1 | check2 | check3 | check4;
+    }
+
+    public void slow(Entity e){
+        e.speed =(int)(e.last_speed * 0.5f);
+    }
+
+    public void stun(Entity e){
+        e.speed = 0;
+    }
+
     public void update() {
         if(user == mp.player){
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
@@ -69,6 +92,14 @@ public class Projectile extends Entity {
         } else{
             boolean contactPlayer = mp.cChecker.checkPlayer(this);
             if(!mp.player.isInvincible && contactPlayer){
+                if(name.equals("Plasma")) {
+                    if(mp.player.getEffect == Effect.NONE) {
+                        GamePanel.environmentManager.lighting.transit = true;
+                        GamePanel.environmentManager.lighting.fadeIn = true;
+                    }
+                    mp.player.getEffect = Effect.BLIND;
+                    effManager.setEffectDuration(600);
+                }
                 active = false;
                 mp.player.receiveDamage(this , user);
                 mp.player.isInvincible = true;
@@ -84,10 +115,16 @@ public class Projectile extends Entity {
         newWorldX = worldX;
         newWorldY = worldY;
 
-        int i = mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
-        if(i != -1)
+        int i1 = mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        if(i1 != -1)
         {
-            if(mp.inactiveObj[i].name.equals("Wall")) {
+            if(mp.inactiveObj[i1].name.equals("Wall")) {
+                active = false;
+            }
+        }
+        int i2 = mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        if(i2 != -1){
+            if(mp.activeObj[i2].name.equals("Door")) {
                 active = false;
             }
         }

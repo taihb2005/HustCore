@@ -15,7 +15,7 @@ public class Obj_BasicGreenProjectile extends Projectile{
         width = 64;
         height = 64;
         maxHP = 80;
-        speed = 7;
+        speed = 10;
         base_damage = 5;
         solidArea1 = new Rectangle(28 , 30 , 8 , 8);
         hitbox = new Rectangle(28 , 30, 8 , 8);

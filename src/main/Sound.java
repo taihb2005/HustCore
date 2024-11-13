@@ -16,7 +16,7 @@ public class Sound {
     int volumePercentage = 100;
     public Sound()
     {
-        //soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
+        soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
         soundURL[1] = getClass().getResource("/sound/speak.wav");
         soundURL[2] = getClass().getResource("/sound/shoot.wav");
         soundURL[3] = getClass().getResource("/sound/levelup.wav");
@@ -29,7 +29,6 @@ public class Sound {
             clip = AudioSystem.getClip();
             clip.open(ais);
             fc = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-            System.out.println(fc);
             checkVolume(volumePercentage);
         } catch(Exception e)
         {
