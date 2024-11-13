@@ -17,6 +17,7 @@ public class KeyHandler implements KeyListener{
     public static boolean key2pressed;
     public static boolean key3pressed;
     public static boolean key4pressed;
+    public static boolean key5pressed;
 
 
     public KeyHandler(GamePanel gp)
@@ -76,15 +77,19 @@ public class KeyHandler implements KeyListener{
             }
             if(keyCode == KeyEvent.VK_2)
             {
-                key1pressed = true;
+                key2pressed = true;
             }
             if(keyCode == KeyEvent.VK_3)
             {
-                key1pressed = true;
+                key3pressed = true;
             }
             if(keyCode == KeyEvent.VK_4)
             {
-                key1pressed = true;
+                key4pressed = true;
+            }
+            if(keyCode == KeyEvent.VK_5)
+            {
+                key5pressed = true;
             }
 
         } else
@@ -180,9 +185,10 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_W: upPressed = false; break;
             case KeyEvent.VK_ENTER: enterPressed = false; break;
             case KeyEvent.VK_1: key1pressed = false; break;
-            case KeyEvent.VK_2: key1pressed = false; break;
-            case KeyEvent.VK_3: key1pressed = false; break;
-            case KeyEvent.VK_4: key1pressed = false; break;
+            case KeyEvent.VK_2: key2pressed = false; break;
+            case KeyEvent.VK_3: key3pressed = false; break;
+            case KeyEvent.VK_4: key4pressed = false; break;
+            case KeyEvent.VK_5: key5pressed = false; break;
         }
     }
 

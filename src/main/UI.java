@@ -163,6 +163,7 @@ public class UI {
         {
             drawHPBar();
             drawManaBar();
+            drawInventory();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -173,6 +174,7 @@ public class UI {
             drawDialogueScreen();
             drawHPBar();
             drawManaBar();
+            drawInventory();
         }
         if(gameState == GameState.LEVELUP_STATE){
             drawDialogueScreen();
@@ -183,6 +185,7 @@ public class UI {
             drawManaBar();
             drawPausedScreen();
             drawOptionsScreen();
+            drawInventory();
         }
         if(gameState == GameState.LOSE_STATE){
             gp.currentMap.dispose();
@@ -301,5 +304,34 @@ public class UI {
             g2.drawString(">", textX-25, textY);
         }
     }
+    public void drawInventory() {
+
+        int frameX = tileSize/4 ;
+        int frameY = tileSize/2 ;
+        int frameWidth = tileSize  ;
+        int frameHeight = tileSize * 6;
+
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        int slotX = frameX + 12;
+        int slotY = frameY + 20;
+        int slotSize = tileSize/4;
+
+        for(int i = 0; i < 5; i++) {
+            int currentslotX = slotX;
+            int currentslotY = slotY + i * (slotSize + 40);
+
+            Color c = new Color(0, 0, 0, 100);
+            g2.setColor(c);
+            g2.fillRoundRect(currentslotX, currentslotY, tileSize/2, tileSize, 10, 10);
+
+            c = new Color(255, 255, 255); // WHITE
+            g2.setColor(c);
+            g2.setStroke(new BasicStroke(5));
+            g2.drawRoundRect(currentslotX, currentslotY, tileSize/2, tileSize, 10, 10);
+
+        }
+    }
+
 }
 
