@@ -13,6 +13,11 @@ public class KeyHandler implements KeyListener{
     public static boolean enterPressed;
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
+    public static boolean key1pressed;
+    public static boolean key2pressed;
+    public static boolean key3pressed;
+    public static boolean key4pressed;
+
 
     public KeyHandler(GamePanel gp)
     {
@@ -59,6 +64,23 @@ public class KeyHandler implements KeyListener{
             {
                 enterPressed = true;
             }
+            if(keyCode == KeyEvent.VK_1)
+            {
+                key1pressed = true;
+            }
+            if(keyCode == KeyEvent.VK_2)
+            {
+                key1pressed = true;
+            }
+            if(keyCode == KeyEvent.VK_3)
+            {
+                key1pressed = true;
+            }
+            if(keyCode == KeyEvent.VK_4)
+            {
+                key1pressed = true;
+            }
+
         } else
         if(GamePanel.gameState == GameState.PAUSE_STATE)
         {
@@ -92,6 +114,10 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_D: rightPressed = false; break;
             case KeyEvent.VK_W: upPressed = false; break;
             case KeyEvent.VK_ENTER: enterPressed = false; break;
+            case KeyEvent.VK_1: key1pressed = false; break;
+            case KeyEvent.VK_2: key1pressed = false; break;
+            case KeyEvent.VK_3: key1pressed = false; break;
+            case KeyEvent.VK_4: key1pressed = false; break;
         }
     }
 
