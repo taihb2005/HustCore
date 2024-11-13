@@ -1,22 +1,24 @@
 package entity.player;
 
+import entity.Effect;
 import entity.Entity;
-import entity.projecttile;
+import entity.projectile.Obj_BasicProjectile;
+import entity.projectile.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
+import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Player extends Entity {
 
     GameMap mp;
     final int IDLE = 0;
-    final int RUN = 1;
+    final int RUN  = 1;
     final int TALK = 2;
     final int SHOOT = 3;
     final int RELOAD = 4;
@@ -24,6 +26,8 @@ public class Player extends Entity {
 
     final int RIGHT = 0;
     final int LEFT = 1;
+    final int DOWN = 2;
+    final int UP = 3;
 
     private int PREVIOUS_ACTION;
     private int CURRENT_ACTION;
@@ -32,27 +36,26 @@ public class Player extends Entity {
     private boolean isRunning;
     private boolean isShooting;
     private boolean isReloading;
-    private boolean isDying;
+    private boolean isDying = false;
 
-    private boolean up;
-    private boolean down;
-    private boolean left;
-    private boolean right;
-    private boolean shoot;
-    private boolean die;
-    
+    private boolean attackCanceled;
     public final int screenX, screenY;
+    public Entity currentLight;
 
-    private BufferedImage[][][] player_gun = new BufferedImage[8][][];;
-    private BufferedImage[][][] player_nogun = new BufferedImage[8][][];
-    private BufferedImage bullet;
-
-    private ArrayList<projecttile> projecttiles = new ArrayList<projecttile>();
+    private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
+    private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
 
     private int CURRENT_FRAME;
-
+    public int SHOOT_INTERVAL ;
+    public int nextLevelUp = 30;
 
     final protected Animation animator = new Animation();
+
+    //PLAYER STATUS
+    public int blindRadius = 100;
+    private final int invincibleDuration = 30;
+    private final int manaHealInterval = 180;
+    private int manaHealCounter = 0;
 
     public Player(GameMap mp) {
         super();
@@ -60,14 +63,12 @@ public class Player extends Entity {
         width = 64;
         height = 64;
 
+        hitbox = new Rectangle(23 , 35 , 16 , 24);
         solidArea1 = new Rectangle(27 , 53 , 13 , 6);
-        solidAreaDefaultX1 = 27;
-        solidAreaDefaultY1 = 53;
+        setDefaultSolidArea();
 
         screenX = GamePanel.windowWidth/2 - 32;
         screenY = GamePanel.windowHeight/2 - 32;
-
-        bullet = new Sprite("/entity/player/bullet.png",width, height).getSpriteSheet();    
 
         getPlayerImages();
         setDefaultValue();
@@ -75,12 +76,21 @@ public class Player extends Entity {
 
     private void setDefaultValue()
     {
-        worldX = 1466;
+        projectile_name = "Basic Projectile";
+        projectile = new Obj_BasicProjectile(mp);
+        SHOOT_INTERVAL = projectile.maxHP + 5;
+        level = 1;
+        exp = 0;
+        set();
+
+        worldX = 1400;
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
         speed = 3;
+        last_speed = speed;
 
+        attackCanceled = false;
         up = down = left = right = false;
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
@@ -101,59 +111,41 @@ public class Player extends Entity {
     }
 
 
-    @Override
-    public void update()
-    {
-        keyInput();
-        handlePosition();
-        changeDirection();
-        //handleCollision();
-        handleAnimationState();
-        animator.update();
-        CURRENT_FRAME = animator.getCurrentFrames();
-    }
-
-
-    @Override
-    public void render(Graphics2D g2)
-    {
-        g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
-                     worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
-                     width, height, null);
-    }
 
     private void keyInput()
     {
+        if(isDying) KeyHandler.disableKey();
         up    = KeyHandler.upPressed;
         down  = KeyHandler.downPressed;
         left  = KeyHandler.leftPressed;
         right = KeyHandler.rightPressed;
-        shoot = KeyHandler.shootPressed;
 
-        if (KeyHandler.shootPressed) {
-            isShooting = true;
-            animator.playOnce();
+        //RUN
+        isRunning = up | down | left | right;
+
+        if(GamePanel.gameState == GameState.PLAY_STATE) attackCanceled = false; else
+            if(GamePanel.gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
+        //SHOOT
+        if (KeyHandler.enterPressed) {
+            if (!attackCanceled && !isRunning && shootAvailableCounter == SHOOT_INTERVAL) {
+                isShooting = true;
+                shootProjectile();
+            }
         }
 
-        isRunning = up | down | left | right;
         //isShooting = shoot;
     }
 
     private void handleAnimationState()
     {
-        if(isShooting && animator.isPlaying()) {
+        if(isShooting && !isRunning  && !attackCanceled ) {
             CURRENT_ACTION = SHOOT;
-            //animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 5);
         }else if(isRunning)
         {
             CURRENT_ACTION = RUN;
-            if(left)
-            {
-                direction = "left";
-            } else if(right)
-            {
-                direction = "right";
-            }
+            switchDirection();
+        } else if(isDying){
+            CURRENT_ACTION = DEATH;
         } else
         {
             animator.setAnimationState(player_gun[IDLE][CURRENT_DIRECTION] , 5);
@@ -164,21 +156,22 @@ public class Player extends Entity {
         if(PREVIOUS_ACTION != CURRENT_ACTION)
         {
             PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning)
+            if(isRunning) animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
+            if(isShooting && !isRunning)
             {
-                animator.setAnimationState(player_gun[CURRENT_ACTION][CURRENT_DIRECTION] , 10);
+                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 6);
+                animator.playOnce();
             }
-            if(isShooting)
-            {
-                animator.setAnimationState(player_gun[SHOOT][CURRENT_DIRECTION] , 4);
+            if(isDying){
+                animator.setAnimationState(player_gun[DEATH][CURRENT_DIRECTION] , 15);
+                animator.playOnce();
             }
         }
-
-        if (!animator.isPlaying()) {
-            isShooting = false;
+        if ((!animator.isPlaying() && isShooting) || isRunning) isShooting = false;
+        if (!animator.isPlaying() && isDying){
+            isDying = false;
+            GamePanel.gameState = GameState.LOSE_STATE;
         }
-        //System.out.println(frameCounts);
-
     }
 
     private void changeDirection()
@@ -187,40 +180,50 @@ public class Player extends Entity {
         {
             case "left" : CURRENT_DIRECTION = LEFT; break;
             case "right": CURRENT_DIRECTION = RIGHT; break;
+            case "up"   : CURRENT_DIRECTION = UP; break;
+            case "down" : CURRENT_DIRECTION = DOWN ; break;
         }
     }
 
-//    private void handleCollision(){
-//        collisionOn = false;
-//        onlyChangeDirection = false;
-//        mp.cChecker.checkObjectCollsion(this);
-//    }
+    private void switchDirection(){
+        if(left) direction = "left";
+        else if(right) direction = "right";
+        else if(up) direction = "up";
+        else if(down) direction = "down";
+    }
+
 
     private void handlePosition()
     {
+        isInteracting = false;
+        interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
+        interactEnemy(mp.cChecker.checkInteractEntity(this , true , mp.enemy));
+        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
-        if (up && isRunning) {
-            if(right){newWorldX += 1; newWorldY -= 1;} else
-            if(left){newWorldX -= 1 ; newWorldY -= 1;} else
+        if (up && isRunning && !isShooting) {
+            if(right){newWorldX += speed / 3; newWorldY -= speed / 3;} else
+            if(left){newWorldX -= speed / 3 ; newWorldY -= speed / 3;} else
                 if(!down) newWorldY -= speed;
         }
-        if (down && isRunning) {
-            if(right){newWorldX += 1; newWorldY += 1;} else
-            if(left){newWorldX -= 1 ; newWorldY += 1;} else
+        if (down && isRunning && !isShooting) {
+            if(right){newWorldX += speed / 3; newWorldY += speed / 3;} else
+            if(left){newWorldX -= speed / 3 ; newWorldY += speed / 3;} else
             if(!up) newWorldY += speed;
         }
-        if (left && isRunning) {
-            if(up){newWorldX -= 1; newWorldY -= 1;} else
-            if(down){newWorldX -= 1 ; newWorldY +=1;} else
+        if (left && isRunning && !isShooting) {
+            if(up){newWorldX -= speed / 3; newWorldY -= speed / 3;} else
+            if(down){newWorldX -= speed / 3 ; newWorldY += speed / 3;} else
                 if(!right) newWorldX -= speed;
         }
-        if (right && isRunning) {
-            if(up){newWorldX += 1; newWorldY -= 1;} else
-            if(down){newWorldX += 1 ; newWorldY += 1;} else
+        if (right && isRunning && !isShooting) {
+            if(up){newWorldX += speed / 3; newWorldY -= speed / 3;} else
+            if(down){newWorldX += speed / 3 ; newWorldY += speed / 3;} else
             if(!left) newWorldX += speed;
         }
 
-        mp.cChecker.checkCollisionWithInactiveObject(this);
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
 
         if(!collisionOn)
         {
@@ -230,8 +233,219 @@ public class Player extends Entity {
         newWorldX = worldX;
         newWorldY = worldY;
 
-        GamePanel.camera.centerOn(worldX , worldY);
+        if(isShooting){
+            GamePanel.camera.cameraShake(worldX , worldY);
+        } else GamePanel.camera.centerOn(worldX , worldY);
+    }
+
+    private void handleStatus(){
+        if(shootAvailableCounter < SHOOT_INTERVAL){
+            shootAvailableCounter++;
+        }
+        if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
+
+        if(isInvincible){
+            invincibleCounter++;
+            if(invincibleCounter >= invincibleDuration){
+                invincibleCounter = 0;
+                isInvincible = false;
+            }
+        }
+    }
+
+    private void interactNpc(int index)
+    {
+        if(index != -1)
+        {
+            mp.npc[index].isInteracting = true;
+            attackCanceled = true;
+            isInteracting = true;
+            if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
+                KeyHandler.enterPressed = false;
+                GamePanel.gameState = GameState.DIALOGUE_STATE;
+                mp.npc[index].talk();
+            }
+        }
+    }
+
+    private void interactEnemy(int index){
+        if(index != -1)
+            mp.enemy[index].isInteracting = true;
+    }
+
+    private void interactObject(int index)
+    {
+        if(index != -1){
+            attackCanceled = true;
+            isInteracting = true;
+            if(KeyHandler.enterPressed)
+            {
+                KeyHandler.enterPressed = false;
+                mp.activeObj[index].isOpening = true;
+            }
+        }
+    }
+
+    private void shootProjectile() {
+        checkForMana();
+        if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
+            mp.gp.playSE(2);
+            projectile.set(worldX , worldY , direction , true , this);
+            Obj_BasicProjectile tmp = (Obj_BasicProjectile) projectile;
+            tmp.setHitbox();
+            projectile = tmp;
+            projectile.setSolidArea();
+            currentMana -= projectile.manaCost;
+            updateMana();
+            for(int i = 0; i < mp.projectiles.length; i++)
+            {
+                if(mp.projectiles[i] == null)
+                {
+                    mp.projectiles[i] = projectile;
+                    break;
+                }
+            }
+            shootAvailableCounter = 0;
+        }
+    }
+
+    public void damageEnemy(int index){
+        if(index != -1){
+            projectile.active = false;
+            switch (mp.enemy[index].name){
+                case "Shooter": mp.playerAttack.damageShooter(index); break;
+                default       : mp.playerAttack.damageEnemy(index);   break;
+            }
+            if(mp.enemy[index].currentHP <= 0){
+                exp += mp.enemy[index].expDrop;
+                System.out.println("Current exp: " + exp);
+                mp.enemy[index].currentHP = 0;
+                mp.enemy[index].die();
+                checkForLevelUp();
+            }
+        }
+    }
+
+    private void damageShooter(int index){
+        boolean checkDirection = projectile.checkOppositeDirection(mp.enemy[index]);
+        boolean checkDistanceX = Math.abs(this.worldX - mp.enemy[index].worldX) <= 64 * 1;
+        boolean checkDistanceY = Math.abs(this.worldY - mp.enemy[index].worldY) <= 64 * 1;
+        if(checkDirection && (checkDistanceX && checkDistanceY)){
+            if(!mp.enemy[index].isInvincible) {
+                mp.enemy[index].currentHP -= damage;
+                mp.enemy[index].isInvincible = true;
+                System.out.println("Hit! Deal " + damage + " damage to the enemy!");
+            }
+        }
+    }
+
+    public void receiveDamage(Projectile proj , Entity attacker){
+        currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
+    }
+
+    //DEMO
+    private void updateHP() {
+        if(currentHP < 0) currentHP = 0;
+        if (currentHP == 0) {
+            isRunning = false;
+            isDying = true;
+        }
+    }
+
+    private void updateMana(){
+        if(currentMana > maxMana) currentMana = maxMana;
+        if(currentMana < 0) currentMana = 0;
+    }
+
+    private void checkForMana(){
+        if(!hasResource() && isShooting){
+            isShooting = false;
+            GamePanel.gameState = GameState.DIALOGUE_STATE;
+            dialogues[0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
+            startDialogue(this);
+            KeyHandler.enterPressed = false;
+        }
+    }
+
+    private void healMana(){
+        manaHealCounter++;
+        if(manaHealCounter >= manaHealInterval){
+            manaHealCounter = 0;
+            currentMana += 10;
+        }
+        updateMana();
+    }
+
+    public boolean hasResource(){
+        return currentMana >= projectile.manaCost;
     }
 
 
+    @Override
+    public void set(){
+        setDamage();
+        setDefense();
+        setMaxHP();
+        setMaxMana();
+    }
+
+    private void setDamage(){
+        strength = level - 1;
+        damage = projectile.base_damage + strength * level ;
+    }
+    private void setDefense(){
+        defense = level * 2;
+    }
+    private void setMaxHP(){
+        maxHP = 1000 + (level - 1) * 20;
+        currentHP = maxHP;
+    }
+    private void setMaxMana(){
+        maxMana = 1000 + (level - 1) * 15;
+        currentMana = maxMana;
+    }
+    public void checkForLevelUp(){
+        if(exp >= nextLevelUp)
+        {
+            level++;
+            set();
+            exp = nextLevelUp;
+            nextLevelUp += 30;
+            GamePanel.gameState = GameState.DIALOGUE_STATE;
+            mp.gp.playSE(3);
+            dialogues[0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            startDialogue(this);
+        }
+    }
+
+    @Override
+    public void update()
+    {
+        keyInput();
+        handlePosition();
+        handleStatus();
+        changeDirection();
+        updateHP();
+        healMana();
+        updateEffect();
+        handleAnimationState();
+        animator.update();
+        CURRENT_FRAME = animator.getCurrentFrames();
+
+    }
+
+
+    @Override
+    public void render(Graphics2D g2)
+    {
+        if(isInvincible && !isDying){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.6f));
+        }
+        g2.drawImage(player_gun[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] ,
+                worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
+                width, height, null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
+        if(getEffect == Effect.SLOW) renderSlowEffect(g2);
+        if(getEffect == Effect.BLIND) renderBlindEffect(g2);
+    }
 }

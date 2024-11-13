@@ -22,13 +22,13 @@ Mô tả:
 
 public class Mon_Spectron extends Entity implements Actable {
     GameMap mp;
-    final private int IDLE = 0;
-    final private int RUN = 1;
-    final private int SHOOT = 2;
-    final private int DIE = 3;
+    final private static int IDLE = 0;
+    final private static int RUN = 1;
+    final private static int SHOOT = 2;
+    final private static int DIE = 3;
 
-    final private int RIGHT = 0;
-    final private int LEFT = 1;
+    final private static int RIGHT = 0;
+    final private static int LEFT = 1;
 
     private int PREVIOUS_ACTION;
     private int CURRENT_ACTION;
@@ -52,6 +52,7 @@ public class Mon_Spectron extends Entity implements Actable {
     public Mon_Spectron(GameMap mp)
     {
         super();
+        name = "Spectron";
         this.mp = mp;
         super.width = 64;
         super.height = 64;
@@ -75,8 +76,9 @@ public class Mon_Spectron extends Entity implements Actable {
         maxHP = 40;
         currentHP = maxHP;
         lastHP = currentHP;
-        strength = 20;
+        strength = 10;
         speed = 1;
+        last_speed = speed;
 
         expDrop = 10;
 
@@ -230,13 +232,7 @@ public class Mon_Spectron extends Entity implements Actable {
         }
 
         //INVINCIBLE
-        if(isInvincible){
-            invincibleCounter++;
-            if(invincibleCounter >= invincibleDuration){
-                invincibleCounter = 0;
-                isInvincible = false;
-            }
-        }
+        updateInvincibility();
     }
 
     public void attack() {

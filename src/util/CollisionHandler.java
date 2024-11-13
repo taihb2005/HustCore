@@ -37,20 +37,19 @@ public class CollisionHandler {
         return index;
     }
 
-    public int checkInteractWithNpc(Entity entity , boolean isPlayer){
+    public int checkInteractEntity(Entity entity , boolean isPlayer , Entity [] list){
         int index = -1;
-        for (int i = 0; i < mp.npc.length; i++) {
-            if (mp.npc[i] != null) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null && list[i].interactionDetectionArea != null) {
 
                 int newSolidAreaX1 = entity.newWorldX + entity.solidArea1.x;
                 int newSolidAreaY1 = entity.newWorldY + entity.solidArea1.y;
-                Rectangle tmp1 = new Rectangle(mp.npc[i].worldX + mp.npc[i].interactionDetectionArea.x, mp.npc[i].worldY + mp.npc[i].interactionDetectionArea.y,
-                        mp.npc[i].interactionDetectionArea.width, mp.npc[i].interactionDetectionArea.height);
+                Rectangle tmp1 = new Rectangle(list[i].worldX + list[i].interactionDetectionArea.x, list[i].worldY + list[i].interactionDetectionArea.y,
+                        list[i].interactionDetectionArea.width, list[i].interactionDetectionArea.height);
                 Rectangle tmp = new Rectangle(newSolidAreaX1, newSolidAreaY1, entity.solidArea1.width, entity.solidArea1.height);
 
                 if (tmp.intersects(tmp1)) {
                     if(isPlayer) {
-                        mp.npc[i].isInteracting = true;
                         index = i;
                     }
                     break;

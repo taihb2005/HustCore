@@ -1,6 +1,8 @@
 package main;
 
 // awt library
+import entity.Effect;
+import environment.EnvironmentManager;
 import map.GameMap;
 import map.MapManager;
 import map.MapParser;
@@ -18,13 +20,15 @@ public class GamePanel extends JPanel implements Runnable {
     final static public int scale = 3; // Use to scale the objects which appear on the screen
     final static public int tileSize = originalTileSize * scale;
 
-    final static public int maxWindowCols = 20;
+    final static public int maxWindowCols = 16;
     final static public int maxWindowRows = 12;
 
     final static public int windowWidth = maxWindowCols * 48;
     final static public int windowHeight = maxWindowRows * 48;
 
-    public static Sound sound = new Sound();
+    public static Sound music = new Sound();
+    public static Sound se = new Sound();
+    public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
@@ -43,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
+        setup();
         currentMap.gp = this;
         ui = new UI(this);
 
@@ -53,17 +58,20 @@ public class GamePanel extends JPanel implements Runnable {
         MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
         currentMap = MapManager.getGameMap("map_test");
         camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
-
+        environmentManager = new EnvironmentManager(currentMap);
+        environmentManager.setup();
+        environmentManager.lighting.setLightSource(2000);
     }
 
     public void setup()
     {
         playMusic(0);
+        se.setFile(1);
     }
 
 
     public void startGameThread() {
-        gameState = GameState.PLAY_STATE;
+        gameState = GameState.MENU_STATE;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -105,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if(gameState == GameState.PLAY_STATE ) {
             currentMap.update();
+            if(environmentManager.lighting.transit) environmentManager.lighting.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
@@ -117,6 +126,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         currentMap.render(g2);
+        environmentManager.draw(g2);
         ui.render(g2);
 
         g2.dispose();
@@ -124,18 +134,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playMusic(int index)
     {
-        sound.setFile(index);
-        sound.play();
-        sound.loop();
+        music.setFile(index);
+        music.play();
+        music.loop();
     }
     public void stopMusic(int index)
     {
-        sound.stop();
+        music.stop();
     }
-    public void playSoundEffect(int index)
+    public void playSE(int index)
     {
-        sound.setFile(index);
-        sound.play();
+        se.setFile(index);
+        se.play();
     }
 
 

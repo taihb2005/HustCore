@@ -2,16 +2,15 @@ package map;
 
 import entity.Entity;
 import entity.object.Obj_Wall;
+import entity.player.AttackEnemy;
 import entity.player.Player;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
-import main.Sound;
 import util.CollisionHandler;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import static main.GamePanel.camera;
 
@@ -19,8 +18,10 @@ import static main.GamePanel.camera;
 public class GameMap {
 
     public GamePanel gp;
+    public Player player = new Player(this);
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
+    public AttackEnemy playerAttack = new AttackEnemy(this);
 
     private final int mapWidth;
     private final int mapHeight;
@@ -35,14 +36,16 @@ public class GameMap {
     public Entity [] projectiles;
     public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
 
+    //MAP STAT
+    private int bestLightingRadius = 2000;
+
     private long startTime = System.nanoTime();
-    public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
         inactiveObj = new Entity[100];
         activeObj   = new Entity[100];
-        npc         = new Entity[100];
+        npc = new Entity[100];
         enemy       = new Entity[100];
         projectiles = new Entity[100];
         objList     = new ArrayList<>();
@@ -163,6 +166,12 @@ public class GameMap {
                     if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
                 }
             }
+            g2.setColor(Color.GREEN);
+            for(Entity e : enemy){
+                if(e != null && e.interactionDetectionArea != null){
+                    g2.drawRect(e.interactionDetectionArea.x + e.worldX - camera.getX() , e.interactionDetectionArea.y + e.worldY - camera.getY() , e.interactionDetectionArea.width , e.interactionDetectionArea.height);
+                }
+            }
         }
         objList.clear();
     }
@@ -224,6 +233,9 @@ public class GameMap {
         Arrays.fill(projectiles, null);
         objList.clear();
     }
+
+    public void setBestLightingRadius(int r){bestLightingRadius = r;}
+    public int getBestLightingRadius(){return bestLightingRadius;}
 
     public int getMapWidth() {
         return mapWidth;
