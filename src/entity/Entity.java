@@ -1,7 +1,5 @@
 package entity;
 
-import entity.projectile.Obj_BasicGreenProjectile;
-import entity.projectile.Obj_BasicProjectile;
 import entity.projectile.Projectile;
 import graphics.Sprite;
 import main.GamePanel;
@@ -27,6 +25,7 @@ public abstract class Entity {
     public boolean isOpening = false;
     public boolean isInvincible = false;
     public boolean isDying = false;
+    public boolean isCollected = false;
     public boolean canbeDestroyed = false;
     //SPRITE SIZE
     public int width;

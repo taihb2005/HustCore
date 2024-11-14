@@ -45,12 +45,17 @@ public class AssetSetter {
         mp.inactiveObj[mp.inactiveObjIndex] = chair_no1;
         mp.inactiveObjIndex++;
 
+        Obj_HPchest hPchest_no1 = new Obj_HPchest();
+        hPchest_no1.worldX = 1600; hPchest_no1.worldY = 1500;
+        mp.inactiveObj[mp.inactiveObjIndex] = hPchest_no1;
+        mp.inactiveObjIndex++;
+
         //INTERACTIVE OBJ
         int index = 0;
         Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
         small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-        mp.activeObj[index] = small_door;
-        index++;
+        mp.activeObj[mp.activeObjIndex] = small_door;
+        mp.activeObjIndex++;
     }
 
     public void setNpc()

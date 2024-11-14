@@ -105,7 +105,7 @@ public class UI {
         }else
         {
             target.dialogueIndex--;
-            if(gameState == GameState.DIALOGUE_STATE )
+            if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
             }
@@ -188,7 +188,6 @@ public class UI {
             gp.currentMap.dispose();
             drawGameOverScreen();
         }
-
     }
 
     public Font getFont(){return joystix;};
@@ -219,6 +218,15 @@ public class UI {
         // Vẽ thanh HP hiện tại (màu xanh)
         g2.setColor(Color.BLUE);
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+    }
+
+    public void drawRewardWindow(){
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        int x = tileSize * 2;
+        int y = tileSize / 2;
+        int width = gp.getWidth() - tileSize * 4;
+        int height = tileSize * 4;
+        drawSubWindow(x , y , width , height);
     }
 
     public void drawLevelUpWindow(){
