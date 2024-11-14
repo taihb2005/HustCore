@@ -26,6 +26,9 @@ public class UI {
     int subState = 0;
     int dialogueCount;
 
+    private boolean slotselected = true;
+    int selectedSlot = 0;
+
     public int commandNum = 0;
 
     public Entity target;
@@ -310,12 +313,9 @@ public class UI {
     public void drawInventory() {
 
         int frameX = tileSize / 4;
-        int frameY = tileSize / 2;
+        int frameY = tileSize / 2 + 80;
         int frameWidth = tileSize * 2 - 18;
         int frameHeight = tileSize * 6 + 32;
-        int selectedSlot = 0;
-        boolean slotselected = false;
-
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
         int slotX = frameX + 15;
@@ -344,25 +344,24 @@ public class UI {
             KeyHandler.key5pressed = false;
         }
 
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 15));
+
         for (int i = 0; i < 5; i++) {
-            int currentslotX = slotX;
             int currentslotY = slotY + i * (slotSize + 50);
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.fillRoundRect(slotX, currentslotY, 50, 50, 10, 10);
 
-            Color c = new Color(0, 0, 0, 100);
-            g2.setColor(c);
-            g2.fillRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
-
-            c = new Color(255, 255, 255); // WHITE
-            g2.setColor(c);
+            g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
-            g2.drawRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
+            g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
 
+            String numSlot = Integer.toString(i + 1);
+            g2.drawString(numSlot , slotX + 33 , currentslotY + 44);
 
             if (slotselected && i == selectedSlot)
             {
-                g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
+                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
             }
         }
     }
