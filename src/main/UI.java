@@ -2,12 +2,14 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
+import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 import static main.GamePanel.*;
 
@@ -24,6 +26,9 @@ public class UI {
     int subState = 0;
     int dialogueCount;
 
+    private boolean slotselected = true;
+    int selectedSlot = 0;
+
     public int commandNum = 0;
 
     public Entity target;
@@ -31,6 +36,7 @@ public class UI {
     private BufferedImage hpFrame, manaFrame;
 
     private BufferedImage titleBackground;
+
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -163,6 +169,7 @@ public class UI {
         {
             drawHPBar();
             drawManaBar();
+            drawInventory();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -173,6 +180,7 @@ public class UI {
             drawDialogueScreen();
             drawHPBar();
             drawManaBar();
+            drawInventory();
         }
         if(gameState == GameState.LEVELUP_STATE){
             drawDialogueScreen();
@@ -183,6 +191,7 @@ public class UI {
             drawManaBar();
             drawPausedScreen();
             drawOptionsScreen();
+            drawInventory();
         }
         if(gameState == GameState.LOSE_STATE){
             gp.currentMap.dispose();
@@ -307,6 +316,61 @@ public class UI {
         g2.drawString("Exit", textX, textY);
         if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
+        }
+    }
+    public void drawInventory() {
+
+        int frameX = tileSize / 4;
+        int frameY = tileSize / 2 + 80;
+        int frameWidth = tileSize * 2 - 18;
+        int frameHeight = tileSize * 6 + 32;
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        int slotX = frameX + 15;
+        int slotY = frameY + 12;
+        int slotSize = tileSize / 4;
+
+        if (KeyHandler.key1pressed) {
+            selectedSlot = 0;
+            slotselected = true;
+            KeyHandler.key1pressed = false;
+        } else if (KeyHandler.key2pressed) {
+            selectedSlot = 1;
+            slotselected = true;
+            KeyHandler.key2pressed = false;
+        } else if (KeyHandler.key3pressed) {
+            selectedSlot = 2;
+            slotselected = true;
+            KeyHandler.key3pressed = false;
+        } else if (KeyHandler.key4pressed) {
+            selectedSlot = 3;
+            slotselected = true;
+            KeyHandler.key4pressed = false;
+        } else if (KeyHandler.key5pressed) {
+            selectedSlot = 4;
+            slotselected = true;
+            KeyHandler.key5pressed = false;
+        }
+
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 15));
+
+        for (int i = 0; i < 5; i++) {
+            int currentslotY = slotY + i * (slotSize + 50);
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.fillRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+
+            g2.setColor(new Color(255, 255, 255));
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+
+            String numSlot = Integer.toString(i + 1);
+            g2.drawString(numSlot , slotX + 33 , currentslotY + 44);
+
+            if (slotselected && i == selectedSlot)
+            {
+                g2.setStroke(new BasicStroke(5));
+                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+            }
         }
     }
 }
