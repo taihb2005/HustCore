@@ -28,6 +28,7 @@ public class GameMap {
     public ArrayList<TileLayer> mapLayer;
 
     public int inactiveObjIndex = 0;
+    public int activeObjIndex = 0;
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
     public Entity [] npc;         //Danh sách target ở trên map

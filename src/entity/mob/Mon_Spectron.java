@@ -5,6 +5,7 @@ import entity.Entity;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
+import entity.object.Obj_Heart;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,6 +46,9 @@ public class Mon_Spectron extends Entity implements Actable {
     private int actionLockCounter = 0;
 
     private int CURRENT_FRAME;
+
+    //DEMO
+    private Obj_Heart heart;
 
     public Mon_Spectron(GameMap mp)
     {
@@ -136,6 +140,7 @@ public class Mon_Spectron extends Entity implements Actable {
         if(!mon_animator_spectron.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
+            spawnHeart();
         }
 
     }
@@ -199,6 +204,12 @@ public class Mon_Spectron extends Entity implements Actable {
         newWorldY = worldY;
     }
 
+    private void spawnHeart() {
+        heart = new Obj_Heart();
+        heart.worldX = worldX; heart.worldY = worldY;
+        mp.activeObj[mp.activeObjIndex] = heart;
+        mp.activeObjIndex++;
+    }
 
     @Override
     public void update() {

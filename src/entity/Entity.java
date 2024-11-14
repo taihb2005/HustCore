@@ -18,6 +18,7 @@ public abstract class Entity {
     public boolean isOpening = false;
     public boolean isInvincible = false;
     public boolean isDying = false;
+    public boolean isCollected = false;
     public boolean canbeDestroyed;
     //SPRITE SIZE
     public int width;

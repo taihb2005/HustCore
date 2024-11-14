@@ -217,6 +217,15 @@ public class UI {
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
     }
 
+    public void drawRewardWindow(){
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        int x = tileSize * 2;
+        int y = tileSize / 2;
+        int width = gp.getWidth() - tileSize * 4;
+        int height = tileSize * 4;
+        drawSubWindow(x , y , width , height);
+    }
+
     public void drawGameOverScreen()
     {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
