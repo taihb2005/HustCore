@@ -34,6 +34,7 @@ public class UI {
 
     private BufferedImage titleBackground;
 
+
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -308,46 +309,62 @@ public class UI {
     }
     public void drawInventory() {
 
-        int frameX = tileSize/4 ;
-        int frameY = tileSize/2 ;
-        int frameWidth = tileSize * 2 ;
-        int frameHeight = tileSize * 6;
+        int frameX = tileSize / 4;
+        int frameY = tileSize / 2;
+        int frameWidth = tileSize * 2 - 18;
+        int frameHeight = tileSize * 6 + 32;
+        int selectedSlot = 0;
+        boolean slotselected = false;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
         int slotX = frameX + 15;
-        int slotY = frameY + 15;
-        int slotSize = tileSize/4;
+        int slotY = frameY + 12;
+        int slotSize = tileSize / 4;
 
-        for(int i = 0; i < 5; i++) {
+        if (KeyHandler.key1pressed) {
+            selectedSlot = 0;
+            slotselected = true;
+            KeyHandler.key1pressed = false;
+        } else if (KeyHandler.key2pressed) {
+            selectedSlot = 1;
+            slotselected = true;
+            KeyHandler.key2pressed = false;
+        } else if (KeyHandler.key3pressed) {
+            selectedSlot = 2;
+            slotselected = true;
+            KeyHandler.key3pressed = false;
+        } else if (KeyHandler.key4pressed) {
+            selectedSlot = 3;
+            slotselected = true;
+            KeyHandler.key4pressed = false;
+        } else if (KeyHandler.key5pressed) {
+            selectedSlot = 4;
+            slotselected = true;
+            KeyHandler.key5pressed = false;
+        }
+
+        for (int i = 0; i < 5; i++) {
             int currentslotX = slotX;
-            int currentslotY = slotY + i * (slotSize + 40);
+            int currentslotY = slotY + i * (slotSize + 50);
 
             Color c = new Color(0, 0, 0, 100);
             g2.setColor(c);
-            g2.fillRoundRect(currentslotX, currentslotY, 64, 50, 10, 10);
+            g2.fillRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
 
             c = new Color(255, 255, 255); // WHITE
             g2.setColor(c);
-            g2.setStroke(new BasicStroke(5));
-            g2.drawRoundRect(currentslotX, currentslotY, 64, 50, 10, 10);
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
 
 
-            if ((i == 0 && KeyHandler.key1pressed) ||
-                    (i == 1 && KeyHandler.key2pressed) ||
-                    (i == 2 && KeyHandler.key3pressed) ||
-                    (i == 3 && KeyHandler.key4pressed) ||
-                    (i == 4 && KeyHandler.key5pressed)) {
-
-
-                KeyHandler.key1pressed = false;
-                KeyHandler.key2pressed = false;
-                KeyHandler.key3pressed = false;
-                KeyHandler.key4pressed = false;
-                KeyHandler.key5pressed = false;
+            if (slotselected && i == selectedSlot)
+            {
+                g2.setColor(Color.YELLOW);
+                g2.setStroke(new BasicStroke(5));
+                g2.drawRoundRect(currentslotX - 2, currentslotY - 2, 50, 50, 10, 10);
             }
         }
     }
-
 }
 
