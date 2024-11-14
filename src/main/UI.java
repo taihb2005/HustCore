@@ -362,7 +362,7 @@ public class UI {
             {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(currentslotX - 2, currentslotY - 2, 50, 50, 10, 10);
+                g2.drawRoundRect(currentslotX, currentslotY, 50, 50, 10, 10);
             }
         }
     }
