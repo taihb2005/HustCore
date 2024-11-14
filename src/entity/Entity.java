@@ -161,6 +161,7 @@ public abstract class Entity {
         BufferedImage blind = new Sprite("/effect/blind.png").getSpriteSheet();
         g2.drawImage(blind , worldX - camera.getX() + 35 , worldY - camera.getY() + 20, null);
     }
+    public void setHitbox(){};
     public abstract void update();
     public abstract void render(Graphics2D g2);
     public void dispose()

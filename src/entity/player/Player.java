@@ -224,6 +224,7 @@ public class Player extends Entity {
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.npc);
+        mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
 
         if(!collisionOn)
         {
@@ -233,7 +234,7 @@ public class Player extends Entity {
         newWorldX = worldX;
         newWorldY = worldY;
 
-        if(isShooting){
+        if(isShooting && !attackCanceled){
             GamePanel.camera.cameraShake(worldX , worldY);
         } else GamePanel.camera.centerOn(worldX , worldY);
     }
@@ -291,20 +292,11 @@ public class Player extends Entity {
         if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
             mp.gp.playSE(2);
             projectile.set(worldX , worldY , direction , true , this);
-            Obj_BasicProjectile tmp = (Obj_BasicProjectile) projectile;
-            tmp.setHitbox();
-            projectile = tmp;
+            projectile.setHitbox();
             projectile.setSolidArea();
             currentMana -= projectile.manaCost;
             updateMana();
-            for(int i = 0; i < mp.projectiles.length; i++)
-            {
-                if(mp.projectiles[i] == null)
-                {
-                    mp.projectiles[i] = projectile;
-                    break;
-                }
-            }
+            mp.addObject(projectile , mp.projectiles);
             shootAvailableCounter = 0;
         }
     }
@@ -345,7 +337,8 @@ public class Player extends Entity {
 
     //DEMO
     private void updateHP() {
-        if(currentHP < 0) currentHP = 0;
+        if(currentHP > maxHP) currentHP = maxHP; else
+            if(currentHP < 0) currentHP = 0;
         if (currentHP == 0) {
             isRunning = false;
             isDying = true;

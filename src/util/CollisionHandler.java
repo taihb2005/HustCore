@@ -122,4 +122,22 @@ public class CollisionHandler {
         return tmp2.intersects(tmp1);
     }
 
+    public void checkCollisionPlayer(Entity entity){
+        int newSolidAreaX = entity.solidArea1.x + entity.worldX;
+        int newSolidAreaY = entity.solidArea1.y + entity.worldY;
+        Rectangle tmp1 = new Rectangle(newSolidAreaX , newSolidAreaY, entity.solidArea1.width , entity.solidArea1.height);
+        Rectangle tmp2 = new Rectangle(mp.player.solidArea1.x + mp.player.worldX , mp.player.solidArea1.y + mp.player.worldY , mp.player.solidArea1.width , mp.player.solidArea1.height);
+        if(tmp2.intersects(tmp1)){
+            entity.collisionOn = true;
+        }
+
+        if(entity.solidArea2 != null){
+            Rectangle tmp3 = new Rectangle(entity.worldX + entity.solidArea2.x , entity.worldY + entity.solidArea2.y,
+                    entity.solidArea2.width , entity.solidArea2.height);
+            if(tmp3.intersects(tmp2)) {
+                entity.collisionOn = true;
+            }
+        }
+    }
+
 }

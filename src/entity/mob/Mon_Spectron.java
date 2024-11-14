@@ -111,7 +111,7 @@ public class Mon_Spectron extends Entity implements Actable {
     }
 
     public void loot() {
-
+        spawnHeart();
     }
 
     public void pathFinding() {
@@ -171,7 +171,7 @@ public class Mon_Spectron extends Entity implements Actable {
         if(!mon_animator_spectron.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
-            spawnHeart();
+            loot();
         }
 
     }
@@ -270,6 +270,7 @@ public class Mon_Spectron extends Entity implements Actable {
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionPlayer(this);
 
         if(!collisionOn)
         {
@@ -281,10 +282,9 @@ public class Mon_Spectron extends Entity implements Actable {
     }
 
     private void spawnHeart() {
-        heart = new Obj_Heart();
-        heart.worldX = worldX; heart.worldY = worldY;
-        mp.activeObj[mp.activeObjIndex] = heart;
-        mp.activeObjIndex++;
+        heart = new Obj_Heart(mp);
+        heart.worldX = worldX + 16; heart.worldY = worldY + 16;
+        mp.addObject(heart , mp.activeObj);
     }
 
 

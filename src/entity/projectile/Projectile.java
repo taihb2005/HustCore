@@ -35,14 +35,6 @@ public class Projectile extends Entity {
         this.direction = "right";
     }
 
-//    public Projectile(int x, int y, int speed, int direction, BufferedImage Sprite) {
-//        super(x, y, speed);
-//        this.direction = direction;
-//        this.Sprite = Sprite;
-//        this.active = true;
-//        shootingArea = new Rectangle(32, 32, 64, 128);
-//    }
-
     public void set(int worldX, int worldY, String direction, boolean active, Entity user)
     {
         this.worldX = worldX;
@@ -99,6 +91,12 @@ public class Projectile extends Entity {
                     }
                     mp.player.getEffect = Effect.BLIND;
                     effManager.setEffectDuration(600);
+                } else if(name.equals("Basic Green Projectile")){
+                    if(mp.player.getEffect == Effect.NONE) {
+                        mp.player.getEffect = Effect.SLOW;
+                        slow(mp.player);
+                        effManager.setEffectDuration(150);
+                    }
                 }
                 active = false;
                 mp.player.receiveDamage(this , user);

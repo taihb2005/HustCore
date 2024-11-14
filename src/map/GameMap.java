@@ -28,11 +28,9 @@ public class GameMap {
 
     public ArrayList<TileLayer> mapLayer;
 
-    public int inactiveObjIndex = 0;
-    public int activeObjIndex = 0;
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public Entity [] npc;         //Danh sách target ở trên map
+    public Entity [] npc;//Danh sách target ở trên map
     public Entity [] enemy;
     public Entity [] projectiles;
     public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
@@ -46,10 +44,11 @@ public class GameMap {
         mapLayer    = new ArrayList<>();
         inactiveObj = new Entity[100];
         activeObj   = new Entity[100];
-        npc = new Entity[100];
+        npc         = new Entity[100];
         enemy       = new Entity[100];
         projectiles = new Entity[100];
         objList     = new ArrayList<>();
+        dispose();
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
@@ -220,8 +219,9 @@ public class GameMap {
                 Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
                 wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
                 wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                inactiveObj[inactiveObjIndex] = wall;
-                inactiveObjIndex++;
+                addObject(wall , inactiveObj);
+//                inactiveObj[inactiveObjIndex] = wall;
+//                inactiveObjIndex++;
             }
         }
     }
@@ -233,6 +233,15 @@ public class GameMap {
         Arrays.fill(enemy, null);
         Arrays.fill(projectiles, null);
         objList.clear();
+    }
+
+    public void addObject(Entity entity , Entity[] list){
+        for(int i = 0 ; i < list.length ; i++){
+            if(list[i] == null){
+                list[i] = entity;
+                break;
+            }
+        }
     }
 
     public void setBestLightingRadius(int r){bestLightingRadius = r;}
