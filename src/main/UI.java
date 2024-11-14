@@ -2,12 +2,14 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
+import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 import static main.GamePanel.*;
 
@@ -308,13 +310,13 @@ public class UI {
 
         int frameX = tileSize/4 ;
         int frameY = tileSize/2 ;
-        int frameWidth = tileSize  ;
+        int frameWidth = tileSize * 2 ;
         int frameHeight = tileSize * 6;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        int slotX = frameX + 12;
-        int slotY = frameY + 20;
+        int slotX = frameX + 15;
+        int slotY = frameY + 15;
         int slotSize = tileSize/4;
 
         for(int i = 0; i < 5; i++) {
@@ -323,13 +325,27 @@ public class UI {
 
             Color c = new Color(0, 0, 0, 100);
             g2.setColor(c);
-            g2.fillRoundRect(currentslotX, currentslotY, tileSize/2, tileSize, 10, 10);
+            g2.fillRoundRect(currentslotX, currentslotY, 64, 50, 10, 10);
 
             c = new Color(255, 255, 255); // WHITE
             g2.setColor(c);
             g2.setStroke(new BasicStroke(5));
-            g2.drawRoundRect(currentslotX, currentslotY, tileSize/2, tileSize, 10, 10);
+            g2.drawRoundRect(currentslotX, currentslotY, 64, 50, 10, 10);
 
+
+            if ((i == 0 && KeyHandler.key1pressed) ||
+                    (i == 1 && KeyHandler.key2pressed) ||
+                    (i == 2 && KeyHandler.key3pressed) ||
+                    (i == 3 && KeyHandler.key4pressed) ||
+                    (i == 4 && KeyHandler.key5pressed)) {
+
+
+                KeyHandler.key1pressed = false;
+                KeyHandler.key2pressed = false;
+                KeyHandler.key3pressed = false;
+                KeyHandler.key4pressed = false;
+                KeyHandler.key5pressed = false;
+            }
         }
     }
 
