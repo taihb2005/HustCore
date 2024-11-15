@@ -1,6 +1,7 @@
 package map;
 
 import entity.Entity;
+import entity.mob.Mon_HustGuardian;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
@@ -114,5 +115,12 @@ public class AssetSetter {
         shooter1.setDirection("down");
         shooter1.setInterval(120);
         mp.enemy[index] = shooter1;
+
+        Mon_HustGuardian hust1 = new Mon_HustGuardian(mp);
+        hust1.worldX = 1566;
+        hust1.worldY = 1566;
+        hust1.newWorldX = 1566;
+        hust1.newWorldY = 1566;
+        mp.addObject(hust1 , mp.enemy);
     }
 }

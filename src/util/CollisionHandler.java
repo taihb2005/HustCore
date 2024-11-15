@@ -123,8 +123,8 @@ public class CollisionHandler {
     }
 
     public void checkCollisionPlayer(Entity entity){
-        int newSolidAreaX = entity.solidArea1.x + entity.worldX;
-        int newSolidAreaY = entity.solidArea1.y + entity.worldY;
+        int newSolidAreaX = entity.solidArea1.x + entity.newWorldX;
+        int newSolidAreaY = entity.solidArea1.y + entity.newWorldY;
         Rectangle tmp1 = new Rectangle(newSolidAreaX , newSolidAreaY, entity.solidArea1.width , entity.solidArea1.height);
         Rectangle tmp2 = new Rectangle(mp.player.solidArea1.x + mp.player.worldX , mp.player.solidArea1.y + mp.player.worldY , mp.player.solidArea1.width , mp.player.solidArea1.height);
         if(tmp2.intersects(tmp1)){

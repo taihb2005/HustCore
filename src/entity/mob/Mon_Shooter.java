@@ -1,12 +1,14 @@
 package entity.mob;
 
 import entity.Actable;
+import entity.Effect;
 import entity.Entity;
 import entity.projectile.Obj_BasicGreenProjectile;
 import entity.projectile.Obj_Plasma;
 import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
+import main.GamePanel;
 import map.GameMap;
 
 import java.awt.*;
@@ -195,6 +197,17 @@ public class Mon_Shooter extends Entity implements Actable {
     }
 
     private void checkForPlayer(){
+        boolean contactPlayer = mp.cChecker.checkPlayer(this);
+        if(contactPlayer && !mp.player.isInvincible){
+            mp.player.receiveDamage(this);
+            mp.player.isInvincible = true;
+            if(mp.player.getEffect == Effect.NONE) {
+                GamePanel.environmentManager.lighting.transit = true;
+                GamePanel.environmentManager.lighting.fadeIn = true;
+            }
+            mp.player.getEffect = Effect.BLIND;
+            effManager.setEffectDuration(600);
+        }
         if(type == IDLE) canChangeState = isInteracting;
         if(!isInteracting && type == ACTIVE){
             activeTimeCounter++;

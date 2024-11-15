@@ -32,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
+    public static GameState lastGameState;
 
     public GameMap currentMap;
 
@@ -112,11 +113,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         if(gameState == GameState.PLAY_STATE ) {
+            resumeMusic(0);
             currentMap.update();
             if(environmentManager.lighting.transit) environmentManager.lighting.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
+            pauseMusic(0);;
         }
     }
 
@@ -124,9 +127,10 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
-        currentMap.render(g2);
-        environmentManager.draw(g2);
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE) {
+            currentMap.render(g2);
+            environmentManager.draw(g2);
+        }
         ui.render(g2);
 
         g2.dispose();
@@ -137,6 +141,12 @@ public class GamePanel extends JPanel implements Runnable {
         music.setFile(index);
         music.play();
         music.loop();
+    }
+    public void pauseMusic(int index){
+        music.pause();
+    }
+    public void resumeMusic(int index){
+        music.resume();
     }
     public void stopMusic(int index)
     {

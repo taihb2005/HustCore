@@ -25,7 +25,7 @@ public class Obj_Heart extends Entity {
     final private BufferedImage[][] obj_heart = new BufferedImage[2][];
     final private Animation obj_animator_heart = new Animation();
 
-    int hpReward = 10;
+    int hpReward = 40;
 
     public Obj_Heart(GameMap mp) {
         super();

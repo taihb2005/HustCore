@@ -262,6 +262,11 @@ public class Mon_Spectron extends Entity implements Actable {
     }
 
     public void move() {
+        boolean contactPlayer = mp.cChecker.checkPlayer(this);
+        if(contactPlayer && !mp.player.isInvincible){
+            mp.player.receiveDamage(this);
+            mp.player.isInvincible = true;
+        }
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;

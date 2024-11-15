@@ -53,7 +53,7 @@ public class Player extends Entity {
 
     //PLAYER STATUS
     public int blindRadius = 100;
-    private final int invincibleDuration = 30;
+    private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
 
@@ -63,8 +63,8 @@ public class Player extends Entity {
         width = 64;
         height = 64;
 
-        hitbox = new Rectangle(23 , 35 , 16 , 24);
-        solidArea1 = new Rectangle(27 , 53 , 13 , 6);
+        hitbox = new Rectangle(25 , 53 , 22 , 11);
+        solidArea1 = new Rectangle(26 , 50 , 12 , 10);
         setDefaultSolidArea();
 
         screenX = GamePanel.windowWidth/2 - 32;
@@ -306,6 +306,7 @@ public class Player extends Entity {
             projectile.active = false;
             switch (mp.enemy[index].name){
                 case "Shooter": mp.playerAttack.damageShooter(index); break;
+                case "Hust Guardian": break;
                 default       : mp.playerAttack.damageEnemy(index);   break;
             }
             if(mp.enemy[index].currentHP <= 0){
@@ -318,21 +319,12 @@ public class Player extends Entity {
         }
     }
 
-    private void damageShooter(int index){
-        boolean checkDirection = projectile.checkOppositeDirection(mp.enemy[index]);
-        boolean checkDistanceX = Math.abs(this.worldX - mp.enemy[index].worldX) <= 64 * 1;
-        boolean checkDistanceY = Math.abs(this.worldY - mp.enemy[index].worldY) <= 64 * 1;
-        if(checkDirection && (checkDistanceX && checkDistanceY)){
-            if(!mp.enemy[index].isInvincible) {
-                mp.enemy[index].currentHP -= damage;
-                mp.enemy[index].isInvincible = true;
-                System.out.println("Hit! Deal " + damage + " damage to the enemy!");
-            }
-        }
-    }
-
     public void receiveDamage(Projectile proj , Entity attacker){
         currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
+    }
+
+    public void receiveDamage(Entity attacker){
+        currentHP = currentHP - (20 + attacker.strength) + (defense);
     }
 
     //DEMO
@@ -424,6 +416,10 @@ public class Player extends Entity {
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();
+
+        if(KeyHandler.godModeOn){
+            hitbox = new Rectangle(0 , 0 , 0 , 0);
+        }
 
     }
 

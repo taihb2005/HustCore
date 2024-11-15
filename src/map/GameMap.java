@@ -60,33 +60,33 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE || GamePanel.gameState == GameState.LEVELUP_STATE) {
-            objList.add(player);
-            for (Entity entity : inactiveObj) {
-                if (entity != null)
-                    objList.add(entity);
-            }
 
-            for (Entity entity : activeObj) {
-                if (entity != null)
-                    objList.add(entity);
-            }
+        objList.add(player);
+        for (Entity entity : inactiveObj) {
+            if (entity != null)
+                objList.add(entity);
+        }
 
-            for(Entity entity : npc)
+        for (Entity entity : activeObj) {
+            if (entity != null)
+                objList.add(entity);
+        }
+
+        for(Entity entity : npc)
+        {
+            if(entity != null)
             {
-                if(entity != null)
-                {
-                    objList.add(entity);
-                }
+                objList.add(entity);
             }
+        }
 
-            for(Entity entity : enemy)
+        for(Entity entity : enemy)
+        {
+            if(entity != null)
             {
-                if(entity != null)
-                {
-                    objList.add(entity);
-                }
+                objList.add(entity);
             }
+        }
 
 
             //System.out.println(target.get(0) == null);
@@ -95,14 +95,11 @@ public class GameMap {
                 @Override
                 public int compare(Entity e1, Entity e2) {
                     int index;
-                    if (e1.worldY == e2.worldY) {
-                        index = Integer.compare(e1.worldX, e2.worldX);
-                    } else
-                        index = Integer.compare(e1.worldY, e2.worldY);
+
+                    index = Integer.compare(e1.worldY, e2.worldY);
                     return index;
                 }
             });
-        }
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
