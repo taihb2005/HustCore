@@ -7,6 +7,7 @@ import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
 import entity.object.Obj_Heart;
+import entity.object.Obj_Coin;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -52,6 +53,7 @@ public class Mon_Spectron extends Entity implements Actable {
 
     //DEMO
     private Obj_Heart heart;
+    private Obj_Coin coin;
 
     public Mon_Spectron(GameMap mp)
     {
@@ -112,6 +114,7 @@ public class Mon_Spectron extends Entity implements Actable {
 
     public void loot() {
         spawnHeart();
+        spawnCoin();
     }
 
     public void pathFinding() {
@@ -290,6 +293,12 @@ public class Mon_Spectron extends Entity implements Actable {
         heart = new Obj_Heart(mp);
         heart.worldX = worldX + 16; heart.worldY = worldY + 16;
         mp.addObject(heart , mp.activeObj);
+    }
+
+    private void spawnCoin() {
+        coin = new Obj_Coin(mp);
+        coin.worldX = worldX; coin.worldY = worldY + 30;
+        mp.addObject(coin , mp.activeObj);
     }
 
 
