@@ -13,6 +13,7 @@ public class KeyHandler implements KeyListener{
     public static boolean enterPressed;
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
+    public static boolean godModeOn = false;
     public static boolean key1pressed;
     public static boolean key2pressed;
     public static boolean key3pressed;
@@ -66,6 +67,9 @@ public class KeyHandler implements KeyListener{
 
             if (keyCode == KeyEvent.VK_F4) {
                 showHitbox = !showHitbox;
+            }
+            if(keyCode == KeyEvent.VK_F2){
+                godModeOn = true;
             }
             if(keyCode == KeyEvent.VK_ENTER)
             {

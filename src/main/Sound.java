@@ -14,6 +14,7 @@ public class Sound {
     int volumeScale = 3;
     float volume;
     int volumePercentage = 100;
+    long savedPos = 0;
     public Sound()
     {
         soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
@@ -33,6 +34,20 @@ public class Sound {
         } catch(Exception e)
         {
             e.printStackTrace();
+        }
+    }
+    public void pause(){
+        if (clip != null && clip.isRunning()) {
+            long currentFramePosition = clip.getFramePosition();
+            clip.stop();
+            savedPos = currentFramePosition;
+        }
+    }
+    public void resume(){
+        if (clip != null && !clip.isRunning()) {
+            clip.setFramePosition((int)savedPos);
+            clip.start();
+            savedPos = 0;
         }
     }
     public void play()
