@@ -46,6 +46,10 @@ public class AssetSetter {
         small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
         mp.addObject(small_door , mp.activeObj);
 
+        Obj_Battery battery_no1 = new Obj_Battery();
+        battery_no1.worldX = 1500; battery_no1.worldY = 1500;
+        mp.addObject(battery_no1 , mp.activeObj);
+
     }
 
     public void setNpc()
