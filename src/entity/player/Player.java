@@ -64,7 +64,7 @@ public class Player extends Entity {
         height = 64;
 
         hitbox = new Rectangle(25 , 53 , 22 , 11);
-        solidArea1 = new Rectangle(26 , 50 , 12 , 10);
+        solidArea1 = new Rectangle(24 , 45 , 17 , 11);
         setDefaultSolidArea();
 
         screenX = GamePanel.windowWidth/2 - 32;

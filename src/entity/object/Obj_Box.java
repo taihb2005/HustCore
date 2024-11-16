@@ -28,7 +28,7 @@ public class Obj_Box extends Entity {
 
     private void setDefault()
     {
-        solidArea1 = new Rectangle(0 , 9 , 32 , 25);
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
         hitbox = new Rectangle(9 , 12 , 14 , 12);
         interactionDetectionArea = new Rectangle(3 , 7 , 50 , 50);
         super.setDefaultSolidArea();
@@ -41,10 +41,11 @@ public class Obj_Box extends Entity {
                 canbeDestroyed = true;
             }
         }
+        isInteracting = false;
     }
 
     private void collect() {
-        dialogues[0] = "Bạn đã nhận được 1 box!";
+        dialogues[0] = "Bạn đã nhận được 1 bộ cứu thương!";
         GamePanel.gameState = GameState.DIALOGUE_STATE;
         startDialogue(this);
     }
