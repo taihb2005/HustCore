@@ -1,5 +1,7 @@
 package map;
 
+import graphics.Sprite;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ public class TileLayer {
     GameMap mp;
 
     BufferedImage[][] tileLayerData;
+    BufferedImage[] temporaryTile;
     int[][] tileLayerDataIndex;
 
     final ArrayList<TileSet> tileSetList;
@@ -30,7 +33,7 @@ public class TileLayer {
         this.tileWidth = tileSetList.get(0).getTileWidth();
         this.tileHeight = tileSetList.get(0).getTileHeight();
         this.tileLayerDataIndex = data;
-
+        this.temporaryTile = new Sprite("/tile/temporaryTile.png", 64 , 64).getSpriteArrayRow(0);
         parseLayerData(data);
     }
 
@@ -52,7 +55,7 @@ public class TileLayer {
                     int worldX = j * tileWidth;
                     int worldY = i * tileHeight;
 
-                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY() , null);
+                    g2.drawImage(temporaryTile[0], worldX - camera.getX() , worldY - camera.getY(), 65, 65, null);
                 }
 
             }

@@ -24,8 +24,8 @@ public class Obj_Chest extends Entity {
         super();
         name = "Chest";
         this.mp = mp;
-        super.width = 32;
-        super.height = 34;
+        super.width = 64;
+        super.height = 64;
 
         obj_animator_Chest = new Animation();
         obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArrayRow(0);
@@ -78,8 +78,9 @@ public class Obj_Chest extends Entity {
 
     @Override
     public void render(Graphics2D g2) {
-        g2.drawImage(obj_Chest[currentFrames] , worldX - camera.getX(), worldY - camera.getY()
-                , width , height , null);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.drawImage(obj_Chest[0] , worldX - camera.getX(), worldY - camera.getY()
+                , width , height+1 , null);
     }
 
 }
