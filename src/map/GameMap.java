@@ -23,6 +23,8 @@ public class GameMap {
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
+    public static int childNodeSize = 16;
+
     private final int mapWidth;
     private final int mapHeight;
     public int maxWorldCol;
@@ -54,8 +56,8 @@ public class GameMap {
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.maxWorldCol = (mapWidth / 64 ) ;
-        this.maxWorldRow = (mapHeight/ 64) ;
+        this.maxWorldCol = (mapWidth / childNodeSize ) ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) ;
 
         setter.setObject();
         setter.setNpc();
@@ -99,7 +101,6 @@ public class GameMap {
                 @Override
                 public int compare(Entity e1, Entity e2) {
                     int index;
-
                     index = Integer.compare(e1.worldY, e2.worldY);
                     return index;
                 }

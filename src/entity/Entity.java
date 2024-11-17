@@ -191,95 +191,84 @@ public abstract class Entity {
 
     public void searchPath(int goalCol, int goalRow)
     {
-        int startCol = (worldX + solidArea1.x) / 64;
-        int startRow = (worldY + solidArea1.y) / 64;
-        pFinder.setNodes(startCol,startRow,goalCol,goalRow,this);
+        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
+        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
+        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
         if(pFinder.search())
         {
             //Next WorldX and WorldY
-            int nextX = pFinder.pathList.get(0).col * 64;
-            int nextY = pFinder.pathList.get(0).row * 64;
+            if(pFinder.pathList.isEmpty()){
+                onPath = false;
+            } else {
+                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
+                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
 
-            //Entity's solidArea position
-            int enLeftX = worldX + solidArea1.x;
-            int enRightX = worldX + solidArea1.x + solidArea1.width;
-            int enTopY = worldY + solidArea1.y;
-            int enBottomY = worldY + solidArea1.y + solidArea1.height;
 
-            // TOP PATH
-            if(enTopY > nextY && enLeftX >= nextX && enRightX < nextX + 64)
-            {
-                direction = "up";
-            }
-            // BOTTOM PATH
-            else if(enTopY < nextY && enLeftX >= nextX && enRightX < nextX + 64)
-            {
-                direction = "down";
-            }
-            // RIGHT - LEFT PATH
-            else if(enTopY >= nextY && enBottomY < nextY + 64)
-            {
-                //either left or right
-                // LEFT PATH
-                if(enLeftX > nextX)
-                {
-                    direction = "left";
+                //Entity's solidArea position
+                int enLeftX = worldX + solidArea1.x;
+                int enRightX = worldX + solidArea1.x + solidArea1.width;
+                int enTopY = worldY + solidArea1.y;
+                int enBottomY = worldY + solidArea1.y + solidArea1.height;
+
+                // TOP PATH
+                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                    direction = "up";
                 }
-                // RIGHT PATH
-                if(enLeftX < nextX)
-                {
-                    direction = "right";
+                // BOTTOM PATH
+                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                    direction = "down";
                 }
-            }
-            //OTHER EXCEPTIONS
-            else if(enTopY > nextY && enLeftX > nextX)
-            {
-                // up or left
-                direction = "up";
-                newWorldY -= speed;
-                checkCollision();
-                //System.out.println(collisionOn);
-                if(collisionOn)
-                {
-                    direction = "left";
+                // RIGHT - LEFT PATH
+                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
+                    //either left or right
+                    // LEFT PATH
+                    if (enLeftX > nextX) {
+                        direction = "left";
+                    }
+                    // RIGHT PATH
+                    if (enLeftX < nextX) {
+                        direction = "right";
+                    }
                 }
-                newWorldY += speed;
-            }
-            else if(enTopY > nextY && enLeftX < nextX)
-            {
-                // up or right
-                direction = "up";
-                newWorldY -= speed;
-                checkCollision();
-                if(collisionOn)
-                {
-                    direction = "right";
+                //OTHER EXCEPTIONS
+                else if (enTopY > nextY && enLeftX > nextX) {
+                    // up or left
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    //System.out.println(collisionOn);
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY > nextY && enLeftX < nextX) {
+                    // up or right
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY < nextY && enLeftX > nextX) {
+                    // down or left
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY -= speed;
+                } else if (enTopY < nextY && enLeftX < nextX) {
+                    // down or right
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY -= speed;
                 }
-                newWorldY += speed;
-            }
-            else if(enTopY < nextY && enLeftX > nextX)
-            {
-                // down or left
-                direction = "down";
-                newWorldY += speed;
-                checkCollision();
-                if(collisionOn)
-                {
-                    direction = "left";
-                }
-                newWorldY -= speed;
-            }
-            else if(enTopY < nextY && enLeftX < nextX)
-            {
-                // down or right
-                direction = "down";
-                newWorldY += speed;
-                checkCollision();
-                if(collisionOn)
-                {
-                    direction = "right";
-                }
-                newWorldY -= speed;
             }
             // for following player, disable this. It should be enabled when npc walking to specified location
 //            int nextCol = gp.pFinder.pathList.get(0).col;

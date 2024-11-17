@@ -21,9 +21,9 @@ public class TileManager {
         if(drawPath){
             for(int i = 0 ; i < gp.pFinder.pathList.size() ; i++){
                 Node node = gp.pFinder.pathList.get(i);
-                int screenX = node.col * 64 - camera.getX();
-                int screenY = node.row * 64 - camera.getY();
-                g2.fillRect(screenX , screenY , 64 , 64);
+                int screenX = node.col * GameMap.childNodeSize - camera.getX();
+                int screenY = node.row * GameMap.childNodeSize - camera.getY();
+                g2.fillRect(screenX , screenY , GameMap.childNodeSize , GameMap.childNodeSize);
             }
         };
     }

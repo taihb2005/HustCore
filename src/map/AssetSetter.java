@@ -91,5 +91,29 @@ public class AssetSetter {
         mp.enemy[index] = sptr;
         index++;
 
+        Mon_Spectron sptr2 = new Mon_Spectron(mp);
+        sptr2.worldX = 40 * 64;
+        sptr2.worldY = 20 * 64;
+        sptr2.newWorldX = 40 * 64;
+        sptr2.newWorldY = 20 * 64;
+        mp.enemy[index] = sptr2;
+        index++;
+
+        Mon_Spectron sptr3 = new Mon_Spectron(mp);
+        sptr3.worldX = 30 * 64;
+        sptr3.worldY = 20 * 64;
+        sptr3.newWorldX = 30 * 64;
+        sptr3.newWorldY = 20 * 64;
+        mp.enemy[index] = sptr3;
+        index++;
+
+        Mon_Spectron sptr4 = new Mon_Spectron(mp);
+        sptr4.worldX = 10 * 64;
+        sptr4.worldY = 20 * 64;
+        sptr4.newWorldX = 10 * 64;
+        sptr4.newWorldY = 20 * 64;
+        mp.enemy[index] = sptr4;
+        index++;
+
     }
 }
