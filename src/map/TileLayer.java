@@ -108,15 +108,14 @@ public class TileLayer {
         }
     }
 
-   public int getNumCols()
-   {
-       return numCols;
-   }
+    public int getNumCols()
+    {
+        return numCols;
+    }
 
-   public int getNumRows()
-   {
-       return numRows;
-   }
+    public int getNumRows()
+    {
+        return numRows;
+    }
 }
-
 

@@ -17,39 +17,39 @@ public class AssetSetter {
 
     public void setObject()
     {
-        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
-        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
-        mp.addObject(filledTank_no1 , mp.inactiveObj);
+//        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
+//        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
+//        mp.addObject(filledTank_no1 , mp.inactiveObj);
 
-        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
-        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
-        mp.addObject(filledTank_no2 , mp.inactiveObj);
-
-        Obj_EmptyTank emptyTank_no1 = new Obj_EmptyTank();
-        emptyTank_no1.worldX = 23 * 64 ; emptyTank_no1.worldY = 26 * 64;
-        mp.addObject(emptyTank_no1 , mp.inactiveObj);
-
-        Obj_Television tv_no1 = new Obj_Television(1);
-        tv_no1.worldX = 1344 ; tv_no1.worldY = 1990;
-        mp.addObject(tv_no1 , mp.inactiveObj);
-
-        Obj_Desk desk_no1 = new Obj_Desk(1);
-        desk_no1.worldX = 1537; desk_no1.worldY = 1553;
-        mp.addObject(desk_no1 , mp.inactiveObj);
-
-        Obj_Chair chair_no1 = new Obj_Chair(1);
-        chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
-        mp.addObject(chair_no1 , mp.inactiveObj);
-
-        //INTERACTIVE OBJ
-        int index = 0;
-        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-        mp.addObject(small_door , mp.activeObj);
-
-        Obj_Chest chest_no1 = new Obj_Chest(mp);
-        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
-        mp.addObject(chest_no1 , mp.activeObj);
+//        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
+//        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
+//        mp.addObject(filledTank_no2 , mp.inactiveObj);
+//
+//        Obj_EmptyTank emptyTank_no1 = new Obj_EmptyTank();
+//        emptyTank_no1.worldX = 23 * 64 ; emptyTank_no1.worldY = 26 * 64;
+//        mp.addObject(emptyTank_no1 , mp.inactiveObj);
+//
+//        Obj_Television tv_no1 = new Obj_Television(1);
+//        tv_no1.worldX = 1344 ; tv_no1.worldY = 1990;
+//        mp.addObject(tv_no1 , mp.inactiveObj);
+//
+//        Obj_Desk desk_no1 = new Obj_Desk(1);
+//        desk_no1.worldX = 1537; desk_no1.worldY = 1553;
+//        mp.addObject(desk_no1 , mp.inactiveObj);
+//
+//        Obj_Chair chair_no1 = new Obj_Chair(1);
+//        chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
+//        mp.addObject(chair_no1 , mp.inactiveObj);
+//
+//        //INTERACTIVE OBJ
+//        int index = 0;
+//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
+//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+//        mp.addObject(small_door , mp.activeObj);
+//
+//        Obj_Chest chest_no1 = new Obj_Chest(mp);
+//        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
+//        mp.addObject(chest_no1 , mp.activeObj);
 
     }
 
@@ -84,43 +84,12 @@ public class AssetSetter {
     {
         int index = 0;
         Mon_Spectron sptr = new Mon_Spectron(mp);
-        sptr.worldX = 1400;
-        sptr.worldY = 1800;
-        sptr.newWorldX = 1400;
-        sptr.newWorldY = 1800;
+        sptr.worldX = 31 * 64;
+        sptr.worldY = 32 * 64;
+        sptr.newWorldX = 31 * 64;
+        sptr.newWorldY = 32 * 64;
         mp.enemy[index] = sptr;
         index++;
 
-        Mon_Spectron sptr2 = new Mon_Spectron(mp);
-        sptr2.worldX = 1600;
-        sptr2.worldY = 1800;
-        sptr2.newWorldX = 1600;
-        sptr2.newWorldY = 1800;
-        mp.enemy[index] = sptr2;
-        index++;
-
-        Mon_Spectron sptr3 = new Mon_Spectron(mp);
-        sptr3.worldX = 1600;
-        sptr3.worldY = 1800;
-        sptr3.newWorldX = 1600;
-        sptr3.newWorldY = 1800;
-        mp.enemy[index] = sptr3;
-        index++;
-
-        Mon_Shooter shooter1 = new Mon_Shooter(mp , Mon_Shooter.IDLE);
-        shooter1.worldX = 1400;
-        shooter1.worldY = 1450;
-        shooter1.newWorldX = 1200;
-        shooter1.newWorldY = 1300;
-        shooter1.setDirection("down");
-        shooter1.setInterval(120);
-        mp.enemy[index] = shooter1;
-
-        Mon_HustGuardian hust1 = new Mon_HustGuardian(mp);
-        hust1.worldX = 1566;
-        hust1.worldY = 1566;
-        hust1.newWorldX = 1566;
-        hust1.newWorldY = 1566;
-        mp.addObject(hust1 , mp.enemy);
     }
 }

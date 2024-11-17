@@ -419,6 +419,7 @@ public class Player extends Entity {
 
         if(KeyHandler.godModeOn){
             hitbox = new Rectangle(0 , 0 , 0 , 0);
+            solidArea1 = new Rectangle(0 , 0 , 0 , 0);
         }
 
     }

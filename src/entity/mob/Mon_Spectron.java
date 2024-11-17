@@ -1,5 +1,6 @@
 package entity.mob;
 
+import ai.Node;
 import entity.Actable;
 import entity.Entity;
 import entity.projectile.Obj_BasicGreenProjectile;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.pFinder;
 
 /*
 Mô tả:
@@ -189,28 +191,23 @@ public class Mon_Spectron extends Entity implements Actable {
         }
         //MOVE
         actionLockCounter++;
-        if(actionLockCounter >= changeDirCounter && !isDying && !isShooting)
-        {
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
             up = down = left = right = false;
             Random random = new Random();
             int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if(i <= 28)
-            {
+            if (i <= 28) {
                 direction = "up";
                 up = true;
             }
-            if(i>28 && i <= 50)
-            {
+            if (i > 28 && i <= 50) {
                 direction = "down";
                 down = true;
             }
-            if(i>50 && i <= 75)
-            {
+            if (i > 50 && i <= 75) {
                 direction = "left";
                 left = true;
             }
-            if(i>75 && i < 100)
-            {
+            if (i > 75 && i < 100) {
                 direction = "right";
                 right = true;
             }
