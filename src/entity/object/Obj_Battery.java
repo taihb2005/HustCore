@@ -39,7 +39,7 @@ public class Obj_Battery extends Entity {
         if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
             if (KeyHandler.enterPressed) {// Đánh dấu là đã thu thập
                 collect();
-                canbeDestroyed = true;
+                isCollected = true;
             }
         }
         isInteracting = false;

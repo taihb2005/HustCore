@@ -65,7 +65,7 @@ public class Mon_Spectron extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
         this.canbeDestroyed = false;
-        onPath = true;
+        onPath = false;
 
         set();
     }

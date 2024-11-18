@@ -1,6 +1,7 @@
 package map;
 
 import entity.Entity;
+import entity.items.Inventory;
 import entity.mob.Mon_HustGuardian;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
@@ -9,7 +10,6 @@ import entity.object.*;
 
 public class AssetSetter {
     GameMap mp;
-
     public AssetSetter(GameMap mp)
     {
         this.mp = mp;

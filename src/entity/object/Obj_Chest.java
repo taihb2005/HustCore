@@ -1,6 +1,8 @@
 package entity.object;
 
 import entity.Entity;
+import entity.items.Item_Battery;
+import entity.items.Item_Kit;
 import graphics.Animation;
 import graphics.Sprite;
 import main.KeyHandler;
@@ -20,8 +22,8 @@ public class Obj_Chest extends Entity {
     private final Animation obj_animator_Chest = new Animation();
     private int CURRENT_FRAME = 0;
     private int currentStates = CLOSED;
-    private Obj_Battery battery;
-    private Obj_Box box;
+    private Item_Battery battery;
+    private Item_Kit kit;
 
     public Obj_Chest(GameMap mp)
     {
@@ -52,15 +54,13 @@ public class Obj_Chest extends Entity {
     }
 
     private void spawnBattery() {
-        battery = new Obj_Battery();
-        battery.worldX = worldX+10; battery.worldY = worldY+10;
-        mp.addObject(battery , mp.activeObj);
+        battery = new Item_Battery();
+        battery.add(mp.item);
     }
 
     private void spawnBox() {
-        box = new Obj_Box();
-        box.worldX = worldX+50; box.worldY = worldY+10;
-        mp.addObject(box , mp.activeObj);
+        kit = new Item_Kit();
+        kit.add(mp.item);
     }
 
     public void handleAnimationState() {
@@ -68,6 +68,8 @@ public class Obj_Chest extends Entity {
             if (KeyHandler.enterPressed) {// Đánh dấu là đã thu thập
                 currentStates = OPENED;
                 loot();  // Gọi hàm thu thập để hiển thị phần thưởng
+                battery.collect();
+                kit.collect();
             }
         }
         isInteracting = false;
