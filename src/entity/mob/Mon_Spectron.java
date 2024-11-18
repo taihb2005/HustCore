@@ -185,20 +185,15 @@ public class Mon_Spectron extends Entity implements Actable {
     private void setAction()
     {
         //SPEED
-        if(currentHP <= 15){
-            speed = 2;
-            changeDirCounter = 60;
-            shootInterval = 60;
-        }
         //MOVE
         if(onPath == true){
             int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 16;
             int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / 16;
             up = down = left = right = false;
             searchPath(playerCol , playerRow);
-            System.out.println(pFinder.pathList.isEmpty());
             decideToMove();
             isRunning = up | down | left | right;
+            isRunning = !isShooting;
         } else {
             actionLockCounter++;
             if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {

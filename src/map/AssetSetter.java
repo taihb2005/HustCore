@@ -42,11 +42,11 @@ public class AssetSetter {
 //        mp.addObject(chair_no1 , mp.inactiveObj);
 //
 //        //INTERACTIVE OBJ
-//        int index = 0;
-//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-//        mp.addObject(small_door , mp.activeObj);
-//
+        int index = 0;
+        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
+        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+        mp.addObject(small_door , mp.activeObj);
+
 //        Obj_Chest chest_no1 = new Obj_Chest(mp);
 //        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
 //        mp.addObject(chest_no1 , mp.activeObj);
@@ -84,36 +84,14 @@ public class AssetSetter {
     {
         int index = 0;
         Mon_Spectron sptr = new Mon_Spectron(mp);
-        sptr.worldX = 31 * 64;
-        sptr.worldY = 32 * 64;
-        sptr.newWorldX = 31 * 64;
-        sptr.newWorldY = 32 * 64;
+        sptr.worldX = 1600;
+        sptr.worldY = 1800;
+        sptr.newWorldX = 1600;
+        sptr.newWorldY = 1800;
         mp.enemy[index] = sptr;
         index++;
 
-        Mon_Spectron sptr2 = new Mon_Spectron(mp);
-        sptr2.worldX = 40 * 64;
-        sptr2.worldY = 20 * 64;
-        sptr2.newWorldX = 40 * 64;
-        sptr2.newWorldY = 20 * 64;
-        mp.enemy[index] = sptr2;
-        index++;
 
-        Mon_Spectron sptr3 = new Mon_Spectron(mp);
-        sptr3.worldX = 30 * 64;
-        sptr3.worldY = 20 * 64;
-        sptr3.newWorldX = 30 * 64;
-        sptr3.newWorldY = 20 * 64;
-        mp.enemy[index] = sptr3;
-        index++;
-
-        Mon_Spectron sptr4 = new Mon_Spectron(mp);
-        sptr4.worldX = 10 * 64;
-        sptr4.worldY = 20 * 64;
-        sptr4.newWorldX = 10 * 64;
-        sptr4.newWorldY = 20 * 64;
-        mp.enemy[index] = sptr4;
-        index++;
 
     }
 }
