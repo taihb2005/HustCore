@@ -62,7 +62,7 @@ public class UI {
         }
 
         try {
-            titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/titleBackground.png"));
+            titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/Background.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,8 +140,50 @@ public class UI {
     // Hàm vẽ thử
 
     public void drawTitleScreen(){
-        g2.drawImage(manaFrame, 0, 0, 139, 28, null);
-        g2.drawImage(titleBackground, 0, 0, windowWidth, windowHeight, null);
+        g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
+
+        //Title name
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
+        String text = "HUST Core";
+        int x = getXforCenteredText(text);
+        int y = windowHeight / 4;
+
+        //Shadow
+        g2.setColor(Color.black);
+        g2.drawString(text,x+5,y+5);
+
+        //Colour
+        g2.setColor(Color.white);
+        g2.drawString(text , x , y );
+
+        //Draw Picture
+
+        //Menu
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
+
+        text = "PLAY";
+        x = getXforCenteredText(text);
+        y = windowHeight*3/5;
+        g2.drawString(text, x, y);
+        if(commandNum == 0){
+            g2.drawString(">",x-gp.tileSize, y);
+        }
+
+        text = "OPTIONS";
+        x = getXforCenteredText(text);
+        y = windowHeight*7/10;
+        g2.drawString(text, x, y);
+        if(commandNum == 1){
+            g2.drawString(">",x-gp.tileSize, y);
+        }
+
+        text = "QUIT";
+        x = getXforCenteredText(text);
+        y = windowHeight*4/5;
+        g2.drawString(text, x, y);
+        if(commandNum == 2){
+            g2.drawString(">",x-gp.tileSize, y);
+        }
     }
 
     private void drawPausedScreen()
@@ -196,6 +238,11 @@ public class UI {
         if(gameState == GameState.LOSE_STATE){
             gp.currentMap.dispose();
             drawGameOverScreen();
+        }
+        if(gameState == GameState.SETTING_STATE){
+            drawTitleScreen();
+            drawOptionsScreen();
+            drawInventory();
         }
     }
 
