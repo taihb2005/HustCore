@@ -1,7 +1,9 @@
 package main;
 
 import entity.Entity;
+import entity.Item;
 import entity.player.Player;
+import entity.items.Inventory;
 import main.KeyHandler;
 
 import javax.imageio.ImageIO;
@@ -27,12 +29,11 @@ public class UI {
     int dialogueCount;
 
     private boolean slotselected = true;
-    int selectedSlot = 0;
+    int selectedSlot = -1;
 
     public int commandNum = 0;
 
     public Entity target;
-
     private BufferedImage hpFrame, manaFrame;
 
     private BufferedImage titleBackground;
@@ -362,14 +363,29 @@ public class UI {
             g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
             g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+        }
+//
+//            if (slotselected && i == selectedSlot)
+//            {
+//                g2.setStroke(new BasicStroke(5));
+//                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+//            }
+//        }
+        if (currentMap.item != null) for (int i = 0; i < currentMap.item.length; i++) {
+            int currentSlotY = slotY + i * (slotSize + 50);
+            if (currentMap.item[i] != null) {
+                // Vẽ icon của item
+                g2.drawImage(currentMap.item[i].getIcon(), slotX + 8, currentSlotY + 8, 33, 33, null);
 
-            String numSlot = Integer.toString(i + 1);
-            g2.drawString(numSlot , slotX + 33 , currentslotY + 44);
-
-            if (slotselected && i == selectedSlot)
-            {
-                g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+                // Hiển thị viền slot được chọn
+                if (slotselected && i == selectedSlot) {
+                    g2.setStroke(new BasicStroke(5));
+                    g2.drawRoundRect(slotX, currentSlotY, 50, 50, 10, 10);
+                    // Hiển thị số lượng và tên item
+                    g2.setColor(Color.white);
+                    g2.drawString(currentMap.item[i].getName(), slotX + 70, currentSlotY + 20);
+                    g2.drawString("x" + currentMap.item[i].getQuantity(), slotX + 70, currentSlotY + 40);
+                }
             }
         }
     }

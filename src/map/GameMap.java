@@ -1,6 +1,8 @@
 package map;
 
 import entity.Entity;
+import entity.Item;
+import entity.items.Inventory;
 import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
@@ -38,6 +40,8 @@ public class GameMap {
     public Entity [] enemy;
     public Entity [] projectiles;
     public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
+    public Item[] item;
+    public Inventory inventory;
 
     //MAP STAT
     private int bestLightingRadius = 2000;
@@ -52,6 +56,7 @@ public class GameMap {
         enemy       = new Entity[100];
         projectiles = new Entity[100];
         objList     = new ArrayList<>();
+        item        = new Item[100];
         dispose();
 
         this.mapWidth = mapWidth;
@@ -111,7 +116,7 @@ public class GameMap {
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList)
         {
-            if(mapObject != null) mapObject.render(g2);
+            if(mapObject != null && !mapObject.isCollected) mapObject.render(g2);
         }
         for(Entity projectile : projectiles)
         {
@@ -196,6 +201,14 @@ public class GameMap {
             for(int i = 0 ; i < projectiles.length ; i++){
                 if(projectiles[i] != null){
                     if(!projectiles[i].active) projectiles[i] = null;
+                }
+            }
+            //UPDATE ITEM
+            for(int i = 0 ; i < item.length ; i++){
+                if (item[i] != null) {
+                    if(item[i].getQuantity() == 0){
+                        item[i] = null;
+                    }
                 }
             }
             for(Entity entity : inactiveObj) if(entity != null) entity.update();

@@ -36,14 +36,6 @@ public class TileLayer {
         this.tileWidth = tileSetList.get(0).getTileWidth();
         this.tileHeight = tileSetList.get(0).getTileHeight();
         this.tileLayerDataIndex = data;
-        for (int i = 1; i <= 851; i++) {
-            try {
-                temporaryTile[i-1] = ImageIO.read(getClass().getResourceAsStream("/tile/techtile/Tile" + i + ".png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
         parseLayerData(data);
     }
 
@@ -65,7 +57,7 @@ public class TileLayer {
                     int worldX = j * tileWidth;
                     int worldY = i * tileHeight;
 
-                    g2.drawImage(temporaryTile[71], worldX - camera.getX() , worldY - camera.getY(), 65, 65, null);
+                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY(), 65, 65, null);
                 }
 
             }
