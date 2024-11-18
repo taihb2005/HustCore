@@ -2,6 +2,7 @@ package map;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,8 +72,7 @@ public class MapParser {
     }
 
 
-    private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist , GameMap mp)
-    {
+    private static TileLayer parseTileLayer(String data , int numRows , int numCols , ArrayList<TileSet> tilesetlist , GameMap mp) throws IOException {
         String[] values = data.trim().split(",");
 
         int index = 0;
