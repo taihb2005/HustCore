@@ -1,11 +1,13 @@
 package main;
 
 // awt library
+import ai.PathFinder;
 import entity.Effect;
 import environment.EnvironmentManager;
 import map.GameMap;
 import map.MapManager;
 import map.MapParser;
+import map.TileManager;
 import util.Camera;
 
 import java.awt.*;
@@ -28,13 +30,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
+    public static PathFinder pFinder;
+    public static TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
     public static GameState lastGameState;
 
-    public GameMap currentMap;
+    public static GameMap currentMap;
 
     Thread gameThread;
 
@@ -56,9 +60,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void loadMap()
     {
-        MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
+        MapParser.loadMap( "map_test" ,"res/map/path_finding.tmx");
         currentMap = MapManager.getGameMap("map_test");
         camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
+        pFinder = new PathFinder(currentMap);
+        tileManager = new TileManager(this);
         environmentManager = new EnvironmentManager(currentMap);
         environmentManager.setup();
         environmentManager.lighting.setLightSource(2000);
@@ -131,6 +137,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
+        tileManager.render(g2);
         ui.render(g2);
 
         g2.dispose();

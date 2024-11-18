@@ -1,5 +1,6 @@
 package entity.mob;
 
+import ai.Node;
 import entity.Actable;
 import entity.Entity;
 import entity.projectile.Obj_BasicGreenProjectile;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.pFinder;
 
 /*
 Mô tả:
@@ -63,6 +65,7 @@ public class Mon_Spectron extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
         this.canbeDestroyed = false;
+        onPath = true;
 
         set();
     }
@@ -188,34 +191,39 @@ public class Mon_Spectron extends Entity implements Actable {
             shootInterval = 60;
         }
         //MOVE
-        actionLockCounter++;
-        if(actionLockCounter >= changeDirCounter && !isDying && !isShooting)
-        {
+        if(onPath == true){
+            int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 16;
+            int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / 16;
             up = down = left = right = false;
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if(i <= 28)
-            {
-                direction = "up";
-                up = true;
+            searchPath(playerCol , playerRow);
+            System.out.println(pFinder.pathList.isEmpty());
+            decideToMove();
+            isRunning = up | down | left | right;
+        } else {
+            actionLockCounter++;
+            if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
+                up = down = left = right = false;
+                Random random = new Random();
+                int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+                if (i <= 28) {
+                    direction = "up";
+                    up = true;
+                }
+                if (i > 28 && i <= 50) {
+                    direction = "down";
+                    down = true;
+                }
+                if (i > 50 && i <= 75) {
+                    direction = "left";
+                    left = true;
+                }
+                if (i > 75 && i < 100) {
+                    direction = "right";
+                    right = true;
+                }
+                actionLockCounter = 0; // reset
+                isRunning = !isShooting;
             }
-            if(i>28 && i <= 50)
-            {
-                direction = "down";
-                down = true;
-            }
-            if(i>50 && i <= 75)
-            {
-                direction = "left";
-                left = true;
-            }
-            if(i>75 && i < 100)
-            {
-                direction = "right";
-                right = true;
-            }
-            actionLockCounter = 0; // reset
-            isRunning = !isShooting;
         }
 
         //ATTACK

@@ -42,6 +42,7 @@ public class Obj_Battery extends Entity {
                 canbeDestroyed = true;
             }
         }
+        isInteracting = false;
     }
 
     private void collect() {

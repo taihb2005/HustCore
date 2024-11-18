@@ -23,8 +23,12 @@ public class GameMap {
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
+    public static int childNodeSize = 16;
+
     private final int mapWidth;
     private final int mapHeight;
+    public int maxWorldCol;
+    public int maxWorldRow;
 
     public ArrayList<TileLayer> mapLayer;
 
@@ -42,7 +46,7 @@ public class GameMap {
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new Entity[100];
+        inactiveObj = new Entity[300];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
         enemy       = new Entity[100];
@@ -52,6 +56,8 @@ public class GameMap {
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
+        this.maxWorldCol = (mapWidth / childNodeSize ) ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) ;
 
         setter.setObject();
         setter.setNpc();
@@ -95,7 +101,6 @@ public class GameMap {
                 @Override
                 public int compare(Entity e1, Entity e2) {
                     int index;
-
                     index = Integer.compare(e1.worldY, e2.worldY);
                     return index;
                 }
@@ -213,10 +218,14 @@ public class GameMap {
                 int tileID = layer.tileLayerDataIndex[i][j];
                 int index = layer.getIndexTileSet(layer.tileLayerDataIndex[i][j]);
 
-                Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
-                wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
-                wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                addObject(wall , inactiveObj);
+                if(layer.tileSetList.get(index).objects.get(tileID - 1) != null) {
+
+
+                    Obj_Wall wall = new Obj_Wall(layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
+                    wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
+                    wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
+                    addObject(wall, inactiveObj);
+                }
 //                inactiveObj[inactiveObjIndex] = wall;
 //                inactiveObjIndex++;
             }
