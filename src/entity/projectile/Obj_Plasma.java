@@ -1,7 +1,6 @@
 package entity.projectile;
 
-import entity.Effect;
-import entity.Entity;
+import entity.effect.EffectType;
 import graphics.Sprite;
 import map.GameMap;
 
@@ -16,7 +15,7 @@ public class Obj_Plasma extends Projectile{
         maxHP = 40;
         speed = 7;
         base_damage = 30;
-        effectType = Effect.SLOW;
+        effectType = EffectType.SLOW;
         slowDuration = 180;
         manaCost = 20;
         direction = "right";

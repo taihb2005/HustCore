@@ -2,7 +2,6 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
-import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,6 +17,7 @@ public class UI {
     public Player player;
     Graphics2D g2;
     public Font joystix;
+    public Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -26,13 +26,15 @@ public class UI {
     int subState = 0;
     int dialogueCount;
 
+    Color displayItemquantity = new Color(204 , 180 , 50);
+    Color displayTextItemQuantity = Color.WHITE;
+
     private boolean slotselected = true;
-    int selectedSlot = 0;
+    int selectedSlot = -1;
 
     public int commandNum = 0;
 
     public Entity target;
-
     private BufferedImage hpFrame, manaFrame;
 
     private BufferedImage titleBackground;
@@ -41,10 +43,12 @@ public class UI {
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
-        this.player = gp.currentMap.player;
+        this.player = currentMap.player;
         try {
-            InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
-            joystix = Font.createFont(Font.TRUETYPE_FONT, is);
+            InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
+            InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
+            joystix = Font.createFont(Font.TRUETYPE_FONT, is1);
+            maru= Font.createFont(Font.TRUETYPE_FONT , is2);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -84,8 +88,8 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(target.dialogues[target.dialogueIndex] != null) {
-            currentDialogue = target.dialogues[target.dialogueIndex];
+        if(target.dialogues[target.dialogueSet][target.dialogueIndex] != null) {
+            currentDialogue = target.dialogues[target.dialogueSet][target.dialogueIndex];
             drawSubWindow(x, y, width, height);
 
             frameCounter++;
@@ -100,17 +104,17 @@ public class UI {
             }
             if(KeyHandler.enterPressed)
             {
+                KeyHandler.enterPressed = false;
                 textIndex = 0;
                 displayedText = "";
                 if(gameState == GameState.DIALOGUE_STATE )
                 {
                     target.dialogueIndex++;
-                    KeyHandler.enterPressed = false;
                 }
             }
         }else
         {
-            target.dialogueIndex--;
+            target.dialogueIndex = 0;
             if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
@@ -161,42 +165,6 @@ public class UI {
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
         int x = windowWidth / 2 - length / 2;
         return x;
-    }
-
-    public void render(Graphics2D g2) {
-        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
-        if(gameState == GameState.PLAY_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        else if(gameState == GameState.MENU_STATE)
-        {
-            drawTitleScreen();
-        }
-        else if(gameState == GameState.DIALOGUE_STATE)
-        {
-            drawDialogueScreen();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        if(gameState == GameState.LEVELUP_STATE){
-            drawDialogueScreen();
-        } else
-        if(gameState == GameState.PAUSE_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawPausedScreen();
-            drawOptionsScreen();
-            drawInventory();
-        }
-        if(gameState == GameState.LOSE_STATE){
-            gp.currentMap.dispose();
-            drawGameOverScreen();
-        }
     }
 
     public Font getFont(){return joystix;};
@@ -263,10 +231,10 @@ public class UI {
 
         // SUB WINDOW
 
-        int frameX = gp.tileSize * 4;
-        int frameY = gp.tileSize;
-        int frameWidth = gp.tileSize * 8;
-        int frameHeight = gp.tileSize * 10;
+        int frameX = tileSize * 4;
+        int frameY = tileSize;
+        int frameWidth = tileSize * 8;
+        int frameHeight = tileSize * 10;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
@@ -362,15 +330,60 @@ public class UI {
             g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
             g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+        }
+//
+//            if (slotselected && i == selectedSlot)
+//            {
+//                g2.setStroke(new BasicStroke(5));
+//                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+//            }
+//        }
+        if (currentMap.player.inventory != null) for (int i = 0; i < currentMap.player.inventory.length; i++) {
+            int currentSlotY = slotY + i * (slotSize + 50);
+            if (currentMap.player.inventory[i] != null) {
+                // Vẽ icon của item
+                g2.drawImage(currentMap.player.inventory[i].getIcon(), slotX + 8, currentSlotY + 8, 33, 33, null);
+                g2.setFont(maru.deriveFont(Font.PLAIN , 25));
+                String quantity = Integer.toString( currentMap.player.inventory[i].getQuantity());
+                g2.drawString( quantity , slotX + 37 , currentSlotY + 46);
 
-            String numSlot = Integer.toString(i + 1);
-            g2.drawString(numSlot , slotX + 33 , currentslotY + 44);
-
-            if (slotselected && i == selectedSlot)
-            {
-                g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+                // Hiển thị viền slot được chọn
             }
+        }
+    }
+    public void render(Graphics2D g2) {
+        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        if(gameState == GameState.PLAY_STATE)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+        }
+        else if(gameState == GameState.MENU_STATE)
+        {
+            drawTitleScreen();
+        }
+        else if(gameState == GameState.DIALOGUE_STATE)
+        {
+            drawDialogueScreen();
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+        }
+        if(gameState == GameState.LEVELUP_STATE){
+            drawDialogueScreen();
+        } else
+        if(gameState == GameState.PAUSE_STATE)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawPausedScreen();
+            drawOptionsScreen();
+            drawInventory();
+        }
+        if(gameState == GameState.LOSE_STATE){
+            currentMap.dispose();
+            drawGameOverScreen();
         }
     }
 }

@@ -1,9 +1,10 @@
 package entity;
 
+import entity.effect.EffectType;
+import entity.effect.EffectManager;
 import entity.projectile.Projectile;
 import graphics.Sprite;
-import main.GamePanel;
-import map.GameMap;
+import main.GameState;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,7 +28,6 @@ public abstract class Entity {
     public boolean isDying = false;
     public boolean isCollected = false;
     public boolean canbeDestroyed = false;
-    public boolean onPath = false;
     //SPRITE SIZE
     public int width;
     public int height;
@@ -54,31 +54,19 @@ public abstract class Entity {
     public int damage;
     public String projectile_name;
     public Projectile projectile ;
-    public int lightRadius;
     public int shootAvailableCounter = 0;
     public int invincibleCounter = 0;
     public int invincibleDuration;//Thời gian bất tử
-
-    //PROJECTILE STATUS
-    public int manaCost;
-    public boolean active;
-
-    //ENEMY STATUS
-    public int expDrop = 0;
-
-    //ENTITY EFFECT
-    public Effect getEffect = Effect.NONE;
-    public int effectDuration;
 
     public boolean up;
     public boolean down;
     public boolean left;
     public boolean right;
 
-    public String[] dialogues = new String[8];
+    public String[][] dialogues = new String[5][30];
 
     public int dialogueIndex;
-    public int dialogueSet;
+    public int dialogueSet = -1;
 
     public Entity(){}
 
@@ -104,9 +92,11 @@ public abstract class Entity {
         }
     }
 
-    public void startDialogue(Entity entity)
+    public void startDialogue(Entity entity , int dialogueSet)
     {
+        gameState = GameState.DIALOGUE_STATE;
         ui.target = entity;
+        ui.target.dialogueSet = dialogueSet;
     }
 
 
@@ -125,31 +115,31 @@ public abstract class Entity {
             }
         }
     }
-    public void updateEffect(){
-        if(getEffect != Effect.NONE){
-            switch(getEffect){
-                case SLOW :
-                    if(effManager.slowEffect()) {
-                        getEffect = Effect.NONE;
-                        speed = last_speed;
-                    }
-                    break;
-                case SPEED_BOOST:
-                    if(effManager.speed_boostEffect()){
-                        getEffect = Effect.NONE;
-                        speed = last_speed;
-                    }
-                    break;
-                case BLIND:
-                    if(effManager.blindEffect()){
-                        getEffect = Effect.NONE;
-                        environmentManager.lighting.transit = true;
-                        environmentManager.lighting.fadeOut = true;
-                    }
-                    break;
-            }
-        }
-    }
+//    public void updateEffect(){
+//        if(getEffect != EffectType.NONE){
+//            switch(getEffect){
+//                case SLOW :
+//                    if(effManager.slowEffect()) {
+//                        getEffect = EffectType.NONE;
+//                        speed = last_speed;
+//                    }
+//                    break;
+//                case SPEED_BOOST:
+//                    if(effManager.speed_boostEffect()){
+//                        getEffect = EffectType.NONE;
+//                        speed = last_speed;
+//                    }
+//                    break;
+//                case BLIND:
+//                    if(effManager.blindEffect()){
+//                        getEffect = EffectType.NONE;
+//                        environmentManager.lighting.transit = true;
+//                        environmentManager.lighting.fadeOut = true;
+//                    }
+//                    break;
+//            }
+//        }
+//    }
     public void renderSlowEffect(Graphics2D g2){
         BufferedImage slow = new Sprite("/effect/slow.png" , 32 , 32).getSpriteSheet();
         g2.drawImage(slow , worldX - camera.getX() + 35 , worldY - camera.getY() + 20, null);
@@ -182,102 +172,102 @@ public abstract class Entity {
         }
     }
 
-    public void checkCollision(){
-        collisionOn = false;
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.inactiveObj);
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.npc);
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.activeObj);
-    }
-
-    public void searchPath(int goalCol, int goalRow)
-    {
-        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
-        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
-        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
-        if(pFinder.search())
-        {
-            //Next WorldX and WorldY
-            if(pFinder.pathList.isEmpty()){
-                onPath = false;
-            } else {
-                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
-                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
-
-
-                //Entity's solidArea position
-                int enLeftX = worldX + solidArea1.x;
-                int enRightX = worldX + solidArea1.x + solidArea1.width;
-                int enTopY = worldY + solidArea1.y;
-                int enBottomY = worldY + solidArea1.y + solidArea1.height;
-
-                // TOP PATH
-                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "up";
-                }
-                // BOTTOM PATH
-                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "down";
-                }
-                // RIGHT - LEFT PATH
-                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
-                    //either left or right
-                    // LEFT PATH
-                    if (enLeftX > nextX) {
-                        direction = "left";
-                    }
-                    // RIGHT PATH
-                    if (enLeftX < nextX) {
-                        direction = "right";
-                    }
-                }
-                //OTHER EXCEPTIONS
-                else if (enTopY > nextY && enLeftX > nextX) {
-                    // up or left
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    //System.out.println(collisionOn);
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY > nextY && enLeftX < nextX) {
-                    // up or right
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY < nextY && enLeftX > nextX) {
-                    // down or left
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY -= speed;
-                } else if (enTopY < nextY && enLeftX < nextX) {
-                    // down or right
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY -= speed;
-                }
-            }
-            // for following player, disable this. It should be enabled when npc walking to specified location
-//            int nextCol = gp.pFinder.pathList.get(0).col;
-//            int nextRow = gp.pFinder.pathList.get(0).row;
-//            if(nextCol == goalCol && nextRow == goalRow)
-//            {
+//    public void checkCollision(){
+//        collisionOn = false;
+//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.inactiveObj);
+//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.npc);
+//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.activeObj);
+//    }
+//
+//    public void searchPath(int goalCol, int goalRow)
+//    {
+//        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
+//        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
+//        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
+//        if(pFinder.search())
+//        {
+//            //Next WorldX and WorldY
+//            if(pFinder.pathList.isEmpty()){
 //                onPath = false;
+//            } else {
+//                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
+//                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
+//
+//
+//                //Entity's solidArea position
+//                int enLeftX = worldX + solidArea1.x;
+//                int enRightX = worldX + solidArea1.x + solidArea1.width;
+//                int enTopY = worldY + solidArea1.y;
+//                int enBottomY = worldY + solidArea1.y + solidArea1.height;
+//
+//                // TOP PATH
+//                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+//                    direction = "up";
+//                }
+//                // BOTTOM PATH
+//                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+//                    direction = "down";
+//                }
+//                // RIGHT - LEFT PATH
+//                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
+//                    //either left or right
+//                    // LEFT PATH
+//                    if (enLeftX > nextX) {
+//                        direction = "left";
+//                    }
+//                    // RIGHT PATH
+//                    if (enLeftX < nextX) {
+//                        direction = "right";
+//                    }
+//                }
+//                //OTHER EXCEPTIONS
+//                else if (enTopY > nextY && enLeftX > nextX) {
+//                    // up or left
+//                    direction = "up";
+//                    newWorldY -= speed;
+//                    checkCollision();
+//                    //System.out.println(collisionOn);
+//                    if (collisionOn) {
+//                        direction = "left";
+//                    }
+//                    newWorldY += speed;
+//                } else if (enTopY > nextY && enLeftX < nextX) {
+//                    // up or right
+//                    direction = "up";
+//                    newWorldY -= speed;
+//                    checkCollision();
+//                    if (collisionOn) {
+//                        direction = "right";
+//                    }
+//                    newWorldY += speed;
+//                } else if (enTopY < nextY && enLeftX > nextX) {
+//                    // down or left
+//                    direction = "down";
+//                    newWorldY += speed;
+//                    checkCollision();
+//                    if (collisionOn) {
+//                        direction = "left";
+//                    }
+//                    newWorldY -= speed;
+//                } else if (enTopY < nextY && enLeftX < nextX) {
+//                    // down or right
+//                    direction = "down";
+//                    newWorldY += speed;
+//                    checkCollision();
+//                    if (collisionOn) {
+//                        direction = "right";
+//                    }
+//                    newWorldY -= speed;
+//                }
 //            }
-        }
-    }
+//            // for following player, disable this. It should be enabled when npc walking to specified location
+////            int nextCol = gp.pFinder.pathList.get(0).col;
+////            int nextRow = gp.pFinder.pathList.get(0).row;
+////            if(nextCol == goalCol && nextRow == goalRow)
+////            {
+////                onPath = false;
+////            }
+//        }
+//    }
 
 }

@@ -1,8 +1,6 @@
-package entity;
+package entity.effect;
 
 import main.GamePanel;
-
-import java.awt.*;
 
 public class EffectManager {
     private int effectCounter = 0;

@@ -81,9 +81,8 @@ public class Obj_Heart extends Entity {
 
     private void collect() {
         mp.player.currentHP += hpReward;
-        dialogues[0] = "Bạn đã được hồi " + hpReward + " máu!";
-        GamePanel.gameState = GameState.DIALOGUE_STATE;
-        startDialogue(this);
+        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
+        startDialogue(this , 0);
     }
 
     @Override

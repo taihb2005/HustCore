@@ -1,8 +1,7 @@
 package map;
 
-import entity.Entity;
-import entity.mob.Mon_HustGuardian;
-import entity.mob.Mon_Shooter;
+import entity.items.Item_Battery;
+import entity.items.Item_Kit;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
@@ -20,7 +19,7 @@ public class AssetSetter {
 //        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
 //        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
 //        mp.addObject(filledTank_no1 , mp.inactiveObj);
-//
+
 //        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
 //        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
 //        mp.addObject(filledTank_no2 , mp.inactiveObj);
@@ -42,14 +41,24 @@ public class AssetSetter {
 //        mp.addObject(chair_no1 , mp.inactiveObj);
 //
 //        //INTERACTIVE OBJ
-//        int index = 0;
-//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-//        mp.addObject(small_door , mp.activeObj);
+        int index = 0;
+        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
+        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+        mp.addObject(small_door , mp.activeObj);
 
-//        Obj_Chest chest_no1 = new Obj_Chest(mp);
-//        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
-//        mp.addObject(chest_no1 , mp.activeObj);
+        Obj_Chest chest_no1 = new Obj_Chest(mp);
+        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
+        chest_no1.setLoot(new Item_Kit());
+        chest_no1.setLoot(new Item_Battery());
+        chest_no1.setDialogue();
+        mp.addObject(chest_no1 , mp.activeObj);
+
+        Obj_Chest chest_no2 = new Obj_Chest(mp);
+        chest_no2.worldX = 1400; chest_no2.worldY = 1900;
+        chest_no2.setLoot(new Item_Kit() , 10);
+        chest_no2.setLoot(new Item_Battery());
+        chest_no2.setDialogue();
+        mp.addObject(chest_no2 , mp.activeObj);
 
     }
 
@@ -59,24 +68,29 @@ public class AssetSetter {
         Npc_CorruptedHustStudent npc1 = new Npc_CorruptedHustStudent(mp);
         npc1.worldX = 1300;
         npc1.worldY = 1700;
-        npc1.dialogues[0] = "Xin chào!";
-        npc1.dialogues[1] = "Nhìn bạn trông quen lắm mà \ntôi không nhận ra ai...";
-        npc1.dialogues[2] = "Anyway, nơi này đã từng là \nmột Đại học danh giá của Việt Nam\n" +
-                            "bằng một thế lực nào đó mà \nmọi người biến thành hồ ly tinh hết!";
-        npc1.dialogues[3] = "Những sinh viên ở đây để bị \nbiến thành những con robot giống\n" +
+        npc1.dialogues[0][0] = "Xin chào!";
+        npc1.dialogues[0][1] = "Nhìn bạn trông quen lắm mà \ntôi không nhận ra ai...";
+        npc1.dialogues[0][2] = "Anyway, nơi này đã từng là \nmột Đại học danh giá của Việt Nam\n" +
+                            "bằng một thế lực nào đó mà \nmọi người biến thành hết!";
+        npc1.dialogues[0][3] = "Những sinh viên ở đây để bị \nbiến thành những con robot giống\n" +
                             "nhau. Cơ mà để phân biệt được \nthì chỉ còn cách dựa vào giọng.";
-        npc1.dialogues[4] = "Chúng minh cũng muốn biến lại \nnhư cũ lắm nhưng đó là điều khó.";
-        npc1.dialogues[5] = "Chúng minh đã từng nhờ nhiều \nngười nhưng kết cục đều là bị biến\n" +
+        npc1.dialogues[0][4] = "Chúng minh cũng muốn biến lại \nnhư cũ lắm nhưng đó là điều khó.";
+        npc1.dialogues[0][5] = "Chúng minh đã từng nhờ nhiều \nngười nhưng kết cục đều là bị biến\n" +
                             "thành như thế này!";
-        npc1.dialogues[6] = "Nếu bạn biến được chúng \nmình về như cũ thì sẽ tốt biết bao...";
+        npc1.dialogues[0][6] = "Nếu bạn biến được chúng \nmình về như cũ thì sẽ tốt biết bao...";
+
+        npc1.dialogues[1][0] = "Bạn biết con rùa rụt cổ không?";
+        npc1.dialogues[1][1] = "Nó trú ngụ ở trung tâm của phòng\nđiều khiển";
+        npc1.dialogues[1][2] = "Tiêu diệt nó sẽ khiến bạn có\nthêm manh mối!";
+        npc1.dialogues[1][3] = "Chúc bạn may mắn!";
         mp.addObject(npc1 , mp.npc);
 
         Npc_CorruptedHustStudent npc2 = new Npc_CorruptedHustStudent(mp);
         npc2.worldX = 1500;
         npc2.worldY = 1400;
-        npc2.dialogues[0] = "Có vẻ bạn là người mới ở đây...";
-        npc2.dialogues[1] = "Nơi này rất nguy hiểm.\n Nó đầy rẫy những con robot cảnh vệ...";
-        npc2.dialogues[2] = "Chúc bạn may mắn sống sót trở \nvề...";
+        npc2.dialogues[0][0] = "Có vẻ bạn là người mới ở đây...";
+        npc2.dialogues[0][1] = "Nơi này rất nguy hiểm.\n Nó đầy rẫy những con robot cảnh vệ...";
+        npc2.dialogues[0][2] = "Chúc bạn may mắn sống sót trở \nvề...";
         mp.addObject(npc2 , mp.npc);
     }
 
@@ -90,32 +104,6 @@ public class AssetSetter {
         sptr.newWorldY = 1800;
         mp.enemy[index] = sptr;
         index++;
-//
-//        Mon_Spectron sptr1 = new Mon_Spectron(mp);
-//        sptr1.worldX = 1500;
-//        sptr1.worldY = 1800;
-//        sptr1.newWorldX = 1500;
-//        sptr1.newWorldY = 1800;
-//        mp.enemy[index] = sptr1;
-//        index++;
-//
-//        Mon_Spectron sptr2 = new Mon_Spectron(mp);
-//        sptr2.worldX = 1400;
-//        sptr2.worldY = 1800;
-//        sptr2.newWorldX = 1400;
-//        sptr2.newWorldY = 1800;
-//        mp.enemy[index] = sptr2;
-//        index++;
-//
-//        Mon_Spectron sptr3 = new Mon_Spectron(mp);
-//        sptr3.worldX = 1300;
-//        sptr3.worldY = 1800;
-//        sptr3.newWorldX = 1300;
-//        sptr3.newWorldY = 1800;
-//        mp.enemy[index] = sptr3;
-//        index++;
-
-
 
 
 

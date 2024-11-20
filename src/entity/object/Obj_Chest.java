@@ -1,6 +1,10 @@
 package entity.object;
 
+import entity.Actable;
 import entity.Entity;
+import entity.items.Item;
+import entity.items.Item_Battery;
+import entity.items.Item_Kit;
 import graphics.Animation;
 import graphics.Sprite;
 import main.KeyHandler;
@@ -8,10 +12,12 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.gameState;
 
-public class Obj_Chest extends Entity {
+public class Obj_Chest extends Entity implements Actable {
     GameMap mp;
     public final static int CLOSED = 0;
     public final static int OPENED = 1;
@@ -20,8 +26,9 @@ public class Obj_Chest extends Entity {
     private final Animation obj_animator_Chest = new Animation();
     private int CURRENT_FRAME = 0;
     private int currentStates = CLOSED;
-    private Obj_Battery battery;
-    private Obj_Box box;
+    public ArrayList<Item> reward = new ArrayList<>();
+    private Item_Battery battery;
+    private Item_Kit kit;
 
     public Obj_Chest(GameMap mp)
     {
@@ -44,30 +51,61 @@ public class Obj_Chest extends Entity {
         interactionDetectionArea = new Rectangle(17 , 64 , 29, 5);
         super.setDefaultSolidArea();
 
+        dialogueSet = -1;
+
+    }
+
+    public void setDialogue() {
+        HashMap<Item , Integer> map = new HashMap<>();
+        for (int i = 0; i < reward.size(); i++) {
+            if(!map.containsKey(reward.get(i))){
+                map.put(reward.get(i) , 1);
+            } else{
+                int tmp = map.get(reward.get(i));
+                map.put(reward.get(i) , ++tmp);
+            }
+        }
+        int dialogueIndex = 0;
+        for(var item : map.entrySet()){
+            dialogues[0][dialogueIndex] = "Bạn nhận được " + item.getKey().getName() + " x" + item.getValue() +
+                            "\n" + item.getKey().getDescription();
+            dialogueIndex++;
+        }
+
+        dialogues[1][0] = "Nó đã được mở rồi!";
+    }
+
+    public void talk(){
+        dialogueSet++;
+        if(dialogues[dialogueSet][0] == null){
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
     }
 
     public void loot() {
-        spawnBattery();
-        spawnBox();
+        for (Item item : reward) {
+            item.add(mp.player.inventory);
+        }
     }
 
-    private void spawnBattery() {
-        battery = new Obj_Battery();
-        battery.worldX = worldX+10; battery.worldY = worldY+10;
-        mp.addObject(battery , mp.activeObj);
+    public void setLoot(Item item){
+        reward.add(item);
     }
 
-    private void spawnBox() {
-        box = new Obj_Box();
-        box.worldX = worldX+50; box.worldY = worldY+10;
-        mp.addObject(box , mp.activeObj);
+    public void setLoot(Item item , int quantity){
+        for(int i = 0 ; i < quantity ; i++) reward.add(item);
     }
 
     public void handleAnimationState() {
         if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
-            if (KeyHandler.enterPressed) {// Đánh dấu là đã thu thập
-                currentStates = OPENED;
-                loot();  // Gọi hàm thu thập để hiển thị phần thưởng
+            if (KeyHandler.enterPressed) {
+                KeyHandler.enterPressed = false;
+                talk();
+                if(currentStates == CLOSED) {
+                    currentStates = OPENED;
+                    loot();  // Gọi hàm thu thập để hiển thị phần thưởng
+                }
             }
         }
         isInteracting = false;
@@ -86,4 +124,13 @@ public class Obj_Chest extends Entity {
                  , null);
     }
 
+    @Override
+    public void attack() {
+
+    }
+
+    @Override
+    public void move() {
+
+    }
 }

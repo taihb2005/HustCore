@@ -1,6 +1,7 @@
 package util;
 
 import entity.Entity;
+import entity.mob.Monster;
 import map.GameMap;
 
 import java.awt.*;
@@ -59,7 +60,7 @@ public class CollisionHandler {
         return index;
     }
 
-    public int checkEntityForDamage(Entity entity , Entity [] list){
+    public int checkEntityForDamage(Entity entity , Monster[] list){
         int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null) {

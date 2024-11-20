@@ -1,11 +1,8 @@
 package entity.mob;
 
 import entity.Actable;
-import entity.Effect;
-import entity.Entity;
-import entity.projectile.Obj_BasicGreenProjectile;
+import entity.effect.EffectType;
 import entity.projectile.Obj_Plasma;
-import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
 import main.GamePanel;
@@ -21,7 +18,7 @@ Only attack at a certain of time, but deal massive damage when the projectile hi
 This thing only take damage when the player shoots in front of it, and when the player is 2 tiles away.
 Sleeps when no player is nearby, goes active when the player in its detection range
  */
-public class Mon_Shooter extends Entity implements Actable {
+public class Mon_Shooter extends Monster implements Actable {
     GameMap mp;
     public final static int IDLE = 0;
     public final static int ACTIVE = 1;
@@ -34,14 +31,7 @@ public class Mon_Shooter extends Entity implements Actable {
     private final static int UP = 3;
 
     private boolean isAlwaysUp;
-    private boolean isIdle;
-    private boolean isShooting;
     private boolean canChangeState;
-
-    private int CURRENT_ACTION;
-    private int PREVIOUS_ACTION;
-    private int CURRENT_DIRECTION;
-    private int CURRENT_FRAME;
 
     private int maxActiveTime = 1800;
     private int activeTimeCounter = 0;
@@ -201,12 +191,6 @@ public class Mon_Shooter extends Entity implements Actable {
         if(contactPlayer && !mp.player.isInvincible){
             mp.player.receiveDamage(this);
             mp.player.isInvincible = true;
-            if(mp.player.getEffect == Effect.NONE) {
-                GamePanel.environmentManager.lighting.transit = true;
-                GamePanel.environmentManager.lighting.fadeIn = true;
-            }
-            mp.player.getEffect = Effect.BLIND;
-            effManager.setEffectDuration(600);
         }
         if(type == IDLE) canChangeState = isInteracting;
         if(!isInteracting && type == ACTIVE){

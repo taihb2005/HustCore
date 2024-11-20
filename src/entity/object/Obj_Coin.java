@@ -80,9 +80,8 @@ public class Obj_Coin extends Entity {
     }
 
     private void collect() {
-        dialogues[0] = "Bạn đã nhận được " + coin + " xu!";
-        GamePanel.gameState = GameState.DIALOGUE_STATE;
-        startDialogue(this);
+        dialogues[0][0] = "Bạn đã nhận được " + coin + " xu!";
+        startDialogue(this , 0);
     }
 
     @Override

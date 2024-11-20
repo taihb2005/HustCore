@@ -1,8 +1,8 @@
 package entity.mob;
 
-import ai.Node;
 import entity.Actable;
-import entity.Entity;
+import entity.effect.type.Blind;
+import entity.effect.type.Slow;
 import entity.projectile.Obj_BasicGreenProjectile;
 import graphics.Animation;
 import graphics.Sprite;
@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static main.GamePanel.camera;
-import static main.GamePanel.pFinder;
 
 /*
 Mô tả:
@@ -24,7 +23,7 @@ Mô tả:
 +Kĩ năng: Có thể bay qua các vật thể một cách dễ dàng
 */
 
-public class Mon_Spectron extends Entity implements Actable {
+public class Mon_Spectron extends Monster implements Actable {
     GameMap mp;
     final private static int IDLE = 0;
     final private static int RUN = 1;
@@ -34,13 +33,6 @@ public class Mon_Spectron extends Entity implements Actable {
     final private static int RIGHT = 0;
     final private static int LEFT = 1;
 
-    private int PREVIOUS_ACTION;
-    private int CURRENT_ACTION;
-    private int CURRENT_DIRECTION;
-
-    private boolean isRunning;
-    private boolean isShooting;
-    private boolean isIdle;
 
     final private BufferedImage [][][] mon_spectron = new BufferedImage[4][][];
     final private Animation mon_animator_spectron = new Animation();
@@ -50,7 +42,6 @@ public class Mon_Spectron extends Entity implements Actable {
     private int changeDirCounter = 120;
     private int shootInterval = 120;
 
-    private int CURRENT_FRAME;
     private int lastHP;
 
     //DEMO
@@ -65,7 +56,7 @@ public class Mon_Spectron extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
         this.canbeDestroyed = false;
-        onPath = true;
+        onPath = false;
 
         set();
     }
@@ -88,6 +79,7 @@ public class Mon_Spectron extends Entity implements Actable {
         strength = 10;
         speed = 1;
         last_speed = speed;
+        effectDeal = new Blind(mp.player , 600);
 
         expDrop = 10;
 
@@ -192,8 +184,7 @@ public class Mon_Spectron extends Entity implements Actable {
             up = down = left = right = false;
             searchPath(playerCol , playerRow);
             decideToMove();
-            isRunning = up | down | left | right;
-            isRunning = !isShooting;
+            isRunning = (up | down | left | right) && !isShooting;
         } else {
             actionLockCounter++;
             if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
@@ -222,6 +213,12 @@ public class Mon_Spectron extends Entity implements Actable {
         }
 
         //ATTACK
+        boolean contactPlayer = mp.cChecker.checkPlayer(this);
+        if(contactPlayer && !mp.player.isInvincible){
+            mp.player.isInvincible = true;
+            mp.player.receiveDamage(this);
+            effectDeal.add();
+        }
         if(lastHP > currentHP){
             lastHP = currentHP;
             reactForDamage();
@@ -268,11 +265,6 @@ public class Mon_Spectron extends Entity implements Actable {
     }
 
     public void move() {
-        boolean contactPlayer = mp.cChecker.checkPlayer(this);
-        if(contactPlayer && !mp.player.isInvincible){
-            mp.player.receiveDamage(this);
-            mp.player.isInvincible = true;
-        }
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;

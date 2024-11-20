@@ -93,6 +93,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         super.setDefaultSolidArea();
 
         dialogueIndex = 0;
+        dialogueSet = -1;
     }
 
     @Override
@@ -171,10 +172,14 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void talk() {
-        isTalking = true;
         facePlayer();
-        if(dialogues[dialogueIndex] == null) dialogueIndex = 0;
-        startDialogue(this);
+        dialogueSet++;
+        isTalking = true;
+        if(dialogues[dialogueSet][0] == null) {
+            dialogueIndex = 0;
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
     }
 
     @Override
@@ -184,11 +189,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void loot() {
-
-    }
-
-    @Override
-    public void pathFinding() {
 
     }
 
