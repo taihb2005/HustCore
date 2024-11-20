@@ -1,7 +1,10 @@
 package entity.player;
 
-import entity.Effect;
+import entity.effect.Effect;
+import entity.effect.EffectType;
 import entity.Entity;
+import entity.items.Item;
+import entity.mob.Monster;
 import entity.projectile.Obj_BasicProjectile;
 import entity.projectile.Projectile;
 import graphics.Sprite;
@@ -13,6 +16,10 @@ import graphics.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static main.GamePanel.camera;
 
 public class Player extends Entity {
 
@@ -44,18 +51,21 @@ public class Player extends Entity {
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
+    final protected Animation animator = new Animation();
 
     private int CURRENT_FRAME;
     public int SHOOT_INTERVAL ;
     public int nextLevelUp = 30;
-
-    final protected Animation animator = new Animation();
 
     //PLAYER STATUS
     public int blindRadius = 100;
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
+    public HashMap<String , Integer> effectManager = new HashMap<>();
+    public ArrayList<Effect> effect = new ArrayList<>();
+    public Item [] inventory = new Item[100];
+    public ItemHandler iHandler = new ItemHandler();
 
     public Player(GameMap mp) {
         super();
@@ -114,6 +124,12 @@ public class Player extends Entity {
 
     private void keyInput()
     {
+        //GOD MODE
+        if(KeyHandler.godModeOn){
+            hitbox = new Rectangle(0 , 0 , 0 , 0);
+            solidArea1 = new Rectangle(0 , 0 , 0 , 0);
+        }
+
         if(isDying) KeyHandler.disableKey();
         up    = KeyHandler.upPressed;
         down  = KeyHandler.downPressed;
@@ -132,6 +148,7 @@ public class Player extends Entity {
                 shootProjectile();
             }
         }
+        iHandler.useItem(this);
 
         //isShooting = shoot;
     }
@@ -263,7 +280,6 @@ public class Player extends Entity {
             isInteracting = true;
             if(GamePanel.gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
-                GamePanel.gameState = GameState.DIALOGUE_STATE;
                 mp.npc[index].talk();
             }
         }
@@ -323,10 +339,19 @@ public class Player extends Entity {
         currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
     }
 
-    public void receiveDamage(Entity attacker){
+    public void receiveDamage(Monster attacker){
         currentHP = currentHP - (20 + attacker.strength) + (defense);
     }
 
+    public void updateInventory(){
+        for(int i = 0 ; i < inventory.length ; i++){
+            if (inventory[i] != null) {
+                if(inventory[i].getQuantity() == 0){
+                    inventory[i] = null;
+                }
+            }
+        }
+    }
     //DEMO
     private void updateHP() {
         if(currentHP > maxHP) currentHP = maxHP; else
@@ -342,12 +367,25 @@ public class Player extends Entity {
         if(currentMana < 0) currentMana = 0;
     }
 
+    private void updateEffect(){
+        if(!effect.isEmpty()){
+            for(Effect e : effect) {
+                e.update();
+                if(e.effectFinished){
+                    e.remove();
+                    effectManager.remove(e.name);
+                }
+            }
+            effect.removeIf(e-> e.effectFinished);
+        }
+    }
+
     private void checkForMana(){
         if(!hasResource() && isShooting){
             isShooting = false;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            dialogues[0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
-            startDialogue(this);
+            dialogues[0][0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
+            startDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
     }
@@ -396,10 +434,10 @@ public class Player extends Entity {
             set();
             exp = nextLevelUp;
             nextLevelUp += 30;
-            GamePanel.gameState = GameState.DIALOGUE_STATE;
+            //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
-            dialogues[0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
-            startDialogue(this);
+            dialogues[0][0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            startDialogue(this , 0);
         }
     }
 
@@ -410,18 +448,13 @@ public class Player extends Entity {
         handlePosition();
         handleStatus();
         changeDirection();
+        updateInventory();
         updateHP();
         healMana();
         updateEffect();
         handleAnimationState();
         animator.update();
         CURRENT_FRAME = animator.getCurrentFrames();
-
-        if(KeyHandler.godModeOn){
-            hitbox = new Rectangle(0 , 0 , 0 , 0);
-            solidArea1 = new Rectangle(0 , 0 , 0 , 0);
-        }
-
     }
 
 
@@ -435,7 +468,12 @@ public class Player extends Entity {
                 worldX - GamePanel.camera.getX() , worldY - GamePanel.camera.getY(),
                 width, height, null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-        if(getEffect == Effect.SLOW) renderSlowEffect(g2);
-        if(getEffect == Effect.BLIND) renderBlindEffect(g2);
+        int positionY = worldY - camera.getY() + 20;
+        if(!effect.isEmpty()){
+            for(int i = 0 ; i < effect.size() ; i++){
+                int positionX = worldX - camera.getX() + 35 + 32 * i;
+                g2.drawImage(effect.get(i).icon , positionX , positionY , null);
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
-package entity;
+package entity.effect;
 
-public enum Effect {
+public enum EffectType {
     NONE,
     SLOW,
     SPEED_BOOST,

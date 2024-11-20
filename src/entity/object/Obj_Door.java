@@ -113,9 +113,9 @@ public class Obj_Door extends Entity implements Actable {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Nó bị khóa!";
-        dialogues[1] = "Bạn có muốn sử dụng một\n tấm thẻ để mở khóa không?";
-        dialogues[2] = "Bạn không có chiếc thẻ nào!";
+        dialogues[0][0] = "Nó bị khóa!";
+        dialogues[0][1] = "Bạn có muốn sử dụng một\n tấm thẻ để mở khóa không?";
+        dialogues[1][0] = "Bạn không có chiếc thẻ nào!";
     }
 
     public void talk() {
@@ -123,7 +123,7 @@ public class Obj_Door extends Entity implements Actable {
         {
             dialogueIndex = 0;
         }
-        startDialogue(this);
+        startDialogue(this , 0);
     }
 
     @Override

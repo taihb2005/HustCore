@@ -2,7 +2,6 @@ package main;
 
 // awt library
 import ai.PathFinder;
-import entity.Effect;
 import environment.EnvironmentManager;
 import map.GameMap;
 import map.MapManager;

@@ -1,17 +1,21 @@
 package entity.items;
 
-import entity.Item;
+import entity.Entity;
 import graphics.Sprite;
 import main.GamePanel;
 import main.GameState;
 
 public class Item_Kit extends Item {
+    private final int hpReward = 60;
     public Item_Kit(){
         super(2, "Kit", new Sprite("/entity/object/ITEM_box.png", 32, 32).getSprite(0,0));
+        name = "Bộ cứu thương";
+        description = "Sử dụng để hồi máu";
+        dialogues[0][0] = "Bạn được hồi " + hpReward + " máu!";
     }
-    public void collect() {
-//        dialogues[0] = "Bạn đã nhận được 1 bộ cứu thương!";
-//        GamePanel.gameState = GameState.DIALOGUE_STATE;
-//        startDialogue(this);
+    public void use(Entity entity){
+        quantity--;
+        entity.currentHP += hpReward;
+        startDialogue(this , 0);
     }
 }

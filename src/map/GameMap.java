@@ -1,11 +1,11 @@
 package map;
 
 import entity.Entity;
-import entity.Item;
-import entity.items.Inventory;
+import entity.mob.Monster;
 import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
+import entity.projectile.Projectile;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
@@ -37,11 +37,9 @@ public class GameMap {
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
     public Entity [] npc;//Danh sách target ở trên map
-    public Entity [] enemy;
-    public Entity [] projectiles;
-    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
-    public Item[] item;
-    public Inventory inventory;
+    public Monster [] enemy;
+    public Projectile[] projectiles;
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồm player , target,...
 
     //MAP STAT
     private int bestLightingRadius = 2000;
@@ -53,10 +51,9 @@ public class GameMap {
         inactiveObj = new Entity[300];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
-        enemy       = new Entity[100];
-        projectiles = new Entity[100];
+        enemy       = new Monster[100];
+        projectiles = new Projectile[100];
         objList     = new ArrayList<>();
-        item        = new Item[100];
         dispose();
 
         this.mapWidth = mapWidth;
@@ -204,13 +201,6 @@ public class GameMap {
                 }
             }
             //UPDATE ITEM
-            for(int i = 0 ; i < item.length ; i++){
-                if (item[i] != null) {
-                    if(item[i].getQuantity() == 0){
-                        item[i] = null;
-                    }
-                }
-            }
             for(Entity entity : inactiveObj) if(entity != null) entity.update();
             for(Entity entity : activeObj) if(entity != null) entity.update();
             for(Entity entity : npc) if(entity != null) entity.update();

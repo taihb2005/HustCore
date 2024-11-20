@@ -1,15 +1,19 @@
-package entity;
+package entity.items;
 
+import entity.Entity;
+import map.GameMap;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.ui;
 
-public class Item {
+public class Item extends Entity {
     protected int id;
     protected String name;
+    protected String description;
     protected int quantity;
     protected BufferedImage icon;
-    public String[] dialogues = new String[8];
     public Item(int id, String name, BufferedImage icon) {
         this.id = id;
         this.name = name;
@@ -32,10 +36,24 @@ public class Item {
             }
         }
     }
+
+    public void use(Entity entity){
+    };
     // Các getter và setter nếu cần thiết
     public int getId() { return id; }
     public String getName() { return name; }
+    public String getDescription(){return description;}
     public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity;}
     public BufferedImage getIcon() { return icon; }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void render(Graphics2D g2) {
+
+    }
 }

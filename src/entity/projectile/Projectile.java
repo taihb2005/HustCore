@@ -1,9 +1,9 @@
 package entity.projectile;
 
-import entity.Effect;
+import entity.effect.EffectType;
 import entity.Entity;
+import entity.mob.Monster;
 import graphics.Animation;
-import main.GamePanel;
 import map.GameMap;
 
 import java.awt.image.BufferedImage;
@@ -25,8 +25,12 @@ public class Projectile extends Entity {
     protected int CURRENT_DIRECTION;
     protected int CURRENT_FRAME;
 
+    public int manaCost;
+    public boolean active;
+
+
     public int base_damage;
-    public Effect effectType;
+    public EffectType effectType;
     public int slowDuration;
 
     public Projectile(GameMap mp)
@@ -84,20 +88,6 @@ public class Projectile extends Entity {
         } else{
             boolean contactPlayer = mp.cChecker.checkPlayer(this);
             if(!mp.player.isInvincible && contactPlayer){
-                if(name.equals("Plasma")) {
-                    if(mp.player.getEffect == Effect.NONE) {
-                        GamePanel.environmentManager.lighting.transit = true;
-                        GamePanel.environmentManager.lighting.fadeIn = true;
-                    }
-                    mp.player.getEffect = Effect.BLIND;
-                    effManager.setEffectDuration(600);
-                } else if(name.equals("Basic Green Projectile")){
-                    if(mp.player.getEffect == Effect.NONE) {
-                        mp.player.getEffect = Effect.SLOW;
-                        slow(mp.player);
-                        effManager.setEffectDuration(150);
-                    }
-                }
                 active = false;
                 mp.player.receiveDamage(this , user);
                 mp.player.isInvincible = true;
