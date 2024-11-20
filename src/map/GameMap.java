@@ -97,13 +97,10 @@ public class GameMap {
 
             //System.out.println(target.get(0) == null);
 
-            Collections.sort(objList, new Comparator<Entity>() {
-                @Override
-                public int compare(Entity e1, Entity e2) {
-                    int index;
-                    index = Integer.compare(e1.worldY, e2.worldY);
-                    return index;
-                }
+            Collections.sort(objList, (e1, e2) -> {
+                int index;
+                index = Integer.compare(e1.worldY, e2.worldY);
+                return index;
             });
 
         long lasttime = System.nanoTime();

@@ -20,7 +20,7 @@ public class AssetSetter {
 //        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
 //        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
 //        mp.addObject(filledTank_no1 , mp.inactiveObj);
-
+//
 //        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
 //        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
 //        mp.addObject(filledTank_no2 , mp.inactiveObj);
@@ -42,10 +42,10 @@ public class AssetSetter {
 //        mp.addObject(chair_no1 , mp.inactiveObj);
 //
 //        //INTERACTIVE OBJ
-        int index = 0;
-        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-        mp.addObject(small_door , mp.activeObj);
+//        int index = 0;
+//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
+//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+//        mp.addObject(small_door , mp.activeObj);
 
 //        Obj_Chest chest_no1 = new Obj_Chest(mp);
 //        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
@@ -90,6 +90,32 @@ public class AssetSetter {
         sptr.newWorldY = 1800;
         mp.enemy[index] = sptr;
         index++;
+//
+//        Mon_Spectron sptr1 = new Mon_Spectron(mp);
+//        sptr1.worldX = 1500;
+//        sptr1.worldY = 1800;
+//        sptr1.newWorldX = 1500;
+//        sptr1.newWorldY = 1800;
+//        mp.enemy[index] = sptr1;
+//        index++;
+//
+//        Mon_Spectron sptr2 = new Mon_Spectron(mp);
+//        sptr2.worldX = 1400;
+//        sptr2.worldY = 1800;
+//        sptr2.newWorldX = 1400;
+//        sptr2.newWorldY = 1800;
+//        mp.enemy[index] = sptr2;
+//        index++;
+//
+//        Mon_Spectron sptr3 = new Mon_Spectron(mp);
+//        sptr3.worldX = 1300;
+//        sptr3.worldY = 1800;
+//        sptr3.newWorldX = 1300;
+//        sptr3.newWorldY = 1800;
+//        mp.enemy[index] = sptr3;
+//        index++;
+
+
 
 
 
