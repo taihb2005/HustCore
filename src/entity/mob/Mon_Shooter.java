@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Actable;
 import entity.effect.EffectType;
+import entity.effect.type.Slow;
 import entity.projectile.Obj_Plasma;
 import graphics.Animation;
 import graphics.Sprite;
@@ -65,6 +66,7 @@ public class Mon_Shooter extends Monster implements Actable {
         speed = 0;
         strength = 10;
         level = 1;
+        effectDeal = new Slow(mp.player , 150);
 
         getImage();
         setDefault();
@@ -191,6 +193,7 @@ public class Mon_Shooter extends Monster implements Actable {
         if(contactPlayer && !mp.player.isInvincible){
             mp.player.receiveDamage(this);
             mp.player.isInvincible = true;
+            effectDeal.add();
         }
         if(type == IDLE) canChangeState = isInteracting;
         if(!isInteracting && type == ACTIVE){

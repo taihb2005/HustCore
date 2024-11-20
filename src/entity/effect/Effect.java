@@ -55,5 +55,6 @@ public class Effect {
     public void setEffectDuration(int duration){
         effectFinished = false;
         effectDuration = duration;
+        effectDurationCounter = 0;
     }
 }

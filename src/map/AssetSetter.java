@@ -2,6 +2,7 @@ package map;
 
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
+import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
@@ -79,7 +80,7 @@ public class AssetSetter {
                             "thành như thế này!";
         npc1.dialogues[0][6] = "Nếu bạn biến được chúng \nmình về như cũ thì sẽ tốt biết bao...";
 
-        npc1.dialogues[1][0] = "Bạn biết con rùa rụt cổ không?";
+        npc1.dialogues[1][0] = "Bạn biết con rùa rụt cổ không\nvà chem chép không?";
         npc1.dialogues[1][1] = "Nó trú ngụ ở trung tâm của phòng\nđiều khiển";
         npc1.dialogues[1][2] = "Tiêu diệt nó sẽ khiến bạn có\nthêm manh mối!";
         npc1.dialogues[1][3] = "Chúc bạn may mắn!";
@@ -106,6 +107,12 @@ public class AssetSetter {
         index++;
 
 
-
+        Mon_Shooter shooter = new Mon_Shooter(mp);
+        shooter.worldX = 1400;
+        shooter.worldY = 1500;
+        shooter.newWorldX = 1400;
+        shooter.newWorldY = 1500;
+        mp.enemy[index] = shooter;
+        index++;
     }
 }
