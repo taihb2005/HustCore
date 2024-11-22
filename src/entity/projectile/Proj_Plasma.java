@@ -6,8 +6,8 @@ import map.GameMap;
 
 import java.awt.*;
 
-public class Obj_Plasma extends Projectile{
-    public Obj_Plasma(GameMap mp) {
+public class Proj_Plasma extends Projectile{
+    public Proj_Plasma(GameMap mp) {
         super(mp);
         name = "Plasma";
         width = 64;
@@ -15,7 +15,6 @@ public class Obj_Plasma extends Projectile{
         maxHP = 40;
         speed = 7;
         base_damage = 30;
-        effectType = EffectType.SLOW;
         slowDuration = 180;
         manaCost = 20;
         direction = "right";
@@ -29,12 +28,6 @@ public class Obj_Plasma extends Projectile{
 
     private void getImage(){
         projectile_sprite = new Sprite("/entity/projectile/plasma.png" , width , height).getSpriteArray();
-    }
-
-    public void setHitbox(){
-        switch(direction){
-            case "right":
-        }
     }
 
 }

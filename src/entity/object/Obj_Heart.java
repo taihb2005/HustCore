@@ -42,6 +42,21 @@ public class Obj_Heart extends Entity {
         setDefault();
     }
 
+    public Obj_Heart(GameMap mp , int x , int y) {
+        super(x , y);
+        this.mp = mp;
+        name = "Heart";
+        super.width = 32;
+        super.height = 32;
+
+        CURRENT_ACTION = IDLE;
+        PREVIOUS_ACTION = IDLE;
+        isInteracting = false;
+        isIdle = true;
+        getImage();
+        setDefault();
+    }
+
     private void getImage(){
         obj_heart[IDLE] = new Sprite("/entity/object/heartNormal.png", width, height).getSpriteArrayRow(0);
         obj_heart[TOUCHED] = new Sprite("/entity/object/heartTouched.png", width, height).getSpriteArrayRow(0);

@@ -17,11 +17,19 @@ public class Slow extends Effect {
     }
 
     public void affect(){
+        if(player.effectManager.containsKey("Speed Boost")) {
+            player.effectManager.remove("Speed Boost");
+            remove();
+            for(Effect e : player.effect){
+                if(e.name.equals("Speed Boost")) {
+                    e.effectFinished = true;
+                    break;
+                }
+            }
+        }
         player.speed = player.last_speed / 2;
     }
     public void remove(){
         player.speed = player.last_speed;
     }
-
-
 }

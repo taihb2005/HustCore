@@ -8,7 +8,7 @@ public class Node {
     int gCost;
     int hCost;
     int fCost;
-    boolean solid;
+    public boolean solid;
     boolean open;
     boolean checked;
 

@@ -1,12 +1,10 @@
 package entity.mob;
 
 import entity.Actable;
-import entity.effect.EffectType;
-import entity.effect.type.Slow;
-import entity.projectile.Obj_Plasma;
+import entity.effect.type.Blind;
+import entity.projectile.Proj_Plasma;
 import graphics.Animation;
 import graphics.Sprite;
-import main.GamePanel;
 import map.GameMap;
 
 import java.awt.*;
@@ -15,12 +13,11 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 /*
 Type of monster only attack in one direction
-Only attack at a certain of time, but deal massive damage when the projectile hits and slow player down
+Only attack at a certain of time, but deal massive damage when the projectile hits and blind player
 This thing only take damage when the player shoots in front of it, and when the player is 2 tiles away.
 Sleeps when no player is nearby, goes active when the player in its detection range
  */
 public class Mon_Shooter extends Monster implements Actable {
-    GameMap mp;
     public final static int IDLE = 0;
     public final static int ACTIVE = 1;
     public final static int SHOOT = 2;
@@ -43,7 +40,7 @@ public class Mon_Shooter extends Monster implements Actable {
     private final Animation mon_animator_shooter = new Animation();
     public int type;
     public Mon_Shooter(GameMap mp){
-        super();
+        super(mp);
         this.mp = mp;
         name = "Shooter";
         this.type = IDLE;
@@ -57,7 +54,7 @@ public class Mon_Shooter extends Monster implements Actable {
         setDefault();
     }
     public Mon_Shooter(GameMap mp , int type){
-        super();
+        super(mp);
         this.mp = mp;
         name = "Shooter";
         this.type = type;
@@ -66,13 +63,43 @@ public class Mon_Shooter extends Monster implements Actable {
         speed = 0;
         strength = 10;
         level = 1;
-        effectDeal = new Slow(mp.player , 150);
 
         getImage();
         setDefault();
     }
     public Mon_Shooter(GameMap mp , int type , boolean isAlwaysUp){
-        super();
+        super(mp);
+        this.mp = mp;
+        name = "Shooter";
+        this.type = type;
+        this.isAlwaysUp = isAlwaysUp;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+    }
+
+    public Mon_Shooter(GameMap mp , int type , int x , int y){
+        super(mp , x  ,y);
+        this.mp = mp;
+        name = "Shooter";
+        this.type = type;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+    }
+
+    public Mon_Shooter(GameMap mp , int type , boolean isAlwaysUp , int x , int y){
+        super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
         this.type = type;
@@ -92,7 +119,9 @@ public class Mon_Shooter extends Monster implements Actable {
         currentHP = maxHP;
         invincibleDuration = 60;
         projectile_name = "Plasma";
-        projectile = new Obj_Plasma(mp);
+        projectile = new Proj_Plasma(mp);
+        effectDealOnTouch = new Blind(mp.player , 120);
+        effectDealByProjectile = new Blind(mp.player , 600);
 
         expDrop = 20;
 
@@ -157,16 +186,11 @@ public class Mon_Shooter extends Monster implements Actable {
     public void attack(){
         if(!isDying) {
             projectile.set(worldX, worldY, direction, true, this);
-            for (int i = 0; i < mp.projectiles.length; i++) {
-                if (mp.projectiles[i] == null) {
-                    mp.projectiles[i] = projectile;
-                    break;
-                }
-            }
+            mp.addObject(projectile , mp.projectiles);
         }
     }
 
-    private void changeDirection(){
+    private void changeAnimationDirection(){
         switch (direction){
             case "right" : CURRENT_DIRECTION = RIGHT; break;
             case "left"  : CURRENT_DIRECTION = LEFT; break;
@@ -189,12 +213,7 @@ public class Mon_Shooter extends Monster implements Actable {
     }
 
     private void checkForPlayer(){
-        boolean contactPlayer = mp.cChecker.checkPlayer(this);
-        if(contactPlayer && !mp.player.isInvincible){
-            mp.player.receiveDamage(this);
-            mp.player.isInvincible = true;
-            effectDeal.add();
-        }
+        damagePlayer();
         if(type == IDLE) canChangeState = isInteracting;
         if(!isInteracting && type == ACTIVE){
             activeTimeCounter++;
@@ -284,6 +303,6 @@ public class Mon_Shooter extends Monster implements Actable {
     public void setInterval(int dt){this.shotInterval = dt;}
     public void setDirection(String dir){
         direction = dir;
-        changeDirection();
+        changeAnimationDirection();
     }
 }

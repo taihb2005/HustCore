@@ -60,6 +60,23 @@ public class Obj_Door extends Entity implements Actable {
         setDefault();
     }
 
+    public Obj_Door(int type , int id , int state , int x , int y) {
+        super(x , y);
+        name = "Door";
+        this.type = type;
+        this.id = id;
+        this.state = state;
+        this.prev_state = state;
+        this.isOpening = false;
+        this.canbeDestroyed = false;
+        isOpened = false;
+        obj_door_sprite = new BufferedImage[2][];
+        obj_door = new Animation();
+
+        getDoorImage();
+        setDefault();
+    }
+
     private void getDoorImage()
     {
         switch(this.type)

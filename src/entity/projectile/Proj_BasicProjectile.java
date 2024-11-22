@@ -5,8 +5,8 @@ import map.GameMap;
 
 import java.awt.*;
 
-public class Obj_BasicProjectile extends Projectile{
-    public Obj_BasicProjectile(GameMap mp) {
+public class Proj_BasicProjectile extends Projectile{
+    public Proj_BasicProjectile(GameMap mp) {
         super(mp);
         name = "Basic Projectile";
         width = 64;

@@ -25,6 +25,19 @@ public class Obj_Desk extends Entity {
         setDefault();
     }
 
+    public Obj_Desk(int type , int x , int y)
+    {
+        super(x , y);
+        name = "Desk";
+        super.width = 64;
+        super.height = 64;
+
+        this.type = type;
+        obj_desk = new Sprite("/entity/object/desk_id" + type + ".png" , width , height).getSprite(0 , 0);
+
+        setDefault();
+    }
+
     private void setDefault()
     {
         solidArea1 = new Rectangle(8 , 24 , 48 , 32);
