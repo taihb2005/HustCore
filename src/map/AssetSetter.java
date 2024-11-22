@@ -1,11 +1,19 @@
 package map;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import entity.GameObject;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
+
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
 
 public class AssetSetter {
     GameMap mp;
@@ -17,6 +25,55 @@ public class AssetSetter {
 
     public void setObject()
     {
+        try {
+            // Đọc file JSON
+            Reader reader = new FileReader("res/entity/object.json");
+
+            // Sử dụng Gson để ánh xạ
+            Gson gson = new Gson();
+
+            // Đọc dữ liệu vào Map
+            Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {}.getType());
+
+            // Lấy danh sách active và inactive
+            List<GameObject> activeObjects = data.get("active");
+            List<GameObject> inactiveObjects = data.get("inactive");
+
+            // Hiển thị thông tin các object
+            for (GameObject obj : inactiveObjects) {
+                System.out.println();
+                switch(obj.getObject()) {
+                    case "Obj_FilledTank":
+                        Obj_FilledTank filledTank = new Obj_FilledTank(obj.getType());
+                        filledTank.worldX = obj.getX(); filledTank.worldY = obj.getY();
+                        mp.addObject(filledTank, mp.inactiveObj);
+                        break;
+                    case "Obj_EmptyTank":
+                        Obj_EmptyTank emptyTank = new Obj_EmptyTank();
+                        emptyTank.worldX = obj.getX(); emptyTank.worldY = obj.getY();
+                        mp.addObject(emptyTank, mp.inactiveObj);
+                        break;
+                    case "Obj_Television":
+                        Obj_Television tv = new Obj_Television(obj.getType());
+                        tv.worldX = obj.getX(); tv.worldY = obj.getY();
+                        mp.addObject(tv, mp.inactiveObj);
+                        break;
+                    case "Obj_Desk":
+                        Obj_Desk desk = new Obj_Desk(obj.getType());
+                        desk.worldX = obj.getX(); desk.worldY = obj.getY();
+                        mp.addObject(desk, mp.inactiveObj);
+                        break;
+                    case "Obj_Chair":
+                        Obj_Chair chair = new Obj_Chair(obj.getType());
+                        chair.worldX = obj.getX(); chair.worldY = obj.getY();
+                        mp.addObject(chair, mp.inactiveObj);
+                        break;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
 //        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
 //        mp.addObject(filledTank_no1 , mp.inactiveObj);
@@ -42,24 +99,24 @@ public class AssetSetter {
 //        mp.addObject(chair_no1 , mp.inactiveObj);
 //
 //        //INTERACTIVE OBJ
-        int index = 0;
-        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-        mp.addObject(small_door , mp.activeObj);
-
-        Obj_Chest chest_no1 = new Obj_Chest(mp);
-        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
-        chest_no1.setLoot(new Item_Kit());
-        chest_no1.setLoot(new Item_Battery());
-        chest_no1.setDialogue();
-        mp.addObject(chest_no1 , mp.activeObj);
-
-        Obj_Chest chest_no2 = new Obj_Chest(mp);
-        chest_no2.worldX = 1400; chest_no2.worldY = 1900;
-        chest_no2.setLoot(new Item_Kit() , 10);
-        chest_no2.setLoot(new Item_Battery());
-        chest_no2.setDialogue();
-        mp.addObject(chest_no2 , mp.activeObj);
+//        int index = 0;
+//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
+//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
+//        mp.addObject(small_door , mp.activeObj);
+//
+//        Obj_Chest chest_no1 = new Obj_Chest(mp);
+//        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
+//        chest_no1.setLoot(new Item_Kit(),1);
+//        chest_no1.setLoot(new Item_Battery(),1);
+//        chest_no1.setDialogue();
+//        mp.addObject(chest_no1 , mp.activeObj);
+//
+//        Obj_Chest chest_no2 = new Obj_Chest(mp);
+//        chest_no2.worldX = 1400; chest_no2.worldY = 1900;
+//        chest_no2.setLoot(new Item_Kit() , 10);
+//        chest_no2.setLoot(new Item_Battery(), 1);
+//        chest_no2.setDialogue();
+//        mp.addObject(chest_no2 , mp.activeObj);
 
     }
 
