@@ -103,7 +103,7 @@ public class AssetSetter {
         Mon_Spectron sptr = new Mon_Spectron(mp , 1600 , 1800);
         mp.addObject(sptr , mp.enemy);
 
-        Mon_HustGuardian hust = new Mon_HustGuardian(mp , 1500 , 1600);
+        Mon_HustGuardian hust = new Mon_HustGuardian(mp , 1460 , 1590);
         mp.addObject(hust , mp.enemy);
 
     }

@@ -132,6 +132,7 @@ public class Obj_Door extends Entity implements Actable {
     public void setDialogue() {
         dialogues[0][0] = "Nó bị khóa!";
         dialogues[0][1] = "Bạn có muốn sử dụng một\n tấm thẻ để mở khóa không?";
+
         dialogues[1][0] = "Bạn không có chiếc thẻ nào!";
     }
 

@@ -13,7 +13,7 @@ public class Item_SpeedGem extends Item{
     }
 
     public void use(Player player){
-        if(!player.effectManager.containsKey("Slow")) {
+        if(!player.effectManager.containsKey("Slow") && !player.effectManager.containsKey("Speed Boost")) {
             SpeedBoost speedBoost = new SpeedBoost(player, 300);
             quantity--;
             speedBoost.add();

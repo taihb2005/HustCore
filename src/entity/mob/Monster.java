@@ -5,6 +5,8 @@ import entity.effect.Effect;
 import map.GameMap;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 import static main.GamePanel.currentMap;
 import static main.GamePanel.pFinder;
@@ -19,11 +21,14 @@ public class Monster extends Entity {
     protected boolean isIdle;
     protected boolean isShooting;
     protected boolean isRunning;
+    protected boolean isDetectPlayer;
 
     public boolean onPath = false;
     public boolean getAggro = false;
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
+
+    public final ArrayList<String> validDirection = new ArrayList<>();
 
     protected int SHOOT_INTERVAL;
 
@@ -81,6 +86,15 @@ public class Monster extends Entity {
         updateInvincibility();
     }
 
+    public void facePlayer() {
+        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 32;
+        int posCol = (worldX + solidArea1.x) / 32;
+
+        if(playerCol > posCol) direction = "right"; else
+            direction = "left";
+
+    }
+
     public void damagePlayer(){
         boolean contactPlayer = mp.cChecker.checkPlayer(this);
         if(contactPlayer && !mp.player.isInvincible){
@@ -90,8 +104,45 @@ public class Monster extends Entity {
         }
     }
 
-    public void searchPath(int goalCol, int goalRow)
-    {
+    public boolean checkForValidDirection(){
+        validDirection.clear();
+        newWorldX = worldX;
+        newWorldY = worldY;
+        //UP
+        newWorldY -= speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("up");
+        newWorldY += speed;
+
+        //DOWN
+        newWorldY += speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("down");
+        newWorldY -= speed;
+
+        //LEFT
+        newWorldX -=speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("left");
+        newWorldX += speed;
+
+        //RIGHT
+        newWorldX += speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("right");
+        newWorldX -= speed;
+
+        return !validDirection.isEmpty();
+    }
+
+    public String getValidDirection(){
+        int n = validDirection.size();
+        Random gen = new Random();
+        int i = gen.nextInt(n);
+        return validDirection.get(i);
+    }
+
+    public void searchPath(int goalCol, int goalRow) {
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
         pFinder.setNodes(startCol,startRow,goalCol,goalRow);

@@ -212,7 +212,6 @@ public class Player extends Entity {
     private void handlePosition() {
         isInteracting = false;
         interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
-        interactEnemy(mp.cChecker.checkInteractEntity(this , true , mp.enemy));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
         if (up && isRunning && !isShooting) {
@@ -280,11 +279,6 @@ public class Player extends Entity {
                 mp.npc[index].talk();
             }
         }
-    }
-
-    private void interactEnemy(int index){
-        if(index != -1)
-            mp.enemy[index].isInteracting = true;
     }
 
     private void interactObject(int index)

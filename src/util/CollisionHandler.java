@@ -123,6 +123,14 @@ public class CollisionHandler {
         return tmp2.intersects(tmp1);
     }
 
+    public boolean checkInteractPlayer(Entity entity){
+        int newHitBoxX = entity.interactionDetectionArea.x + entity.worldX;
+        int newHitBoxY = entity.interactionDetectionArea.y + entity.worldY;
+        Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.interactionDetectionArea.width , entity.interactionDetectionArea.height);
+        Rectangle tmp2 = new Rectangle(mp.player.hitbox.x + mp.player.worldX , mp.player.hitbox.y + mp.player.worldY , mp.player.hitbox.width , mp.player.hitbox.height);
+        return tmp2.intersects(tmp1);
+    }
+
     public void checkCollisionPlayer(Entity entity){
         int newSolidAreaX = entity.solidArea1.x + entity.newWorldX;
         int newSolidAreaY = entity.solidArea1.y + entity.newWorldY;

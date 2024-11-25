@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static main.GamePanel.*;
+import static map.GameMap.childNodeSize;
 
 public class Mon_HustGuardian extends Monster implements Actable {
     public final static int IDLE = 0;
@@ -30,7 +31,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
     private final BufferedImage[][][] mon_hust_guardian = new BufferedImage[4][][];
     private BufferedImage exclaimation;
     private final Animation mon_animator_hust_guardian = new Animation();
-    private final int getAggroCounter = 0;
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
@@ -38,9 +38,10 @@ public class Mon_HustGuardian extends Monster implements Actable {
     private int spawnPointY;
     private int posX;
     private int posY;
-    private int inRange;
     private int rangeRadius;
-    private final ArrayList<String> validDirection = new ArrayList<>();
+
+    private int detectionCounter = 0;
+    private final int detectionToSetAggro = 180;
 
     public Mon_HustGuardian(GameMap mp){
         super(mp);
@@ -80,6 +81,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         hitbox = new Rectangle(22 , 24 , 22 , 36);
         solidArea1 = new Rectangle(24 , 42 , 19 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+        interactionDetectionArea = new Rectangle(-50 , -50 , width + 100 , height + 100);
         setDefaultSolidArea();
 
         invincibleDuration = 40;
@@ -165,49 +167,8 @@ public class Mon_HustGuardian extends Monster implements Actable {
         } else {
             actionWhenGetAggro();//Đuổi theo người chơi
         }
-
-        //System.out.println(onPath);
-
         isRunning = (up | down | right | left) & (!isShooting);
         damagePlayer();
-    }
-
-    private boolean checkForValidDirection(){
-        validDirection.clear();
-        newWorldX = worldX;
-        newWorldY = worldY;
-        //UP
-        newWorldY -= speed;
-        checkCollision();
-        if(!collisionOn) validDirection.add("up");
-        newWorldY += speed;
-
-        //DOWN
-        newWorldY += speed;
-        checkCollision();
-        if(!collisionOn) validDirection.add("down");
-        newWorldY -= speed;
-
-        //LEFT
-        newWorldX -=speed;
-        checkCollision();
-        if(!collisionOn) validDirection.add("left");
-        newWorldX += speed;
-
-        //RIGHT
-        newWorldX += speed;
-        checkCollision();
-        if(!collisionOn) validDirection.add("right");
-        newWorldX -= speed;
-
-        return !validDirection.isEmpty();
-    }
-
-    private String getValidDirection(){
-        int n = validDirection.size();
-        Random gen = new Random();
-        int i = gen.nextInt(n);
-        return validDirection.get(i);
     }
 
     private void checkIfInRange(){
@@ -248,13 +209,33 @@ public class Mon_HustGuardian extends Monster implements Actable {
             actionLockCounter = 0;
             isRunning = !isShooting && (right | left | up | down);
         }
+
+        if(isInteracting){
+            detectionCounter++;
+            up = down = left = right = false;
+            isRunning = false;
+            isDetectPlayer = true;
+            if(detectionCounter >= detectionToSetAggro){
+                isDetectPlayer = false;
+                detectionCounter = 0;
+                speed = 2;
+                getAggro = true;
+            }
+        } else{
+            if(!getAggro)isDetectPlayer = false;
+            detectionCounter = 0;
+        }
+
+        if(isDetectPlayer) facePlayer();
+
+        isInteracting = false;
     }
 
     private void actionWhenGetAggro(){
-        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 32;
-        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / 32;
-        int posCol = (worldX + solidArea1.x) / 32;
-        int posRow = (worldY + solidArea1.y) / 32;
+        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
+        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+        int posCol = (worldX + solidArea1.x) / childNodeSize;
+        int posRow = (worldY + solidArea1.y) / childNodeSize;
 
         searchPath(playerCol , playerRow);
         decideToMove();
@@ -285,7 +266,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.npc);
         mp.cChecker.checkCollisionPlayer(this);
-
+        if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
         if(!collisionOn)
         {
             worldX = newWorldX;
@@ -309,9 +290,9 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     public void attack() {
         if(!projectile.active &&shootAvailableCounter == SHOOT_INTERVAL) {
+            projectile.set(worldX, worldY, direction, true, this);
             projectile.setHitbox();
             projectile.setSolidArea();
-            projectile.set(worldX, worldY, direction, true, this);
             mp.addObject(projectile, mp.projectiles);
             shootAvailableCounter = 0;
         }
@@ -339,8 +320,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         }
         g2.drawImage(mon_hust_guardian[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-//        g2.setColor(Color.RED);
-//        g2.drawLine(posX - camera.getX() , posY - camera.getY() , spawnPointX - camera.getX() ,spawnPointY - camera.getY());
+        if(isDetectPlayer) g2.drawImage(exclaimation , worldX - camera.getX() + 54 , worldY - camera.getY() , null);
     }
 
 }
