@@ -186,38 +186,29 @@ public class Mon_Spectron extends Monster implements Actable {
     {
         //SPEED
         //MOVE
-        if(onPath){
-            int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 16;
-            int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / 16;
+        actionLockCounter++;
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
             up = down = left = right = false;
-            searchPath(playerCol , playerRow);
-            decideToMove();
-            isRunning = (up | down | left | right) && !isShooting;
-        } else {
-            actionLockCounter++;
-            if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
-                up = down = left = right = false;
-                Random random = new Random();
-                int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-                if (i <= 28) {
-                    direction = "up";
-                    up = true;
-                }
-                if (i > 28 && i <= 50) {
-                    direction = "down";
-                    down = true;
-                }
-                if (i > 50 && i <= 75) {
-                    direction = "left";
-                    left = true;
-                }
-                if (i > 75 && i < 100) {
-                    direction = "right";
-                    right = true;
-                }
-                actionLockCounter = 0; // reset
-                isRunning = !isShooting;
+            Random random = new Random();
+            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+            if (i <= 28) {
+                direction = "up";
+                up = true;
             }
+            if (i > 28 && i <= 50) {
+                direction = "down";
+                down = true;
+            }
+            if (i > 50 && i <= 75) {
+                direction = "left";
+                left = true;
+            }
+            if (i > 75 && i < 100) {
+                direction = "right";
+                right = true;
+            }
+            actionLockCounter = 0; // reset
+            isRunning = !isShooting && (right | left | up | down);
         }
 
         //ATTACK

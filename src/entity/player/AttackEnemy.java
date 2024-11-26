@@ -44,6 +44,15 @@ public class AttackEnemy {
         }
     }
 
+    public void damageCyborgon(int index){
+        if(!mp.enemy[index].isInvincible) {
+            mp.enemy[index].canChangeState = true;
+            mp.enemy[index].currentHP -= player.damage;
+            mp.enemy[index].isInvincible = true;
+            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
+        }
+    }
+
     public void damageSpectron(int index){
 
     }
