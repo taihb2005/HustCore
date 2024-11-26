@@ -45,6 +45,13 @@
       "doorType": 1
     },
     {
+      "object": "Obj_Door",
+      "name": "door_butitisclosed",
+      "type": 1,
+      "position": { "x": 1408, "y": 1244 },
+      "doorType": 0
+    },
+    {
       "object": "Obj_Chest",
       "name": "chest_no1",
       "type": 1,
