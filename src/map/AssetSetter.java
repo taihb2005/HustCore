@@ -1,11 +1,14 @@
 package map;
 
-import entity.items.Item_Battery;
-import entity.items.Item_Kit;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
+
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
 
 public class AssetSetter {
     GameMap mp;
@@ -17,49 +20,6 @@ public class AssetSetter {
 
     public void setObject()
     {
-//        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
-//        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
-//        mp.addObject(filledTank_no1 , mp.inactiveObj);
-
-//        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
-//        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
-//        mp.addObject(filledTank_no2 , mp.inactiveObj);
-//
-//        Obj_EmptyTank emptyTank_no1 = new Obj_EmptyTank();
-//        emptyTank_no1.worldX = 23 * 64 ; emptyTank_no1.worldY = 26 * 64;
-//        mp.addObject(emptyTank_no1 , mp.inactiveObj);
-//
-//        Obj_Television tv_no1 = new Obj_Television(1);
-//        tv_no1.worldX = 1344 ; tv_no1.worldY = 1990;
-//        mp.addObject(tv_no1 , mp.inactiveObj);
-//
-//        Obj_Desk desk_no1 = new Obj_Desk(1);
-//        desk_no1.worldX = 1537; desk_no1.worldY = 1553;
-//        mp.addObject(desk_no1 , mp.inactiveObj);
-//
-//        Obj_Chair chair_no1 = new Obj_Chair(1);
-//        chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
-//        mp.addObject(chair_no1 , mp.inactiveObj);
-//
-//        //INTERACTIVE OBJ
-        int index = 0;
-        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-        mp.addObject(small_door , mp.activeObj);
-
-        Obj_Chest chest_no1 = new Obj_Chest(mp);
-        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
-        chest_no1.setLoot(new Item_Kit());
-        chest_no1.setLoot(new Item_Battery());
-        chest_no1.setDialogue();
-        mp.addObject(chest_no1 , mp.activeObj);
-
-        Obj_Chest chest_no2 = new Obj_Chest(mp);
-        chest_no2.worldX = 1400; chest_no2.worldY = 1900;
-        chest_no2.setLoot(new Item_Kit() , 10);
-        chest_no2.setLoot(new Item_Battery());
-        chest_no2.setDialogue();
-        mp.addObject(chest_no2 , mp.activeObj);
 
     }
 
