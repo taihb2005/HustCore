@@ -93,13 +93,13 @@ public class CollisionHandler {
                         list[i].solidArea1.width , list[i].solidArea1.height);
                 Rectangle tmp = new Rectangle(newSolidAreaX1 , newSolidAreaY1, entity.solidArea1.width , entity.solidArea1.height);
 
-                if(tmp.intersects(tmp1)) {
+                if(tmp.intersects(tmp1) && list[i] != entity) {
                     entity.collisionOn = true;
                     index = i;
                     if(list[i].solidArea2 == null) break;
                 }
 
-                if(list[i].solidArea2 != null)
+                if(list[i].solidArea2 != null && list[i] != entity)
                 {
                     Rectangle tmp2 = new Rectangle(list[i].worldX + list[i].solidArea2.x , list[i].worldY + list[i].solidArea2.y,
                             list[i].solidArea2.width , list[i].solidArea2.height);
@@ -119,6 +119,14 @@ public class CollisionHandler {
         int newHitBoxX = entity.hitbox.x + entity.worldX;
         int newHitBoxY = entity.hitbox.y + entity.worldY;
         Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);
+        Rectangle tmp2 = new Rectangle(mp.player.hitbox.x + mp.player.worldX , mp.player.hitbox.y + mp.player.worldY , mp.player.hitbox.width , mp.player.hitbox.height);
+        return tmp2.intersects(tmp1);
+    }
+
+    public boolean checkInteractPlayer(Entity entity){
+        int newHitBoxX = entity.interactionDetectionArea.x + entity.worldX;
+        int newHitBoxY = entity.interactionDetectionArea.y + entity.worldY;
+        Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.interactionDetectionArea.width , entity.interactionDetectionArea.height);
         Rectangle tmp2 = new Rectangle(mp.player.hitbox.x + mp.player.worldX , mp.player.hitbox.y + mp.player.worldY , mp.player.hitbox.width , mp.player.hitbox.height);
         return tmp2.intersects(tmp1);
     }

@@ -1,9 +1,8 @@
 package entity.mob;
 
 import entity.Actable;
-import entity.effect.type.Blind;
 import entity.effect.type.Slow;
-import entity.projectile.Obj_BasicGreenProjectile;
+import entity.projectile.Proj_BasicGreenProjectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
@@ -24,7 +23,6 @@ Mô tả:
 */
 
 public class Mon_Spectron extends Monster implements Actable {
-    GameMap mp;
     final private static int IDLE = 0;
     final private static int RUN = 1;
     final private static int SHOOT = 2;
@@ -50,7 +48,20 @@ public class Mon_Spectron extends Monster implements Actable {
 
     public Mon_Spectron(GameMap mp)
     {
-        super();
+        super(mp);
+        name = "Spectron";
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+        this.canbeDestroyed = false;
+        onPath = false;
+
+        set();
+    }
+
+    public Mon_Spectron(GameMap mp , int x , int y)
+    {
+        super(mp , x , y);
         name = "Spectron";
         this.mp = mp;
         super.width = 64;
@@ -71,7 +82,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
     private void setDefault()
     {
-        projectile = new Obj_BasicGreenProjectile(mp);
+        projectile = new Proj_BasicGreenProjectile(mp);
         invincibleDuration = 40; // 1s
         maxHP = 40;
         currentHP = maxHP;
@@ -79,7 +90,8 @@ public class Mon_Spectron extends Monster implements Actable {
         strength = 10;
         speed = 1;
         last_speed = speed;
-        effectDeal = new Blind(mp.player , 600);
+        effectDealOnTouch = new Slow(mp.player , 60);
+        effectDealByProjectile = new Slow(mp.player , 180);
 
         expDrop = 10;
 
@@ -112,11 +124,7 @@ public class Mon_Spectron extends Monster implements Actable {
         spawnCoin();
     }
 
-    public void pathFinding() {
-
-    }
-
-    private void changeDirection()
+    private void changeAnimationDirection()
     {
         switch(direction)
         {
@@ -178,47 +186,33 @@ public class Mon_Spectron extends Monster implements Actable {
     {
         //SPEED
         //MOVE
-        if(onPath == true){
-            int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 16;
-            int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / 16;
+        actionLockCounter++;
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
             up = down = left = right = false;
-            searchPath(playerCol , playerRow);
-            decideToMove();
-            isRunning = (up | down | left | right) && !isShooting;
-        } else {
-            actionLockCounter++;
-            if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
-                up = down = left = right = false;
-                Random random = new Random();
-                int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-                if (i <= 28) {
-                    direction = "up";
-                    up = true;
-                }
-                if (i > 28 && i <= 50) {
-                    direction = "down";
-                    down = true;
-                }
-                if (i > 50 && i <= 75) {
-                    direction = "left";
-                    left = true;
-                }
-                if (i > 75 && i < 100) {
-                    direction = "right";
-                    right = true;
-                }
-                actionLockCounter = 0; // reset
-                isRunning = !isShooting;
+            Random random = new Random();
+            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+            if (i <= 28) {
+                direction = "up";
+                up = true;
             }
+            if (i > 28 && i <= 50) {
+                direction = "down";
+                down = true;
+            }
+            if (i > 50 && i <= 75) {
+                direction = "left";
+                left = true;
+            }
+            if (i > 75 && i < 100) {
+                direction = "right";
+                right = true;
+            }
+            actionLockCounter = 0; // reset
+            isRunning = !isShooting && (right | left | up | down);
         }
 
         //ATTACK
-        boolean contactPlayer = mp.cChecker.checkPlayer(this);
-        if(contactPlayer && !mp.player.isInvincible){
-            mp.player.isInvincible = true;
-            mp.player.receiveDamage(this);
-            effectDeal.add();
-        }
+        damagePlayer();
         if(lastHP > currentHP){
             lastHP = currentHP;
             reactForDamage();
@@ -245,24 +239,9 @@ public class Mon_Spectron extends Monster implements Actable {
 
     public void attack() {
         projectile.set(worldX , worldY , direction , true , this);
-        for(int i = 0; i < mp.projectiles.length; i++)
-        {
-            if(mp.projectiles[i] == null)
-            {
-                mp.projectiles[i] = projectile;
-                break;
-            }
-        }
+        mp.addObject(projectile , mp.projectiles);
     }
 
-    public void reactForDamage(){
-        switch (mp.player.projectile.direction){
-            case "right": direction = "left"; left = true ; break;
-            case "left" : direction = "right"; right = true ; break;
-            case "up"   : direction = "down" ; down = true; break;
-            case "down" : direction = "up"   ; up = true; break;
-        }
-    }
 
     public void move() {
         collisionOn = false;
@@ -301,7 +280,7 @@ public class Mon_Spectron extends Monster implements Actable {
     public void update() {
         setAction();
         move();
-        changeDirection();
+        changeAnimationDirection();
         handleAnimationState();
         mon_animator_spectron.update();
         CURRENT_FRAME = mon_animator_spectron.getCurrentFrames();

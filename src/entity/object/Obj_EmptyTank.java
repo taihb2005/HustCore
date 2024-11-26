@@ -22,6 +22,17 @@ public class Obj_EmptyTank extends Entity {
         setDefault();
     }
 
+    public Obj_EmptyTank(int x , int y){
+        super(x , y);
+        name = "Empty Tank";
+        super.width = 64;
+        super.height = 128;
+
+        obj_emptyTank = new Sprite("/entity/object/emptytank.png" , width , height).getSprite(0 , 0);
+
+        setDefault();
+    }
+
     private void setDefault()
     {
         solidArea1 = new Rectangle(12 , 58 , 42 , 36);

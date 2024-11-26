@@ -83,13 +83,13 @@ public class Projectile extends Entity {
     public void update() {
         if(user == mp.player){
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
-           //System.out.println(index);
             mp.player.damageEnemy(index);
         } else{
             boolean contactPlayer = mp.cChecker.checkPlayer(this);
             if(!mp.player.isInvincible && contactPlayer){
                 active = false;
                 mp.player.receiveDamage(this , user);
+                user.projectileCauseEffect();
                 mp.player.isInvincible = true;
             }
         }

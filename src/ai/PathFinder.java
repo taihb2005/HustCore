@@ -5,14 +5,25 @@ import main.GamePanel;
 import map.GameMap;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class PathFinder {
 
     GameMap mp;
-    Node[][] node;
+    public Node[][] node;
     //ArrayList<Node> openList = new ArrayList<>();
-    public PriorityQueue<Node> openList = new PriorityQueue<>( new ComparatorNode());
+    public PriorityQueue<Node> openList = new PriorityQueue<>(new Comparator<Node>() {
+        @Override
+        public int compare(Node n1, Node n2) {
+            // So sánh fCost theo thứ tự giảm dần
+            if (n1.fCost != n2.fCost) {
+                return Integer.compare(n1.fCost, n2.fCost); //
+            }
+            // Nếu fCost bằng nhau, so sánh gCost theo thứ tự giảm dần
+            return Integer.compare(n1.gCost, n2.gCost);
+        }
+    });
     public ArrayList<Node> pathList = new ArrayList<>();
     Node startNode, goalNode, currentNode;
     public boolean goalReached = false;
@@ -82,6 +93,7 @@ public class PathFinder {
 
         checkForSolidTile(mp.inactiveObj);
         checkForSolidTile(mp.activeObj);
+        checkForSolidTile(mp.npc);
 
         while(col < mp.maxWorldCol && row < mp.maxWorldRow)
         {
@@ -117,7 +129,7 @@ public class PathFinder {
     }
     public boolean search()
     {
-        while(!goalReached && step < 1000)
+        while(!goalReached && step < 5000)
         {
             currentNode = openList.poll();
 
@@ -210,15 +222,4 @@ public class PathFinder {
     }
 }
 
-class ComparatorNode implements java.util.Comparator<Node>{
 
-    @Override
-    public int compare(Node n1, Node n2) {
-        // So sánh fCost theo thứ tự giảm dần
-        if (n1.fCost != n2.fCost) {
-            return Integer.compare(n1.fCost, n2.fCost); //
-        }
-        // Nếu fCost bằng nhau, so sánh gCost theo thứ tự giảm dần
-        return Integer.compare(n1.gCost, n2.gCost);
-    }
-}

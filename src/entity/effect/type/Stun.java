@@ -11,13 +11,4 @@ public class Stun extends Effect {
         id = 3;
     }
 
-    @Override
-    public void render(Graphics2D g2) {
-
-    }
-
-    @Override
-    public void update() {
-
-    }
 }

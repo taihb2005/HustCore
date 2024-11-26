@@ -44,6 +44,20 @@ public class Obj_Chest extends Entity implements Actable {
         setDefault();
     }
 
+    public Obj_Chest(GameMap mp , int x , int y)
+    {
+        super(x , y);
+        name = "Chest";
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+
+        obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArray();
+        obj_animator_Chest.setAnimationState(obj_Chest[currentStates] , 8);
+
+        setDefault();
+    }
+
     private void setDefault()
     {
         solidArea1 = new Rectangle(16 , 43 , 32 , 17);

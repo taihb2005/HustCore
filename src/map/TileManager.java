@@ -10,7 +10,7 @@ import static main.GamePanel.camera;
 public class TileManager {
     GamePanel gp;
 
-    boolean drawPath = true;
+    boolean drawPath = false;
 
     public TileManager(GamePanel gp){
         this.gp = gp;

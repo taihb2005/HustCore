@@ -4,11 +4,10 @@ import graphics.Sprite;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class Obj_BasicGreenProjectile extends Projectile{
+public class Proj_BasicGreenProjectile extends Projectile{
 
-    public Obj_BasicGreenProjectile(GameMap mp)
+    public Proj_BasicGreenProjectile(GameMap mp)
     {
         super(mp);
         name = "Basic Green Projectile";
