@@ -18,5 +18,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.10" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.4" level="project" />
   </component>
 </module>
