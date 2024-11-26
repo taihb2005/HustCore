@@ -265,6 +265,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.npc);
+        mp.cChecker.checkCollisionWithEntity(this , mp.enemy);
         mp.cChecker.checkCollisionPlayer(this);
         if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
         if(!collisionOn)

@@ -213,6 +213,7 @@ public class Mon_Shooter extends Monster implements Actable {
     }
 
     private void checkForPlayer(){
+        if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
         damagePlayer();
         if(type == IDLE) canChangeState = isInteracting;
         if(!isInteracting && type == ACTIVE){
