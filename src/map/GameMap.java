@@ -25,7 +25,7 @@ public class GameMap {
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
-    public static int childNodeSize = 16;
+    public static int childNodeSize = 32;
 
     private final int mapWidth;
     private final int mapHeight;

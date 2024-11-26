@@ -3,9 +3,9 @@ package entity.projectile;
 import graphics.Sprite;
 import map.GameMap;
 
-public class Obj_GreenBullet extends Projectile{
+public class Proj_GreenBullet extends Projectile{
 
-    public Obj_GreenBullet(GameMap mp) {
+    public Proj_GreenBullet(GameMap mp) {
         super(mp);
         name = "Green Bullet";
         width = 64;

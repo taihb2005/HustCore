@@ -64,6 +64,21 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     }
 
+    public Npc_CorruptedHustStudent(GameMap mp , int x , int y)
+    {
+        super(x , y);
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+
+        npc_animator_corruptedStudent = new Animation();
+
+        getNpcImage();
+        setDefault();
+        setDialogue();
+
+    }
+
     private void getNpcImage()
     {
         npc_corruptedStudent_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_idle1.png" , width , height).getSpriteArray();

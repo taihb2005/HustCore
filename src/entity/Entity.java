@@ -1,7 +1,6 @@
 package entity;
 
 import entity.effect.EffectType;
-import entity.effect.EffectManager;
 import entity.projectile.Projectile;
 import graphics.Sprite;
 import main.GameState;
@@ -12,11 +11,10 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.*;
 
 public abstract class Entity {
-    public static EffectManager effManager = new EffectManager();
     public String name;
     //POSITION
     public int worldX, worldY;
-    public int newWorldX , newWorldY;
+    public int newWorldX, newWorldY;
     public String direction;
     public int speed;
     public int last_speed;
@@ -53,7 +51,7 @@ public abstract class Entity {
     public int defense;
     public int damage;
     public String projectile_name;
-    public Projectile projectile ;
+    public Projectile projectile;
     public int shootAvailableCounter = 0;
     public int invincibleCounter = 0;
     public int invincibleDuration;//Thời gian bất tử
@@ -68,206 +66,81 @@ public abstract class Entity {
     public int dialogueIndex;
     public int dialogueSet = -1;
 
-    public Entity(){}
-
-    public Entity(int x , int y , int speed)
-    {
-        this.worldX = x;
-        this.worldY = y;
-        this.speed = speed;
+    public Entity() {
     }
 
-    public void setDefaultSolidArea()
-    {
-        if(solidArea1 != null)
-        {
+    public Entity(int x, int y) {
+        this.worldX = x;
+        this.worldY = y;
+        this.newWorldX = x;
+        this.newWorldY = y;
+    }
+
+    public void setDefaultSolidArea() {
+        if (solidArea1 != null) {
             solidAreaDefaultX1 = solidArea1.x;
             solidAreaDefaultY1 = solidArea1.y;
         }
 
-        if(solidArea2 != null)
-        {
+        if (solidArea2 != null) {
             solidAreaDefaultX2 = solidArea2.x;
             solidAreaDefaultY2 = solidArea2.y;
         }
     }
 
-    public void startDialogue(Entity entity , int dialogueSet)
-    {
+    public void startDialogue(Entity entity, int dialogueSet) {
         gameState = GameState.DIALOGUE_STATE;
         ui.target = entity;
         ui.target.dialogueSet = dialogueSet;
     }
 
-
-    public void talk(){};
-    public void set(){};
-    public void die(){
-        isDying = true;
-        hitbox = new Rectangle(0 , 0 , 0 ,0);
+    public void talk() {
     }
-    public void updateInvincibility(){
-        if(isInvincible){
+
+    public void set() {
+    }
+
+    public void projectileCauseEffect(){
+
+    }
+
+    public void die() {
+        isDying = true;
+        hitbox = new Rectangle(0, 0, 0, 0);
+    }
+
+    public void updateInvincibility() {
+        if (isInvincible) {
             invincibleCounter++;
-            if(invincibleCounter >= invincibleDuration){
+            if (invincibleCounter >= invincibleDuration) {
                 invincibleCounter = 0;
                 isInvincible = false;
             }
         }
     }
-//    public void updateEffect(){
-//        if(getEffect != EffectType.NONE){
-//            switch(getEffect){
-//                case SLOW :
-//                    if(effManager.slowEffect()) {
-//                        getEffect = EffectType.NONE;
-//                        speed = last_speed;
-//                    }
-//                    break;
-//                case SPEED_BOOST:
-//                    if(effManager.speed_boostEffect()){
-//                        getEffect = EffectType.NONE;
-//                        speed = last_speed;
-//                    }
-//                    break;
-//                case BLIND:
-//                    if(effManager.blindEffect()){
-//                        getEffect = EffectType.NONE;
-//                        environmentManager.lighting.transit = true;
-//                        environmentManager.lighting.fadeOut = true;
-//                    }
-//                    break;
-//            }
-//        }
-//    }
-    public void renderSlowEffect(Graphics2D g2){
-        BufferedImage slow = new Sprite("/effect/slow.png" , 32 , 32).getSpriteSheet();
-        g2.drawImage(slow , worldX - camera.getX() + 35 , worldY - camera.getY() + 20, null);
+
+    public void setHitbox() {
     }
-    public void renderSpeedBoostEffect(Graphics2D g2){
-        BufferedImage speed_boost = new Sprite("/effect/speed_boost.png").getSpriteSheet();
-        g2.drawImage(speed_boost , worldX - camera.getX() + 35 , worldY - camera.getY() + 20, null);
-    }
-    public void renderBlindEffect(Graphics2D g2){
-        BufferedImage blind = new Sprite("/effect/blind.png").getSpriteSheet();
-        g2.drawImage(blind , worldX - camera.getX() + 35 , worldY - camera.getY() + 20, null);
-    }
-    public void setHitbox(){};
+
     public abstract void update();
+
     public abstract void render(Graphics2D g2);
-    public void dispose()
-    {
+
+    public void dispose() {
         solidArea1 = null;
         solidArea2 = null;
         interactionDetectionArea = null;
         dialogues = null;
     }
 
-    public void decideToMove(){
-        switch(direction){
-            case "right": right = true; break;
-            case "left" : left = true; break;
-            case "down" : down = true; break;
-            case "up"   : up = true; break;
-        }
+    public String getOppositeDirection(String direction){
+        return  switch (direction) {
+            case "left" -> "right";
+            case "right" -> "left";
+            case "up" -> "down";
+            case "down" -> "up";
+            default -> "";
+        };
     }
-
-//    public void checkCollision(){
-//        collisionOn = false;
-//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.inactiveObj);
-//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.npc);
-//        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.activeObj);
-//    }
-//
-//    public void searchPath(int goalCol, int goalRow)
-//    {
-//        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
-//        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
-//        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
-//        if(pFinder.search())
-//        {
-//            //Next WorldX and WorldY
-//            if(pFinder.pathList.isEmpty()){
-//                onPath = false;
-//            } else {
-//                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
-//                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
-//
-//
-//                //Entity's solidArea position
-//                int enLeftX = worldX + solidArea1.x;
-//                int enRightX = worldX + solidArea1.x + solidArea1.width;
-//                int enTopY = worldY + solidArea1.y;
-//                int enBottomY = worldY + solidArea1.y + solidArea1.height;
-//
-//                // TOP PATH
-//                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-//                    direction = "up";
-//                }
-//                // BOTTOM PATH
-//                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-//                    direction = "down";
-//                }
-//                // RIGHT - LEFT PATH
-//                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
-//                    //either left or right
-//                    // LEFT PATH
-//                    if (enLeftX > nextX) {
-//                        direction = "left";
-//                    }
-//                    // RIGHT PATH
-//                    if (enLeftX < nextX) {
-//                        direction = "right";
-//                    }
-//                }
-//                //OTHER EXCEPTIONS
-//                else if (enTopY > nextY && enLeftX > nextX) {
-//                    // up or left
-//                    direction = "up";
-//                    newWorldY -= speed;
-//                    checkCollision();
-//                    //System.out.println(collisionOn);
-//                    if (collisionOn) {
-//                        direction = "left";
-//                    }
-//                    newWorldY += speed;
-//                } else if (enTopY > nextY && enLeftX < nextX) {
-//                    // up or right
-//                    direction = "up";
-//                    newWorldY -= speed;
-//                    checkCollision();
-//                    if (collisionOn) {
-//                        direction = "right";
-//                    }
-//                    newWorldY += speed;
-//                } else if (enTopY < nextY && enLeftX > nextX) {
-//                    // down or left
-//                    direction = "down";
-//                    newWorldY += speed;
-//                    checkCollision();
-//                    if (collisionOn) {
-//                        direction = "left";
-//                    }
-//                    newWorldY -= speed;
-//                } else if (enTopY < nextY && enLeftX < nextX) {
-//                    // down or right
-//                    direction = "down";
-//                    newWorldY += speed;
-//                    checkCollision();
-//                    if (collisionOn) {
-//                        direction = "right";
-//                    }
-//                    newWorldY -= speed;
-//                }
-//            }
-//            // for following player, disable this. It should be enabled when npc walking to specified location
-////            int nextCol = gp.pFinder.pathList.get(0).col;
-////            int nextRow = gp.pFinder.pathList.get(0).row;
-////            if(nextCol == goalCol && nextRow == goalRow)
-////            {
-////                onPath = false;
-////            }
-//        }
-//    }
 
 }

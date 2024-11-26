@@ -27,15 +27,18 @@ public class Effect {
     public void add(){
         setEffectDuration(effectDuration);
         affect();
-        if(!player.effectManager.containsKey(name)){
+        if(!player.effectManager.containsKey(name)){ //Nếu như chưa tồn tại effect thì thêm vào
             player.effectManager.put(name , effectDuration);
             setEffectAnimation();
             player.effect.add(this);
-        } else{
-            player.effectManager.put(name , effectDuration);
+        } else{         //Nếu như tồn tại rồi thì check một vài thứ sau
             for(Effect eff : player.effect){
-                if(eff.name.equals(name)) {
-                    eff.setEffectDuration(effectDuration);
+                if(eff.name.equals(name)) {   //Tìm đến cái effect đã tồn tại
+                    int effectRemainingTime = player.effectManager.get(name) - effectDurationCounter;
+                    if(effectRemainingTime < effectDuration) { //Nếu như thời gian effect còn lại nhỏ hơn thì mới set cái mới
+                        eff.setEffectDuration(effectDuration);
+                        player.effectManager.put(name , effectDuration); //Đặt thời lượng của effect vào map để dùng sau
+                    }
                     break;
                 }
             }

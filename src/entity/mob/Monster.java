@@ -5,11 +5,14 @@ import entity.effect.Effect;
 import map.GameMap;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 import static main.GamePanel.currentMap;
 import static main.GamePanel.pFinder;
 
 public class Monster extends Entity {
+    public GameMap mp;
     protected int CURRENT_ACTION;
     protected int PREVIOUS_ACTION;
     protected int CURRENT_DIRECTION;
@@ -18,11 +21,54 @@ public class Monster extends Entity {
     protected boolean isIdle;
     protected boolean isShooting;
     protected boolean isRunning;
+    protected boolean isDetectPlayer;
 
     public boolean onPath = false;
-    public Effect effectDeal;
+    public boolean getAggro = false;
+    public Effect effectDealOnTouch;
+    public Effect effectDealByProjectile;
+
+    public final ArrayList<String> validDirection = new ArrayList<>();
+
+    protected int SHOOT_INTERVAL;
 
     public int expDrop = 0;
+
+    public Monster(GameMap mp){
+        super();
+        this.mp = mp;
+    }
+    public Monster(GameMap mp , int x , int y){
+        super(x , y);
+        this.mp = mp;
+    }
+
+    public void projectileCauseEffect(){
+        effectDealByProjectile.add();
+    }
+
+    public void decideToMove() {
+        up = down = left = right = false;
+        switch (direction) {
+            case "right":
+                right = true;
+                break;
+            case "left":
+                left = true;
+                break;
+            case "down":
+                down = true;
+                break;
+            case "up":
+                up = true;
+                break;
+        }
+    }
+    
+    public void reactForDamage(){
+        direction = getOppositeDirection(mp.player.projectile.direction);
+        decideToMove();
+    }
 
     public void checkCollision(){
         collisionOn = false;
@@ -31,12 +77,72 @@ public class Monster extends Entity {
         currentMap.cChecker.checkCollisionWithEntity(this , currentMap.activeObj);
     }
 
-    public void damagePlayer(){
+    public void handleStatus(){
+        if(shootAvailableCounter < SHOOT_INTERVAL){
+            shootAvailableCounter++;
+        }
+        if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
+
+        updateInvincibility();
+    }
+
+    public void facePlayer() {
+        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 32;
+        int posCol = (worldX + solidArea1.x) / 32;
+
+        if(playerCol > posCol) direction = "right"; else
+            direction = "left";
 
     }
 
-    public void searchPath(int goalCol, int goalRow)
-    {
+    public void damagePlayer(){
+        boolean contactPlayer = mp.cChecker.checkPlayer(this);
+        if(contactPlayer && !mp.player.isInvincible){
+            mp.player.isInvincible = true;
+            mp.player.receiveDamage(this);
+            effectDealOnTouch.add();
+        }
+    }
+
+    public boolean checkForValidDirection(){
+        validDirection.clear();
+        newWorldX = worldX;
+        newWorldY = worldY;
+        //UP
+        newWorldY -= speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("up");
+        newWorldY += speed;
+
+        //DOWN
+        newWorldY += speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("down");
+        newWorldY -= speed;
+
+        //LEFT
+        newWorldX -=speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("left");
+        newWorldX += speed;
+
+        //RIGHT
+        newWorldX += speed;
+        checkCollision();
+        if(!collisionOn) validDirection.add("right");
+        newWorldX -= speed;
+
+        return !validDirection.isEmpty();
+    }
+
+    public String getValidDirection(){
+        int n = validDirection.size();
+        Random gen = new Random();
+        int i = gen.nextInt(n);
+        return validDirection.get(i);
+    }
+
+    public void searchPath(int goalCol, int goalRow) {
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
         pFinder.setNodes(startCol,startRow,goalCol,goalRow);
@@ -45,6 +151,7 @@ public class Monster extends Entity {
             //Next WorldX and WorldY
             if(pFinder.pathList.isEmpty()){
                 onPath = false;
+                up = down = left = right = false;
             } else {
                 int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
                 int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
@@ -116,13 +223,12 @@ public class Monster extends Entity {
                     newWorldY -= speed;
                 }
             }
-            // for following player, disable this. It should be enabled when npc walking to specified location
-//            int nextCol = gp.pFinder.pathList.get(0).col;
-//            int nextRow = gp.pFinder.pathList.get(0).row;
-//            if(nextCol == goalCol && nextRow == goalRow)
-//            {
-//                onPath = false;
-//            }
+        } else {
+            getAggro = false;
+            onPath = false;
+            up = down = right = left = false;
+            isRunning = false;
+            speed = last_speed;
         }
     }
 

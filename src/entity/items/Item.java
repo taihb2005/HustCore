@@ -1,6 +1,7 @@
 package entity.items;
 
 import entity.Entity;
+import entity.player.Player;
 import map.GameMap;
 
 import java.awt.*;
@@ -14,9 +15,8 @@ public class Item extends Entity {
     protected String description;
     protected int quantity;
     protected BufferedImage icon;
-    public Item(int id, String name, BufferedImage icon) {
+    public Item(int id, BufferedImage icon) {
         this.id = id;
-        this.name = name;
         this.quantity = 1; // Khởi tạo số lượng là 1 khi tạo Item mới
         this.icon = icon;
     }
@@ -37,7 +37,7 @@ public class Item extends Entity {
         }
     }
 
-    public void use(Entity entity){
+    public void use(Player player){
     };
     // Các getter và setter nếu cần thiết
     public int getId() { return id; }
