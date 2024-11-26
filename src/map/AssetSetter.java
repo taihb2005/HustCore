@@ -4,6 +4,7 @@ import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.items.Item_Potion;
 import entity.items.Item_SpeedGem;
+import entity.mob.Mon_Cyborgon;
 import entity.mob.Mon_HustGuardian;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
@@ -106,5 +107,7 @@ public class AssetSetter {
         Mon_HustGuardian hust = new Mon_HustGuardian(mp , 1460 , 1590);
         mp.addObject(hust , mp.enemy);
 
+        Mon_Cyborgon cy = new Mon_Cyborgon(mp , 1400 , 1500);
+        mp.addObject(cy , mp.enemy);
     }
 }

@@ -314,6 +314,7 @@ public class Player extends Entity {
             switch (mp.enemy[index].name){
                 case "Shooter": mp.playerAttack.damageShooter(index); break;
                 case "Hust Guardian": mp.playerAttack.damageGuardian(index); break;
+                case "Cyborgon"   : mp.playerAttack.damageCyborgon(index);
                 default       : mp.playerAttack.damageEnemy(index);   break;
             }
             if(mp.enemy[index].currentHP <= 0){

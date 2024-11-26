@@ -22,6 +22,7 @@ public class Monster extends Entity {
     protected boolean isShooting;
     protected boolean isRunning;
     protected boolean isDetectPlayer;
+    public boolean canChangeState = false;
 
     public boolean onPath = false;
     public boolean getAggro = false;
@@ -68,13 +69,6 @@ public class Monster extends Entity {
     public void reactForDamage(){
         direction = getOppositeDirection(mp.player.projectile.direction);
         decideToMove();
-    }
-
-    public void checkCollision(){
-        collisionOn = false;
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.inactiveObj);
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.npc);
-        currentMap.cChecker.checkCollisionWithEntity(this , currentMap.activeObj);
     }
 
     public void handleStatus(){
@@ -142,6 +136,7 @@ public class Monster extends Entity {
         return validDirection.get(i);
     }
 
+    @Override
     public void searchPath(int goalCol, int goalRow) {
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
