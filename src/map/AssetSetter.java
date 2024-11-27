@@ -6,6 +6,8 @@ import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
+import entity.mob.Mon_Cyborgon;
+import entity.mob.Mon_HustGuardian;
 import entity.mob.Mon_Shooter;
 import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
@@ -87,9 +89,11 @@ public class AssetSetter {
                             switch (item.getName()) {
                                 case "Item_Kit":
                                     chest.setLoot(new Item_Kit(), item.getQuantity());
+                                    chest.setDialogue();
                                     break;
                                 case "Item_Battery":
                                     chest.setLoot(new Item_Battery(), item.getQuantity());
+                                    chest.setDialogue();
                                     break;
                             }
                         }
@@ -197,6 +201,22 @@ public class AssetSetter {
         shooter.newWorldX = 1400;
         shooter.newWorldY = 1500;
         mp.enemy[index] = shooter;
+        index++;
+
+        Mon_HustGuardian guardian = new Mon_HustGuardian(mp);
+        guardian.worldX = 1500;
+        guardian.worldY = 1600;
+        guardian.newWorldX = 1500;
+        guardian.newWorldY = 1600;
+        mp.enemy[index] = guardian;
+        index++;
+
+        Mon_Cyborgon cyborg = new Mon_Cyborgon(mp);
+        cyborg.worldX = 1250;
+        cyborg.worldY = 1600;
+        cyborg.newWorldX = 1250;
+        cyborg.newWorldY = 1600;
+        mp.enemy[index] = cyborg;
         index++;
     }
 }

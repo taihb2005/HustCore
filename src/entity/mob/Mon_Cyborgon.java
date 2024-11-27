@@ -33,7 +33,11 @@ public class Mon_Cyborgon extends Monster implements Actable {
     private final Animation mon_animator_cyborgon = new Animation();
 
     private int actionLockCounter = 0;
+    private int attackLockCounter = 0;
     private final int changeDirCounter = 120;
+    private int shootInterval = 120;
+
+    private int lastHP;
 
     public Mon_Cyborgon(GameMap mp){
         super(mp);
@@ -75,6 +79,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         invincibleDuration = 40;
         maxHP = 120;
         currentHP = maxHP;
+        lastHP = currentHP;
         strength = 20;
         level = 1;
         defense = 0;
@@ -174,10 +179,59 @@ public class Mon_Cyborgon extends Monster implements Actable {
         }
     }
 
-    private void setAction(){
-        if(state == ACTIVE){
-
+    private void setAction()
+    {
+        //SPEED
+        //MOVE
+        actionLockCounter++;
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
+            up = down = left = right = false;
+            Random random = new Random();
+            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+            if (i <= 28) {
+                direction = "up";
+                up = true;
+            }
+            if (i > 28 && i <= 50) {
+                direction = "down";
+                down = true;
+            }
+            if (i > 50 && i <= 75) {
+                direction = "left";
+                left = true;
+            }
+            if (i > 75 && i < 100) {
+                direction = "right";
+                right = true;
+            }
+            actionLockCounter = 0; // reset
+            isRunning = !isShooting && (right | left | up | down);
         }
+
+        //ATTACK
+        damagePlayer();
+        if(lastHP > currentHP){
+            lastHP = currentHP;
+            reactForDamage();
+            isShooting = true;
+            isRunning = false;
+            if(isDying) isShooting = false;
+        } else {
+            if(isShooting && isDying) isShooting = false;
+            attackLockCounter++;
+            if (attackLockCounter >= shootInterval && !isDying) {
+                Random gen = new Random();
+                int i = gen.nextInt(100) + 1;
+                if (i >= 75 && i < 100) {
+                    isShooting = true;
+                    isRunning = false;
+                }
+                attackLockCounter = 0;
+            }
+        }
+
+        //INVINCIBLE
+        updateInvincibility();
     }
     
     public void move() {
@@ -195,6 +249,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
         if(!collisionOn)
         {
+            speed = 2;
             worldX = newWorldX;
             worldY = newWorldY;
         }
