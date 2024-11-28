@@ -26,8 +26,8 @@ public class Sprite {
 
     public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
-        this.w = tileSize; //original tile size
-        this.h = tileSize; //original tile size
+        this.w = 64; //original tile size
+        this.h = 64; //original tile size
 
         SPRITESHEET = loadFile(filepath);
 
@@ -77,7 +77,7 @@ public class Sprite {
 
     public BufferedImage getSprite(int x , int y) //get sub image from the sprite, at the position x , y from the img
     {
-        return SPRITESHEET.getSubimage(y * w , x * h , w , h);
+        return SPRITESHEET.getSubimage(y * w , x * h , w , h );
     }
 
 

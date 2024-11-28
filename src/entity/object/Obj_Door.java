@@ -28,6 +28,7 @@ public class Obj_Door extends Entity implements Actable {
 
     public Obj_Door(int type , int id) {
         super();
+        name = "Door";
         this.type = type;
         this.id = id;
         this.state = 0;
@@ -44,13 +45,31 @@ public class Obj_Door extends Entity implements Actable {
 
     public Obj_Door(int type , int id , int state) {
         super();
+        name = "Door";
         this.type = type;
         this.id = id;
         this.state = state;
         this.prev_state = state;
         this.canbeDestroyed = false;
         this.isOpening = false;
-        if(state == 0) isOpened = false; else isOpened = true;
+        isOpened = state != 0;
+        obj_door_sprite = new BufferedImage[2][];
+        obj_door = new Animation();
+
+        getDoorImage();
+        setDefault();
+    }
+
+    public Obj_Door(int type , int id , int state , int x , int y) {
+        super(x , y);
+        name = "Door";
+        this.type = type;
+        this.id = id;
+        this.state = state;
+        this.prev_state = state;
+        this.isOpening = false;
+        this.canbeDestroyed = false;
+        isOpened = false;
         obj_door_sprite = new BufferedImage[2][];
         obj_door = new Animation();
 
@@ -111,9 +130,10 @@ public class Obj_Door extends Entity implements Actable {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Nó bị khóa!";
-        dialogues[1] = "Bạn có muốn sử dụng một\n tấm thẻ để mở khóa không?";
-        dialogues[2] = "Bạn không có chiếc thẻ nào!";
+        dialogues[0][0] = "Nó bị khóa!";
+        dialogues[0][1] = "Bạn có muốn sử dụng một\n tấm thẻ để mở khóa không?";
+
+        dialogues[1][0] = "Bạn không có chiếc thẻ nào!";
     }
 
     public void talk() {
@@ -121,7 +141,12 @@ public class Obj_Door extends Entity implements Actable {
         {
             dialogueIndex = 0;
         }
-        startDialogue(this);
+        startDialogue(this , 0);
+    }
+
+    @Override
+    public void attack() {
+
     }
 
     public void loot() {

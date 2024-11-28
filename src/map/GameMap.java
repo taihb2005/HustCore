@@ -1,54 +1,65 @@
 package map;
 
 import entity.Entity;
+import entity.mob.Monster;
 import entity.object.Obj_Wall;
+import entity.player.AttackEnemy;
 import entity.player.Player;
+import entity.projectile.Projectile;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
-import main.Sound;
 import util.CollisionHandler;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import static main.GamePanel.camera;
 
 
 public class GameMap {
 
+    public GamePanel gp;
+    public Player player = new Player(this);
     public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
-    public Sound sound = new Sound();
+    public AttackEnemy playerAttack = new AttackEnemy(this);
+
+    public static int childNodeSize = 32;
 
     private final int mapWidth;
     private final int mapHeight;
+    public int maxWorldCol;
+    public int maxWorldRow;
 
     public ArrayList<TileLayer> mapLayer;
 
-    public int inactiveObjIndex = 0;
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public Entity [] npc;         //Danh sách target ở trên map
-    public Entity [] onAirEnemy;  //Danh sách kẻ địch bay
-    public Entity [] onGroundEnemy;//Danh sách kẻ địch trên mặt đất
-    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
+    public Entity [] npc;//Danh sách target ở trên map
+    public Monster [] enemy;
+    public Projectile[] projectiles;
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồm player , target,...
+
+    //MAP STAT
+    private int bestLightingRadius = 2000;
 
     private long startTime = System.nanoTime();
-    public Player player = new Player(this);
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new Entity[100];
+        inactiveObj = new Entity[300];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
-        onAirEnemy  = new Entity[100];
-        onGroundEnemy = new Entity[100];
+        enemy       = new Monster[100];
+        projectiles = new Projectile[100];
         objList     = new ArrayList<>();
+        dispose();
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
+        this.maxWorldCol = (mapWidth / childNodeSize ) ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) ;
 
         setter.setObject();
         setter.setNpc();
@@ -57,56 +68,53 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
-            objList.add(player);
-            for (Entity entity : inactiveObj) {
-                if (entity != null)
-                    objList.add(entity);
-            }
 
-            for (Entity entity : activeObj) {
-                if (entity != null)
-                    objList.add(entity);
-            }
+        objList.add(player);
+        for (Entity entity : inactiveObj) {
+            if (entity != null)
+                objList.add(entity);
+        }
 
-            for(Entity entity : npc)
+        for (Entity entity : activeObj) {
+            if (entity != null)
+                objList.add(entity);
+        }
+
+        for(Entity entity : npc)
+        {
+            if(entity != null)
             {
-                if(entity != null)
-                {
-                    objList.add(entity);
-                }
+                objList.add(entity);
             }
+        }
 
-            for(Entity entity : onAirEnemy)
+        for(Entity entity : enemy)
+        {
+            if(entity != null)
             {
-                if(entity != null)
-                {
-                    objList.add(entity);
-                }
+                objList.add(entity);
             }
+        }
 
 
             //System.out.println(target.get(0) == null);
 
-            Collections.sort(objList, new Comparator<Entity>() {
-                @Override
-                public int compare(Entity e1, Entity e2) {
-                    int index;
-                    if (e1.worldY == e2.worldY) {
-                        index = Integer.compare(e1.worldX, e2.worldX);
-                    } else
-                        index = Integer.compare(e1.worldY, e2.worldY);
-                    return index;
-                }
+            Collections.sort(objList, (e1, e2) -> {
+                int index;
+                index = Integer.compare(e1.worldY, e2.worldY);
+                return index;
             });
-        }
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList)
         {
-            if(mapObject != null) mapObject.render(g2);
+            if(mapObject != null && !mapObject.isCollected) mapObject.render(g2);
+        }
+        for(Entity projectile : projectiles)
+        {
+            if(projectile != null) projectile.render(g2);
         }
         mapLayer.get(3).render(g2); //Decor layer
 
@@ -143,6 +151,28 @@ public class GameMap {
                     }
                 }
             }
+            for(Entity e : projectiles){
+                if(e != null){
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                }
+            }
+            g2.setColor(Color.RED);
+            for(Entity e : objList){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
+            for(Entity e : projectiles){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
+            g2.setColor(Color.GREEN);
+            for(Entity e : enemy){
+                if(e != null && e.interactionDetectionArea != null){
+                    g2.drawRect(e.interactionDetectionArea.x + e.worldX - camera.getX() , e.interactionDetectionArea.y + e.worldY - camera.getY() , e.interactionDetectionArea.width , e.interactionDetectionArea.height);
+                }
+            }
         }
         objList.clear();
     }
@@ -157,11 +187,22 @@ public class GameMap {
                     if(activeObj[i].canbeDestroyed) activeObj[i] = null;
                 }
             }
+            for(int i = 0 ; i < enemy.length ; i++){
+                if(enemy[i] != null){
+                    if(enemy[i].canbeDestroyed) enemy[i] = null;
+                }
+            }
+            for(int i = 0 ; i < projectiles.length ; i++){
+                if(projectiles[i] != null){
+                    if(!projectiles[i].active) projectiles[i] = null;
+                }
+            }
+            //UPDATE ITEM
             for(Entity entity : inactiveObj) if(entity != null) entity.update();
             for(Entity entity : activeObj) if(entity != null) entity.update();
             for(Entity entity : npc) if(entity != null) entity.update();
-            for(Entity entity : onAirEnemy) if(entity != null) entity.update();
-            for(Entity entity : onGroundEnemy) if(entity != null) entity.update();
+            for(Entity entity : enemy) if(entity != null) entity.update();
+            for(Entity entity : projectiles) if(entity != null) entity.update();
             player.update();
 
         }
@@ -177,15 +218,40 @@ public class GameMap {
                 int tileID = layer.tileLayerDataIndex[i][j];
                 int index = layer.getIndexTileSet(layer.tileLayerDataIndex[i][j]);
 
-                Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
-                wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
-                wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                inactiveObj[inactiveObjIndex] = wall;
-                inactiveObjIndex++;
+                if(layer.tileSetList.get(index).objects.get(tileID - 1) != null) {
+
+
+                    Obj_Wall wall = new Obj_Wall(layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
+                    wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
+                    wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
+                    addObject(wall, inactiveObj);
+                }
+//                inactiveObj[inactiveObjIndex] = wall;
+//                inactiveObjIndex++;
             }
         }
     }
 
+    public void dispose(){
+        Arrays.fill(inactiveObj, null);
+        Arrays.fill(activeObj, null);
+        Arrays.fill(npc, null);
+        Arrays.fill(enemy, null);
+        Arrays.fill(projectiles, null);
+        objList.clear();
+    }
+
+    public void addObject(Entity entity , Entity[] list){
+        for(int i = 0 ; i < list.length ; i++){
+            if(list[i] == null){
+                list[i] = entity;
+                break;
+            }
+        }
+    }
+
+    public void setBestLightingRadius(int r){bestLightingRadius = r;}
+    public int getBestLightingRadius(){return bestLightingRadius;}
 
     public int getMapWidth() {
         return mapWidth;

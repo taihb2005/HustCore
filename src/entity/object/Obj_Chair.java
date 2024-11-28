@@ -9,13 +9,25 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 
 public class Obj_Chair extends Entity {
-    public static String name = "chair";
     private final BufferedImage obj_chair;
     public int type;
 
     public Obj_Chair(int type)
     {
         super();
+        name = "Chair";
+        super.width = 64;
+        super.height = 64;
+
+        obj_chair = new Sprite("/entity/object/chair_id" + type + ".png" , width , height).getSprite(0 , 0);
+
+        setDefault();
+    }
+
+    public Obj_Chair(int type , int x , int y)
+    {
+        super(x , y);
+        name = "Chair";
         super.width = 64;
         super.height = 64;
 

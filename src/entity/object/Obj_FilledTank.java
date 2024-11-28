@@ -15,11 +15,25 @@ public class Obj_FilledTank extends Entity {
     private int currentFrames = 0;
     public int type;
 
-    public static String name = "filled_tank";
 
     public Obj_FilledTank(int type)
     {
         super();
+        name = "Filled Tank";
+        super.width = 64;
+        super.height = 128;
+        this.type = type;
+
+        obj_animator_filledTank = new Animation();
+        obj_filledTank = new Sprite("/entity/object/filledtank_id" + type + ".png", width , height).getSpriteArrayRow(0);
+        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
+
+        setDefault();
+    }
+    public Obj_FilledTank(int type , int x , int y)
+    {
+        super(x , y);
+        name = "Filled Tank";
         super.width = 64;
         super.height = 128;
         this.type = type;

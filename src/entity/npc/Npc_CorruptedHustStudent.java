@@ -43,7 +43,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     //NPC RNG
     private final int DESIRED_RNG = 50;
-    private int randomNumerFrames = 500;
+    private final int randomNumerFrames = 500;
     private int frameRandom = 0;
     private int rng = 0;
     private final Random generator = new Random();
@@ -52,6 +52,21 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     public Npc_CorruptedHustStudent(GameMap mp)
     {
         super();
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+
+        npc_animator_corruptedStudent = new Animation();
+
+        getNpcImage();
+        setDefault();
+        setDialogue();
+
+    }
+
+    public Npc_CorruptedHustStudent(GameMap mp , int x , int y)
+    {
+        super(x , y);
         this.mp = mp;
         super.width = 64;
         super.height = 64;
@@ -93,6 +108,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         super.setDefaultSolidArea();
 
         dialogueIndex = 0;
+        dialogueSet = -1;
     }
 
     @Override
@@ -171,19 +187,23 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void talk() {
-        isTalking = true;
         facePlayer();
-        if(dialogues[dialogueIndex] == null) dialogueIndex = 0;
-        startDialogue(this);
+        dialogueSet++;
+        isTalking = true;
+        if(dialogues[dialogueSet][0] == null) {
+            dialogueIndex = 0;
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
+    }
+
+    @Override
+    public void attack() {
+
     }
 
     @Override
     public void loot() {
-
-    }
-
-    @Override
-    public void pathFinding() {
 
     }
 

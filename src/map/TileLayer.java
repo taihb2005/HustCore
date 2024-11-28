@@ -1,8 +1,13 @@
 package map;
 
+import graphics.Sprite;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static main.GamePanel.camera;
 
@@ -11,6 +16,7 @@ public class TileLayer {
     GameMap mp;
 
     BufferedImage[][] tileLayerData;
+    BufferedImage[] temporaryTile = new BufferedImage[851];
     int[][] tileLayerDataIndex;
 
     final ArrayList<TileSet> tileSetList;
@@ -21,7 +27,7 @@ public class TileLayer {
     final int tileWidth;
     final int tileHeight;
 
-    public TileLayer(int numrows, int numcols, int[][] data, ArrayList<TileSet> tileSetList , GameMap mp) {
+    public TileLayer(int numrows, int numcols, int[][] data, ArrayList<TileSet> tileSetList , GameMap mp) throws IOException {
         super();
         this.mp = mp;
         this.numRows = numrows;
@@ -30,7 +36,6 @@ public class TileLayer {
         this.tileWidth = tileSetList.get(0).getTileWidth();
         this.tileHeight = tileSetList.get(0).getTileHeight();
         this.tileLayerDataIndex = data;
-
         parseLayerData(data);
     }
 
@@ -52,7 +57,7 @@ public class TileLayer {
                     int worldX = j * tileWidth;
                     int worldY = i * tileHeight;
 
-                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY() , null);
+                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY(), 65, 65, null);
                 }
 
             }
@@ -108,15 +113,14 @@ public class TileLayer {
         }
     }
 
-   public int getNumCols()
-   {
-       return numCols;
-   }
+    public int getNumCols()
+    {
+        return numCols;
+    }
 
-   public int getNumRows()
-   {
-       return numRows;
-   }
+    public int getNumRows()
+    {
+        return numRows;
+    }
 }
-
 
