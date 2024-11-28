@@ -58,8 +58,8 @@ public class GameMap {
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.maxWorldCol = (mapWidth / childNodeSize ) ;
-        this.maxWorldRow = (mapHeight/ childNodeSize) ;
+        this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
 
         setter.setObject();
         setter.setNpc();
