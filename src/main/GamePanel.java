@@ -59,7 +59,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void loadMap()
     {
-        MapParser.loadMap( "map_test" ,"res/map/map3.tmx");
+        MapParser.loadMap( "map_test" ,"res/map/map1.tmx");
         currentMap = MapManager.getGameMap("map_test");
         camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
         pFinder = new PathFinder(currentMap);
