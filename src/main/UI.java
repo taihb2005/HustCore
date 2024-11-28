@@ -25,6 +25,8 @@ public class UI {
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
     int dialogueCount;
+    private BufferedImage gameOverBackground;
+
 
     Color displayItemquantity = new Color(204 , 180 , 50);
     Color displayTextItemQuantity = Color.WHITE;
@@ -67,6 +69,12 @@ public class UI {
 
         try {
             titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/titleBackground.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            gameOverBackground = ImageIO.read(getClass().getResourceAsStream("/ui/robotInvasion.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -215,14 +223,46 @@ public class UI {
         drawSubWindow(x , y , width , height);
     }
 
-    public void drawGameOverScreen()
-    {
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
-        g2.setColor(Color.WHITE);
-        String text = "You sucked";
+        public void drawGameOverScreen() {
+        //BACKGROUND
+        g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
+        //MENU
+        g2.setFont(joystix.deriveFont(Font.BOLD, 35f));
+        g2.setColor(Color.white);
+
+        String text = "RETRY";
         int x = getXforCenteredText(text);
         int y = windowHeight / 2;
-        g2.drawString(text , x , y);
+        int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+
+        g2.drawString(text, x, y);
+        //BOUND
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 - 10, tileSize + 10, 40, 40);
+        if(commandNum == 0) {
+            g2.drawString(">", x - tileSize - 10, y);
+        }
+
+        text = "MENU";
+        x = getXforCenteredText(text);
+        y += tileSize + 20;
+        g2.drawString(text, x, y);
+        //BOUND
+        length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3, tileSize + 10, 40, 40);
+        if(commandNum == 1) {
+            g2.drawString(">", x - tileSize - 10, y);
+        }
+
+        text = "QUIT";
+        x = getXforCenteredText(text);
+        y += tileSize + 20;
+        g2.drawString(text, x, y);
+        //BOUND
+        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 , tileSize + 10, 40, 40);
+        if(commandNum == 2) {
+            g2.drawString(">", x - tileSize - 10, y);
+        }
     }
 
     public void drawOptionsScreen() {
