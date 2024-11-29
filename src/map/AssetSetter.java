@@ -6,10 +6,8 @@ import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
+import entity.mob.Mon_Boss;
 import entity.mob.Mon_Cyborgon;
-import entity.mob.Mon_HustGuardian;
-import entity.mob.Mon_Shooter;
-import entity.mob.Mon_Spectron;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 
@@ -186,37 +184,41 @@ public class AssetSetter {
     public void setEnemy()
     {
         int index = 0;
-        Mon_Spectron sptr = new Mon_Spectron(mp);
-        sptr.worldX = 1600;
-        sptr.worldY = 1800;
-        sptr.newWorldX = 1600;
-        sptr.newWorldY = 1800;
-        mp.enemy[index] = sptr;
-        index++;
+//        Mon_Spectron sptr = new Mon_Spectron(mp);
+//        sptr.worldX = 1600;
+//        sptr.worldY = 1800;
+//        sptr.newWorldX = 1600;
+//        sptr.newWorldY = 1800;
+//        mp.enemy[index] = sptr;
+//        index++;
+//
+//
+//        Mon_Shooter shooter = new Mon_Shooter(mp);
+//        shooter.worldX = 1400;
+//        shooter.worldY = 1500;
+//        shooter.newWorldX = 1400;
+//        shooter.newWorldY = 1500;
+//        mp.enemy[index] = shooter;
+//        index++;
+//
+//        Mon_HustGuardian guardian = new Mon_HustGuardian(mp);
+//        guardian.worldX = 1500;
+//        guardian.worldY = 1600;
+//        guardian.newWorldX = 1500;
+//        guardian.newWorldY = 1600;
+//        mp.enemy[index] = guardian;
+//        index++;
+//
+//        Mon_Cyborgon cyborg = new Mon_Cyborgon(mp , 1250 , 1550);
+//        mp.addObject(cyborg , mp.enemy);
+//        index++;
 
-
-        Mon_Shooter shooter = new Mon_Shooter(mp);
-        shooter.worldX = 1400;
-        shooter.worldY = 1500;
-        shooter.newWorldX = 1400;
-        shooter.newWorldY = 1500;
-        mp.enemy[index] = shooter;
-        index++;
-
-        Mon_HustGuardian guardian = new Mon_HustGuardian(mp);
-        guardian.worldX = 1500;
-        guardian.worldY = 1600;
-        guardian.newWorldX = 1500;
-        guardian.newWorldY = 1600;
-        mp.enemy[index] = guardian;
-        index++;
-
-        Mon_Cyborgon cyborg = new Mon_Cyborgon(mp);
-        cyborg.worldX = 1250;
-        cyborg.worldY = 1600;
-        cyborg.newWorldX = 1250;
-        cyborg.newWorldY = 1600;
-        mp.enemy[index] = cyborg;
+        Mon_Boss boss = new Mon_Boss(mp);
+        boss.worldX = 1500;
+        boss.worldY = 1600;
+        boss.newWorldX = 1500;
+        boss.newWorldY = 1600;
+        mp.addObject(boss, mp.enemy);
         index++;
     }
 }
