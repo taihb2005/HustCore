@@ -193,6 +193,7 @@ public class KeyHandler implements KeyListener{
             }
             if (keyCode == KeyEvent.VK_ENTER) {
                 if (GamePanel.ui.commandNum == 0) {
+                    gp.restart();
                     GamePanel.gameState = GameState.PLAY_STATE;
                 }
                 else if (GamePanel.ui.commandNum == 1) {

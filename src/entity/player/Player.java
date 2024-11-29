@@ -12,10 +12,12 @@ import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
+import status.StatusManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static main.GamePanel.camera;
@@ -46,7 +48,6 @@ public class Player extends Entity {
 
     private boolean attackCanceled;
     public final int screenX, screenY;
-    public Entity currentLight;
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
     private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
@@ -65,12 +66,15 @@ public class Player extends Entity {
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[100];
     public ItemHandler iHandler = new ItemHandler();
+    public StatusManager sManager = new StatusManager();
 
     public Player(GameMap mp) {
         super();
         this.mp = mp;
         width = 64;
         height = 64;
+        speed = 3;
+        last_speed = speed;
 
         hitbox = new Rectangle(25 , 40 , 15 , 20);
         solidArea1 = new Rectangle(26 , 52 , 13 , 6);
@@ -83,7 +87,7 @@ public class Player extends Entity {
         setDefaultValue();
     }
 
-    private void setDefaultValue()
+    public void setDefaultValue()
     {
         projectile_name = "Basic Projectile";
         projectile = new Proj_BasicProjectile(mp);
@@ -96,8 +100,6 @@ public class Player extends Entity {
         worldY = 1700;
         newWorldX = worldX;
         newWorldY = worldY;
-        speed = 3;
-        last_speed = speed;
 
         attackCanceled = false;
         up = down = left = right = false;
@@ -107,6 +109,27 @@ public class Player extends Entity {
         CURRENT_ACTION = IDLE;
         CURRENT_FRAME = 0;
         animator.setAnimationState(player_gun[IDLE][RIGHT] , 5);
+
+        Arrays.fill(inventory , null);
+        sManager.setPos(worldX , worldY);
+//        sManager.setSavedHP(maxHP);
+//        sManager.setSavedMana(maxMana);
+        sManager.setLevel(level);
+        sManager.setExp(exp);
+        sManager.setInventory(inventory);
+        sManager.setDirection(direction);
+    }
+
+    public void resetValue(){
+        effectManager.clear();
+        effect.clear();
+        level = sManager.getSavedLevel();
+        exp = sManager.getSavedExp();
+        worldX = sManager.getWorldX();
+        worldY = sManager.getWorldY();
+        newWorldX = worldX; newWorldY = worldY;
+        inventory = sManager.getSavedInventory();
+        set();
     }
 
     private void getPlayerImages()
@@ -152,8 +175,7 @@ public class Player extends Entity {
         //isShooting = shoot;
     }
 
-    private void handleAnimationState()
-    {
+    private void handleAnimationState() {
         if(isShooting && !isRunning  && !attackCanceled ) {
             CURRENT_ACTION = SHOOT;
         }else if(isRunning)
@@ -190,8 +212,7 @@ public class Player extends Entity {
         }
     }
 
-    private void changeAnimationDirection()
-    {
+    private void changeAnimationDirection() {
         switch(direction)
         {
             case "left" : CURRENT_DIRECTION = LEFT; break;
@@ -200,14 +221,12 @@ public class Player extends Entity {
             case "down" : CURRENT_DIRECTION = DOWN ; break;
         }
     }
-
     private void switchDirection(){
         if(left) direction = "left";
         else if(right) direction = "right";
         else if(up) direction = "up";
         else if(down) direction = "down";
     }
-
 
     private void handlePosition() {
         isInteracting = false;
@@ -280,9 +299,7 @@ public class Player extends Entity {
             }
         }
     }
-
-    private void interactObject(int index)
-    {
+    private void interactObject(int index) {
         if(index != -1){
             attackCanceled = true;
             isInteracting = true;
@@ -397,8 +414,6 @@ public class Player extends Entity {
         return currentMana >= projectile.manaCost;
     }
 
-
-    @Override
     public void set(){
         setDamage();
         setDefense();

@@ -4,6 +4,7 @@ import main.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 import static main.GamePanel.tileSize;
 
@@ -57,9 +58,10 @@ public class Sprite {
     {
         BufferedImage sprite = null;
         try{
-            sprite = ImageIO.read(getClass().getResourceAsStream(filepath));
+            sprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(filepath)));
         } catch(Exception e)
         {
+            sprite = new BufferedImage(256 , 256 , BufferedImage.TYPE_INT_RGB);
             System.out.println("Failed to load sprite: " + filepath);
         }
         return sprite;

@@ -29,19 +29,14 @@ public class AssetSetter {
     public void setObject()
     {
         try {
-            // Đọc file JSON
             Reader reader = new FileReader("res/entity/object.json");
-            // Sử dụng Gson để ánh xạ
             Gson gson = new Gson();
 
-            // Đọc dữ liệu vào Map
             Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {}.getType());
 
-            // Lấy danh sách active và inactive
             List<GameObject> activeObjects = data.get("active");
             List<GameObject> inactiveObjects = data.get("inactive");
 
-            // Hiển thị thông tin các object
             for (GameObject obj : inactiveObjects) {
                 System.out.println();
                 switch(obj.getObject()) {
@@ -105,50 +100,6 @@ public class AssetSetter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        Obj_FilledTank filledTank_no1 = new Obj_FilledTank(1);
-//        filledTank_no1.worldX = 22 * 64; filledTank_no1.worldY = 25 * 64;
-//        mp.addObject(filledTank_no1 , mp.inactiveObj);
-
-//        Obj_FilledTank filledTank_no2 = new Obj_FilledTank(2);
-//        filledTank_no2.worldX = 26 * 64; filledTank_no2.worldY = 25 * 64;
-//        mp.addObject(filledTank_no2 , mp.inactiveObj);
-//
-//        Obj_EmptyTank emptyTank_no1 = new Obj_EmptyTank();
-//        emptyTank_no1.worldX = 23 * 64 ; emptyTank_no1.worldY = 26 * 64;
-//        mp.addObject(emptyTank_no1 , mp.inactiveObj);
-//
-//        Obj_Television tv_no1 = new Obj_Television(1);
-//        tv_no1.worldX = 1344 ; tv_no1.worldY = 1990;
-//        mp.addObject(tv_no1 , mp.inactiveObj);
-//
-//        Obj_Desk desk_no1 = new Obj_Desk(1);
-//        desk_no1.worldX = 1537; desk_no1.worldY = 1553;
-//        mp.addObject(desk_no1 , mp.inactiveObj);
-//
-//        Obj_Chair chair_no1 = new Obj_Chair(1);
-//        chair_no1.worldX = 1527 ; chair_no1.worldY = 1573;
-//        mp.addObject(chair_no1 , mp.inactiveObj);
-//
-//        //INTERACTIVE OBJ
-//        int index = 0;
-//        Obj_Door small_door = new Obj_Door(Obj_Door.BIG_DOOR , 1);
-//        small_door.worldX = 22 * 64; small_door.worldY = 21 * 64;
-//        mp.addObject(small_door , mp.activeObj);
-//
-//        Obj_Chest chest_no1 = new Obj_Chest(mp);
-//        chest_no1.worldX = 1500; chest_no1.worldY = 1900;
-//        chest_no1.setLoot(new Item_Kit(),1);
-//        chest_no1.setLoot(new Item_Battery(),1);
-//        chest_no1.setDialogue();
-//        mp.addObject(chest_no1 , mp.activeObj);
-//
-//        Obj_Chest chest_no2 = new Obj_Chest(mp);
-//        chest_no2.worldX = 1400; chest_no2.worldY = 1900;
-//        chest_no2.setLoot(new Item_Kit() , 10);
-//        chest_no2.setLoot(new Item_Battery(), 1);
-//        chest_no2.setDialogue();
-//        mp.addObject(chest_no2 , mp.activeObj);
-
     }
 
     public void setNpc()
@@ -185,38 +136,13 @@ public class AssetSetter {
 
     public void setEnemy()
     {
-        int index = 0;
-        Mon_Spectron sptr = new Mon_Spectron(mp);
-        sptr.worldX = 1600;
-        sptr.worldY = 1800;
-        sptr.newWorldX = 1600;
-        sptr.newWorldY = 1800;
-        mp.enemy[index] = sptr;
-        index++;
+        Mon_Shooter shooter = new Mon_Shooter(mp , "left" , 0 , true, 120 , 1700 , 1600);
+        mp.addObject(shooter , mp.enemy);
+    }
 
-
-        Mon_Shooter shooter = new Mon_Shooter(mp);
-        shooter.worldX = 1400;
-        shooter.worldY = 1500;
-        shooter.newWorldX = 1400;
-        shooter.newWorldY = 1500;
-        mp.enemy[index] = shooter;
-        index++;
-
-        Mon_HustGuardian guardian = new Mon_HustGuardian(mp);
-        guardian.worldX = 1500;
-        guardian.worldY = 1600;
-        guardian.newWorldX = 1500;
-        guardian.newWorldY = 1600;
-        mp.enemy[index] = guardian;
-        index++;
-
-        Mon_Cyborgon cyborg = new Mon_Cyborgon(mp);
-        cyborg.worldX = 1250;
-        cyborg.worldY = 1600;
-        cyborg.newWorldX = 1250;
-        cyborg.newWorldY = 1600;
-        mp.enemy[index] = cyborg;
-        index++;
+    public void loadAll(){
+        setObject();
+        setNpc();
+        setEnemy();
     }
 }

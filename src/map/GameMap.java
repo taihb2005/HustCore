@@ -61,49 +61,22 @@ public class GameMap {
         this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
         this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
 
-        setter.setObject();
-        setter.setNpc();
-        setter.setEnemy();
     }
 
     public void render(Graphics2D g2)
     {
 
         objList.add(player);
-        for (Entity entity : inactiveObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
+        for (Entity entity : inactiveObj) if(entity != null) objList.add(entity);
+        for (Entity entity : activeObj) if(entity != null) objList.add(entity);
+        for (Entity entity : npc) if(entity != null) objList.add(entity);
+        for (Entity entity : enemy) if(entity != null) objList.add(entity);
 
-        for (Entity entity : activeObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
-
-        for(Entity entity : npc)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-        for(Entity entity : enemy)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-
-            //System.out.println(target.get(0) == null);
-
-            Collections.sort(objList, (e1, e2) -> {
-                int index;
-                index = Integer.compare(e1.worldY, e2.worldY);
-                return index;
-            });
+        Collections.sort(objList, (e1, e2) -> {
+            int index;
+            index = Integer.compare(e1.worldY, e2.worldY);
+            return index;
+        });
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer

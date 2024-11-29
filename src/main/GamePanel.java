@@ -3,10 +3,7 @@ package main;
 // awt library
 import ai.PathFinder;
 import environment.EnvironmentManager;
-import map.GameMap;
-import map.MapManager;
-import map.MapParser;
-import map.TileManager;
+import map.*;
 import util.Camera;
 
 import java.awt.*;
@@ -35,9 +32,10 @@ public class GamePanel extends JPanel implements Runnable {
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
-    public static GameState lastGameState;
 
+    public static int currentLevel;
     public static GameMap currentMap;
+    public AssetSetter setter;
 
     Thread gameThread;
 
@@ -51,9 +49,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
-        setup();
-        currentMap.gp = this;
-        ui = new UI(this);
+        //setup();
+//        currentMap.gp = this;
+//        ui = new UI(this);
 
     }
 
@@ -61,9 +59,13 @@ public class GamePanel extends JPanel implements Runnable {
     {
         MapParser.loadMap( "map_test" ,"res/map/map3.tmx");
         currentMap = MapManager.getGameMap("map_test");
+        currentMap.gp = this;
+        ui = new UI(this);
         camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
         pFinder = new PathFinder(currentMap);
         tileManager = new TileManager(this);
+        setter = new AssetSetter(currentMap);
+        setter.loadAll();
         environmentManager = new EnvironmentManager(currentMap);
         environmentManager.setup();
         environmentManager.lighting.setLightSource(2000);
@@ -73,6 +75,11 @@ public class GamePanel extends JPanel implements Runnable {
     {
         playMusic(0);
         se.setFile(1);
+    }
+
+    public void restart(){
+        currentMap.player.resetValue();
+        loadMap();
     }
 
 
