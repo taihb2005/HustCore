@@ -50,16 +50,17 @@ public class KeyHandler implements KeyListener{
             }
             if (keyCode == KeyEvent.VK_ENTER) {
                 if(GamePanel.ui.commandNum == 0){
-                GamePanel.gameState = GameState.PLAY_STATE;
+                    GamePanel.gameState = GameState.PLAY_STATE;
 
-            }
+                }
                 if(GamePanel.ui.commandNum == 1){
                     GamePanel.gameState = GameState.SETTING_STATE;
                 }
+
                 if(GamePanel.ui.commandNum == 2){
                     System.exit(0);
                 }
-                }
+            }
         }
 
         if(GamePanel.gameState == GameState.PLAY_STATE) {
@@ -118,11 +119,10 @@ public class KeyHandler implements KeyListener{
             }
 
         } else
-        if(GamePanel.gameState == GameState.PAUSE_STATE||GamePanel.gameState == GameState.SETTING_STATE)
+        if(GamePanel.gameState == GameState.PAUSE_STATE)
         {
             if(keyCode == KeyEvent.VK_ESCAPE)
                 GamePanel.gameState = GameState.PLAY_STATE;
-
             // FOR OPTIONS
             int maxCommandNum = 0;
             switch(GamePanel.ui.subState) {
@@ -173,10 +173,11 @@ public class KeyHandler implements KeyListener{
             {
                 if (GamePanel.ui.subState == 0) {
                     if (GamePanel.ui.commandNum == 2) {
-                        GamePanel.gameState = GameState.MENU_STATE;
+                        GamePanel.gameState = GameState.PLAY_STATE;
                     }
                     if (GamePanel.ui.commandNum == 3) {
                         GamePanel.gameState = GameState.MENU_STATE;
+                        GamePanel.ui.commandNum =0;
                     }
                 }
             }
@@ -190,9 +191,110 @@ public class KeyHandler implements KeyListener{
         } else
         if(GamePanel.gameState == GameState.LOSE_STATE)
         {
-            if(keyCode == KeyEvent.VK_SPACE)
+            if(keyCode == KeyEvent.VK_W)
             {
-                GamePanel.gameState = GameState.MENU_STATE;
+                GamePanel.ui.commandNum--;
+                if (GamePanel.ui.commandNum < 0) {
+                    GamePanel.ui.commandNum = 1;
+                }
+            }
+            if(keyCode == KeyEvent.VK_S)
+            {
+                GamePanel.ui.commandNum++;
+                if (GamePanel.ui.commandNum > 1) {
+                    GamePanel.ui.commandNum = 0;
+                }
+            }
+
+            if(keyCode == KeyEvent.VK_ENTER)
+            {
+                if(GamePanel.ui.commandNum == 1) {
+                    GamePanel.gameState = GameState.MENU_STATE;
+                    GamePanel.ui.commandNum =0;
+                }
+                else{
+                    GamePanel.gameState = GameState.PLAY_STATE;
+                }
+            }
+        }
+        else if(GamePanel.gameState == GameState.SETTING_STATE){
+            if(keyCode == KeyEvent.VK_ESCAPE) {
+                if(gp.ui.subState == 0) {
+                    GamePanel.gameState = GameState.MENU_STATE;
+                    gp.ui.commandNum = 1;
+                }
+                if(gp.ui.subState == 1){
+                    gp.ui.subState = 0;
+
+                }
+
+            }
+            // FOR OPTIONS
+            int maxCommandNum = 0;
+            switch(GamePanel.ui.subState) {
+                case 0: maxCommandNum = 3;
+                case 1: maxCommandNum = 5;
+            }
+
+            if(keyCode == KeyEvent.VK_W)
+            {
+                GamePanel.ui.commandNum--;
+                if (GamePanel.ui.commandNum < 0) {
+                    GamePanel.ui.commandNum = maxCommandNum;
+                }
+                GamePanel.ui.cursor--;
+                if (GamePanel.ui.cursor < 0) {
+                    GamePanel.ui.cursor = 4;
+                }
+            }
+            if(keyCode == KeyEvent.VK_S)
+            {
+                GamePanel.ui.commandNum++;
+                if (GamePanel.ui.commandNum > maxCommandNum) {
+                    GamePanel.ui.commandNum = 0;
+                }
+                GamePanel.ui.cursor++;
+                if (GamePanel.ui.cursor > 4) {
+                    GamePanel.ui.cursor = 0;
+                }
+            }
+            if(keyCode == KeyEvent.VK_A)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage > 0) {
+                        GamePanel.music.volumePercentage-=10;
+                        GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
+                    }
+                    if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage > 0) {
+                        GamePanel.se.volumePercentage-=10;
+                        GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
+                    }
+                }
+            }
+            if(keyCode == KeyEvent.VK_D)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage < 100) {
+                        GamePanel.music.volumePercentage+=10;
+                        GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
+                    }
+                    if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage < 100) {
+                        GamePanel.se.volumePercentage+=10;
+                        GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
+                    }
+                }
+            }
+            if(keyCode == KeyEvent.VK_ENTER)
+            {
+                if (GamePanel.ui.subState == 0) {
+                    if (GamePanel.ui.commandNum == 2) {
+                        GamePanel.ui.subState =1;
+                    }
+                    if (GamePanel.ui.commandNum == 3) {
+                        GamePanel.gameState = GameState.MENU_STATE;
+                    }
+                }
+
             }
         }
 

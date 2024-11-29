@@ -6,6 +6,7 @@ import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ public class UI {
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
     int dialogueCount;
+    int cursor = 0;
 
     private boolean slotselected = true;
     int selectedSlot = 0;
@@ -37,6 +39,9 @@ public class UI {
 
     private BufferedImage titleBackground;
 
+    private BufferedImage titleImage;
+
+    private BufferedImage Key1Image;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -63,6 +68,18 @@ public class UI {
 
         try {
             titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/Background.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            titleImage  = ImageIO.read(getClass().getResourceAsStream("/ui/1.2.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Key1Image  = ImageIO.read(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,9 +257,9 @@ public class UI {
             drawGameOverScreen();
         }
         if(gameState == GameState.SETTING_STATE){
-            drawTitleScreen();
-            drawOptionsScreen();
-            drawInventory();
+
+            drawSettingScreen();
+
         }
     }
 
@@ -296,12 +313,37 @@ public class UI {
 
     public void drawGameOverScreen()
     {
+        g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
-        g2.setColor(Color.WHITE);
-        String text = "You sucked";
+        String text = "You sucked!";
         int x = getXforCenteredText(text);
-        int y = windowHeight / 2;
+        int y = windowHeight *2/5;
         g2.drawString(text , x , y);
+
+        g2.setColor(Color.black);
+        g2.drawString(text,x+5,y+5);
+
+        //Colour
+        g2.setColor(Color.white);
+        g2.drawString(text , x , y );
+
+        //RETRY
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
+        text = "RETRY";
+        x = getXforCenteredText(text);
+        y = windowHeight*3/5;
+        g2.drawString(text, x, y);
+        if(commandNum == 0){
+            g2.drawString(">",x-gp.tileSize, y);
+        }
+
+        text = "QUIT";
+        x = getXforCenteredText(text);
+        y = windowHeight*7/10;
+        g2.drawString(text, x, y);
+        if(commandNum == 1){
+            g2.drawString(">",x-gp.tileSize, y);
+        }
     }
 
     public void drawOptionsScreen() {
@@ -320,11 +362,12 @@ public class UI {
         switch(subState) {
             case 0: options_top(frameX, frameY); break;
         }
+
     }
     public void options_top(int frameX, int frameY) {
         int textX, textY;
-        Font codeFont = new Font("Consolas", Font.PLAIN, 20);  // Thử với Consolas
-        g2.setFont(codeFont);
+        // Thử với Consolas
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
         String text = "Options";
         textX = getXforCenteredText(text);
@@ -335,7 +378,10 @@ public class UI {
         textX = frameX + tileSize;
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
-        g2.drawString(String.valueOf(music.volumePercentage), textX + 200, textY);
+        drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString("-",textX +150, textY);
+        g2.drawString("+",textX+280, textY);
         if (commandNum == 0) {
             g2.drawString(">", textX-25, textY);
         }
@@ -344,7 +390,10 @@ public class UI {
         textX = frameX + tileSize;
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
-        g2.drawString(String.valueOf(se.volumePercentage), textX + 200, textY);
+        drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString("-",textX +150, textY);
+        g2.drawString("+",textX+280, textY);
         if (commandNum == 1) {
             g2.drawString(">", textX-25, textY);
         }
@@ -352,7 +401,7 @@ public class UI {
         // RETRY
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Retry", textX, textY);
+        g2.drawString("Restart", textX, textY);
         if (commandNum == 2) {
             g2.drawString(">", textX-25, textY);
         }
@@ -420,5 +469,124 @@ public class UI {
             }
         }
     }
-}
+    public void drawSettingScreen(){
+        g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(32F));
 
+        // SUB WINDOW
+
+        int frameX = gp.tileSize * 4;
+        int frameY = gp.tileSize;
+        int frameWidth = gp.tileSize * 8;
+        int frameHeight = gp.tileSize * 10;
+
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        switch(subState) {
+            case 0: setting_top(frameX, frameY); break;
+            case 1: control(frameX, frameY); break;
+        }
+    }
+    public void setting_top(int frameX, int frameY) {
+        int textX, textY;
+        // Thử với Consolas
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        // TITLE
+        String text = "Options";
+        textX = getXforCenteredText(text);
+        textY = frameY + tileSize;
+        g2.drawString(text, textX, textY);
+        // MUSIC
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Music", textX, textY);
+        drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString("-",textX +150, textY);
+        g2.drawString("+",textX+280, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX-25, textY);
+        }
+
+        // SE
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("SE", textX, textY);
+        drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString("-",textX +150, textY);
+        g2.drawString("+",textX+280, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX-25, textY);
+        }
+
+        //CONTROL
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("CONTROL", textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX-25, textY);
+        }
+
+        // EXIT
+        textX = frameX + tileSize;
+        textY += tileSize*2;
+        g2.drawString("Exit", textX, textY);
+        if (commandNum == 3) {
+            g2.drawString(">", textX-25, textY);
+        }
+    }
+    public void control(int frameX, int frameY){
+        int textX, textY;
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        //TITLE
+        String text = "CONTROL";
+        textX = getXforCenteredText(text);
+        textY = frameY + tileSize;
+        g2.drawString(text, textX, textY);
+
+        //BANG HO TRO
+        textX = frameX + tileSize/2;
+        textY += tileSize;
+
+        g2.drawString("MOVE", textX, textY);
+        if(cursor == 0) g2.drawString(">", textX-25, textY);
+        textY+=tileSize;
+
+        g2.drawString("ATTACK", textX, textY);
+        if(cursor ==1) g2.drawString(">", textX-25, textY);
+        textY+=tileSize;
+
+        g2.drawString("BUY/USE ITEMS", textX, textY);
+        if(cursor ==2) g2.drawString(">", textX-25, textY);
+        textY+=tileSize;
+
+        g2.drawString("PAUSE/ESCAPE", textX, textY);
+        if(cursor == 3) g2.drawString(">", textX-25, textY);
+        textY+=tileSize;
+
+        g2.drawString("COMMUNICATE", textX, textY);
+        if(cursor == 4) g2.drawString(">", textX-25, textY);
+
+        //THONG TIN
+        textX = frameX + tileSize*11/2;
+        textY = frameY + tileSize*2;
+
+        g2.drawString("W A S D", textX, textY);
+        textY+=tileSize;
+
+        g2.drawString("ENTER", textX, textY);
+        textY+=tileSize;
+
+        g2.drawString("1 2 3 4", textX, textY);
+        textY+=tileSize;
+
+        g2.drawString("ESC", textX, textY);
+        textY+=tileSize;
+
+        g2.drawString("ENTER", textX, textY);
+
+
+    }
+}
