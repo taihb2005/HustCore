@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 
 import static main.GamePanel.*;
@@ -25,14 +26,8 @@ public class UI {
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
     int cursor = 0;
-    int dialogueCount;
     private BufferedImage gameOverBackground;
 
-
-    Color displayItemquantity = new Color(204 , 180 , 50);
-    Color displayTextItemQuantity = Color.WHITE;
-
-    private boolean slotselected = true;
     int selectedSlot = -1;
 
     public int commandNum = 0;
@@ -61,37 +56,37 @@ public class UI {
         }
 
         try {
-            hpFrame = ImageIO.read(getClass().getResourceAsStream("/ui/hpFrame.png"));
+            hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/hpFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            manaFrame = ImageIO.read(getClass().getResourceAsStream("/ui/manaFrame.png"));
+            manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/Background.png"));
+            titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            titleImage  = ImageIO.read(getClass().getResourceAsStream("/ui/1.2.png"));
+            titleImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/1.2.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            Key1Image  = ImageIO.read(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png"));
+            Key1Image  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try{
-            gameOverBackground = ImageIO.read(getClass().getResourceAsStream("/ui/robotInvasion.png"));
+            gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,28 +185,28 @@ public class UI {
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "PLAY";
+        text = "BẮT ĐẦU";
         x = getXforCenteredText(text);
         y = windowHeight*3/5;
         g2.drawString(text, x, y);
         if(commandNum == 0){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
 
-        text = "OPTIONS";
+        text = "TÙY CHỈNH";
         x = getXforCenteredText(text);
         y = windowHeight*7/10;
         g2.drawString(text, x, y);
         if(commandNum == 1){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
 
-        text = "QUIT";
+        text = "THOÁT";
         x = getXforCenteredText(text);
         y = windowHeight*4/5;
         g2.drawString(text, x, y);
         if(commandNum == 2){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
     }
 
@@ -404,23 +399,18 @@ public class UI {
 
         if (KeyHandler.key1pressed) {
             selectedSlot = 0;
-            slotselected = true;
             KeyHandler.key1pressed = false;
         } else if (KeyHandler.key2pressed) {
             selectedSlot = 1;
-            slotselected = true;
             KeyHandler.key2pressed = false;
         } else if (KeyHandler.key3pressed) {
             selectedSlot = 2;
-            slotselected = true;
             KeyHandler.key3pressed = false;
         } else if (KeyHandler.key4pressed) {
             selectedSlot = 3;
-            slotselected = true;
             KeyHandler.key4pressed = false;
         } else if (KeyHandler.key5pressed) {
             selectedSlot = 4;
-            slotselected = true;
             KeyHandler.key5pressed = false;
         }
 
@@ -490,9 +480,7 @@ public class UI {
             drawGameOverScreen();
         }
         if(gameState == GameState.SETTING_STATE){
-
             drawSettingScreen();
-
         }
     }
     public void drawSettingScreen(){
@@ -502,10 +490,10 @@ public class UI {
 
         // SUB WINDOW
 
-        int frameX = gp.tileSize * 4;
-        int frameY = gp.tileSize;
-        int frameWidth = gp.tileSize * 8;
-        int frameHeight = gp.tileSize * 10;
+        int frameX = tileSize * 4;
+        int frameY = tileSize;
+        int frameWidth = tileSize * 8;
+        int frameHeight = tileSize * 10;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
@@ -550,7 +538,7 @@ public class UI {
         //CONTROL
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("CONTROL", textX, textY);
+        g2.drawString("ĐIỀU KHIỂN", textX, textY);
         if (commandNum == 2) {
             g2.drawString(">", textX-25, textY);
         }
@@ -558,7 +546,7 @@ public class UI {
         // EXIT
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Exit", textX, textY);
+        g2.drawString("Quay lại", textX, textY);
         if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
         }
