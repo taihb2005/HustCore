@@ -2,7 +2,6 @@ package entity.projectile;
 
 import entity.effect.EffectType;
 import entity.Entity;
-import entity.mob.Monster;
 import graphics.Animation;
 import map.GameMap;
 

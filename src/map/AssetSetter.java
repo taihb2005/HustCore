@@ -6,11 +6,7 @@ import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
-import entity.mob.Mon_Boss;
-import entity.mob.Mon_Cyborgon;
-import entity.mob.Mon_HustGuardian;
-import entity.mob.Mon_Shooter;
-import entity.mob.Mon_Spectron;
+import entity.mob.*;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 

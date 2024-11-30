@@ -1,13 +1,10 @@
 package entity;
 
-import entity.effect.EffectType;
 import entity.projectile.Projectile;
-import graphics.Sprite;
 import main.GameState;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 import static main.GamePanel.*;
 

@@ -69,5 +69,6 @@ public class Animation{
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
     public int getCurrentFrames(){return currentFrames;}
+    public int getFrameCounts(){return frameCounts;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
 }
