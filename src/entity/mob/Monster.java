@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Entity;
 import entity.effect.Effect;
+import entity.projectile.Projectile;
 import map.GameMap;
 
 import java.awt.*;
@@ -28,6 +29,8 @@ public class Monster extends Entity {
     public boolean getAggro = false;
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
+
+    protected ArrayList<Projectile> proj;
 
     public final ArrayList<String> validDirection = new ArrayList<>();
 
@@ -76,6 +79,7 @@ public class Monster extends Entity {
             shootAvailableCounter++;
         }
         if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
+        proj.removeIf(chemchep->!chemchep.active);
 
         updateInvincibility();
     }

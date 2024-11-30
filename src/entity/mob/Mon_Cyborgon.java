@@ -3,7 +3,6 @@ package entity.mob;
 import entity.Actable;
 import entity.effect.type.EffectNone;
 import entity.projectile.Proj_GreenBullet;
-import entity.projectile.Proj_GuardianProjectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
@@ -13,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static main.GamePanel.camera;
-import static main.GamePanel.se;
 import static map.GameMap.childNodeSize;
 
 public class Mon_Cyborgon extends Monster implements Actable {
@@ -337,7 +335,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void updateDiameter(GameMap mp) {
-        newDiameter = 100 + (maxHP - currentHP)*10;
+        newDiameter = 100 + (maxHP - currentHP)*20;
         if (diameter != newDiameter) diameter++;
         if (Math.pow(worldX-mp.player.worldX,2) + Math.pow(worldY-mp.player.worldY,2) < diameter*diameter) {
             exposureTime++;

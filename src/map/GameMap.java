@@ -61,8 +61,8 @@ public class GameMap {
         this.maxWorldCol = (mapWidth / childNodeSize ) ;
         this.maxWorldRow = (mapHeight/ childNodeSize) ;
 
-        setter.setObject();
-        setter.setNpc();
+//        setter.setObject();
+//        setter.setNpc();
         setter.setEnemy();
     }
 

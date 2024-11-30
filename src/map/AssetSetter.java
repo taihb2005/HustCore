@@ -6,8 +6,7 @@ import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
-import entity.mob.Mon_Boss;
-import entity.mob.Mon_Cyborgon;
+import entity.mob.*;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 
@@ -212,11 +211,11 @@ public class AssetSetter {
 //        Mon_Cyborgon cyborg = new Mon_Cyborgon(mp , 1250 , 1550);
 //        mp.addObject(cyborg , mp.enemy);
 //        index++;
-
+//
         Mon_Boss boss = new Mon_Boss(mp);
-        boss.worldX = 1500;
+        boss.worldX = 1200;
         boss.worldY = 1600;
-        boss.newWorldX = 1500;
+        boss.newWorldX = 1200;
         boss.newWorldY = 1600;
         mp.addObject(boss, mp.enemy);
         index++;
