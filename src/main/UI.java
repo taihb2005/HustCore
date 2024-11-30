@@ -171,8 +171,7 @@ public class UI {
     public int getXforCenteredText(String text)
     {
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        int x = windowWidth / 2 - length / 2;
-        return x;
+        return windowWidth / 2 - length / 2;
     }
 
     public Font getFont(){return joystix;};

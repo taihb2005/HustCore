@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void loadMap()
     {
-        //MapParser.loadMap( "map3" ,"res/map/map3.tmx");
+        MapParser.loadMap( "map3" ,"res/map/map3.tmx");
         currentMap = MapManager.getGameMap("map3");
         currentMap.gp = this;
         ui = new UI(this);
