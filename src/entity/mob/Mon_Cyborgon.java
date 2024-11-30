@@ -33,11 +33,6 @@ public class Mon_Cyborgon extends Monster implements Actable {
     private final BufferedImage [][][] mon_cyborgon = new BufferedImage[7][][];
     private final Animation mon_animator_cyborgon = new Animation();
 
-    private int lastHP;
-
-    private int actionLockCounter = 0;
-    private final int changeDirCounter = 120;
-
     private int diameter = 100;
     private int newDiameter = diameter;
     private float alpha = 0.1f;
@@ -92,6 +87,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
         effectDealByProjectile = new EffectNone(mp.player);
         speed = 2;
         last_speed = speed;
+
+        expDrop = 20;
 
         SHOOT_INTERVAL = projectile.maxHP + 5;
 
@@ -210,33 +207,6 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void actionWhenNeutral() {
-        actionLockCounter++;
-        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
-            up = down = left = right = false;
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if(i <= 60){
-                up = down = left = right = false;
-            }
-            if ( i > 60 && i <= 70) {
-                direction = "up";
-                up = true;
-            }
-            if (i > 70 && i <= 80) {
-                direction = "down";
-                down = true;
-            }
-            if (i > 80 && i <= 90) {
-                direction = "left";
-                left = true;
-            }
-            if (i > 90 && i < 100) {
-                direction = "right";
-                right = true;
-            }
-            actionLockCounter = 0;
-            isRunning = !isShooting && (right | left | up | down);
-        }
         if (currentHP < 0.8 * maxHP) getAggro = true;
     }
 
@@ -310,14 +280,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-
-
         g2.drawImage(mon_cyborgon[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-
-
-
-
     }
 
     private void updateOpacity() {

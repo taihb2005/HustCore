@@ -48,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        preLoadMap();
         loadMap();
         //setup();
 //        currentMap.gp = this;
@@ -57,8 +58,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void loadMap()
     {
-        MapParser.loadMap( "map_test" ,"res/map/map3.tmx");
-        currentMap = MapManager.getGameMap("map_test");
+        //MapParser.loadMap( "map3" ,"res/map/map3.tmx");
+        currentMap = MapManager.getGameMap("map3");
         currentMap.gp = this;
         ui = new UI(this);
         camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
@@ -69,6 +70,11 @@ public class GamePanel extends JPanel implements Runnable {
         environmentManager = new EnvironmentManager(currentMap);
         environmentManager.setup();
         environmentManager.lighting.setLightSource(2000);
+    }
+
+    private void preLoadMap(){
+        MapParser.loadMap( "map1" ,"res/map/map1.tmx");
+        MapParser.loadMap( "map3" ,"res/map/map3.tmx");
     }
 
     public void setup()

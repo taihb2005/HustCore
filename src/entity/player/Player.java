@@ -111,6 +111,10 @@ public class Player extends Entity {
         animator.setAnimationState(player_gun[IDLE][RIGHT] , 5);
 
         Arrays.fill(inventory , null);
+        storeValue();
+    }
+
+    public void storeValue(){
         sManager.setPos(worldX , worldY);
 //        sManager.setSavedHP(maxHP);
 //        sManager.setSavedMana(maxMana);
