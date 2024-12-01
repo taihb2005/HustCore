@@ -30,8 +30,6 @@ public class Monster extends Entity {
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
 
-    protected ArrayList<Projectile> proj;
-
     public final ArrayList<String> validDirection = new ArrayList<>();
 
     protected int SHOOT_INTERVAL;
@@ -79,8 +77,6 @@ public class Monster extends Entity {
             shootAvailableCounter++;
         }
         if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
-        proj.removeIf(chemchep->!chemchep.active);
-
         updateInvincibility();
     }
 

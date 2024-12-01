@@ -71,14 +71,6 @@ public class Projectile extends Entity {
         return check1 | check2 | check3 | check4;
     }
 
-    public void slow(Entity e){
-        e.speed =(int)(e.last_speed * 0.5f);
-    }
-
-    public void stun(Entity e){
-        e.speed = 0;
-    }
-
     public void update() {
         if(user == mp.player){
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);

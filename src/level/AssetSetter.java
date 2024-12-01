@@ -1,14 +1,16 @@
-package map;
+package level;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
+import entity.items.Item_Potion;
+import entity.items.Item_SpeedGem;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
 import entity.mob.*;
-import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
+import map.GameMap;
 
 import java.io.FileReader;
 import java.io.Reader;
@@ -87,6 +89,14 @@ public class AssetSetter {
                                     chest.setLoot(new Item_Battery(), item.getQuantity());
                                     chest.setDialogue();
                                     break;
+                                case "Item_SpeedGem":
+                                    chest.setLoot(new Item_SpeedGem() , item.getQuantity());
+                                    chest.setDialogue();
+                                    break;
+                                case "Item_Potion":
+                                    chest.setLoot(new Item_Potion() , item.getQuantity());
+                                    chest.setDialogue();
+                                    break;
                             }
                         }
                         chest.setDialogue();
@@ -133,12 +143,8 @@ public class AssetSetter {
 
     public void setEnemy()
     {
-        Mon_Shooter shooter = new Mon_Shooter(mp , "left" , 0 , true, 120 , 1700 , 1600);
-        mp.addObject(shooter , mp.enemy);
-
-        Mon_Cyborgon x = new Mon_Cyborgon(mp , 1500 , 1600);
-        mp.addObject(x , mp.enemy);
-
+        Mon_Boss boss = new Mon_Boss(mp , 1200 , 1600);
+        mp.addObject(boss, mp.enemy);
     }
 
     public void loadAll(){

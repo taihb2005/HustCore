@@ -17,12 +17,12 @@ public class Proj_Flame extends Projectile {
         slowDuration = 180;
         manaCost = 20;
         direction = "right";
-        hitbox = new Rectangle(28 , 30 , 64 , 64);
+        hitbox = new Rectangle(4 , 29 , 56 , 35);
         solidArea1 = hitbox;
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();
         getImage();
-        projectile_animator.setAnimationState(projectile_sprite[CURRENT_DIRECTION] , 20);
+        projectile_animator.setAnimationState(projectile_sprite[CURRENT_DIRECTION] , 15);
     }
 
     private void getImage(){

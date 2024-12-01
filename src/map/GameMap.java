@@ -21,7 +21,6 @@ public class GameMap {
 
     public GamePanel gp;
     public Player player = new Player(this);
-    public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 

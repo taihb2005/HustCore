@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.sManager;
 
 public class Player extends Entity {
 
@@ -66,7 +67,6 @@ public class Player extends Entity {
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[100];
     public ItemHandler iHandler = new ItemHandler();
-    public StatusManager sManager = new StatusManager();
 
     public Player(GameMap mp) {
         super();
@@ -85,6 +85,10 @@ public class Player extends Entity {
 
         getPlayerImages();
         setDefaultValue();
+        sManager.setLevel(level);
+        sManager.setExp(exp);
+        sManager.setInventory(inventory);
+        sManager.setDirection(direction);
     }
 
     public void setDefaultValue()

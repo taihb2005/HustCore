@@ -68,7 +68,8 @@
       "position": { "x": 1400, "y": 1900 },
       "items": [
         { "name": "Item_Kit", "quantity": 10 },
-        { "name": "Item_Battery", "quantity": 1 }
+        { "name": "Item_Battery", "quantity": 1 },
+        { "name": "Item_SpeedGem" , "quantity": 10}
       ]
     }
   ]

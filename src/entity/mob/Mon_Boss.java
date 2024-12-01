@@ -42,6 +42,7 @@ public class Mon_Boss extends Monster implements Actable {
     private int detectionCounter = 0;
     private final int detectionToSetAggro = 180;
     private Projectile projectile1, projectile2, projectile3;
+    private ArrayList<Projectile> proj;
 
     private boolean isShooting1, isShooting2, isShooting3;
 
@@ -54,6 +55,17 @@ public class Mon_Boss extends Monster implements Actable {
     private int testTime = 0;
     public Mon_Boss(GameMap mp){
         super(mp);
+        name = "Boss";
+        width = 128;
+        height = 128;
+        speed = 1;
+
+        getImage();
+        setDefault();
+    }
+
+    public Mon_Boss(GameMap mp , int x , int y){
+        super(mp , x , y);
         name = "Boss";
         width = 128;
         height = 128;
@@ -77,7 +89,6 @@ public class Mon_Boss extends Monster implements Actable {
         hitbox = new Rectangle(22 , 24 , 22 , 36);
         solidArea1 = new Rectangle(24 , 42 , 19 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-        interactionDetectionArea = new Rectangle(-50 , -50 , width + 100 , height + 100);
         setDefaultSolidArea();
 
         invincibleDuration = 30;
@@ -118,6 +129,7 @@ public class Mon_Boss extends Monster implements Actable {
         if (testTime == Integer.MAX_VALUE) testTime = 0;
         handleAnimationState();
         handleStatus();
+        if(!proj.isEmpty())proj.removeIf(pr -> !pr.active);
         move();
         mon_animator_boss.update();
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
@@ -187,6 +199,9 @@ public class Mon_Boss extends Monster implements Actable {
         if(!mon_animator_boss.isPlaying() && isShooting){
             isShooting = false;
         }
+        if(!mon_animator_boss.isPlaying() && isShooting3){
+            isShooting3 = false;
+        }
         if(!mon_animator_boss.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
@@ -245,8 +260,8 @@ public class Mon_Boss extends Monster implements Actable {
                 newFlame.setHitbox();
                 newFlame.setSolidArea();
                 proj.add(newFlame);
-                mp.addObject(newFlame, mp.projectiles);
             }
+            for(Projectile flame : proj) mp.addObject(flame , mp.projectiles);
         }
     }
     public void shoot4() {

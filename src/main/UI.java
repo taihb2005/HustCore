@@ -425,13 +425,6 @@ public class UI {
             g2.setStroke(new BasicStroke(2));
             g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
         }
-//
-//            if (slotselected && i == selectedSlot)
-//            {
-//                g2.setStroke(new BasicStroke(5));
-//                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
-//            }
-//        }
         if (currentMap.player.inventory != null) for (int i = 0; i < currentMap.player.inventory.length; i++) {
             int currentSlotY = slotY + i * (slotSize + 50);
             if (currentMap.player.inventory[i] != null) {
