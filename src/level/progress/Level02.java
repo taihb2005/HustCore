@@ -13,6 +13,6 @@ public class Level02 extends Level {
         map = MapManager.getGameMap("map1");
         map.gp = gp;
         init();
-        eventRect = new EventRectangle(64 , 0 , 128 , 32);
+        eventRect = new EventRectangle(0 , 0 , 0 , 0);
     }
 }

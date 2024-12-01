@@ -12,6 +12,15 @@ public class StatusManager {
     private Item [] savedInventory = new Item[100];
     private String direction;
 
+    public StatusManager(){
+        worldX = 1400; worldY = 1700;
+        savedHP = 100;
+        savedMana = 100;
+        savedLevel = 1;
+        savedExp = 0;
+        direction = "right";
+    }
+
     public void setPos(int x , int y){worldX = x; worldY = y;};
     public void setSavedHP(int HP){savedHP = HP;}
     public void setSavedMana(int mana){savedMana = mana;}
