@@ -70,7 +70,6 @@ public class Proj_TrackingPlasma extends Projectile {
 
     @Override
     public void searchPath(int goalCol, int goalRow) {
-        System.out.println(timeCount);
         int startCol = (worldX + solidArea1.x) / childNodeSize;
         int startRow = (worldY + solidArea1.y) / childNodeSize;
 

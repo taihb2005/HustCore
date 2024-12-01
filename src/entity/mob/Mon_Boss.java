@@ -13,8 +13,10 @@ import map.GameMap;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static main.GamePanel.*;
+import static map.GameMap.childNodeSize;
 
 public class Mon_Boss extends Monster implements Actable {
     public final static int IDLE = 0;
@@ -33,6 +35,9 @@ public class Mon_Boss extends Monster implements Actable {
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
+    private int shootTimer = 0;
+    private int shootInterval = 10;
+
     private int spawnPointX;
     private int spawnPointY;
     private int posX;
@@ -42,13 +47,13 @@ public class Mon_Boss extends Monster implements Actable {
     private int detectionCounter = 0;
     private final int detectionToSetAggro = 180;
     private Projectile projectile1, projectile2, projectile3;
-    private ArrayList<Projectile> proj;
-
+    ArrayList<Projectile> proj;
+    private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
 
-    private int flameColumnDelayCounter = 0; // Bộ đếm delay giữa các cột
-    private int flameCurrentColumn = 1;     // Cột hiện tại đang được bắn
-    private int maxFlameColumns = 5;        // Tổng số cột flame
+//    private int flameColumnDelayCounter = 0; // Bộ đếm delay giữa các cột
+//    private int flameCurrentColumn = 1;     // Cột hiện tại đang được bắn
+//    private int maxFlameColumns = 5;        // Tổng số cột flame
     private boolean shooting = false;      // Trạng thái đang bắn flame
 
 
@@ -86,7 +91,7 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     private void setDefault(){
-        hitbox = new Rectangle(22 , 24 , 22 , 36);
+        hitbox = new Rectangle(22 , 24 , 128 , 128);
         solidArea1 = new Rectangle(24 , 42 , 19 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         setDefaultSolidArea();
@@ -116,20 +121,54 @@ public class Mon_Boss extends Monster implements Actable {
         mon_animator_boss.setAnimationState(mon_boss[IDLE][CURRENT_DIRECTION] , 10);
     }
 
+    private void changeAnimationDirection(){
+        switch(direction)
+        {
+            case "left" : CURRENT_DIRECTION = LEFT; break;
+            case "right": CURRENT_DIRECTION = RIGHT; break;
+        }
+    }
+
+    private void setAction()
+    {
+        actionLockCounter++;
+        if (actionLockCounter >= 100 && !isShooting1 && !isShooting2 && !isShooting3 && !isDying) {
+            Random random = new Random();
+            int i = random.nextInt(300) + 1;  // pick up  a number from 1 to 100
+            if (i <= 99) {
+                actionWhileShoot1();
+            }
+            if (i > 99 && i <= 199) {
+                actionWhileShoot2();
+            }
+            if (i > 199) {
+                actionWhileShoot3();
+            }
+            actionLockCounter = 0; // reset
+            isRunning = !isShooting && (right | left | up | down);
+        }
+        else if (isShooting3) {
+            shootTimer++;
+            actionWhileShoot3();
+        };
+    }
+
     @Override
     public void update() {
-        testTime++;
-//        System.out.println(testTime);
-        for (int i = 1; i < 2; i++) {
-            if (testTime % 200 == i*10) {
-                shoot3(i);
-            }
-        }
-//        if (testTime % 50 == 0) shoot2();
-        if (testTime == Integer.MAX_VALUE) testTime = 0;
+//        testTime++;
+//        if (testTime == 100) shoot3();
+//        if (shooting) {
+//            shootTimer++;
+//            if (shootTimer >= shootInterval) {
+//                createFlameColumn(); // Tạo cột lửa
+//                shootTimer = 0; // Reset timer
+//            }
+//        }
+        setAction();
         handleAnimationState();
         handleStatus();
         if(!proj.isEmpty())proj.removeIf(pr -> !pr.active);
+        changeAnimationDirection();
         move();
         mon_animator_boss.update();
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
@@ -196,8 +235,11 @@ public class Mon_Boss extends Monster implements Actable {
             }
         }
 
-        if(!mon_animator_boss.isPlaying() && isShooting){
-            isShooting = false;
+        if(!mon_animator_boss.isPlaying() && isShooting1){
+            isShooting1 = false;
+        }
+        if(!mon_animator_boss.isPlaying() && isShooting2){
+            isShooting2 = false;
         }
         if(!mon_animator_boss.isPlaying() && isShooting3){
             isShooting3 = false;
@@ -210,7 +252,27 @@ public class Mon_Boss extends Monster implements Actable {
     }
     @Override
     public void move() {
+        collisionOn = false;
+        if(up && isRunning && !isDying) newWorldY = worldY - speed; //Gì đây hả cđl
+        if(down && isRunning && !isDying) newWorldY = worldY + speed;
+        if(left && isRunning && !isDying) newWorldX = worldX - speed;
+        if(right && isRunning && !isDying) newWorldX = worldX + speed;
 
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
+        mp.cChecker.checkCollisionWithEntity(this , mp.enemy);
+        mp.cChecker.checkCollisionPlayer(this);
+//        if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
+
+        if(!collisionOn)
+        {
+            worldX = newWorldX;
+            worldY = newWorldY;
+        }
+
+        newWorldX = worldX;
+        newWorldY = worldY;
     }
 
     @Override
@@ -227,9 +289,15 @@ public class Mon_Boss extends Monster implements Actable {
 
     }
 
+    public void shoot3() {
+        shooting = true; // Đặt trạng thái bắn
+        currentColumn = 1; // Bắt đầu từ cột đầu tiên
+    }
+
     public void shoot1() {
+        isShooting1 = true;
         if(!projectile1.active && shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile1.set(worldX, worldY, direction, true, this);
+            projectile1.set(worldX+25, worldY+12, direction, true, this);
             projectile1.setHitbox();
             projectile1.setSolidArea();
             mp.addObject(projectile1, mp.projectiles);
@@ -238,31 +306,27 @@ public class Mon_Boss extends Monster implements Actable {
     }
     public void shoot2() {
         if(!projectile2.active && shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile2.set(worldX, worldY, direction, true, this);
+            projectile2.set(worldX+50, worldY+30, direction, true, this);
             projectile2.setHitbox();
             projectile2.setSolidArea();
             mp.addObject(projectile2, mp.projectiles);
             shootAvailableCounter = 0;
         }
     }
-    public void shoot3(int i) {
-        // Nếu chưa kích hoạt trạng thái bắn hoặc khoảng thời gian cho phép
-        if (!shooting && shootAvailableCounter == SHOOT_INTERVAL) {
-            shooting = true;
-            shootAvailableCounter = 0; // Reset shoot counter
-        }
-
-        // Nếu đang bắn
-        if (shooting) {
-            for (int j = 1; j <= 5; j++) {
-                Projectile newFlame = new Proj_Flame(mp);
-                newFlame.set(worldX + 50 * i+50, worldY + 50 * (j-2) - 41, direction, true, this);
-                newFlame.setHitbox();
-                newFlame.setSolidArea();
-                proj.add(newFlame);
+    public void createFlameColumn() {
+            shootAvailableCounter++;
+            if (shootAvailableCounter >= 10) {
+                for (int j = 1; j <= 5; j++) {
+                    Projectile newFlame = new Proj_Flame(mp);
+                    newFlame.set(worldX + 50 * currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
+                    newFlame.setHitbox();
+                    newFlame.setSolidArea();
+                    proj.add(newFlame);
+                }
+                currentColumn++;
+                for(Projectile flame : proj) mp.addObject(flame , mp.projectiles);
+                shootAvailableCounter = 0;
             }
-            for(Projectile flame : proj) mp.addObject(flame , mp.projectiles);
-        }
     }
     public void shoot4() {
         if(!projectile3.active && shootAvailableCounter == SHOOT_INTERVAL) {
@@ -273,4 +337,58 @@ public class Mon_Boss extends Monster implements Actable {
             shootAvailableCounter = 0;
         }
     }
+
+    public void actionWhileShoot1() {
+        shoot1();
+    }
+
+    public void actionWhileShoot2() {
+        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
+        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+        int posCol = (worldX + solidArea1.x) / childNodeSize;
+        int posRow = (worldY + solidArea1.y) / childNodeSize;
+
+        searchPath(playerCol , playerRow);
+        decideToMove();
+
+        boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
+        boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
+        boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
+        if(check3TilesAway && checkShootInterval && checkIfConcurent){
+            isShooting2 = true;
+            if(posCol < playerCol) direction = "right"; else
+            if(posCol >  playerCol) direction = "left"; else
+            if(posRow < playerRow) direction = "down"; else
+                direction = "up";
+            shoot2();
+        }
+        isRunning = !isShooting2;
+    }
+
+    public void actionWhileShoot3() {
+        System.out.println("SHOOT3");
+        System.out.println(currentColumn);
+        // Kích hoạt trạng thái bắn
+        if (!isShooting3) {
+            isShooting3 = true;
+            shootTimer = 0; // Reset shootTimer
+            currentColumn = 1; // Reset vị trí cột lửa
+        }
+
+        // Xử lý bắn khi đang ở trạng thái bắn
+        if (isShooting3) {
+             // Tăng giá trị shootTimer mỗi frame
+            // Nếu đạt đến khoảng thời gian bắn cho một cột
+            if (shootTimer >= 10) {
+                createFlameColumn(); // Tạo cột lửa
+                shootTimer = 0; // Reset timer
+            }
+            // Nếu đã bắn đủ 5 cột, kết thúc trạng thái bắn
+            if (currentColumn > 5) {
+                currentColumn = 1;
+                isShooting3 = false;
+            }
+        }
+    }
+
 }

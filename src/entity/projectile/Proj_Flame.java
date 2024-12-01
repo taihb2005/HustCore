@@ -11,7 +11,7 @@ public class Proj_Flame extends Projectile {
         name = "Flame";
         width = 64;
         height = 64;
-        maxHP = 40;
+        maxHP = 200;
         speed = 0;
         base_damage = 30;
         slowDuration = 180;
@@ -27,5 +27,10 @@ public class Proj_Flame extends Projectile {
 
     private void getImage(){
         projectile_sprite = new Sprite("/entity/projectile/flame.png" , width , height).getSpriteArray();
+    }
+
+    public void update() {
+        super.update();
+        if (CURRENT_FRAME == 4) active = false;
     }
 }

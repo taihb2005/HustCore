@@ -143,7 +143,7 @@ public class AssetSetter {
 
     public void setEnemy()
     {
-        Mon_Boss boss = new Mon_Boss(mp , 1200 , 1600);
+        Mon_Boss boss = new Mon_Boss(mp , 1300 , 1600);
         mp.addObject(boss, mp.enemy);
     }
 
