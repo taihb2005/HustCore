@@ -138,10 +138,20 @@ public class AssetSetter {
     {
         Mon_Shooter shooter = new Mon_Shooter(mp , "left" , 0 , true, 120 , 1700 , 1600);
         mp.addObject(shooter , mp.enemy);
+
+        Mon_Spectron spct = new Mon_Spectron(mp, 1800, 1900);
+        mp.addObject(spct, mp.enemy);
+
+        Mon_HustGuardian guardian = new Mon_HustGuardian(mp,1600 , 1700);
+       mp.addObject(guardian, mp.enemy);
+
+       Mon_Cyborgon cyborgon = new Mon_Cyborgon(mp, 1400, 1600);
+       mp.addObject(cyborgon, mp.enemy);
+
     }
 
     public void loadAll(){
-        setObject();
+         setObject();
         setNpc();
         setEnemy();
     }
