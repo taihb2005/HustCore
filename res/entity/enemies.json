@@ -5,13 +5,13 @@
       "object": "Obj_Cyborgon",
       "name": "cyborgon",
       "type": 2,
-      "position": { "x": 1400, "y": 1600 },
+      "position": { "x": 1400, "y": 1600 }
     },
     {
       "object": "Obj_HustGuardian",
       "name": "hust_guardian",
       "type": 3,
-      "position": { "x": 1600, "y": 1700 },
+      "position": { "x": 1600, "y": 1700 }
     },
     {
       "object": "Obj_Spectron",
@@ -28,5 +28,6 @@
       "isAlwaysUp": true,
       "attackCycle": 120
     }
-    }
+    ]
+}
 

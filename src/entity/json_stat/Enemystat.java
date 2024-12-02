@@ -1,14 +1,14 @@
 package entity.json_stat;
-
 import java.util.List;
 
-public class GameObject {
+public class Enemystat {
     private String object;
     private String name;
     private int type;
     private Position position;
-    private int doorType; // Dành cho Obj_Door
-    private List<ItemStat> items; // Dành cho Obj_Chest
+    private String direction;
+    private boolean isAlwaysUp;
+    private int attackCycle;
 
     // Getter và Setter
     public String getObject() { return object; }
@@ -23,25 +23,14 @@ public class GameObject {
     public Position getPosition() { return position; }
     public void setPosition(Position position) { this.position = position; }
 
-    public int getDoorType() { return doorType; }
-    public void setDoorType(int doorType) { this.doorType = doorType; }
-
-    public List<ItemStat> getItems() { return items; }
-    public void setItems(List<ItemStat> items) { this.items = items; }
-
     public int getX() { return position.getX(); }
     public int getY() { return position.getY(); }
 
+    public String getDirection() {return direction;}
 
+    public boolean isAlwaysUp() {return isAlwaysUp;}
+
+    public int getAttackCycle() {return attackCycle;}
 }
 
-class Position {
-    private int x;
-    private int y;
 
-    public int getX() { return x; }
-    public void setX(int x) { this.x = x; }
-
-    public int getY() { return y; }
-    public void setY(int y) { this.y = y; }
-}

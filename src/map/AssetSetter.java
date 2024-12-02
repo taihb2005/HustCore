@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
+import entity.json_stat.Enemystat;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
 import entity.mob.Mon_Cyborgon;
@@ -134,25 +135,56 @@ public class AssetSetter {
         mp.addObject(npc2 , mp.npc);
     }
 
-    public void setEnemy()
-    {
-        Mon_Shooter shooter = new Mon_Shooter(mp , "left" , 0 , true, 120 , 1700 , 1600);
-        mp.addObject(shooter , mp.enemy);
+    public void setEnemy(){
+    try {
+        Reader reader = new FileReader("res/entity/enemies.json");
+        Gson gson = new Gson();
 
-        Mon_Spectron spct = new Mon_Spectron(mp, 1800, 1900);
-        mp.addObject(spct, mp.enemy);
+        Map<String, List<Enemystat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<Enemystat>>>() {}.getType());
 
-        Mon_HustGuardian guardian = new Mon_HustGuardian(mp,1600 , 1700);
-       mp.addObject(guardian, mp.enemy);
+        List<Enemystat> Enemies = data.get("active");
 
-       Mon_Cyborgon cyborgon = new Mon_Cyborgon(mp, 1400, 1600);
-       mp.addObject(cyborgon, mp.enemy);
+        for (Enemystat enemy : Enemies) {
+            switch (enemy.getObject()) {
+                case "Obj_Cyborgon":
+                    Mon_Cyborgon cyborgon = new Mon_Cyborgon(mp);
+                    cyborgon.worldX = enemy.getX();
+                    cyborgon.worldY = enemy.getY();
+                    mp.addObject(cyborgon, mp.enemy);
+                    break;
 
+                case "Obj_HustGuardian":
+                    Mon_HustGuardian hustGuardian = new Mon_HustGuardian(mp);
+                    hustGuardian.worldX = enemy.getX();
+                    hustGuardian.worldY = enemy.getY();
+                    mp.addObject(hustGuardian, mp.enemy);
+                    break;
+
+                case "Obj_Spectron":
+                    Mon_Spectron spectron = new Mon_Spectron(mp);
+                    spectron.worldX = enemy.getX();
+                    spectron.worldY = enemy.getY();
+                    mp.addObject(spectron, mp.enemy);
+                    break;
+
+                case "Obj_Shooter":
+                    String directions = enemy.getDirection();
+                    Mon_Shooter shooter = new Mon_Shooter(mp, directions, enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getX(), enemy.getY()
+                    );
+                    mp.addObject(shooter, mp.enemy);
+
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    }
+
 
     public void loadAll(){
          setObject();
-        setNpc();
-        setEnemy();
+         setNpc();
+         setEnemy();
     }
 }
