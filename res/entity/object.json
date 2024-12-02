@@ -2,54 +2,53 @@
   "inactive": [
     {
       "object": "Obj_FilledTank",
-      "name": "filledTank_no1",
       "type": 1,
       "position": { "x": 1408, "y": 1600 }
     },
     {
       "object": "Obj_FilledTank",
-      "name": "filledTank_no2",
       "type": 1,
       "position": { "x": 1664, "y": 1600 }
     },
     {
       "object": "Obj_EmptyTank",
-      "name": "emptyTank_no1",
       "position": { "x": 1472, "y": 1664 }
     },
     {
       "object": "Obj_Television",
-      "name": "tv_no1",
       "type": 1,
-      "position": { "x": 1344, "y": 1990 }
+      "size": "big",
+      "state": "on",
+      "position": { "x": 1536, "y": 1664 }
     },
     {
       "object": "Obj_Desk",
-      "name": "desk_no1",
       "type": 1,
       "position": { "x": 1500, "y": 1500 }
     },
     {
       "object": "Obj_Chair",
-      "name": "chair_no1",
       "type": 1,
       "position": { "x": 1527, "y": 1573 }
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "off",
+      "position": { "x": 1527, "y": 1573 }
+    },
+    {
+      "object": "Obj_Bin",
+      "type" : 1,
+      "position": { "x":  1600 , "y": 1573}
     }
   ],
   "active": [
     {
       "object": "Obj_Door",
-      "name": "door_no1",
-      "type": 1,
-      "position": { "x": 1408, "y": 1344 },
-      "doorType": 1
-    },
-    {
-      "object": "Obj_Door",
       "name": "door_butitisclosed",
-      "type": 1,
-      "position": { "x": 1408, "y": 1244 },
-      "doorType": 0
+      "size": "smal",
+      "state": "inactive",
+      "position": { "x": 1408, "y": 1244 }
     },
     {
       "object": "Obj_Chest",

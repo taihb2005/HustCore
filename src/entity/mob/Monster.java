@@ -14,10 +14,6 @@ import static main.GamePanel.pFinder;
 
 public class Monster extends Entity {
     public GameMap mp;
-    protected int CURRENT_ACTION;
-    protected int PREVIOUS_ACTION;
-    protected int CURRENT_DIRECTION;
-    protected int CURRENT_FRAME;
 
     protected boolean isIdle;
     protected boolean isShooting;

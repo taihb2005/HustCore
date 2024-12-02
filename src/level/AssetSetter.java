@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AssetSetter {
     GameMap mp;
@@ -37,42 +38,41 @@ public class AssetSetter {
             List<GameObject> inactiveObjects = data.get("inactive");
 
             for (GameObject obj : inactiveObjects) {
-                System.out.println();
+                int X = obj.getX();
+                int Y = obj.getY();
                 switch(obj.getObject()) {
                     case "Obj_FilledTank":
-                        Obj_FilledTank filledTank = new Obj_FilledTank(obj.getType());
-                        filledTank.worldX = obj.getX(); filledTank.worldY = obj.getY();
-                        mp.addObject(filledTank, mp.inactiveObj);
+                        mp.addObject(new Obj_FilledTank(obj.getType() , X , Y), mp.inactiveObj);
                         break;
                     case "Obj_EmptyTank":
-                        Obj_EmptyTank emptyTank = new Obj_EmptyTank();
-                        emptyTank.worldX = obj.getX(); emptyTank.worldY = obj.getY();
-                        mp.addObject(emptyTank, mp.inactiveObj);
+                        mp.addObject(new Obj_EmptyTank(X , Y), mp.inactiveObj);
                         break;
                     case "Obj_Television":
-                        Obj_Television tv = new Obj_Television(obj.getType());
-                        tv.worldX = obj.getX(); tv.worldY = obj.getY();
-                        mp.addObject(tv, mp.inactiveObj);
+                        mp.addObject(new Obj_Television(obj.getState() , obj.getSize() , obj.getType() , X , Y), mp.inactiveObj);
                         break;
                     case "Obj_Desk":
-                        Obj_Desk desk = new Obj_Desk(obj.getType());
-                        desk.worldX = obj.getX(); desk.worldY = obj.getY();
-                        mp.addObject(desk, mp.inactiveObj);
+                        mp.addObject(new Obj_Desk(obj.getType() , X , Y), mp.inactiveObj);
                         break;
                     case "Obj_Chair":
-                        Obj_Chair chair = new Obj_Chair(obj.getType());
-                        chair.worldX = obj.getX(); chair.worldY = obj.getY();
-                        mp.addObject(chair, mp.inactiveObj);
+                        mp.addObject(new Obj_Chair(obj.getType() , X , Y), mp.inactiveObj);
+                        break;
+                    case "Obj_PasswordAuth":
+                        mp.addObject(new Obj_PasswordAuth(obj.getState() , X , Y) , mp.inactiveObj);
+                        break;
+                    case "Obj_Bin":
+                        mp.addObject(new Obj_Bin(obj.getType() , X , Y) , mp.inactiveObj);
+                        break;
+                    case "Obj_Computer":
                         break;
                 }
             }
 //
             for (GameObject obj : activeObjects) {
+                int X = obj.getX();
+                int Y = obj.getY();
                 switch (obj.getObject()) {
                     case "Obj_Door":
-                        Obj_Door door = new Obj_Door(obj.getDoorType(), obj.getType());
-                        door.worldX = obj.getX();
-                        door.worldY = obj.getY();
+                        Obj_Door door = new Obj_Door(obj.getSize(), obj.getState() , X , Y);
                         mp.addObject(door, mp.activeObj);
                         break;
                     case "Obj_Chest":
@@ -143,8 +143,8 @@ public class AssetSetter {
 
     public void setEnemy()
     {
-        Mon_Boss boss = new Mon_Boss(mp , 1300 , 1600);
-        mp.addObject(boss, mp.enemy);
+//        Mon_Boss boss = new Mon_Boss(mp , 1300 , 1600);
+//        mp.addObject(boss, mp.enemy);
     }
 
     public void loadAll(){

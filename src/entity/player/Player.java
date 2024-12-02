@@ -297,11 +297,11 @@ public class Player extends Entity {
         if(index != -1){
             attackCanceled = true;
             isInteracting = true;
-            if(KeyHandler.enterPressed)
-            {
-                KeyHandler.enterPressed = false;
-                mp.activeObj[index].isOpening = true;
-            }
+//            if(KeyHandler.enterPressed)
+//            {
+//                KeyHandler.enterPressed = false;
+//                mp.activeObj[index].isOpening = true;
+//            }
         }
     }
 

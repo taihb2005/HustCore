@@ -9,6 +9,11 @@ import java.awt.*;
 import static main.GamePanel.*;
 
 public abstract class Entity {
+    protected int CURRENT_ACTION;
+    protected int PREVIOUS_ACTION;
+    protected int CURRENT_DIRECTION;
+    protected int CURRENT_FRAME;
+
     public String name;
     //POSITION
     public int worldX, worldY;
@@ -23,6 +28,7 @@ public abstract class Entity {
     public boolean isInvincible = false;
     public boolean isDying = false;
     public boolean isCollected = false;
+    public boolean canChangeState = false;
     public boolean canbeDestroyed = false;
     public boolean onPath = false;
     //SPRITE SIZE

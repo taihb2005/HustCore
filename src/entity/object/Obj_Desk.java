@@ -40,8 +40,8 @@ public class Obj_Desk extends Entity {
 
     private void setDefault()
     {
-        solidArea1 = new Rectangle(8 , 24 , 48 , 32);
-        solidArea2 = new Rectangle(24 , 56 , 24 , 4);
+        solidArea1 = new Rectangle(8 , 34 , 48 , 26);
+        solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();
 
     }
