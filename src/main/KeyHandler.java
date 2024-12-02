@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener{
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
     public static boolean godModeOn = false;
+    public static boolean keyEpressed = false;
     public static boolean key1pressed;
     public static boolean key2pressed;
     public static boolean key3pressed;
@@ -99,6 +100,9 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_ENTER)
             {
                 enterPressed = true;
+            }
+            if(keyCode == KeyEvent.VK_E){
+                keyEpressed = true;
             }
             if(keyCode == KeyEvent.VK_1)
             {
@@ -317,6 +321,7 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_D: rightPressed = false; break;
             case KeyEvent.VK_W: upPressed = false; break;
             case KeyEvent.VK_ENTER: enterPressed = false; break;
+            case KeyEvent.VK_E: keyEpressed = false ; break;
             case KeyEvent.VK_1: key1pressed = false; break;
             case KeyEvent.VK_2: key2pressed = false; break;
             case KeyEvent.VK_3: key3pressed = false; break;
@@ -333,5 +338,11 @@ public class KeyHandler implements KeyListener{
         enterPressed = false;
         showHitbox = false;
         showDebugMenu = false;
+        keyEpressed = false;
+        key1pressed = false;
+        key2pressed = false;
+        key3pressed = false;
+        key4pressed = false;
+        key5pressed = false;
     }
 }

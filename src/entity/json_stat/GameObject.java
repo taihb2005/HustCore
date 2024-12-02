@@ -6,6 +6,7 @@ public class GameObject {
     private String object;
     private String name;
     private int type;
+    private int frame;
     private Position position;
     private String size;
     private String state; //Dành cho tv
@@ -24,6 +25,9 @@ public class GameObject {
 
     public void setState(String state){this.state = state;}
     public String getState(){return state;}
+
+    public void setFrame(int fr){this.frame = fr;}
+    public int getFrame(){return frame;}
 
     public int getType() { return type; }
     public void setType(int type) { this.type = type; }

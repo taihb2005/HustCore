@@ -12,12 +12,14 @@ import static main.GamePanel.camera;
 public class Obj_Computer extends Entity {
     private final BufferedImage[] obj_computer;
     private final Animation obj_animator_computer;
+    private final String state;
     private int currentFrame = 0;
     public Obj_Computer(String state , int x , int y){
         super(x , y);
         name = "Computer";
         width = 64;
         height = 64;
+        this.state = state;
 
         obj_computer = new Sprite("/entity/object/computer_" + state + ".png" , width , height).getSpriteArrayRow(0);
         obj_animator_computer = new Animation();
@@ -28,8 +30,10 @@ public class Obj_Computer extends Entity {
     }
     @Override
     public void update() {
-        obj_animator_computer.update();
-        currentFrame = obj_animator_computer.getCurrentFrames();
+        if(state.equals("on")) {
+            obj_animator_computer.update();
+            currentFrame = obj_animator_computer.getCurrentFrames();
+        }
     }
 
     @Override

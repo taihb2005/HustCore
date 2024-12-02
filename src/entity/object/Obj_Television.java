@@ -31,9 +31,12 @@ public class Obj_Television extends Entity {
         setDefault();
     }
 
-    public Obj_Television(String state , String size , int type , int x , int y) {
+    public Obj_Television(String state , String size , int frame ,int type , int x , int y) throws Exception{
         super(x , y);
         name = "Television";
+        if(size.equals("small") && state.equals("on") && type != 2){
+            throw new Exception("Nếu tv nhỏ mà on thì luôn để type = 2 nhé anh bạn");
+        }
         int multiplier = (size.equals("big")) ? 1 : 0;
         super.width = 64 + multiplier * 64;
         super.height = 64;
@@ -41,7 +44,7 @@ public class Obj_Television extends Entity {
 
         obj_television = new Sprite("/entity/object/television_" + state + "_id" + type + ".png" , width , height).getSpriteArrayRow(0);
         obj_animator_television = new Animation();
-        obj_animator_television.setAnimationState(obj_television, 20);
+        obj_animator_television.setAnimationState(obj_television , frame ,20);
 
         setDefault();
     }

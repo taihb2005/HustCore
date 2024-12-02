@@ -26,6 +26,14 @@ public class UI {
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
     int cursor = 0;
+    boolean isInventoryOpen = true;
+    int inventoryX = tileSize / 4;
+    int inventoryY = tileSize / 2 + 80;
+    int inventoryWidth = tileSize * 2 - 18;
+    int inventoryHeight = tileSize * 6 + 32;
+    int slotX = inventoryX + 15;
+    int slotWidth = 50;
+    int slotHeight = 50;
     private BufferedImage gameOverBackground;
 
     int selectedSlot = -1;
@@ -386,15 +394,34 @@ public class UI {
         }
     }
     public void drawInventory() {
+        if(KeyHandler.keyEpressed){
+            KeyHandler.keyEpressed = false;
+            isInventoryOpen = !isInventoryOpen;
+        }
+        if (isInventoryOpen && inventoryWidth < (tileSize * 2 - 18)) {
+            inventoryWidth += 10;
+            inventoryX += 10;
+        }
 
-        int frameX = tileSize / 4;
-        int frameY = tileSize / 2 + 80;
-        int frameWidth = tileSize * 2 - 18;
-        int frameHeight = tileSize * 6 + 32;
-        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        if (!isInventoryOpen && inventoryWidth > -64) {
+            inventoryWidth -= 10;
+            inventoryX -= 10;
+        }
 
-        int slotX = frameX + 15;
-        int slotY = frameY + 12;
+        if (isInventoryOpen && slotWidth < 50) {
+            slotWidth += 10;
+            slotX += 10;
+        }
+
+        if (!isInventoryOpen && slotWidth > -64) {
+            slotWidth -= 10;
+            slotX -= 10;
+        }
+
+        drawSubWindow(inventoryX, inventoryY, inventoryWidth, inventoryHeight);
+
+        int slotY = inventoryY + 12;
+
         int slotSize = tileSize / 4;
 
         if (KeyHandler.key1pressed) {
@@ -419,11 +446,11 @@ public class UI {
         for (int i = 0; i < 5; i++) {
             int currentslotY = slotY + i * (slotSize + 50);
             g2.setColor(new Color(0, 0, 0, 100));
-            g2.fillRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+            g2.fillRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
 
             g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
-            g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+            g2.drawRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
         }
         if (currentMap.player.inventory != null) for (int i = 0; i < currentMap.player.inventory.length; i++) {
             int currentSlotY = slotY + i * (slotSize + 50);
@@ -433,7 +460,6 @@ public class UI {
                 g2.setFont(maru.deriveFont(Font.PLAIN , 25));
                 String quantity = Integer.toString( currentMap.player.inventory[i].getQuantity());
                 g2.drawString( quantity , slotX + 37 , currentSlotY + 46);
-
                 // Hiển thị viền slot được chọn
             }
         }

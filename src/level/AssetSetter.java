@@ -20,6 +20,7 @@ import java.util.Optional;
 
 public class AssetSetter {
     GameMap mp;
+    String filePath;
 
     public AssetSetter(GameMap mp)
     {
@@ -29,7 +30,7 @@ public class AssetSetter {
     public void setObject()
     {
         try {
-            Reader reader = new FileReader("res/entity/object.json");
+            Reader reader = new FileReader("res/entity/level/level01/object_level01.json");
             Gson gson = new Gson();
 
             Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {}.getType());
@@ -48,7 +49,7 @@ public class AssetSetter {
                         mp.addObject(new Obj_EmptyTank(X , Y), mp.inactiveObj);
                         break;
                     case "Obj_Television":
-                        mp.addObject(new Obj_Television(obj.getState() , obj.getSize() , obj.getType() , X , Y), mp.inactiveObj);
+                        mp.addObject(new Obj_Television(obj.getState() , obj.getSize(), obj.getFrame(),obj.getType() , X , Y), mp.inactiveObj);
                         break;
                     case "Obj_Desk":
                         mp.addObject(new Obj_Desk(obj.getType() , X , Y), mp.inactiveObj);
@@ -63,6 +64,10 @@ public class AssetSetter {
                         mp.addObject(new Obj_Bin(obj.getType() , X , Y) , mp.inactiveObj);
                         break;
                     case "Obj_Computer":
+                        System.out.println(obj.getState());
+                        mp.addObject(new Obj_Computer(obj.getState() , X ,  Y) , mp.inactiveObj);
+                        break;
+                    case "Obj_Vault":
                         break;
                 }
             }

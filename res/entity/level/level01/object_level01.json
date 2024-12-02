@@ -1,0 +1,265 @@
+{
+  "inactive": [
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 256 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 576 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 640 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 960 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 3,
+      "position": {"x": 1408 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 1,
+      "position": {"x": 1472 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 1792 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 3,
+      "position": {"x": 2112 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 2176 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 960 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1280 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 4,
+      "frame": 0,
+      "position": {"x": 1728 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 1,
+      "position": {"x": 896 , "y": 256}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 2,
+      "position": {"x": 640 , "y": 384}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 896 , "y": 384}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 192 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 1,
+      "position": {"x": 640 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 3,
+      "position": {"x": 704 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 2,
+      "position": {"x": 576 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 1,
+      "position": {"x": 1536 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 1600 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 3,
+      "position": {"x": 1920 , "y": 704}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 1,
+      "position": {"x": 1536 , "y": 1216}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 128 , "y": 1728}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 640 , "y": 1728}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1536 , "y": 1728}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 3,
+      "position": {"x": 1984 , "y": 1728}
+    },
+    {
+      "object": "Obj_Computer",
+      "state": "off",
+      "position": {"x": 64 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "state": "on",
+      "position": {"x": 1536 , "y": 768}
+    }
+  ],
+  "active": [
+    {
+      "object": "Obj_Door",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 1408, "y": 1244 }
+    },
+    {
+      "object": "Obj_Chest",
+      "type": 1,
+      "position": { "x": 1500, "y": 1900 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 1 },
+        { "name": "Item_Battery", "quantity": 1 }
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "type": 1,
+      "position": { "x": 1400, "y": 1900 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 10 },
+        { "name": "Item_Battery", "quantity": 1 },
+        { "name": "Item_SpeedGem" , "quantity": 10}
+      ]
+    }
+  ]
+}

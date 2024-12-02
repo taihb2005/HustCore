@@ -20,6 +20,7 @@ import javax.swing.text.AbstractDocument;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
+    public int currentFPS;
 
     final static public int originalTileSize = 16; // A character usually has 16x16 size
     final static public int scale = 3; // Use to scale the objects which appear on the screen
@@ -91,35 +92,39 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
-        double drawInterval = (double) 1000000000 /FPS;
+        double drawInterval = (double) 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-        //long timer = 0;
-        //int drawCount = 0;
 
+        long timer = 0;
+        int drawCount = 0;
 
-        while(gameThread != null)
-        {
+        while (gameThread != null) {
             currentTime = System.nanoTime();
 
             delta += (currentTime - lastTime) / drawInterval;
-            //timer += currentTime - lastTime;
+            timer += currentTime - lastTime; // Đếm thời gian đã trôi qua
             lastTime = currentTime;
-            if(delta >= 1)
-            {
+
+            if (delta >= 1) {
                 update();
                 repaint();
-//                drawToTempScreen(); //FOR FULL SCREEN - Draw everything to the buffered image
-//                drawToScreen();     //FOR FULL SCREEN - Draw the buffered image to the screen
+
+                drawCount++; // Đếm số khung hình được vẽ
                 delta--;
-                //drawCount++;
             }
 
+            if (timer >= 1000000000) { // Đã đủ 1 giây
+                currentFPS = drawCount;
+                drawCount = 0;  // Đặt lại số khung hình
+                timer = 0;      // Đặt lại thời gian
+            }
         }
 
         dispose();
     }
+
 
     public void update() {
         if(gameState == GameState.PLAY_STATE ) {
