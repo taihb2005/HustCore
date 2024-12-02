@@ -1,8 +1,6 @@
 package entity.mob;
 
 import entity.Actable;
-import entity.Entity;
-import entity.effect.Effect;
 import entity.effect.type.EffectNone;
 import entity.projectile.Proj_GuardianProjectile;
 import graphics.Animation;
@@ -12,8 +10,6 @@ import util.UtilityTool;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.security.KeyPair;
-import java.util.ArrayList;
 import java.util.Random;
 
 import static main.GamePanel.*;

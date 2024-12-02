@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Entity;
 import entity.effect.Effect;
+import entity.projectile.Projectile;
 import map.GameMap;
 
 import java.awt.*;
@@ -13,10 +14,6 @@ import static main.GamePanel.pFinder;
 
 public class Monster extends Entity {
     public GameMap mp;
-    protected int CURRENT_ACTION;
-    protected int PREVIOUS_ACTION;
-    protected int CURRENT_DIRECTION;
-    protected int CURRENT_FRAME;
 
     protected boolean isIdle;
     protected boolean isShooting;
@@ -76,7 +73,6 @@ public class Monster extends Entity {
             shootAvailableCounter++;
         }
         if(shootAvailableCounter > SHOOT_INTERVAL) shootAvailableCounter = SHOOT_INTERVAL;
-
         updateInvincibility();
     }
 

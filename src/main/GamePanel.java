@@ -3,16 +3,20 @@ package main;
 // awt library
 import ai.PathFinder;
 import environment.EnvironmentManager;
-import map.GameMap;
-import map.MapManager;
-import map.MapParser;
-import map.TileManager;
+import level.AssetSetter;
+import level.Level;
+import level.LevelManager;
+import level.progress.Level01;
+import level.progress.Level02;
+import map.*;
+import status.StatusManager;
 import util.Camera;
 
 import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
+import javax.swing.text.AbstractDocument;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -30,13 +34,16 @@ public class GamePanel extends JPanel implements Runnable {
     public static Sound music = new Sound();
     public static Sound se = new Sound();
     public static PathFinder pFinder;
-    public static TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
-    public static GameState lastGameState;
 
+    public static StatusManager sManager = new StatusManager();
+    public LevelManager lvlManager = new LevelManager(this);
+    public static int previousLevelProgress = 2;
+    public static int levelProgress = 2;
+    public static Level currentLevel;
     public static GameMap currentMap;
 
     Thread gameThread;
@@ -44,29 +51,28 @@ public class GamePanel extends JPanel implements Runnable {
     public static UI ui;
 
     public GamePanel() {
-        // Set the size of the window and background color
         this.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        this.setBackground(Color.WHITE); // Ensure the background is white
-        this.setDoubleBuffered(true); // Enable double buffering for smoother rendering
+        this.setBackground(Color.WHITE);
+        this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
-        setup();
-        currentMap.gp = this;
-        ui = new UI(this);
-
+        currentMap.player.storeValue();
     }
 
-    private void loadMap()
+    public void loadMap()
     {
-        MapParser.loadMap( "map_test" ,"res/map/map_test_64.tmx");
-        currentMap = MapManager.getGameMap("map_test");
-        camera.setCamera(windowWidth , windowHeight , currentMap.getMapWidth() ,currentMap.getMapHeight());
-        pFinder = new PathFinder(currentMap);
-        tileManager = new TileManager(this);
-        environmentManager = new EnvironmentManager(currentMap);
-        environmentManager.setup();
-        environmentManager.lighting.setLightSource(2000);
+        switch(levelProgress){
+            case 1 : currentLevel = new Level01(this); break;
+            case 2 : currentLevel = new Level02(this); break;
+        }
+        currentMap = currentLevel.map;
+        ui = new UI(this);
+    }
+
+    public void restart(){
+        currentLevel.map.player.resetValue();
+        loadMap();
     }
 
     public void setup()
@@ -74,7 +80,6 @@ public class GamePanel extends JPanel implements Runnable {
         playMusic(0);
         se.setFile(1);
     }
-
 
     public void startGameThread() {
         gameState = GameState.MENU_STATE;
@@ -120,6 +125,8 @@ public class GamePanel extends JPanel implements Runnable {
         if(gameState == GameState.PLAY_STATE ) {
             resumeMusic(0);
             currentMap.update();
+            currentLevel.updateProgress();
+            if(currentLevel.canChangeMap) lvlManager.update();
             if(environmentManager.lighting.transit) environmentManager.lighting.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
@@ -136,7 +143,6 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
-        tileManager.render(g2);
         ui.render(g2);
 
         g2.dispose();

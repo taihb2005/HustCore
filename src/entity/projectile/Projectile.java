@@ -2,7 +2,6 @@ package entity.projectile;
 
 import entity.effect.EffectType;
 import entity.Entity;
-import entity.mob.Monster;
 import graphics.Animation;
 import map.GameMap;
 
@@ -72,14 +71,6 @@ public class Projectile extends Entity {
         return check1 | check2 | check3 | check4;
     }
 
-    public void slow(Entity e){
-        e.speed =(int)(e.last_speed * 0.5f);
-    }
-
-    public void stun(Entity e){
-        e.speed = 0;
-    }
-
     public void update() {
         if(user == mp.player){
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
@@ -125,6 +116,8 @@ public class Projectile extends Entity {
     }
     public void render(Graphics2D g2) {
         if (active) {
+//            System.out.println((projectile_sprite.length-1)+" "+(projectile_sprite[CURRENT_DIRECTION].length-1));
+//            System.out.println(CURRENT_DIRECTION+" "+CURRENT_FRAME);
             g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() ,
                          width , height , null);
         }

@@ -103,10 +103,6 @@ public class Obj_Chest extends Entity implements Actable {
         }
     }
 
-    public void setLoot(Item item){
-        reward.add(item);
-    }
-
     public void setLoot(Item item , int quantity){
         for(int i = 0 ; i < quantity ; i++) reward.add(item);
     }

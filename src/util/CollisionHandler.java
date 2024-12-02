@@ -2,6 +2,7 @@ package util;
 
 import entity.Entity;
 import entity.mob.Monster;
+import level.EventRectangle;
 import map.GameMap;
 
 import java.awt.*;
@@ -146,6 +147,17 @@ public class CollisionHandler {
             if(tmp3.intersects(tmp2)) {
                 entity.collisionOn = true;
             }
+        }
+    }
+
+    public void checkEvent(EventRectangle eventRect){
+        int newSolidAreaX1 = mp.player.worldX + mp.player.hitbox.x;
+        int newSolidAreaY1 = mp.player.worldY + mp.player.hitbox.y;
+
+        Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , mp.player.solidArea1.width , mp.player.solidArea1.height);
+
+        if(tmp1.intersects(eventRect)){
+
         }
     }
 

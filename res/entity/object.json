@@ -1,0 +1,75 @@
+{
+  "inactive": [
+    {
+      "object": "Obj_FilledTank",
+      "type": 1,
+      "position": { "x": 1408, "y": 1600 }
+    },
+    {
+      "object": "Obj_FilledTank",
+      "type": 1,
+      "position": { "x": 1664, "y": 1600 }
+    },
+    {
+      "object": "Obj_EmptyTank",
+      "position": { "x": 1472, "y": 1664 }
+    },
+    {
+      "object": "Obj_Television",
+      "type": 1,
+      "size": "big",
+      "state": "on",
+      "position": { "x": 1536, "y": 1664 }
+    },
+    {
+      "object": "Obj_Desk",
+      "type": 1,
+      "position": { "x": 1500, "y": 1500 }
+    },
+    {
+      "object": "Obj_Chair",
+      "type": 1,
+      "position": { "x": 1527, "y": 1573 }
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "off",
+      "position": { "x": 1527, "y": 1573 }
+    },
+    {
+      "object": "Obj_Bin",
+      "type" : 1,
+      "position": { "x":  1600 , "y": 1573}
+    }
+  ],
+  "active": [
+    {
+      "object": "Obj_Door",
+      "name": "door_butitisclosed",
+      "size": "smal",
+      "state": "inactive",
+      "position": { "x": 1408, "y": 1244 }
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "chest_no1",
+      "type": 1,
+      "position": { "x": 1500, "y": 1900 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 1 },
+        { "name": "Item_Battery", "quantity": 1 }
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "chest_no2",
+      "type": 1,
+      "position": { "x": 1400, "y": 1900 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 10 },
+        { "name": "Item_Battery", "quantity": 1 },
+        { "name": "Item_SpeedGem" , "quantity": 10}
+      ]
+    }
+  ]
+}
