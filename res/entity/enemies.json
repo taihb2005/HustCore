@@ -1,0 +1,33 @@
+
+{
+  "active": [
+    {
+      "object": "Obj_Cyborgon",
+      "name": "cyborgon",
+      "type": 2,
+      "position": { "x": 1400, "y": 1600 }
+    },
+    {
+      "object": "Obj_HustGuardian",
+      "name": "hust_guardian",
+      "type": 3,
+      "position": { "x": 1600, "y": 1700 }
+    },
+    {
+      "object": "Obj_Spectron",
+      "name": "spectron",
+      "type": 4,
+      "position": { "x": 1800, "y": 1900 }
+    },
+    {
+      "object": "Obj_Shooter",
+      "name": "shooter",
+      "type": 5,
+      "position": { "x": 1700, "y": 1600 },
+      "direction": ["left", "right"],
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    }
+    ]
+}
+
