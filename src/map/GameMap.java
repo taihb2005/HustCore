@@ -64,7 +64,6 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
-
         objList.add(player);
         for (Entity entity : inactiveObj) if(entity != null) objList.add(entity);
         for (Entity entity : activeObj) if(entity != null) objList.add(entity);
@@ -88,7 +87,6 @@ public class GameMap {
         {
             if(projectile != null) projectile.render(g2);
         }
-        //mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
         long drawTime;

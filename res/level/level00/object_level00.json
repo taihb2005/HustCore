@@ -205,8 +205,8 @@
       "size": "big",
       "state": "on",
       "type": 1,
-      "frame": 2,
-      "position": {"x": 640 , "y": 1728}
+      "frame": 1,
+      "position": {"x": 1248 , "y": 1728}
     },
     {
       "object": "Obj_Television",
@@ -225,41 +225,179 @@
       "position": {"x": 1984 , "y": 1728}
     },
     {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 3,
+      "position": {"x": 1088 , "y": 1792}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 800 , "y": 1600}
+    },
+    {
       "object": "Obj_Computer",
+      "direction": "front",
       "state": "off",
       "position": {"x": 64 , "y": 128}
     },
     {
       "object": "Obj_Computer",
+      "direction": "front",
       "state": "on",
       "position": {"x": 1536 , "y": 768}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1088 , "y": 1836}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1078 , "y": 1850}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1216 , "y": 1792}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1230 , "y": 1810}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 1344 , "y": 1792}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1345 , "y": 1810}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "inactive",
+      "position": {"x": 960 , "y": 1792}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 1024 , "y": 1792}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1088 , "y": 2048}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1152 , "y": 1984}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1024 , "y": 1984}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1216 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1280 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1344 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 832 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 896 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 960 , "y": 1920}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 1088 , "y": 1641}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 1088 , "y": 1677}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 2,
+      "position": {"x": 1152 , "y": 1753}
     }
   ],
   "active": [
     {
       "object": "Obj_Door",
+      "name": "Begin DoorMap 01",
       "size": "small",
       "state": "inactive",
-      "position": { "x": 1408, "y": 1244 }
+      "position": { "x": 832, "y": 1792 }
     },
     {
-      "object": "Obj_Chest",
-      "type": 1,
-      "position": { "x": 1500, "y": 1900 },
-      "items": [
-        { "name": "Item_Kit", "quantity": 1 },
-        { "name": "Item_Battery", "quantity": 1 }
-      ]
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 02",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 960, "y": 1600 }
     },
     {
-      "object": "Obj_Chest",
-      "type": 1,
-      "position": { "x": 1400, "y": 1900 },
-      "items": [
-        { "name": "Item_Kit", "quantity": 10 },
-        { "name": "Item_Battery", "quantity": 1 },
-        { "name": "Item_SpeedGem" , "quantity": 10}
-      ]
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 03",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 1088, "y": 2240 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "door_no1",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 64, "y": 0 }
     }
   ]
 }

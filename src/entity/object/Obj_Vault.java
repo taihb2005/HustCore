@@ -11,7 +11,7 @@ import static main.GamePanel.camera;
 public class Obj_Vault extends Entity {
     private BufferedImage obj_vault;
 
-    public Obj_Vault(String state , int id , int x , int y){
+    public Obj_Vault(String state , int type , int x , int y){
         super(x , y);
         name = "Vault";
         width = 64;
@@ -20,7 +20,7 @@ public class Obj_Vault extends Entity {
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         setDefaultSolidArea();
 
-        obj_vault = new Sprite("/entity/object/vault_" + state + "_id" + id +".png", width , height).getSpriteSheet();
+        obj_vault = new Sprite("/entity/object/vault_" + state + "_id" + type +".png", width , height).getSpriteSheet();
     }
     @Override
     public void update() {

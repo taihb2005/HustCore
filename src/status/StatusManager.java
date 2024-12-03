@@ -9,11 +9,11 @@ public class StatusManager {
     private int savedMana;
     private int savedLevel;
     private int savedExp;
-    private Item [] savedInventory = new Item[100];
+    private final Item [] savedInventory = new Item[100];
     private String direction;
 
     public StatusManager(){
-        worldX = 1400; worldY = 1700;
+        worldX = 1088; worldY = 2176;
         savedHP = 100;
         savedMana = 100;
         savedLevel = 1;

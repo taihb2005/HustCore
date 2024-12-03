@@ -6,6 +6,7 @@ import environment.EnvironmentManager;
 import level.AssetSetter;
 import level.Level;
 import level.LevelManager;
+import level.progress.Level00;
 import level.progress.Level01;
 import level.progress.Level02;
 import map.*;
@@ -42,8 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 2;
-    public static int levelProgress = 2;
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -64,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void loadMap()
     {
         switch(levelProgress){
+            case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
         }
@@ -91,7 +93,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-
         double drawInterval = (double) 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();

@@ -19,8 +19,10 @@ public class Level01 extends Level {
         map = MapManager.getGameMap("map3");
         map.gp = gp;
         init();
+        setter.setFilePathObject("res/level/level01/object_level01.json");
+        setter.setFilePathEnemy("res/level/level01/enemy_level00.json");
+        setter.loadAll();
 
         eventRect = new EventRectangle(64 , 0 , 128 , 32);
     }
-
 }

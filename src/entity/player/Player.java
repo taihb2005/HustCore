@@ -68,6 +68,7 @@ public class Player extends Entity {
 
     public Player(GameMap mp) {
         super();
+        name = "Player";
         this.mp = mp;
         width = 64;
         height = 64;

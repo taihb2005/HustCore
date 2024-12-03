@@ -121,12 +121,12 @@ public class MapParser {
         return new TileSet(firstid , lastid , tilewidth , tileheight , numrows , numcols , tilename);
     }
 
-    private static TileSet parseTSXfile(Element eElement)
-    {
+    private static TileSet parseTSXfile(Element eElement) {
         String tmp_file = eElement.getAttribute("source");
         String filepath = "res" + tmp_file.substring(2);
 
         TileSet tileSet = null;
+        int tileID = 0;
         try {
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -140,7 +140,7 @@ public class MapParser {
             int tileheight = Integer.parseInt(root.getAttribute("tileheight"));
 
             int tilecount = Integer.parseInt(root.getAttribute("tilecount"));
-            int firstid =  Integer.parseInt(eElement.getAttribute("firstgid"));
+            int firstid = Integer.parseInt(eElement.getAttribute("firstgid"));
             int lastid = firstid + tilecount - 1;
 
             int numcols = Integer.parseInt(root.getAttribute("columns"));
@@ -154,15 +154,14 @@ public class MapParser {
             //LẤY RA NHỮNG Ô CÓ OBJECT VÀ CHO VÀO HASHMAP
             NodeList list = doc.getElementsByTagName("tile");
 
-            HashMap<Integer , Rectangle[]> object = new HashMap<>();
+            HashMap<Integer, Rectangle[]> object = new HashMap<>();
             Rectangle[][] objList = new Rectangle[list.getLength()][2];
-            for(int i = 0 ; i < list.getLength() ; i++)
-            {
+            for (int i = 0; i < list.getLength(); i++) {
                 Element tileElement = (Element) list.item(i);
-                int tileID = Integer.parseInt(tileElement.getAttribute("id"));
+                tileID = Integer.parseInt(tileElement.getAttribute("id"));
 
                 NodeList objectGroupList = tileElement.getElementsByTagName("object");
-                for(int k = 0; k < objectGroupList.getLength() ; k++) {
+                for (int k = 0; k < objectGroupList.getLength(); k++) {
                     Element element1 = (Element) objectGroupList.item(k);
 
                     int x = Integer.parseInt(element1.getAttribute("x"));
@@ -170,15 +169,15 @@ public class MapParser {
                     int width = Integer.parseInt(element1.getAttribute("width"));
                     int height = Integer.parseInt(element1.getAttribute("height"));
 
-                    objList[i][k] = new Rectangle(x , y , width , height);
+                    objList[i][k] = new Rectangle(x, y, width, height);
                 }
-                object.put(tileID , objList[i]);
+                object.put(tileID, objList[i]);
             }
 
-            tileSet = new TileSet(firstid , lastid , tilewidth ,tileheight ,numrows , numcols , object ,tilename);
+            tileSet = new TileSet(firstid, lastid, tilewidth, tileheight, numrows, numcols, object, tilename);
 
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
+            System.out.println(tileID);
             e.printStackTrace();
         }
         return tileSet;

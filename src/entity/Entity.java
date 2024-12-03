@@ -15,6 +15,7 @@ public abstract class Entity {
     protected int CURRENT_FRAME;
 
     public String name;
+    public String idName = "";
     //POSITION
     public int worldX, worldY;
     public int newWorldX, newWorldY;

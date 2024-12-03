@@ -1,8 +1,7 @@
 package entity.json_stat;
-import java.util.List;
 
-public class Enemystat {
-    private String object;
+public class EnemyStat {
+    private String enemy;
     private String name;
     private int type;
     private Position position;
@@ -11,8 +10,8 @@ public class Enemystat {
     private int attackCycle;
 
     // Getter và Setter
-    public String getObject() { return object; }
-    public void setObject(String object) { this.object = object; }
+    public String getEnemy() { return enemy; }
+    public void setEnemy(String object) { this.enemy = object; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -31,6 +30,16 @@ public class Enemystat {
     public boolean isAlwaysUp() {return isAlwaysUp;}
 
     public int getAttackCycle() {return attackCycle;}
+    static class Position {
+        private int x;
+        private int y;
+
+        public int getX() { return x; }
+        public void setX(int x) { this.x = x; }
+
+        public int getY() { return y; }
+        public void setY(int y) { this.y = y; }
+    }
 }
 
 

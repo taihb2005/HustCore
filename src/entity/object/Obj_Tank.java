@@ -9,14 +9,14 @@ import java.awt.image.BufferedImage;
 
 import static main.GamePanel.camera;
 
-public class Obj_FilledTank extends Entity {
+public class Obj_Tank extends Entity {
     final private BufferedImage[] obj_filledTank;
     final private Animation obj_animator_filledTank;
     private int currentFrames = 0;
     public int type;
 
 
-    public Obj_FilledTank(int type)
+    public Obj_Tank(int type)
     {
         super();
         name = "Filled Tank";
@@ -30,7 +30,7 @@ public class Obj_FilledTank extends Entity {
 
         setDefault();
     }
-    public Obj_FilledTank(int type , int x , int y)
+    public Obj_Tank(int type , int x , int y)
     {
         super(x , y);
         name = "Filled Tank";
@@ -40,6 +40,25 @@ public class Obj_FilledTank extends Entity {
 
         obj_animator_filledTank = new Animation();
         obj_filledTank = new Sprite("/entity/object/filledtank_id" + type + ".png", width , height).getSpriteArrayRow(0);
+        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
+
+        setDefault();
+    }
+
+    public Obj_Tank(String state , int type , int x , int y) throws Exception
+    {
+        super(x , y);
+        name = "Tank";
+        super.width = 64;
+        super.height = 128;
+        this.type = type;
+
+        if(state.equals("empty") && type != 1){
+            throw new Exception("Cái Tank đã empty rồi thì để type = 1 nhé anh bạn!");
+        }
+
+        obj_animator_filledTank = new Animation();
+        obj_filledTank = new Sprite("/entity/object/tank_" + state + "_id"+ type +".png", width , height).getSpriteArrayRow(0);
         obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
 
         setDefault();

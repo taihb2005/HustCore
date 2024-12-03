@@ -13,24 +13,23 @@ import static main.GamePanel.environmentManager;
 public class Level{
     public GamePanel gp;
     public GameMap map;
-    EventHandler eventHandler;
+    protected EventHandler eventHandler;
     protected AssetSetter setter;
     protected EventRectangle eventRect;
     public boolean canChangeMap;
 
-    boolean levelFinished;
+    protected boolean levelFinished;
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
         pFinder = new PathFinder(map);
         setter = new AssetSetter(map);
-        setter.loadAll();
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();
         environmentManager.lighting.setLightSource(2000);
         eventHandler = new EventHandler(this);
         canChangeMap = false;
-        levelFinished = true;
+        levelFinished = false;
     };
     public void updateProgress(){
         if(levelFinished) eventHandler.detectEvent();

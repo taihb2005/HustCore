@@ -4,6 +4,7 @@ import java.util.List;
 
 public class GameObject {
     private String object;
+    private String direction;
     private String name;
     private int type;
     private int frame;
@@ -16,6 +17,9 @@ public class GameObject {
     // Getter và Setter
     public String getObject() { return object; }
     public void setObject(String object) { this.object = object; }
+
+    public void setDirection(String direction){this.direction = direction;}
+    public String getDirection(){return direction;}
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
