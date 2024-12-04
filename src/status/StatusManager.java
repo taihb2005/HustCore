@@ -13,7 +13,7 @@ public class StatusManager {
     private String direction;
 
     public StatusManager(){
-        worldX = 1088; worldY = 2176;
+        worldX = 0; worldY = 0;
         savedHP = 100;
         savedMana = 100;
         savedLevel = 1;

@@ -20,6 +20,8 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
+import static main.GamePanel.sManager;
+
 public class AssetSetter {
     GameMap mp;
     String filePathObject;
@@ -39,8 +41,12 @@ public class AssetSetter {
 
             Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {}.getType());
 
+            List<GameObject> player = data.get("player");
             List<GameObject> activeObjects = data.get("active");
             List<GameObject> inactiveObjects = data.get("inactive");
+
+            mp.player.setPosition(player.get(0).getX() , player.get(0).getY());
+            sManager.setPos(player.get(0).getX() , player.get(0).getY());
 
             for (GameObject obj : inactiveObjects) {
                 int X = obj.getX();

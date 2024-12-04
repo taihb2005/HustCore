@@ -1,4 +1,7 @@
 {
+  "player": [
+    {"position": {"x": 1088 , "y": 2174}}
+  ],
   "inactive": [
     {
       "object": "Obj_Television",

@@ -11,9 +11,9 @@ public class Sound {
     Clip clip;
     URL[] soundURL = new URL[30];
     FloatControl fc;
-    int volumeScale = 3;
+    int volumeScale = 6;
     float volume;
-    int volumePercentage = 100;
+    int volumePercentage = 60;
     long savedPos = 0;
     public Sound()
     {
@@ -67,10 +67,22 @@ public class Sound {
             throw new IllegalArgumentException("Volume must be between 0 and 100");
         }
 
-        // Chuyển đổi từ 0 - 100 thành -80 đến 6
-        float minVolume = -80.0f; // Mức âm lượng nhỏ nhất trong FloatControl
-        float maxVolume = 6.0f;   // Mức âm lượng lớn nhất trong FloatControl
-        float volume = minVolume + ((float) volumePercentage / 100.0f) * (maxVolume - minVolume);
+        switch (volumePercentage)
+        {
+            case 0 : volume = -80f; break;
+            case 10 : volume = -40f; break;
+            case 20 : volume = -30f; break;
+            case 30 : volume = -20f; break;
+            case 40 : volume = -12f; break;
+            case 50 : volume = -6f; break;
+            case 60 : volume = 0f; break;
+            case 70 : volume = 3f; break;
+            case 80 : volume = 4.5f; break;
+            case 90 : volume = 5.5f; break;
+            case 100: volume = 6f; break;
+            default: volume = -80f; break;
+        }
+
 
         if (fc != null) {
             fc.setValue(volume); // Cài đặt âm lượng cho FloatControl

@@ -57,8 +57,8 @@ public class UI {
         try {
             InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
-            joystix = Font.createFont(Font.TRUETYPE_FONT, is1);
-            maru= Font.createFont(Font.TRUETYPE_FONT , is2);
+            joystix = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(is1));
+            maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -358,7 +358,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 0) {
@@ -370,7 +370,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 1) {
@@ -535,7 +535,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 0) {
@@ -547,7 +547,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 1) {
@@ -619,7 +619,5 @@ public class UI {
         textY+=tileSize;
 
         g2.drawString("ENTER", textX, textY);
-
-
     }
 }
