@@ -197,6 +197,8 @@ public class UI {
         x = getXforCenteredText(text);
         y = windowHeight*3/5;
         g2.drawString(text, x, y);
+        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
         if(commandNum == 0){
             g2.drawString(">",x- tileSize, y);
         }
@@ -205,6 +207,8 @@ public class UI {
         x = getXforCenteredText(text);
         y = windowHeight*7/10;
         g2.drawString(text, x, y);
+        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 1){
             g2.drawString(">",x- tileSize, y);
         }
@@ -213,6 +217,8 @@ public class UI {
         x = getXforCenteredText(text);
         y = windowHeight*4/5;
         g2.drawString(text, x, y);
+        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 2){
             g2.drawString(">",x- tileSize, y);
         }
