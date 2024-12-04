@@ -31,6 +31,15 @@ public class Animation{
         this.currentFrames = 0;
     }
 
+    public void setAnimationState(BufferedImage[] frame , int initialFrame,int ani_Speed)
+    {
+        this.ani_Tick = 0;
+        this.ani_sprite = new ArrayList<>(Arrays.asList(frame));
+        this.ani_Speed = ani_Speed;
+        this.frameCounts = ani_sprite.size();
+        this.currentFrames = initialFrame;
+    }
+
     public void setAnimationState(BufferedImage[] frame ,int ani_Speed , boolean reset)
     {
         this.ani_Tick = 0;
@@ -69,5 +78,6 @@ public class Animation{
 
     public void setAnimationSpeed(int speed){this.ani_Speed = speed;}
     public int getCurrentFrames(){return currentFrames;}
+    public int getFrameCounts(){return frameCounts;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
 }

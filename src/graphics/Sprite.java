@@ -63,6 +63,7 @@ public class Sprite {
         {
             sprite = new BufferedImage(256 , 256 , BufferedImage.TYPE_INT_RGB);
             System.out.println("Failed to load sprite: " + filepath);
+            System.out.println("Sai tên file ở đâu đó kìa má! Xem lại mau");
         }
         return sprite;
     }

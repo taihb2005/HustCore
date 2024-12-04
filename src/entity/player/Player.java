@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.sManager;
 
 public class Player extends Entity {
 
@@ -43,14 +44,12 @@ public class Player extends Entity {
 
     private boolean isRunning;
     private boolean isShooting;
-    private boolean isReloading;
     public boolean isDying = false;
 
     private boolean attackCanceled;
     public final int screenX, screenY;
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
-    private final BufferedImage[][][] player_nogun = new BufferedImage[7][][];
     final protected Animation animator = new Animation();
 
     private int CURRENT_FRAME;
@@ -66,10 +65,10 @@ public class Player extends Entity {
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[100];
     public ItemHandler iHandler = new ItemHandler();
-    public StatusManager sManager = new StatusManager();
 
     public Player(GameMap mp) {
         super();
+        name = "Player";
         this.mp = mp;
         width = 64;
         height = 64;
@@ -92,14 +91,6 @@ public class Player extends Entity {
         projectile_name = "Basic Projectile";
         projectile = new Proj_BasicProjectile(mp);
         SHOOT_INTERVAL = projectile.maxHP + 5;
-        level = 1;
-        exp = 0;
-        set();
-
-        worldX = 1400;
-        worldY = 1700;
-        newWorldX = worldX;
-        newWorldY = worldY;
 
         attackCanceled = false;
         up = down = left = right = false;
@@ -111,9 +102,13 @@ public class Player extends Entity {
         animator.setAnimationState(player_gun[IDLE][RIGHT] , 5);
 
         Arrays.fill(inventory , null);
+        resetValue();
+    }
+
+    public void storeValue(){
         sManager.setPos(worldX , worldY);
-//        sManager.setSavedHP(maxHP);
-//        sManager.setSavedMana(maxMana);
+        sManager.setSavedHP(maxHP);
+        sManager.setSavedMana(maxMana);
         sManager.setLevel(level);
         sManager.setExp(exp);
         sManager.setInventory(inventory);
@@ -303,11 +298,11 @@ public class Player extends Entity {
         if(index != -1){
             attackCanceled = true;
             isInteracting = true;
-            if(KeyHandler.enterPressed)
-            {
-                KeyHandler.enterPressed = false;
-                mp.activeObj[index].isOpening = true;
-            }
+//            if(KeyHandler.enterPressed)
+//            {
+//                KeyHandler.enterPressed = false;
+//                mp.activeObj[index].isOpening = true;
+//            }
         }
     }
 
