@@ -3,12 +3,14 @@ package entity.mob;
 import entity.Actable;
 import entity.effect.type.Blind;
 import entity.projectile.Proj_Plasma;
+import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static main.GamePanel.camera;
 /*
@@ -28,82 +30,28 @@ public class Mon_Shooter extends Monster implements Actable {
     private final static int DOWN = 2;
     private final static int UP = 3;
 
-    private boolean isAlwaysUp;
+    private final boolean isAlwaysUp;
     private boolean canChangeState;
 
-    private int maxActiveTime = 1800;
+    private final int maxActiveTime = 1800;
     private int activeTimeCounter = 0;
     private int shotInterval = 120;
     private int shootCounter = 0;
+    private int shootSpeed = 10;
 
     private final BufferedImage[][][] mon_shooter = new BufferedImage[4][][];
     private final Animation mon_animator_shooter = new Animation();
     public int type;
-    public Mon_Shooter(GameMap mp){
-        super(mp);
-        this.mp = mp;
-        name = "Shooter";
-        this.type = IDLE;
-        width = 64;
-        height = 64;
-        speed = 0;
-        strength = 10;
-        level = 1;
 
-        getImage();
-        setDefault();
-    }
-    public Mon_Shooter(GameMap mp , int type){
-        super(mp);
-        this.mp = mp;
-        name = "Shooter";
-        this.type = type;
-        width = 64;
-        height = 64;
-        speed = 0;
-        strength = 10;
-        level = 1;
+    private ArrayList<Projectile> proj;
 
-        getImage();
-        setDefault();
-    }
-    public Mon_Shooter(GameMap mp , int type , boolean isAlwaysUp){
-        super(mp);
-        this.mp = mp;
-        name = "Shooter";
-        this.type = type;
-        this.isAlwaysUp = isAlwaysUp;
-        width = 64;
-        height = 64;
-        speed = 0;
-        strength = 10;
-        level = 1;
-
-        getImage();
-        setDefault();
-    }
-
-    public Mon_Shooter(GameMap mp , int type , int x , int y){
-        super(mp , x  ,y);
-        this.mp = mp;
-        name = "Shooter";
-        this.type = type;
-        width = 64;
-        height = 64;
-        speed = 0;
-        strength = 10;
-        level = 1;
-
-        getImage();
-        setDefault();
-    }
-
-    public Mon_Shooter(GameMap mp , int type , boolean isAlwaysUp , int x , int y){
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , int x , int y){
         super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
         this.type = type;
         this.isAlwaysUp = isAlwaysUp;
+        if(isAlwaysUp) this.type = ACTIVE;
         width = 64;
         height = 64;
         speed = 0;
@@ -112,6 +60,10 @@ public class Mon_Shooter extends Monster implements Actable {
 
         getImage();
         setDefault();
+        this.direction = direction;
+        changeAnimationDirection();
+        setInterval(shotInterval);
+        shootSpeed = Math.max(shotInterval / 5 , 1);
     }
 
     private void setDefault(){
@@ -120,12 +72,13 @@ public class Mon_Shooter extends Monster implements Actable {
         invincibleDuration = 60;
         projectile_name = "Plasma";
         projectile = new Proj_Plasma(mp);
+        proj = new ArrayList<>();
         effectDealOnTouch = new Blind(mp.player , 120);
         effectDealByProjectile = new Blind(mp.player , 600);
 
         expDrop = 20;
 
-        hitbox = new Rectangle (24 , 23 , 14 , 25);
+        hitbox = new Rectangle (18 , 37 , 24 , 24);
         solidArea1 = hitbox;
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         interactionDetectionArea = new Rectangle(-100 , -100 , width + 200 , height + 200);
@@ -175,6 +128,7 @@ public class Mon_Shooter extends Monster implements Actable {
      */
     public void updateAttackCycle() {
         if(type == ACTIVE && !isDying){
+            proj.removeIf(pr -> !pr.active);
             shootCounter++;
             if(shootCounter >= shotInterval){
                 isShooting = true;
@@ -185,8 +139,11 @@ public class Mon_Shooter extends Monster implements Actable {
 
     public void attack(){
         if(!isDying) {
-            projectile.set(worldX, worldY, direction, true, this);
-            mp.addObject(projectile , mp.projectiles);
+            Projectile bullet = new Proj_Plasma(mp);
+            bullet.set(worldX , worldY , direction , true , this);
+            bullet.setHitbox();
+            proj.add(bullet);
+            mp.addObject(bullet , mp.projectiles);
         }
     }
 
@@ -239,7 +196,7 @@ public class Mon_Shooter extends Monster implements Actable {
             if(PREVIOUS_ACTION != CURRENT_ACTION){
                 PREVIOUS_ACTION = CURRENT_ACTION;
                 if(isDying){
-                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 15);
+                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 10);
                     mon_animator_shooter.playOnce();
                 }
                 if(isIdle)mon_animator_shooter.setAnimationState(mon_shooter[IDLE][CURRENT_DIRECTION] , 100);
@@ -260,7 +217,7 @@ public class Mon_Shooter extends Monster implements Actable {
             if(PREVIOUS_ACTION != CURRENT_ACTION){
                 PREVIOUS_ACTION = CURRENT_ACTION;
                 if(isShooting){
-                    mon_animator_shooter.setAnimationState(mon_shooter[SHOOT][CURRENT_DIRECTION] , 25);
+                    mon_animator_shooter.setAnimationState(mon_shooter[SHOOT][CURRENT_DIRECTION] , shootSpeed);
                     mon_animator_shooter.playOnce();
                 }
                 if(isDying){
@@ -283,7 +240,7 @@ public class Mon_Shooter extends Monster implements Actable {
 
     @Override
     public void update() {
-        checkForPlayer();
+        if(!isAlwaysUp)checkForPlayer();
         updateAttackCycle();
         updateInvincibility();
         handleAnimationState();

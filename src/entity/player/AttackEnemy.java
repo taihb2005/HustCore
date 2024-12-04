@@ -47,6 +47,8 @@ public class AttackEnemy {
     public void damageCyborgon(int index){
         if(!mp.enemy[index].isInvincible) {
             mp.enemy[index].canChangeState = true;
+            mp.enemy[index].getAggro = true;
+            mp.enemy[index].onPath = true;
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
             System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");

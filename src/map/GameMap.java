@@ -21,7 +21,6 @@ public class GameMap {
 
     public GamePanel gp;
     public Player player = new Player(this);
-    public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
@@ -48,7 +47,7 @@ public class GameMap {
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new Entity[300];
+        inactiveObj = new Entity[500];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
         enemy       = new Monster[100];
@@ -58,52 +57,24 @@ public class GameMap {
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.maxWorldCol = (mapWidth / childNodeSize ) ;
-        this.maxWorldRow = (mapHeight/ childNodeSize) ;
+        this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
 
-        setter.setObject();
-        setter.setNpc();
-        setter.setEnemy();
     }
 
     public void render(Graphics2D g2)
     {
-
         objList.add(player);
-        for (Entity entity : inactiveObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
+        for (Entity entity : inactiveObj) if(entity != null) objList.add(entity);
+        for (Entity entity : activeObj) if(entity != null) objList.add(entity);
+        for (Entity entity : npc) if(entity != null) objList.add(entity);
+        for (Entity entity : enemy) if(entity != null) objList.add(entity);
 
-        for (Entity entity : activeObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
-
-        for(Entity entity : npc)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-        for(Entity entity : enemy)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-
-            //System.out.println(target.get(0) == null);
-
-            Collections.sort(objList, (e1, e2) -> {
-                int index;
-                index = Integer.compare(e1.worldY, e2.worldY);
-                return index;
-            });
+        Collections.sort(objList, (e1, e2) -> {
+            int index;
+            index = Integer.compare(e1.worldY, e2.worldY);
+            return index;
+        });
 
         long lasttime = System.nanoTime();
         mapLayer.get(0).render(g2); //Base Layer
@@ -116,7 +87,6 @@ public class GameMap {
         {
             if(projectile != null) projectile.render(g2);
         }
-        mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
         long drawTime;
@@ -135,7 +105,7 @@ public class GameMap {
             g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
             g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
             g2.drawString("Draw time: " + drawTime, x, y + lineHeight * 4);
-            g2.drawString("Time has passed: " + (System.nanoTime() - startTime) / 1000000000 , x , y + lineHeight * 5);
+            g2.drawString("FPS: " + gp.currentFPS , x , y + lineHeight * 5);
         }
 
         //DEBUG HITBOX
