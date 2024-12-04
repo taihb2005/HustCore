@@ -169,8 +169,7 @@ public class AssetSetter {
 
                 case "Obj_Shooter":
                     String directions = enemy.getDirection();
-                    Mon_Shooter shooter = new Mon_Shooter(mp, directions, enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getX(), enemy.getY()
-                    );
+                    Mon_Shooter shooter = new Mon_Shooter(mp, directions, enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getX(), enemy.getY());
                     mp.addObject(shooter, mp.enemy);
 
             }
