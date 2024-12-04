@@ -39,16 +39,17 @@ public class KeyHandler implements KeyListener{
         int keyCode = e.getKeyCode();
 
         if (GamePanel.gameState == GameState.MENU_STATE) {
+            int maxCommandNum = 2;
             if(keyCode == KeyEvent.VK_W){
                 GamePanel.ui.commandNum--;
                 if(GamePanel.ui.commandNum < 0){
-                    GamePanel.ui.commandNum = 0;
+                    GamePanel.ui.commandNum = maxCommandNum;
                 }
             }
             if(keyCode == KeyEvent.VK_S){
                 GamePanel.ui.commandNum++;
-                if(GamePanel.ui.commandNum > 2){
-                    GamePanel.ui.commandNum = 2;
+                if(GamePanel.ui.commandNum > maxCommandNum){
+                    GamePanel.ui.commandNum = 0;
                 }
             }
             if (keyCode == KeyEvent.VK_ENTER) {
@@ -200,11 +201,6 @@ public class KeyHandler implements KeyListener{
         if(GamePanel.gameState == GameState.LOSE_STATE)
         {
             int maxCommandNum = 2;
-
-            /*if(keyCode == KeyEvent.VK_SPACE)
-            {
-                GamePanel.gameState = GameState.MENU_STATE;
-            } */
             if(keyCode == KeyEvent.VK_W)
             {
                 GamePanel.ui.commandNum--;

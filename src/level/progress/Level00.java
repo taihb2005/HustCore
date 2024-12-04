@@ -13,7 +13,7 @@ public class Level00 extends Level {
     private boolean finishedTutorialDialogue = false;
     public Level00(GamePanel gp){
         this.gp = gp;
-        MapParser.loadMap( "map0" ,"res/map/map_special.tmx");
+        MapParser.loadMap( "map0" ,"res/map/map_test.tmx");
         map = MapManager.getGameMap("map0");
         map.gp = gp;
         init();

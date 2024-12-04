@@ -193,7 +193,7 @@ public class UI {
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "BẮT ĐẦU";
+        text = "Start Game";
         x = getXforCenteredText(text);
         y = windowHeight*3/5;
         g2.drawString(text, x, y);
@@ -201,7 +201,7 @@ public class UI {
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "TÙY CHỈNH";
+        text = "Settings";
         x = getXforCenteredText(text);
         y = windowHeight*7/10;
         g2.drawString(text, x, y);
@@ -209,7 +209,7 @@ public class UI {
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "THOÁT";
+        text = "QUIT";
         x = getXforCenteredText(text);
         y = windowHeight*4/5;
         g2.drawString(text, x, y);
