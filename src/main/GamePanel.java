@@ -2,8 +2,7 @@ package main;
 
 // awt library
 import ai.PathFinder;
-import environment.EnvironmentManager;
-import level.AssetSetter;
+import graphics.environment.EnvironmentManager;
 import level.Level;
 import level.LevelManager;
 import level.progress.Level00;
@@ -17,7 +16,6 @@ import java.awt.*;
 
 // swing library
 import javax.swing.JPanel;
-import javax.swing.text.AbstractDocument;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -59,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
+        setup();
         currentMap.player.storeValue();
     }
 
@@ -133,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.update();
             currentLevel.updateProgress();
             if(currentLevel.canChangeMap) lvlManager.update();
-            if(environmentManager.lighting.transit) environmentManager.lighting.update();
+            environmentManager.lighting.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {

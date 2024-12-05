@@ -1,11 +1,9 @@
 package level;
 
 import ai.PathFinder;
-import environment.EnvironmentManager;
+import graphics.environment.EnvironmentManager;
 import main.GamePanel;
 import map.GameMap;
-import map.MapManager;
-import map.MapParser;
 
 import static main.GamePanel.*;
 import static main.GamePanel.environmentManager;
@@ -26,7 +24,7 @@ public class Level{
         setter = new AssetSetter(map);
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();
-        environmentManager.lighting.setLightSource(2000);
+        environmentManager.lighting.setLightRadius(map.getBestLightingRadius());
         eventHandler = new EventHandler(this);
         canChangeMap = false;
         levelFinished = false;
