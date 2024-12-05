@@ -239,13 +239,12 @@ public class Mon_HustGuardian extends Monster implements Actable {
         boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
         boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
         boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
-
-        if(check3TilesAway && checkShootInterval && checkIfConcurent){
+        if (check3TilesAway && checkShootInterval && checkIfConcurent) {
             isShooting = true;
-            if(posCol < playerCol) direction = "right"; else
-                if(posCol >  playerCol) direction = "left"; else
-                    if(posRow < playerRow) direction = "down"; else
-                        direction = "up";
+            if(worldX < mp.player.worldX) direction = "right"; else
+            if(worldX > mp.player.worldX) direction = "left"; else
+            if(worldY < mp.player.worldY) direction = "down"; else
+                direction = "up";
             attack();
         }
         isRunning = !isShooting;

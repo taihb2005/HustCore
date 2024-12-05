@@ -9,6 +9,7 @@ import static main.GamePanel.camera;
 
 public class Proj_ExplosivePlasma extends Projectile{
     private int diameter = 0;
+    private int timeCount = 0;
     private float hue = 0f;
     public Proj_ExplosivePlasma(GameMap mp) {
         super(mp);
@@ -21,7 +22,7 @@ public class Proj_ExplosivePlasma extends Projectile{
         slowDuration = 180;
         manaCost = 20;
         direction = "right";
-        hitbox = new Rectangle(28 , 30 , 6 , 8);
+        hitbox = new Rectangle(0 , 0 , 6 , 8);
         solidArea1 = hitbox;
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();
@@ -35,7 +36,11 @@ public class Proj_ExplosivePlasma extends Projectile{
 
     //DOAN NAY CODE NOT DI NHA
     public void damagePlayer() {
-        if (Math.pow(mp.player.worldX-worldX,2) + Math.pow(mp.player.worldY-worldY,2) < diameter*diameter) mp.player.currentHP -= 1;
+        timeCount++;
+        if (Math.pow(mp.player.worldX-worldX,2) + Math.pow(mp.player.worldY-worldY,2) < diameter*diameter-10 && timeCount >= 100) {
+            timeCount = 0;
+            mp.player.currentHP -= 1;
+        }
     }
 
     @Override
@@ -53,7 +58,13 @@ public class Proj_ExplosivePlasma extends Projectile{
         // Set màu sắc cho nét vẽ
         g2.setColor(dynamicColor);
         actionPerformed();
-        g2.drawOval((worldX + (int) (width*0.6) - diameter / 2) - camera.getX(), (worldY + (int) (height * 0.7) - diameter / 2) - camera.getY(), diameter, diameter);
+        int centerX = worldX + 32;
+        int centerY = worldY + 32;
+        int drawX = centerX - diameter / 2 - camera.getX();
+        int drawY = centerY - diameter / 2 - camera.getY();
+
+        // Vẽ đường tròn với tâm chính xác
+        g2.drawOval(drawX, drawY, diameter, diameter);
     }
 
     public void actionPerformed() {

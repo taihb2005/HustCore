@@ -6,7 +6,7 @@ import map.GameMap;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class PathFinder {
+public class PathFinder2 {
 
     GameMap mp;
     Node[][] node;
@@ -16,7 +16,7 @@ public class PathFinder {
     boolean goalReached = false;
     int step = 0;
 
-    public PathFinder(GameMap mp) {
+    public PathFinder2(GameMap mp) {
         this.mp = mp;
         instantiateNodes();
     }
@@ -198,5 +198,3 @@ public class PathFinder {
         }
     }
 }
-
-
