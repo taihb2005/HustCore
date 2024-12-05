@@ -1,6 +1,7 @@
 package level;
 
 import ai.PathFinder;
+import ai.PathFinder2;
 import environment.EnvironmentManager;
 import main.GamePanel;
 import map.GameMap;
@@ -22,7 +23,7 @@ public class Level{
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
-        pFinder = new PathFinder(map);
+        pFinder = new PathFinder2(map);
         setter = new AssetSetter(map);
         setter.loadAll();
         environmentManager = new EnvironmentManager(map);

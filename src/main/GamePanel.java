@@ -2,6 +2,7 @@ package main;
 
 // awt library
 import ai.PathFinder;
+import ai.PathFinder2;
 import environment.EnvironmentManager;
 import level.AssetSetter;
 import level.Level;
@@ -33,7 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static PathFinder pFinder;
+    public static PathFinder2 pFinder;
+    public TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
@@ -41,8 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 2;
-    public static int levelProgress = 2;
+    public static int previousLevelProgress = 1;
+    public static int levelProgress = 1;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -66,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
         }
+        tileManager = new TileManager(this);
         currentMap = currentLevel.map;
         ui = new UI(this);
     }
@@ -144,7 +147,7 @@ public class GamePanel extends JPanel implements Runnable {
             environmentManager.draw(g2);
         }
         ui.render(g2);
-
+        tileManager.render(g2);
         g2.dispose();
     }
 

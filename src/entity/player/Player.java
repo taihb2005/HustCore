@@ -75,7 +75,7 @@ public class Player extends Entity {
         last_speed = speed;
 
         hitbox = new Rectangle(25 , 40 , 15 , 20);
-        solidArea1 = new Rectangle(26 , 52 , 13 , 6);
+        solidArea1 = new Rectangle(26 , 52 , 18 , 6);
         setDefaultSolidArea();
 
         screenX = GamePanel.windowWidth/2 - 32;

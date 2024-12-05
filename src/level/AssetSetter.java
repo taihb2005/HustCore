@@ -143,13 +143,14 @@ public class AssetSetter {
 
     public void setEnemy()
     {
-//        Mon_Boss boss = new Mon_Boss(mp , 1300 , 1600);
-//        mp.addObject(boss, mp.enemy);
+//       Mon_Boss boss = new Mon_Boss(mp , 1500 , 1600);
+        Mon_HustGuardian boss2 = new Mon_HustGuardian(mp, 1600, 1600);
+        mp.addObject(boss2, mp.enemy);
     }
 
     public void loadAll(){
-        setObject();
-        setNpc();
+//        setObject();
+//        setNpc();
         setEnemy();
     }
 }

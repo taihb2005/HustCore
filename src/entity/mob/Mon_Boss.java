@@ -30,9 +30,10 @@ public class Mon_Boss extends Monster implements Actable {
     public final static int RIGHT = 0;
     public final static int LEFT = 1;
 
+    private int CURRENT_SKILL = 1;
     private final BufferedImage[][][] mon_boss = new BufferedImage[7][][];
     private final Animation mon_animator_boss = new Animation();
-    private int actionLockCounter = 0;
+    private int actionLockCounter = 550;
     private final int changeDirCounter = 240;
 
     private int shootTimer = 0;
@@ -62,9 +63,9 @@ public class Mon_Boss extends Monster implements Actable {
     public Mon_Boss(GameMap mp){
         super(mp);
         name = "Boss";
-        width = 128;
-        height = 128;
-        speed = 1;
+        width = 64;
+        height = 64;
+        speed = 2;
 
         getImage();
         setDefault();
@@ -92,9 +93,10 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     private void setDefault(){
-        hitbox = new Rectangle(22 , 24 , 128 , 128);
-        solidArea1 = new Rectangle(24 , 42 , 19 , 18);
+        hitbox = new Rectangle(20 , 40 , 80 , 80);
+        solidArea1 = new Rectangle(20 , 110 , 90 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+        interactionDetectionArea = new Rectangle(-50 , -50 , width + 100 , height + 100);
         setDefaultSolidArea();
 
         invincibleDuration = 30;
@@ -130,28 +132,27 @@ public class Mon_Boss extends Monster implements Actable {
         }
     }
 
-    private void setAction()
-    {
-        actionLockCounter++;
-        if (actionLockCounter >= 100 && !isShooting1 && !isShooting2 && !isShooting3 && !isDying) {
-            Random random = new Random();
-            int i = random.nextInt(300) + 1;  // pick up  a number from 1 to 100
-            if (i <= 99 && !projectile1.active) {
-                actionWhileShoot1();
+    private void setAction() {
+        switch (CURRENT_SKILL) {
+            case 1: actionWhileShoot1();
+            actionLockCounter--;
+            if (actionLockCounter == 0) {
+                CURRENT_SKILL = 2;
+                actionLockCounter = 100;
             }
-            if (i > 99 && i <= 199) {
-                actionWhileShoot2();
+            break;
+            case 2: actionWhileShoot2();
+            actionLockCounter--;
+            if (actionLockCounter == 0) CURRENT_SKILL = 3;
+            break;
+            case 3: actionWhileShoot3();
+            if (currentColumn >= 10) {
+                CURRENT_SKILL = 1;
+                actionLockCounter = 100;
+                currentColumn = 1;
             }
-            if (i > 199) {
-                actionWhileShoot3();
-            }
-            actionLockCounter = 0; // reset
-            isRunning = !isShooting1 && !isShooting2 && !isShooting3 && (right | left | up | down);
+            break;
         }
-        if(isShooting3) {
-            shootTimer++;
-            actionWhileShoot3();
-        };
     }
 
     @Override
@@ -298,19 +299,19 @@ public class Mon_Boss extends Monster implements Actable {
     }
     public void shoot2() {
         if(!projectile2.active && shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile2.set(worldX+50, worldY+30, direction, true, this);
+            projectile2.set(worldX+78, worldY+60, direction, true, this);
             projectile2.setHitbox();
             projectile2.setSolidArea();
             mp.addObject(projectile2, mp.projectiles);
             shootAvailableCounter = 0;
         }
     }
-    public void createFlameColumn() {
+    public void createFlameColumn(int isLeft) {
             shootAvailableCounter++;
             if (shootAvailableCounter >= 10) {
                 for (int j = 1; j <= 5; j++) {
                     Projectile newFlame = new Proj_Flame(mp);
-                    newFlame.set(worldX + 50 * currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
+                    newFlame.set(worldX + 50 * isLeft* currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
                     newFlame.setHitbox();
                     newFlame.setSolidArea();
                     proj.add(newFlame);
@@ -330,18 +331,22 @@ public class Mon_Boss extends Monster implements Actable {
         int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
         int posCol = (worldX + solidArea1.x) / childNodeSize;
         int posRow = (worldY + solidArea1.y) / childNodeSize;
-
-        searchPath(playerCol , playerRow);
+        int isLeft = (worldX < mp.player.worldX)?-1:1;
+        int desCol = playerCol;
+        int desRow = playerRow;
+        searchPath(desCol , desRow);
         decideToMove();
 
-        boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
+        boolean check3TilesAway = (Math.abs(desCol - posCol) <= 12) || (Math.abs(desRow - posRow) <= 12);
         boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
-        boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
-        if(check3TilesAway && checkShootInterval && checkIfConcurent){
+        boolean checkIfConcurent = (Math.abs(desCol - posCol) == 0) || (Math.abs(desRow - posRow) == 0);
+        if (check3TilesAway && checkShootInterval && checkIfConcurent) {
             isShooting2 = true;
-            if(posCol < playerCol) direction = "right"; else
-            if(posCol >  playerCol) direction = "left"; else
-            if(posRow < playerRow) direction = "down"; else
+            if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {
+                if(worldX < mp.player.worldX)  direction = "right";
+                else if(worldX > mp.player.worldX) direction = "left";
+            }
+             else if(worldY < mp.player.worldY) direction = "down"; else
                 direction = "up";
             shoot2();
         }
@@ -349,8 +354,7 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     public void actionWhileShoot3() {
-        System.out.println(currentColumn);
-        // Kích hoạt trạng thái bắn
+        // Kích hoạt trạng thái bắn nếu chưa bắt đầu
         if (!isShooting3) {
             shoot3 = true;
             isShooting3 = true;
@@ -358,15 +362,21 @@ public class Mon_Boss extends Monster implements Actable {
             shootTimer = 0; // Reset shootTimer
             currentColumn = 1; // Reset vị trí cột lửa
         }
-        // Xử lý bắn khi đang ở trạng thái bắn
+
+        // Xử lý trạng thái bắn
         if (isShooting3) {
+            shootTimer++; // Tăng timer mỗi frame
             if (shootTimer >= 10) {
-                createFlameColumn(); // Tạo cột lửa
-                shootTimer = 0; // Reset timer
+                int isLeft = direction.equals("left") ? -1 : 1;
+                createFlameColumn(isLeft); // Tạo cột lửa
+                shootTimer = 0; // Reset timer sau khi bắn
             }
-            if (currentColumn > 20) {
+
+            // Dừng bắn sau khi hoàn thành 10 cột lửa
+            if (currentColumn > 10) {
                 currentColumn = 1;
                 isShooting3 = false;
+                shoot3 = false;
             }
         }
     }
