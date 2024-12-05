@@ -11,12 +11,13 @@ import static main.GamePanel.environmentManager;
 public class Level{
     public GamePanel gp;
     public GameMap map;
-    protected EventHandler eventHandler;
     protected AssetSetter setter;
-    protected EventRectangle eventRect;
+    protected EventRectangle changeMapEventRect;
     public boolean canChangeMap;
 
-    protected boolean levelFinished;
+    public boolean levelFinished;
+    public boolean finishedBeginingDialogue = false;
+    public boolean finishedTutorialDialogue = false;
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
@@ -25,11 +26,10 @@ public class Level{
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();
         environmentManager.lighting.setLightRadius(map.getBestLightingRadius());
-        eventHandler = new EventHandler(this);
         canChangeMap = false;
         levelFinished = false;
     };
     public void updateProgress(){
-        if(levelFinished) eventHandler.detectEvent();
+
     }
 }

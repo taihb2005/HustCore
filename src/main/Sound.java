@@ -13,7 +13,7 @@ public class Sound {
     FloatControl fc;
     int volumeScale = 6;
     float volume;
-    int volumePercentage = 60;
+    int volumePercentage = 0;
     long savedPos = 0;
     public Sound()
     {

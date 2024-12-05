@@ -2,8 +2,11 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.lang.System.exit;
+import static main.GamePanel.environmentManager;
 
 public class KeyHandler implements KeyListener{
 
@@ -22,6 +25,7 @@ public class KeyHandler implements KeyListener{
     public static boolean key3pressed;
     public static boolean key4pressed;
     public static boolean key5pressed;
+    private Timer timer = new Timer();
 
 
     public KeyHandler(GamePanel gp)
@@ -53,9 +57,17 @@ public class KeyHandler implements KeyListener{
             }
             if (keyCode == KeyEvent.VK_ENTER) {
                 if(GamePanel.ui.commandNum == 0){
-                    gp.restart();
-                    GamePanel.gameState = GameState.PLAY_STATE;
-
+                    disableKey();
+                    gp.darker = true;
+                    TimerTask startToPlayAnimation = new TimerTask() {
+                        @Override
+                        public void run() {
+                            gp.restart();
+                            GamePanel.gameState = GameState.PLAY_STATE;
+                            gp.lighter = true;
+                        }
+                    };
+                    timer.schedule(startToPlayAnimation , 1500);
                 }
                 if(GamePanel.ui.commandNum == 1){
                     GamePanel.gameState = GameState.SETTING_STATE;

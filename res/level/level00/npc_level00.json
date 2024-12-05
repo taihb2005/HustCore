@@ -4,7 +4,43 @@
       "name": "Chill Guy",
       "dialogue": [
                     [
-                      "Sau đoạn hội thoại này cửa sẽ mở!"
+                      "Xin chào!",
+                      "Nếu bạn đã hiểu nhiệm vụ của mình\nrồi. Xin hãy đi qua cửa phía nam.",
+                      "Nếu không, tôi có thể giải thích\ncho bạn."
+                    ],
+                    [
+                      "Có vẻ như bạn là một chiến binh\nmới ở đây",
+                      "Nơi này đang dần dần bị tha hóa\nbởi những con AI!",
+                      "Nếu bạn tò mò,nơi này đã từng\nlà một trường ĐH danh giá!",
+                      "Bởi một sự cố của trung tâm máy\ntính mà toàn bộ con AI đều mất\nkiểm soát",
+                      "Chúng tấn công toàn bộ người\ntrong ĐH và bắt đầu mở rộng\nđến nơi khác!",
+                      "Những người không may bị chúng\nbắt đều bị đem về làm thí nghiệm\nbiến đổi",
+                      "Tôi không rõ lắm, nhưng nếu thất\nbại thì họ sẽ biến thành\ngiống tôibây giờ!",
+                      "Tình huống tệ cực tệ, như lúc\nKhoa Toán bắt đầu trả điểm XSTK\nvậy...",
+                      "Cơ mà, nếu thí nghiệm thất bại\nthì toàn bộ sẽ biến thành bộ dạng\ngiống tôi bây giờ.",
+                      "Nếu bạn gặp ai như tôi thì đừng\nlo. Họ không nguy hiểm đâu!",
+                      "Tôi thấy bạn là một chiến binh\ndũng cảm. Đã từng có nhiều người\nđến cứu.",
+                      "Nhưng tất cả đều không quay trở\nlại.",
+                      "Thông cảm cho bộ dạng thờ ơ này\ncủa tôi. Tại vì chúng tôi cũng\ndần mất hi vọng...",
+                      "Tuy nhiên nhỡ đâu bạn lại làm\nđược.",
+                      "Nếu bạn cần giúp đỡ thì tôi luôn\nở đây giúp đỡ nhé!",
+                      "Chúc bạn thành công và sống sót\ntrở về!"
+                    ],
+                    [
+                      "Như bạn có thể thấy, toàn bộ cửa\nđều đã được mở!",
+                      "Nếu bạn đã hiểu nhiệm vụ thì\nhãy đi về phía nam. Còn không thì\nhãy ở lại nghe tôi hướng dẫn."
+                    ],
+                    [
+                      "Sử dụng nút WASD để di chuyển\nSử dụng Enter để tấn công!",
+                      "Tuy nhiên mỗi lần tấn công tiêu\nhao một lượng mana. Nên hãy\nsử dụng hợp lí.",
+                      "Nhấn E để đóng/mở túi đồ.",
+                      "Nhấn 1, 2 , 3 , 4 , 5 để sử dụng\nvật phẩm",
+                      "Phía trước có một người bị điều\nkhiển bởi con AI trung tâm!",
+                      "Tiêu diệt nó khiến năng lượng\ndần bị suy yếu. Và mọi người sẽ\ndần trở về bình thuòng.",
+                      "Tuy nhiên phía trước nó đã gài\nbẫy nên hãy cẩn thận.",
+                      "Qua mỗi cái bẫy của nó, có thể\ncó rương thưởng để nhận được\nvật phẩm.",
+                      "Hãy sử dụng thật hợp lí!",
+                      "Và bây giờ chúc may mắn!"
                     ]
                   ],
       "direction": "right",
