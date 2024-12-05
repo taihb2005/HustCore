@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static main.GamePanel.camera;
-import static main.GamePanel.sManager;
+import static main.GamePanel.*;
 
 public class Player extends Entity {
 
@@ -68,6 +67,7 @@ public class Player extends Entity {
 
     public Player(GameMap mp) {
         super();
+        name = "Player";
         this.mp = mp;
         width = 64;
         height = 64;
@@ -478,5 +478,11 @@ public class Player extends Entity {
                 g2.drawImage(effect.get(i).icon , positionX , positionY , null);
             }
         }
+    }
+
+    public void setPosition(int x , int y){
+        worldX = x;
+        worldY = y;
+        newWorldX = worldX; newWorldY = worldY;
     }
 }

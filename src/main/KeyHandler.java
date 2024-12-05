@@ -2,8 +2,11 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.lang.System.exit;
+import static main.GamePanel.environmentManager;
 
 public class KeyHandler implements KeyListener{
 
@@ -16,11 +19,13 @@ public class KeyHandler implements KeyListener{
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
     public static boolean godModeOn = false;
+    public static boolean keyEpressed = false;
     public static boolean key1pressed;
     public static boolean key2pressed;
     public static boolean key3pressed;
     public static boolean key4pressed;
     public static boolean key5pressed;
+    private Timer timer = new Timer();
 
 
     public KeyHandler(GamePanel gp)
@@ -52,9 +57,17 @@ public class KeyHandler implements KeyListener{
             }
             if (keyCode == KeyEvent.VK_ENTER) {
                 if(GamePanel.ui.commandNum == 0){
-                    gp.restart();
-                    GamePanel.gameState = GameState.PLAY_STATE;
-
+                    disableKey();
+                    gp.darker = true;
+                    TimerTask startToPlayAnimation = new TimerTask() {
+                        @Override
+                        public void run() {
+                            gp.restart();
+                            GamePanel.gameState = GameState.PLAY_STATE;
+                            gp.lighter = true;
+                        }
+                    };
+                    timer.schedule(startToPlayAnimation , 1500);
                 }
                 if(GamePanel.ui.commandNum == 1){
                     GamePanel.gameState = GameState.SETTING_STATE;
@@ -99,6 +112,9 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_ENTER)
             {
                 enterPressed = true;
+            }
+            if(keyCode == KeyEvent.VK_E){
+                keyEpressed = true;
             }
             if(keyCode == KeyEvent.VK_1)
             {
@@ -317,6 +333,7 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_D: rightPressed = false; break;
             case KeyEvent.VK_W: upPressed = false; break;
             case KeyEvent.VK_ENTER: enterPressed = false; break;
+            case KeyEvent.VK_E: keyEpressed = false ; break;
             case KeyEvent.VK_1: key1pressed = false; break;
             case KeyEvent.VK_2: key2pressed = false; break;
             case KeyEvent.VK_3: key3pressed = false; break;
@@ -333,5 +350,11 @@ public class KeyHandler implements KeyListener{
         enterPressed = false;
         showHitbox = false;
         showDebugMenu = false;
+        keyEpressed = false;
+        key1pressed = false;
+        key2pressed = false;
+        key3pressed = false;
+        key4pressed = false;
+        key5pressed = false;
     }
 }

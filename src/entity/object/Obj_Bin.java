@@ -11,16 +11,16 @@ import static main.GamePanel.camera;
 public class Obj_Bin extends Entity {
     private final BufferedImage obj_bin;
 
-    public Obj_Bin(int id , int x , int y) throws Exception{
+    public Obj_Bin(int type, int x , int y) throws Exception{
         super(x , y);
         name = "Bin";
         width = 64;
         height = 64;
 
-        if(id > 2 || id <= 0) throw new Exception("Xem lại id của nó mau, id <= 2");
+        if(type > 2 || type <= 0) throw new Exception("Xem lại type của nó mau, type <= 2");
 
-        obj_bin = new Sprite("/entity/object/bin_id" + id + ".png" , width , height).getSpriteSheet();
-        solidArea1 = new Rectangle(22 , 45 , 28 , 14);
+        obj_bin = new Sprite("/entity/object/bin_id" + type + ".png" , width , height).getSpriteSheet();
+        solidArea1 = new Rectangle(22 , 45 , 18 , 14);
         solidArea2 = new Rectangle(24 , 58 , 14 , 6);
         setDefaultSolidArea();
     }

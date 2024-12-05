@@ -1,8 +1,7 @@
 package level;
 
 import ai.PathFinder;
-import ai.PathFinder2;
-import environment.EnvironmentManager;
+import graphics.environment.EnvironmentManager;
 import main.GamePanel;
 import map.GameMap;
 import map.MapManager;
@@ -16,24 +15,24 @@ public class Level{
     public GameMap map;
     EventHandler eventHandler;
     protected AssetSetter setter;
-    protected EventRectangle eventRect;
+    protected EventRectangle changeMapEventRect;
     public boolean canChangeMap;
 
-    boolean levelFinished;
+    public boolean levelFinished;
+    public boolean finishedBeginingDialogue = false;
+    public boolean finishedTutorialDialogue = false;
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
-        pFinder = new PathFinder2(map);
+        pFinder = new PathFinder(map);
         setter = new AssetSetter(map);
-        setter.loadAll();
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();
-        environmentManager.lighting.setLightSource(2000);
-        eventHandler = new EventHandler(this);
+        environmentManager.lighting.setLightRadius(map.getBestLightingRadius());
         canChangeMap = false;
-        levelFinished = true;
+        levelFinished = false;
     };
     public void updateProgress(){
-        if(levelFinished) eventHandler.detectEvent();
+
     }
 }

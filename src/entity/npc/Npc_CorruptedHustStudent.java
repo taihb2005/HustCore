@@ -37,6 +37,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private final Animation npc_animator_corruptedStudent;
 
     //NPC BOOLEAN
+    private boolean talkOnce;
     private boolean isTalking;
     private boolean isIdling;
     private int CURRENT_FRAME;
@@ -61,13 +62,13 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         getNpcImage();
         setDefault();
         setDialogue();
-
     }
 
-    public Npc_CorruptedHustStudent(GameMap mp , int x , int y)
+    public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , String[][] dialogue , int x , int y)
     {
         super(x , y);
         this.mp = mp;
+        this.idName = name;
         super.width = 64;
         super.height = 64;
 
@@ -76,7 +77,18 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         getNpcImage();
         setDefault();
         setDialogue();
-
+        this.direction = direction;
+        talkOnce = false;
+        switch(direction){
+            case "left" : CURRENT_DIRECTION = LEFT; break;
+            case "right": CURRENT_DIRECTION = RIGHT ; break;
+            default: CURRENT_DIRECTION = RIGHT ; break;
+        }
+        for(int i = 0 ; i < dialogue.length ;i++){
+            for(int j = 0 ; j < dialogue[i].length ; j++){
+                this.dialogues[i][j] = dialogue[i][j];
+            }
+        }
     }
 
     private void getNpcImage()
@@ -187,6 +199,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void talk() {
+        talkOnce = true;
         facePlayer();
         dialogueSet++;
         isTalking = true;
@@ -227,4 +240,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     public void dispose() {
 
     }
+
+    public boolean hasTalkYet(){return talkOnce;}
 }

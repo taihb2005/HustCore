@@ -8,13 +8,14 @@ import java.awt.*;
 
 import static main.GamePanel.*;
 
-public abstract class Entity {
+public class Entity {
     protected int CURRENT_ACTION;
     protected int PREVIOUS_ACTION;
     protected int CURRENT_DIRECTION;
     protected int CURRENT_FRAME;
 
     public String name;
+    public String idName = "";
     //POSITION
     public int worldX, worldY;
     public int newWorldX, newWorldY;
@@ -218,9 +219,9 @@ public abstract class Entity {
         }
     }
 
-    public abstract void update();
+    public void update(){};
 
-    public abstract void render(Graphics2D g2);
+    public void render(Graphics2D g2){};
 
     public void dispose() {
         solidArea1 = null;

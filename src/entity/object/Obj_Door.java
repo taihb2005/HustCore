@@ -29,9 +29,10 @@ public class Obj_Door extends Entity{
     public int STATE;
     public int PREVIOUS_STATE;
 
-    public Obj_Door(String size , String state , int x , int y) throws Exception{
+    public Obj_Door(String size , String state , String idName , int x , int y) throws Exception{
         super(x  , y);
-        name = "Door";
+        this.name = "Door";
+        this.idName = idName;
         obj_animator_door = new Animation();
         if((!size.equals("small") && !size.equals("big")) || (!state.equals("inactive") && !state.equals("active"))){
             throw new Exception("Kiểm tra lại xâu của kích thước với trạng thái của cái cửa trong file JSON mau!");
