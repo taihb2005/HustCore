@@ -14,7 +14,8 @@ public class Level01 extends Level {
         map.gp = gp;
         init();
         setter.setFilePathObject("res/level/level01/object_level01.json");
-        setter.setFilePathEnemy("res/level/level01/enemy_level00.json");
+        setter.setFilePathEnemy(null);
+        setter.setFilePathNpc(null);
         setter.loadAll();
 
         changeMapEventRect = new EventRectangle(64 , 0 , 128 , 32);

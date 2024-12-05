@@ -13,6 +13,7 @@ public class LevelManager {
             if (levelProgress == 0) levelProgress = 1;
             else if (levelProgress == 1) levelProgress = 2;
             else if (levelProgress == 2) levelProgress = 3;
+            else if (levelProgress == 3) levelProgress = 4;
             currentMap.player.storeValue();
             gp.loadMap();
             previousLevelProgress = levelProgress;
