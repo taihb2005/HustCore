@@ -186,41 +186,42 @@ public class UI {
 
         //Colour
         g2.setColor(Color.white);
-        g2.drawString(text , x , y );
+        g2.drawString(text , x , y);
 
         //Draw Picture
 
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "Start Game";
+        text = "START GAME";
         x = getXforCenteredText(text);
-        y = windowHeight*3/5;
+        y = windowHeight / 2;
+
         g2.drawString(text, x, y);
-        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
-        if(commandNum == 0){
-            g2.drawString(">",x- tileSize, y);
+        //BOUND
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, x + 40, tileSize + 10, 40, 40);
+        if(commandNum == 0) {
+            g2.drawString(">", x - tileSize - 10, y);
         }
 
-        text = "Settings";
+        text = "SETTINGS";
         x = getXforCenteredText(text);
-        y = windowHeight*7/10;
+        y += tileSize + 20;
         g2.drawString(text, x, y);
-        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
-        if(commandNum == 1){
-            g2.drawString(">",x- tileSize, y);
+        //BOUND
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, x - 30, tileSize + 10, 40, 40);
+        if(commandNum == 1) {
+            g2.drawString(">", x - tileSize - 10, y);
         }
 
         text = "QUIT";
         x = getXforCenteredText(text);
-        y = windowHeight*4/5;
+        y += tileSize + 20;
         g2.drawString(text, x, y);
-        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
-        if(commandNum == 2){
-            g2.drawString(">",x- tileSize, y);
+        //BOUND
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, x - tileSize * 4, tileSize + 10, 40, 40);
+        if(commandNum == 2) {
+            g2.drawString(">", x - tileSize - 10, y);
         }
     }
 
