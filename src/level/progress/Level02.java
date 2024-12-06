@@ -13,6 +13,9 @@ public class Level02 extends Level {
         map = MapManager.getGameMap("map1");
         map.gp = gp;
         init();
+        setter.setFilePathObject("res/level/level00/object_level02.json");
+        setter.setFilePathNpc(null);
+        setter.setFilePathEnemy("res/level/level01/enemy_level02.json");
         eventRect = new EventRectangle(0 , 0 , 0 , 0);
     }
 }
