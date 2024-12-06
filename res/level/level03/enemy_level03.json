@@ -1,0 +1,19 @@
+{
+  "root": [
+    {
+      "enemy": "Obj_Shooter",
+      "position": { "x": 755, "y": 572 },
+      "direction": "right",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    },
+    {
+      "enemy": "Obj_Shooter",
+      "position": { "x": 695, "y": 467 },
+      "direction": "right",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    }
+    ]
+}
+

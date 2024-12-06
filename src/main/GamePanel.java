@@ -4,13 +4,13 @@ package main;
 import ai.PathFinder;
 import graphics.environment.EnvironmentManager;
 import ai.PathFinder2;
-import environment.EnvironmentManager;
 import level.AssetSetter;
 import level.Level;
 import level.LevelManager;
 import level.progress.level00.Level00;
 import level.progress.level01.Level01;
 import level.progress.level02.Level02;
+import level.progress.level03.Level03;
 import map.*;
 import status.StatusManager;
 import util.Camera;
@@ -47,10 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
-    public static int previousLevelProgress = 1;
-    public static int levelProgress = 1;
+    public static int previousLevelProgress = 3;
+    public static int levelProgress = 3;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -80,6 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
+            case 3 : currentLevel = new Level03(this); break;
         }
         currentMap = currentLevel.map;
         ui = new UI(this);

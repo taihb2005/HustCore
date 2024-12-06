@@ -59,8 +59,6 @@ public class GameMap {
         this.mapHeight = mapHeight;
         this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
         this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
-        System.out.println(maxWorldCol+ " "+maxWorldRow);
-
     }
 
     public void render(Graphics2D g2)
@@ -231,6 +229,4 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
-
-
 }

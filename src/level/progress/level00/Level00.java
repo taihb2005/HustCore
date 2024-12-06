@@ -29,6 +29,6 @@ public class Level00 extends Level {
         eventHandler00.checkForTutorialEvent();
         if(!finishedBeginingDialogue &&!gp.darker && !gp.lighter) eventHandler00.startingDialogue();
         if(finishedTutorialDialogue) eventHandler00.openTutorialDoor();
-        if(levelFinished) eventHandler00.detectForMapChange();
+        if(levelFinished) eventHandler00.triggerEvent(changeMapEventRect);
     }
 }

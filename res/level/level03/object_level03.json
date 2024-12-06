@@ -1,0 +1,211 @@
+{
+  "player": [
+    {"position": {"x": 896 , "y": 1856}}
+  ],
+  "inactive": [
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 256 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 320 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 512 , "y": 0}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 576 , "y": 0}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 256 , "y": 64}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 512 , "y": 64}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "off",
+      "position": {"x": 256 , "y": 256}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "off",
+      "position": {"x": 512 , "y": 256}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 320 , "y": 320}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 512 , "y": 320}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 1472 , "y": 512}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 512}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1408 , "y": 640}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 640}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 1472 , "y": 832}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 832}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 768 , "y": 960}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 768 , "y": 1088}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 1088 , "y": 1088}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 1024 , "y": 960}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 768 , "y": 1280}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1088 , "y": 1280}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1408 , "y": 1536}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 1536}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1472 , "y": 1600}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1664 , "y": 1600}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1472 , "y": 1792}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1664 , "y": 1792}
+    }
+  ],
+  "active": [
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 01",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 896, "y": 1408 }
+    }
+  ]
+}

@@ -173,7 +173,7 @@ public class AssetSetter {
     }
 
     public void loadAll(){
-        setObject();
+        if(filePathObject != null) setObject();
         if(filePathNpc != null) setNpc();
         if(filePathEnemy != null) setEnemy();
     }
