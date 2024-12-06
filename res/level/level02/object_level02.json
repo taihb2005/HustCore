@@ -291,5 +291,28 @@
       "type": 3,
       "position": {"x": 1408 , "y": 1408}
     }
-  ]
+    ],
+    "active": [
+      {
+        "object": "Obj_Door",
+        "name": "Begin DoorMap 01",
+        "size": "big",
+        "state": "inactive",
+        "position": { "x": 192, "y": 0 }
+      },
+      {
+        "object": "Obj_Door",
+        "name": "Begin DoorMap 02",
+        "size": "small",
+        "state": "inactive",
+        "position": { "x": 832, "y": 0 }
+      },
+      {
+        "object": "Obj_Door",
+        "name": "Begin DoorMap 03",
+        "size": "big",
+        "state": "inactive",
+        "position": { "x": 1280, "y": 0 }
+      }
+    ]
 }
