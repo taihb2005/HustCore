@@ -135,36 +135,88 @@ public class Monster extends Entity {
 
     @Override
     public void searchPath(int goalCol, int goalRow) {
-        // Lấy tọa độ bắt đầu
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
+        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
+        if(pFinder.search())
+        {
+            //Next WorldX and WorldY
+            if(pFinder.pathList.isEmpty()){
+                onPath = false;
+                up = down = left = right = false;
+            } else {
+                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
+                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
 
-        // Khởi tạo Pathfinder (hoặc bạn có thể tái sử dụng)
-        pFinder.setNodes(startCol, startRow, goalCol, goalRow);
 
-        // Nếu tìm thấy đường đi
-        if (pFinder.search()) {
-            // Lấy danh sách các node trong đường đi
-            if (!pFinder.pathList.isEmpty()) {
-                Node nextNode = pFinder.pathList.get(0);
+                //Entity's solidArea position
+                int enLeftX = worldX + solidArea1.x;
+                int enRightX = worldX + solidArea1.x + solidArea1.width;
+                int enTopY = worldY + solidArea1.y;
+                int enBottomY = worldY + solidArea1.y + solidArea1.height;
 
-                // Chuyển tọa độ node sang tọa độ thế giới
-                int nextX = nextNode.col * GameMap.childNodeSize;
-                int nextY = nextNode.row * GameMap.childNodeSize;
-
-                // Xác định hướng di chuyển
-                if (worldY + solidArea1.y > nextY) {
+                // TOP PATH
+                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
                     direction = "up";
-                } else if (worldY + solidArea1.y < nextY) {
+                }
+                // BOTTOM PATH
+                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
                     direction = "down";
-                } else if (worldX + solidArea1.x > nextX) {
-                    direction = "left";
-                } else if (worldX + solidArea1.x < nextX) {
-                    direction = "right";
+                }
+                // RIGHT - LEFT PATH
+                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
+                    //either left or right
+                    // LEFT PATH
+                    if (enLeftX > nextX) {
+                        direction = "left";
+                    }
+                    // RIGHT PATH
+                    if (enLeftX < nextX) {
+                        direction = "right";
+                    }
+                }
+                //OTHER EXCEPTIONS
+                else if (enTopY > nextY && enLeftX > nextX) {
+                    // up or left
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    //System.out.println(collisionOn);
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY > nextY && enLeftX < nextX) {
+                    // up or right
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY < nextY && enLeftX > nextX) {
+                    // down or left
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY -= speed;
+                } else if (enTopY < nextY && enLeftX < nextX) {
+                    // down or right
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY -= speed;
                 }
             }
         } else {
-            // Nếu không tìm thấy đường đi
+            getAggro = false;
             onPath = false;
             up = down = right = left = false;
             isRunning = false;

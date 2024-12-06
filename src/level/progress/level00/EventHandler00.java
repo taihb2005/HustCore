@@ -9,7 +9,9 @@ import level.Level;
 import java.util.TimerTask;
 
 public class EventHandler00 extends EventHandler {
-
+    public boolean levelFinished;
+    public boolean finishedBeginingDialogue = false;
+    public boolean finishedTutorialDialogue = false;
     public EventHandler00(Level lvl) {
         super(lvl);
         setDialogue();
@@ -48,6 +50,13 @@ public class EventHandler00 extends EventHandler {
         eventMaster.dialogues[0][1] = "Nhưng ngay sau khi nhận nhiệm vụ\nbạn thấy mình nằm trong một căn\nphòng kì lạ!";
         eventMaster.dialogues[0][2] = "...Cùng với một gã lạ mặt....";
         eventMaster.dialogues[0][3] = "Thử đến nói chuyện xem sao.";
+    }
+
+    public void update(){
+        checkForTutorialEvent();
+        if(!finishedBeginingDialogue &&!lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
+        if(finishedTutorialDialogue) openTutorialDoor();
+        if(levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
     }
 
 }

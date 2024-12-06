@@ -55,6 +55,7 @@ public class Obj_Heart extends Entity {
         isIdle = true;
         getImage();
         setDefault();
+        dialogueSet = -1;
     }
 
     private void getImage(){
@@ -69,6 +70,8 @@ public class Obj_Heart extends Entity {
         hitbox = new Rectangle(9 , 12 , 14 , 12);
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
+
+        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
     }
 
     private void handleAnimationState() {
@@ -96,8 +99,12 @@ public class Obj_Heart extends Entity {
 
     private void collect() {
         mp.player.currentHP += hpReward;
-        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
-        startDialogue(this , 0);
+        dialogueSet++;
+        if(dialogues[dialogueSet][0] == null) {
+            dialogueIndex = 0;
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
     }
 
     @Override

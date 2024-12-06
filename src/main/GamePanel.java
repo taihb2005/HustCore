@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static PathFinder2 pFinder;
+    public static PathFinder pFinder;
     public TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
@@ -46,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
+    public static int previousLevelProgress = 1;
+    public static int levelProgress = 1;
     public static Level currentLevel;
     public static GameMap currentMap;
 

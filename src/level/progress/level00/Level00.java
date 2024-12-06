@@ -26,9 +26,6 @@ public class Level00 extends Level {
     }
 
     public void updateProgress(){
-        eventHandler00.checkForTutorialEvent();
-        if(!finishedBeginingDialogue &&!gp.darker && !gp.lighter) eventHandler00.startingDialogue();
-        if(finishedTutorialDialogue) eventHandler00.openTutorialDoor();
-        if(levelFinished) eventHandler00.detectForMapChange();
+        eventHandler00.update();
     }
 }

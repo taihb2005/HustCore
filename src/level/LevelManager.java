@@ -6,7 +6,7 @@ import static main.GamePanel.*;
 
 public class LevelManager {
     GamePanel gp;
-    private final int maxLevel = 2;
+    private final int maxLevel = 4;
     public LevelManager(GamePanel gp){this.gp = gp;}
     public void update() {
         if (levelProgress == previousLevelProgress) {

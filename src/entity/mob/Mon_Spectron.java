@@ -72,6 +72,20 @@ public class Mon_Spectron extends Monster implements Actable {
         set();
     }
 
+    public Mon_Spectron(GameMap mp , int x , int y , String idName)
+    {
+        super(mp , x , y);
+        name = "Spectron";
+        this.idName = idName;
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+        this.canbeDestroyed = false;
+        onPath = false;
+
+        set();
+    }
+
     private void getImage()
     {
         mon_spectron[IDLE]  = new Sprite("/entity/mob/spectron/spectron_idle.png" , width  , height).getSpriteArray();
@@ -95,7 +109,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
         expDrop = 10;
 
-        solidArea1 = new Rectangle(20 , 19 , 26 , 15);
+        solidArea1 = new Rectangle(20 , 19 , 26 , 20);
         hitbox = new Rectangle(20 , 8 , 27 , 32);
         //solidArea2 = new Rectangle(0 , 0 , 0 ,0);
         super.setDefaultSolidArea();
@@ -121,7 +135,6 @@ public class Mon_Spectron extends Monster implements Actable {
 
     public void loot() {
         spawnHeart();
-        spawnCoin();
     }
 
     private void changeAnimationDirection()
