@@ -1,0 +1,414 @@
+{
+  "player": [
+    {"position": {"x": 768 , "y": 0}}
+  ],
+  "inactive": [
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 64 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 4,
+      "frame": 0,
+      "position": {"x": 576 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 64 , "y": 640}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 512 , "y": 640}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 192 , "y": 1152}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 384 , "y": 1152}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 2,
+      "position": {"x": 320 , "y": 1344}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1216 , "y": 1024}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1536 , "y": 1024}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1408 , "y": 1856}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 2,
+      "frame": 0,
+      "position": {"x": 320 , "y": 0}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 192 , "y": 832}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 448 , "y": 832}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "inactive",
+      "position": {"x": 1344 , "y": 1024}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 64 , "y": 330}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 75 , "y": 342}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 128 , "y": 330}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 120 , "y": 342}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 512 , "y": 330}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 512 , "y": 365}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 576 , "y": 330}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 567 , "y": 345}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "off",
+      "position": {"x": 64 , "y": 499}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 64 , "y": 466}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 128 , "y": 499}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 128 , "y": 466}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "off",
+      "position": {"x": 512 , "y": 499}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 508 , "y": 466}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 576 , "y": 499}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 578 , "y": 466}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 1,
+      "position": {"x": 576 , "y": 576}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 2,
+      "position": {"x": 594 , "y": 565}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 2,
+      "position": {"x": 594 , "y": 587}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 2,
+      "position": {"x": 0 , "y": 564}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 512, "y": 32}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 512, "y": 64}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 1,
+      "position": {"x": 615, "y": 64}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 2,
+      "position": {"x": 128, "y": 64}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 64 , "y": 64}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 576 , "y": 64}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 64 , "y": 1664}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 576 , "y": 1664}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1280 , "y": 448}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1536 , "y": 448}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1024 , "y": 1280}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1216 , "y": 1280}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1024 , "y": 1408}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1216 , "y": 1408}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1600 , "y": 1536}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1600 , "y": 1664}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1792 , "y": 1536}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1792 , "y": 1664}
+    }
+  ],
+  "active":[
+    {
+      "object": "Obj_Chest",
+      "name": "chest_begin",
+      "type": 1,
+      "position": { "x": 320, "y": 128 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 1 },
+        { "name": "Item_Battery", "quantity": 2 },
+        { "name": "Item_Potion" , "quantity": 1},
+        { "name": "Item_SpeedGem" , "quantity": 1}
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "chest_room3",
+      "type": 1,
+      "position": { "x": 1408, "y": 512 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 3 },
+        { "name": "Item_Battery", "quantity": 1 },
+        { "name": "Item_Potion" , "quantity": 1}
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "chest_room4",
+      "type": 1,
+      "position": { "x": 1024, "y": 1664 },
+      "items": [
+        { "name": "Item_Battery", "quantity": 1 },
+        { "name": "Item_Potion" , "quantity": 1}
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "chest_room4",
+      "type": 1,
+      "position": { "x": 1152, "y": 1664 },
+      "items": [
+        { "name": "Item_Kit", "quantity": 1 },
+        { "name": "Item_SpeedGem" , "quantity": 2}
+      ]
+    },
+    {
+      "object": "Obj_Door",
+      "name": "EndDoor",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 768, "y": 1856 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Room1 Door",
+      "size": "small",
+      "state": "active",
+      "position": { "x": 320, "y": 832 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Room2 Door",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 320, "y": 1152 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Room3 Door",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 1408, "y": 1024 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Room4 Door",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 1408, "y": 1280 }
+    }
+  ]
+}

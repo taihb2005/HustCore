@@ -32,4 +32,7 @@ public class Level03 extends Level {
 
         if(!finishedBeginingDialogue &&!gp.darker && !gp.lighter) eventHandler03.startingDialogue();
     }
+import level.Level;
+
+public class Level03 extends Level {
 }

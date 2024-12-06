@@ -59,6 +59,18 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefault();
     }
 
+    public Mon_Cyborgon(GameMap mp , int x , int y , String idName){
+        super(mp , x , y);
+        name = "Cyborgon";
+        width = 64;
+        height = 64;
+        state = INACTIVE;
+
+        getImage();
+        setDefault();
+        this.idName = idName;
+    }
+
     private void getImage(){
         mon_cyborgon[INACTIVE] = new Sprite("/entity/mob/cyborgon/cyborgon_inactive.png" , 64 , 64).getSpriteArray();
         mon_cyborgon[IDLE1] = new Sprite("/entity/mob/cyborgon/cyborgon_idle1.png" , 64 , 64).getSpriteArray();
@@ -75,9 +87,9 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 40;
-        maxHP = 120;
+        maxHP = 140;
         currentHP = maxHP;
-        strength = 20;
+        strength = 30;
         level = 1;
         defense = 0;
         projectile = new Proj_GreenBullet(mp);
@@ -171,12 +183,14 @@ public class Mon_Cyborgon extends Monster implements Actable {
             if(isIdle) mon_animator_cyborgon.setAnimationState(mon_cyborgon[INACTIVE][CURRENT_DIRECTION] , 120);
             if(canChangeState){
                 mon_animator_cyborgon.setAnimationState(mon_cyborgon[ACTIVE][CURRENT_DIRECTION] , 17);
+                isInvincible = true;
                 mon_animator_cyborgon.playOnce();
             }
         }
 
         if(!mon_animator_cyborgon.isPlaying() && canChangeState){
             canChangeState = false;
+            isInvincible = false;
             state = ACTIVE;
         }
     }
@@ -299,7 +313,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void updateDiameter(GameMap mp) {
-        newDiameter = 100 + (maxHP - currentHP)*20;
+        newDiameter = 100 + (maxHP - currentHP)*5;
         if (diameter != newDiameter) diameter++;
         if (Math.pow(worldX-mp.player.worldX,2) + Math.pow(worldY-mp.player.worldY,2) < diameter*diameter) {
             exposureTime++;

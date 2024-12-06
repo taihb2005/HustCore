@@ -45,7 +45,28 @@ public class Mon_Shooter extends Monster implements Actable {
 
     private ArrayList<Projectile> proj;
 
-    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , int x , int y){
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , String idName ,int x , int y){
+        super(mp , x , y);
+        this.mp = mp;
+        name = "Shooter";
+        this.idName = idName;
+        this.type = type;
+        this.isAlwaysUp = isAlwaysUp;
+        if(isAlwaysUp) this.type = ACTIVE;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+        this.direction = direction;
+        changeAnimationDirection();
+        setInterval(shotInterval);
+        shootSpeed = Math.max(shotInterval / 5 , 1);
+    }
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, int x , int y){
         super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
@@ -64,7 +85,32 @@ public class Mon_Shooter extends Monster implements Actable {
         changeAnimationDirection();
         setInterval(shotInterval);
         shootSpeed = Math.max(shotInterval / 5 , 1);
+        interactionDetectionArea = detectionArea;
     }
+
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, String idName ,int x , int y){
+        super(mp , x , y);
+        this.mp = mp;
+        name = "Shooter";
+        this.type = type;
+        this.idName = idName;
+        this.isAlwaysUp = isAlwaysUp;
+        if(isAlwaysUp) this.type = ACTIVE;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+        this.direction = direction;
+        changeAnimationDirection();
+        setInterval(shotInterval);
+        shootSpeed = Math.max(shotInterval / 5 , 1);
+        interactionDetectionArea = detectionArea;
+    }
+
 
     private void setDefault(){
         maxHP = 200;

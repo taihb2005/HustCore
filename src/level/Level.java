@@ -1,12 +1,12 @@
 package level;
 
 import ai.PathFinder;
-import ai.PathFinder2;
+import entity.mob.Mon_Shooter;
+import entity.mob.Monster;
 import graphics.environment.EnvironmentManager;
+import ai.PathFinder2;
 import main.GamePanel;
 import map.GameMap;
-import map.MapManager;
-import map.MapParser;
 
 import static main.GamePanel.*;
 import static main.GamePanel.environmentManager;
@@ -14,18 +14,19 @@ import static main.GamePanel.environmentManager;
 public class Level{
     public GamePanel gp;
     public GameMap map;
-    EventHandler eventHandler;
     protected AssetSetter setter;
-    protected EventRectangle changeMapEventRect;
+    public EventRectangle changeMapEventRect;
     public boolean canChangeMap;
 
     public boolean levelFinished;
     public boolean finishedBeginingDialogue = false;
     public boolean finishedTutorialDialogue = false;
 
+    public Monster[] monster = new Monster[100];
+
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
-        pFinder = new PathFinder2(map);
+        pFinder = new PathFinder(map);
         setter = new AssetSetter(map);
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();

@@ -5,6 +5,7 @@ public class EnemyStat {
     private String name;
     private int type;
     private Position position;
+    private DetectionRect detection;
     private String direction;
     private boolean isAlwaysUp;
     private int attackCycle;
@@ -22,6 +23,8 @@ public class EnemyStat {
     public Position getPosition() { return position; }
     public void setPosition(Position position) { this.position = position; }
 
+    public DetectionRect getDetection(){return detection;}
+
     public int getX() { return position.getX(); }
     public int getY() { return position.getY(); }
 
@@ -30,7 +33,8 @@ public class EnemyStat {
     public boolean isAlwaysUp() {return isAlwaysUp;}
 
     public int getAttackCycle() {return attackCycle;}
-    static class Position {
+
+    public class Position {
         private int x;
         private int y;
 
@@ -39,6 +43,17 @@ public class EnemyStat {
 
         public int getY() { return y; }
         public void setY(int y) { this.y = y; }
+    }
+    public class DetectionRect{
+        private int x;
+        private int y;
+        private int width;
+        private int height;
+
+        public int getX(){return x;}
+        public int getY(){return y;}
+        public int getWidth(){return width;}
+        public int getHeight(){return height;}
     }
 }
 

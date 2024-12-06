@@ -11,7 +11,7 @@ public class Proj_Plasma extends Projectile{
         name = "Plasma";
         width = 64;
         height = 64;
-        maxHP = 80;
+        maxHP = 100;
         speed = 7;
         base_damage = 30;
         slowDuration = 180;

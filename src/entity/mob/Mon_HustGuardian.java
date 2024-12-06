@@ -50,7 +50,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         setDefault();
     }
 
-    public Mon_HustGuardian(GameMap mp , int x , int y){
+    public Mon_HustGuardian(GameMap mp , int x , int y , String idName){
         super(mp , x , y);
         name = "Hust Guardian";
         width = 64;
@@ -63,6 +63,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
         spawnPointX = (x + solidArea1.x) + solidArea1.width / 2;
         spawnPointY = (y + solidArea1.y) + solidArea1.height /2;
+        this.idName = idName;
     }
 
     private void getImage(){
@@ -239,11 +240,11 @@ public class Mon_HustGuardian extends Monster implements Actable {
         boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
         boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
         boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
-        if (check3TilesAway && checkShootInterval && checkIfConcurent) {
+        if(check3TilesAway && checkShootInterval && checkIfConcurent){
             isShooting = true;
-            if(worldX < mp.player.worldX) direction = "right"; else
-            if(worldX > mp.player.worldX) direction = "left"; else
-            if(worldY < mp.player.worldY) direction = "down"; else
+            if(posCol < playerCol) direction = "right"; else
+            if(posCol >  playerCol) direction = "left"; else
+            if(posRow < playerRow) direction = "down"; else
                 direction = "up";
             attack();
         }

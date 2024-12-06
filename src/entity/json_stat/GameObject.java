@@ -48,7 +48,7 @@ public class GameObject {
     public int getX() { return position.getX(); }
     public int getY() { return position.getY(); }
 
-    static class Position {
+    public class Position {
         private int x;
         private int y;
 

@@ -2,9 +2,9 @@ package main;
 
 // awt library
 import ai.PathFinder;
-import graphics.environment.EnvironmentManager;
 import ai.PathFinder2;
 import level.AssetSetter;
+import graphics.environment.EnvironmentManager;
 import level.Level;
 import level.LevelManager;
 import level.progress.level00.Level00;
@@ -20,7 +20,6 @@ import java.awt.image.BufferedImage;
 
 // swing library
 import javax.swing.JPanel;
-import javax.swing.text.AbstractDocument;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -38,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static PathFinder2 pFinder;
+    public static PathFinder pFinder;
     public TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
@@ -47,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 1;
+    public static int levelProgress = 1;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -78,8 +77,8 @@ public class GamePanel extends JPanel implements Runnable {
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
-            case 3 : currentLevel = new Level03(this); break;
         }
+        tileManager = new TileManager(this);
         currentMap = currentLevel.map;
         ui = new UI(this);
     }
@@ -108,8 +107,6 @@ public class GamePanel extends JPanel implements Runnable {
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-        //long timer = 0;
-        //int drawCount = 0;
 
         long timer = 0;
         int drawCount = 0;
@@ -127,7 +124,6 @@ public class GamePanel extends JPanel implements Runnable {
 
                 drawCount++;
                 delta--;
-                //drawCount++;
             }
 
             if (timer >= 1000000000) {
@@ -166,6 +162,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         ui.render(g2);
         drawDarkness(g2);
+        tileManager.render(g2);
         g2.dispose();
     }
 

@@ -16,15 +16,19 @@ public class EventHandler {
         timer = new Timer();
     }
 
-    public void triggerEvent(EventRectangle e) {
+    public boolean triggerEvent(EventRectangle e){
         lvl.canChangeMap = false;
 
         int newSolidAreaX1 = lvl.map.player.worldX + lvl.map.player.solidArea1.x;
         int newSolidAreaY1 = lvl.map.player.worldY + lvl.map.player.solidArea1.y;
 
-        Rectangle tmp1 = new Rectangle(newSolidAreaX1, newSolidAreaY1, lvl.map.player.solidArea1.width, lvl.map.player.solidArea1.height);
-        if (tmp1.intersects(e)) {
-            lvl.canChangeMap = true;
+        Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , lvl.map.player.solidArea1.width , lvl.map.player.solidArea1.height);
+        if(tmp1.intersects(e)) {
+            if(e.oneTimeOnlyEvent) e.eventFinished = true;
+            return true;
         }
+        return false;
     }
+
+    public void update(){};
 }
