@@ -65,6 +65,7 @@ public class KeyHandler implements KeyListener{
                             gp.restart();
                             GamePanel.gameState = GameState.PLAY_STATE;
                             gp.lighter = true;
+                            timer.cancel();
                         }
                     };
                     timer.schedule(startToPlayAnimation , 1500);

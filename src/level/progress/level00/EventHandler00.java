@@ -9,7 +9,6 @@ import level.Level;
 import java.util.TimerTask;
 
 public class EventHandler00 extends EventHandler {
-    public boolean levelFinished;
     public boolean finishedBeginingDialogue = false;
     public boolean finishedTutorialDialogue = false;
     public EventHandler00(Level lvl) {
@@ -20,7 +19,7 @@ public class EventHandler00 extends EventHandler {
         for(Entity npc : lvl.map.npc){
             if(npc != null && npc.idName.equals("Chill Guy")){
                 Npc_CorruptedHustStudent npc_tmp = (Npc_CorruptedHustStudent) npc;
-                lvl.finishedTutorialDialogue = npc_tmp.hasTalkYet();
+                finishedTutorialDialogue = npc_tmp.hasTalkYet();
             }
         }
     }
@@ -39,7 +38,7 @@ public class EventHandler00 extends EventHandler {
             @Override
             public void run() {
                 eventMaster.startDialogue(eventMaster , 0);
-                lvl.finishedBeginingDialogue = true;
+                finishedBeginingDialogue = true;
             }
         };
         timer.schedule(beginGameDialogue , 800);
@@ -54,9 +53,9 @@ public class EventHandler00 extends EventHandler {
 
     public void update(){
         checkForTutorialEvent();
-        if(!finishedBeginingDialogue &&!lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
+        if(!finishedBeginingDialogue && !lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
         if(finishedTutorialDialogue) openTutorialDoor();
-        if(levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
+        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
     }
 
 }

@@ -439,7 +439,7 @@ public class Player extends Entity {
             nextLevelUp += 30;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
-            dialogues[0][0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";
             startDialogue(this , 0);
         }
     }
