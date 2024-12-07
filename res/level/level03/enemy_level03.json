@@ -33,6 +33,18 @@
       "enemy": "Mon_HustGuardian",
       "name": "Room3Enemy",
       "position": {"x": 1730, "y": 786}
+    },
+    {
+      "enemy": "Mon_EffectDealer",
+      "name": "chemchep",
+      "effect": {"type": "Slow" , "duration": 1},
+      "position" : {"x": 704 , "y" : 128}
+    },
+    {
+      "enemy": "Mon_EffectDealer",
+      "name": "chemchep",
+      "effect": {"type": "SpeedBoost" , "duration": 1},
+      "position" : {"x": 704 , "y" : 192}
     }
   ]
 }
