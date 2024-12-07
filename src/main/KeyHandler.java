@@ -39,13 +39,13 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_W){
                 GamePanel.ui.commandNum--;
                 if(GamePanel.ui.commandNum < 0){
-                    GamePanel.ui.commandNum = 0;
+                    GamePanel.ui.commandNum = 2;
                 }
             }
             if(keyCode == KeyEvent.VK_S){
                 GamePanel.ui.commandNum++;
                 if(GamePanel.ui.commandNum > 2){
-                    GamePanel.ui.commandNum = 2;
+                    GamePanel.ui.commandNum = 0;
                 }
             }
             if (keyCode == KeyEvent.VK_ENTER) {
