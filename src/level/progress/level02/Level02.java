@@ -25,8 +25,6 @@ public class Level02 extends Level {
         setter.loadAll();
         eventHandler02 = new EventHandler02(this, setter.getFilePathEnemy(), setter.getFilePathNpc());
 
-        eventHandler02.setEnemy();
-        eventHandler02.setNpc();
         changeMapEventRect = new EventRectangle(768, 768, 200, 200);
     }
 
