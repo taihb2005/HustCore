@@ -240,7 +240,7 @@ public class KeyHandler implements KeyListener{
             {
                 GamePanel.ui.commandNum--;
                 if (GamePanel.ui.commandNum < 0) {
-                    GamePanel.ui.commandNum = maxCommandNum;
+                    GamePanel.ui.commandNum = 3;
                 }
                 GamePanel.ui.cursor--;
                 if (GamePanel.ui.cursor < 0) {
@@ -250,7 +250,7 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_S)
             {
                 GamePanel.ui.commandNum++;
-                if (GamePanel.ui.commandNum > maxCommandNum) {
+                if (GamePanel.ui.commandNum > 3) {
                     GamePanel.ui.commandNum = 0;
                 }
                 GamePanel.ui.cursor++;
@@ -292,6 +292,7 @@ public class KeyHandler implements KeyListener{
                     }
                     if (GamePanel.ui.commandNum == 3) {
                         GamePanel.gameState = GameState.MENU_STATE;
+                        GamePanel.ui.commandNum = 0;
                     }
                 }
 
