@@ -10,7 +10,6 @@ import map.MapManager;
 import map.MapParser;
 
 public class Level02 extends Level {
-    private Npc_CorruptedHustStudent npc;
     private EventHandler02 eventHandler02;
 
     public Level02(GamePanel gp) {
@@ -23,10 +22,8 @@ public class Level02 extends Level {
         setter.setFilePathNpc("res/level/level02/npc_level02.json");
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
         setter.loadAll();
-        eventHandler02 = new EventHandler02(this, setter.getFilePathEnemy(), setter.getFilePathNpc());
+        eventHandler02 = new EventHandler02(this);
 
-        eventHandler02.setEnemy();
-        eventHandler02.setNpc();
         changeMapEventRect = new EventRectangle(768, 768, 200, 200);
     }
 

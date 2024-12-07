@@ -13,6 +13,7 @@ import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 import status.StatusManager;
+import level.progress.level02.EventHandler02;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -64,6 +65,7 @@ public class Player extends Entity {
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[100];
     public ItemHandler iHandler = new ItemHandler();
+    private EventHandler02 eventHandler02;
 
     public Player(GameMap mp) {
         super();
@@ -73,6 +75,7 @@ public class Player extends Entity {
         height = 64;
         speed = 3;
         last_speed = speed;
+        this.eventHandler02 = new EventHandler02();
 
         hitbox = new Rectangle(25 , 40 , 15 , 20);
         solidArea1 = new Rectangle(26 , 52 , 18 , 6);
@@ -333,7 +336,10 @@ public class Player extends Entity {
                 System.out.println("Current exp: " + exp);
                 mp.enemy[index].currentHP = 0;
                 mp.enemy[index].die();
+
                 checkForLevelUp();
+                eventHandler02.onEnemyDefeated();
+
             }
         }
     }

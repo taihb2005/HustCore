@@ -7,6 +7,7 @@ import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
 import level.EventRectangle;
+import level.Level;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
