@@ -3,6 +3,7 @@ package level.progress.level02;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.json_stat.EnemyStat;
+import entity.json_stat.NpcStat;
 import entity.mob.*;
 import entity.npc.Npc_CorruptedHustStudent;
 import level.EventHandler;
@@ -17,15 +18,15 @@ import java.util.Map;
 
 public class EventHandler02 extends EventHandler {
     private final String filePathEnemy;
+    private String filePathNpc;
     private int enemiesDefeated = 0;
     private int rewardIndex = 0;
     private final int[] rewards = {1, 2, 3, 4};
-    private final Npc_CorruptedHustStudent npc;
 
-    public EventHandler02(Level lvl, String filePathEnemy, Npc_CorruptedHustStudent npc) {
+    public EventHandler02(Level lvl, String filePathEnemy, String filePathNpc) {
         super(lvl);
         this.filePathEnemy = filePathEnemy;
-        this.npc = npc;
+        this.filePathNpc = filePathNpc;
     }
 
     public void onEnemyDefeated() {
@@ -33,7 +34,13 @@ public class EventHandler02 extends EventHandler {
         if (enemiesDefeated % 5 == 0 && rewardIndex < rewards.length) {
             int reward = rewards[rewardIndex];
             rewardIndex++;
-            npc.addNumberToProvide(reward);
+
+            for (Object npcObj : lvl.map.npc) {
+                if (npcObj instanceof Npc_CorruptedHustStudent) {
+                    Npc_CorruptedHustStudent npc = (Npc_CorruptedHustStudent) npcObj;
+                    npc.addDialogue("Bạn nhận được con số: " + reward);
+                }
+            }
         }
     }
 
@@ -100,20 +107,25 @@ public class EventHandler02 extends EventHandler {
             e.printStackTrace();
         }
     }
-    public void loadDialoguesFromJson(String filePath) {
+    public void setNpc() {
         try {
+            Reader reader = new FileReader(filePathNpc);
             Gson gson = new Gson();
-            Reader reader = new FileReader(filePath);
-            Map<String, List<String>> data = gson.fromJson(reader, new TypeToken<Map<String, List<String>>>() {}.getType());
 
-            List<String> dialoguesFromJson = data.get("dialogues");
-            for (int i = 0; i < dialoguesFromJson.size(); i++) {
-                if (i < dialogues.length) {
-                    dialogues[i][0] = dialoguesFromJson.get(i);
-                }
+            Map<String, List<NpcStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<NpcStat>>>() {}.getType());
+            List<NpcStat> npcs = data.get("root");
+
+            for (NpcStat npcStat : npcs) {
+                int x = npcStat.getX();
+                int y = npcStat.getY();
+                String[][] dialogues = npcStat.getDialogue();
+
+                Npc_CorruptedHustStudent npc = new Npc_CorruptedHustStudent(lvl.map, npcStat.getName(), npcStat.getDirection(), dialogues, x, y);
+
+                lvl.map.addObject(npc, lvl.map.npc);
             }
         } catch (Exception e) {
-            System.out.println("Không thể tải hội thoại cho NPC.");
+            System.out.println("Lỗi khi tạo NPC từ file JSON.");
             e.printStackTrace();
         }
     }

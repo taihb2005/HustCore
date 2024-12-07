@@ -19,14 +19,14 @@ public class Level02 extends Level {
         map = MapManager.getGameMap("map_special");
         map.gp = gp;
         init();
-        createNpc();
-       eventHandler02= new EventHandler02(this, "res/level/level02/enemy_level02.json", npc);
         setter.setFilePathObject("res/level/level02/object_level02.json");
         setter.setFilePathNpc("res/level/level02/npc_level02.json");
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
         setter.loadAll();
+        eventHandler02 = new EventHandler02(this, setter.getFilePathEnemy(), setter.getFilePathNpc());
 
         eventHandler02.setEnemy();
+        eventHandler02.setNpc();
         changeMapEventRect = new EventRectangle(0, 0, 0, 0);
     }
 
