@@ -19,7 +19,7 @@ public class Level02 extends Level {
         map.gp = gp;
         init();
         setter.setFilePathObject("res/level/level02/object_level02.json");
-        setter.setFilePathNpc("res/level/level02/npc_level02.json");
+        setter.setFilePathNpc(null);
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
         setter.loadAll();
         eventHandler02 = new EventHandler02(this);
