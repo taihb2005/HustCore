@@ -1,19 +1,39 @@
 {
   "root": [
     {
-      "enemy": "Obj_Shooter",
-      "position": { "x": 755, "y": 572 },
+      "enemy": "Mon_Shooter",
+      "position": { "x": 713, "y": 556 },
       "direction": "right",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
-      "enemy": "Obj_Shooter",
+      "enemy": "Mon_Shooter",
       "position": { "x": 695, "y": 467 },
       "direction": "right",
       "isAlwaysUp": true,
       "attackCycle": 120
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "name": "Room3Enemy",
+      "position": {"x": 1401, "y": 550}
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "name": "Room3Enemy",
+      "position": {"x": 1401, "y": 786}
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "name": "Room3Enemy",
+      "position": {"x": 1730, "y": 550}
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "name": "Room3Enemy",
+      "position": {"x": 1730, "y": 786}
     }
-    ]
+  ]
 }
 

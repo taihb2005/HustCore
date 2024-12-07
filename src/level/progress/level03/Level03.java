@@ -11,9 +11,10 @@ import map.MapParser;
 public class Level03 extends Level {
     private Entity[] phase = new Entity[100];
     EventHandler03 eventHandler03;
-    public Level03(GamePanel gp){
+
+    public Level03(GamePanel gp) {
         this.gp = gp;
-        MapParser.loadMap( "map3" ,"res/map/map3.tmx");
+        MapParser.loadMap("map3", "res/map/untitled.tmx");
         map = MapManager.getGameMap("map3");
         if (map == null) System.out.println("null3");
         map.gp = gp;
@@ -24,15 +25,9 @@ public class Level03 extends Level {
         setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = true;
-        changeMapEventRect = new EventRectangle(0 , 0 , 0 , 0);
+        changeMapEventRect = new EventRectangle(0, 0, 0, 0);
     }
-
-    public void updateProgress(){
-        eventHandler03.checkForTutorialEvent();
-
-        if(!finishedBeginingDialogue &&!gp.darker && !gp.lighter) eventHandler03.startingDialogue();
+    public void updateProgress() {
+        eventHandler03.update();
     }
-import level.Level;
-
-public class Level03 extends Level {
 }

@@ -1,6 +1,6 @@
 {
   "player": [
-    {"position": {"x": 896 , "y": 1856}}
+    {"position": {"x": 896 , "y": 1656}}
   ],
   "inactive": [
     {
@@ -202,10 +202,52 @@
   "active": [
     {
       "object": "Obj_Door",
-      "name": "Begin DoorMap 01",
+      "name": "Door 1",
       "size": "big",
-      "state": "inactive",
+      "state": "active",
       "position": { "x": 896, "y": 1408 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 2",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 896, "y": 960 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 3",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 1536, "y": 512 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 4",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 1536, "y": 832 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 5",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 1536, "y": 1536 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 6",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 1536, "y": 1856 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Door 7",
+      "size": "big",
+      "state": "active",
+      "position": { "x": 384, "y": 320 }
     }
   ]
 }

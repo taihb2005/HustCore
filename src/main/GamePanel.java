@@ -46,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 1;
-    public static int levelProgress = 1;
+    public static int previousLevelProgress = 3;
+    public static int levelProgress = 3;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -77,6 +77,7 @@ public class GamePanel extends JPanel implements Runnable {
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
+            case 3 : currentLevel = new Level03(this); break;
         }
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;

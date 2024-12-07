@@ -6,6 +6,7 @@ import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
+import level.EventRectangle;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
@@ -113,6 +114,8 @@ public class GameMap {
         {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(1));
+            EventRectangle x = new EventRectangle(896 , 1408 , 128, 64 , true);
+            g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
             for (Entity e : objList) {
                 if (e != null) {
                     g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
