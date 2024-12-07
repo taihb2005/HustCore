@@ -16,7 +16,7 @@ import static main.GamePanel.*;
 public class UI {
     private final GamePanel gp;
     public Player player;
-    Graphics2D g2;
+    public Graphics2D g2;
     public Font joystix;
     public Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
@@ -26,7 +26,7 @@ public class UI {
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
     int cursor = 0;
-    boolean isInventoryOpen = true;
+    boolean isInventoryOpen = false;
     int inventoryX = tileSize / 4;
     int inventoryY = tileSize / 2 + 80;
     int inventoryWidth = tileSize * 2 - 18;
@@ -98,9 +98,6 @@ public class UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
-        // DEMO
-        //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
     }
     public void startDialogue(String dialogue) {
         currentDialogue = dialogue;
@@ -149,18 +146,16 @@ public class UI {
             }
         }
 
-        // Vẽ đoạn hội thoại từng dòng
-        x += tileSize;
+        x += tileSize - 10;
         y += tileSize;
         for (String line : displayedText.split("\n")) { // splits dialogue until "\n" as a line
             g2.drawString(line, x, y);
             y += 40;
         }
-
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
-        Color c = new Color(0,0,0, 100); //BLACK
+        Color c = new Color(0,0,0, 178); //BLACK
         g2.setColor(c);
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
@@ -236,8 +231,6 @@ public class UI {
         return windowWidth / 2 - length / 2;
     }
 
-    public Font getFont(){return joystix;};
-
     public void drawHPBar() {
         int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
         int hpBarHeight = 12;   // Chiều cao của thanh HP
@@ -264,15 +257,6 @@ public class UI {
         // Vẽ thanh HP hiện tại (màu xanh)
         g2.setColor(Color.BLUE);
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
-    }
-
-    public void drawRewardWindow(){
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
-        int x = tileSize * 2;
-        int y = tileSize / 2;
-        int width = gp.getWidth() - tileSize * 4;
-        int height = tileSize * 4;
-        drawSubWindow(x , y , width , height);
     }
 
     public void drawLevelUpWindow(){

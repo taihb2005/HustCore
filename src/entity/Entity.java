@@ -2,13 +2,14 @@ package entity;
 
 import entity.projectile.Projectile;
 import main.GameState;
+import main.KeyHandler;
 import map.GameMap;
 
 import java.awt.*;
 
 import static main.GamePanel.*;
 
-public abstract class Entity {
+public class Entity {
     protected int CURRENT_ACTION;
     protected int PREVIOUS_ACTION;
     protected int CURRENT_DIRECTION;
@@ -94,6 +95,7 @@ public abstract class Entity {
     }
 
     public void startDialogue(Entity entity, int dialogueSet) {
+        KeyHandler.enterPressed = false;
         gameState = GameState.DIALOGUE_STATE;
         ui.target = entity;
         ui.target.dialogueSet = dialogueSet;
@@ -219,9 +221,9 @@ public abstract class Entity {
         }
     }
 
-    public abstract void update();
+    public void update(){};
 
-    public abstract void render(Graphics2D g2);
+    public void render(Graphics2D g2){};
 
     public void dispose() {
         solidArea1 = null;

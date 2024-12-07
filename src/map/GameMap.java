@@ -6,6 +6,7 @@ import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
+import level.EventRectangle;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
@@ -59,7 +60,6 @@ public class GameMap {
         this.mapHeight = mapHeight;
         this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
         this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
-
     }
 
     public void render(Graphics2D g2)
@@ -77,6 +77,7 @@ public class GameMap {
         });
 
         long lasttime = System.nanoTime();
+        mapLayer.get(0).render(g2);
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList)
@@ -113,6 +114,8 @@ public class GameMap {
         {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(1));
+            EventRectangle x = new EventRectangle(896 , 1408 , 128, 64 , true);
+            g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
             for (Entity e : objList) {
                 if (e != null) {
                     g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
@@ -230,6 +233,4 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
-
-
 }

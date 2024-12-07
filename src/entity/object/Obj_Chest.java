@@ -44,10 +44,11 @@ public class Obj_Chest extends Entity implements Actable {
         setDefault();
     }
 
-    public Obj_Chest(GameMap mp , int x , int y)
+    public Obj_Chest(GameMap mp , int x , int y , String idName)
     {
         super(x , y);
         name = "Chest";
+        this.idName = idName;
         this.mp = mp;
         super.width = 64;
         super.height = 64;

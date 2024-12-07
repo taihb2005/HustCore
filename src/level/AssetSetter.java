@@ -15,6 +15,7 @@ import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
 import map.GameMap;
 
+import java.awt.*;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
@@ -49,8 +50,8 @@ public class AssetSetter {
             sManager.setPos(player.get(0).getX() , player.get(0).getY());
 
             for (GameObject obj : inactiveObjects) {
-                int X = obj.getX();
-                int Y = obj.getY();
+                int X = obj.getPosition().getX();
+                int Y = obj.getPosition().getY();
                 switch(obj.getObject()) {
                     case "Obj_Tank":
                         mp.addObject(new Obj_Tank(obj.getState() ,obj.getType() , X , Y), mp.inactiveObj);
@@ -85,28 +86,23 @@ public class AssetSetter {
                         mp.addObject(door, mp.activeObj);
                         break;
                     case "Obj_Chest":
-                        Obj_Chest chest = new Obj_Chest(mp);
-                        chest.worldX = obj.getX();
-                        chest.worldY = obj.getY();
+                        Obj_Chest chest = new Obj_Chest(mp , X , Y , obj.getName());
                         for (ItemStat item : obj.getItems()) {
                             switch (item.getName()) {
                                 case "Item_Kit":
                                     chest.setLoot(new Item_Kit(), item.getQuantity());
-                                    chest.setDialogue();
                                     break;
                                 case "Item_Battery":
                                     chest.setLoot(new Item_Battery(), item.getQuantity());
-                                    chest.setDialogue();
                                     break;
                                 case "Item_SpeedGem":
                                     chest.setLoot(new Item_SpeedGem() , item.getQuantity());
-                                    chest.setDialogue();
                                     break;
                                 case "Item_Potion":
                                     chest.setLoot(new Item_Potion() , item.getQuantity());
-                                    chest.setDialogue();
                                     break;
                             }
+                            chest.setDialogue();
                         }
                         chest.setDialogue();
                         mp.addObject(chest, mp.activeObj);
@@ -148,22 +144,29 @@ public class AssetSetter {
             List<EnemyStat> Enemies = data.get("root");
 
             for (EnemyStat enemy : Enemies) {
-                int X = enemy.getX();
-                int Y = enemy.getY();
+                int X = enemy.getPosition().getX();
+                int Y = enemy.getPosition().getY();
                 switch (enemy.getEnemy()) {
-                    case "Obj_Cyborgon":
-                        mp.addObject(new Mon_Cyborgon(mp  , X , Y), mp.enemy);
+                    case "Mon_Cyborgon":
+                        mp.addObject(new Mon_Cyborgon(mp  , X , Y , enemy.getName()), mp.enemy);
                         break;
-                    case "Obj_HustGuardian":
-                        mp.addObject(new Mon_HustGuardian(mp , X , Y), mp.enemy);
+                    case "Mon_HustGuardian":
+                        mp.addObject(new Mon_HustGuardian(mp , X , Y , enemy.getName()), mp.enemy);
                         break;
-                    case "Obj_Spectron":
-                        mp.addObject(new Mon_Spectron(mp , X , Y), mp.enemy);
+                    case "Mon_Spectron":
+                        mp.addObject(new Mon_Spectron(mp , X , Y , enemy.getName()), mp.enemy);
                         break;
-                    case "Obj_Shooter":
-                        String directions = enemy.getDirection();
-                        mp.addObject( new Mon_Shooter(mp, directions, enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getX(), enemy.getY()
-                        ), mp.enemy);
+                    case "Mon_Shooter":
+                        if(enemy.getDetection() == null) {
+                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getName() ,enemy.getX(), enemy.getY()
+                            ), mp.enemy);
+                        } else
+                        {
+                            Rectangle detect = new Rectangle(enemy.getDetection().getX() , enemy.getDetection().getY() , enemy.getDetection().getWidth() , enemy.getDetection().getHeight());
+                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), detect , enemy.getName() ,enemy.getX(), enemy.getY()
+                            ), mp.enemy);
+                        };
+                        break;
                 }
             }
 
@@ -173,7 +176,7 @@ public class AssetSetter {
     }
 
     public void loadAll(){
-        setObject();
+        if(filePathObject != null) setObject();
         if(filePathNpc != null) setNpc();
         if(filePathEnemy != null) setEnemy();
     }

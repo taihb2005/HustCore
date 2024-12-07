@@ -15,7 +15,8 @@ public class Lighting {
     public boolean transit = false;
     public boolean fadeIn = false;
     public boolean fadeOut = false;
-    public boolean spotLight = false;
+    public boolean spotLightIn = false;
+    public boolean spotLightOut = false;
     private final Color [] color;
     private final float [] fraction;
     private int radius;
@@ -35,7 +36,7 @@ public class Lighting {
         color[1] = new Color(0, 0, 0.08f, 0.5f);
         color[2] = new Color(0, 0, 0.08f, 1f);
 
-        fraction[0] = 0f;
+        fraction[0] = 0.8f;
         fraction[1] = 0.9f;
         fraction[2] = 1f;
 
@@ -65,7 +66,8 @@ public class Lighting {
         if(transit) {
             if (fadeIn) blindFadein();
             else if (fadeOut) blindFadeOut();
-        }else if(spotLight) startSpotLight();
+        }else if(spotLightIn) startSpotLight();
+         else if(spotLightOut) endSpotLight();
         screenX = mp.player.worldX - camera.getX() + 32;
         screenY = mp.player.worldY - camera.getY() + 32;
     }
@@ -108,23 +110,35 @@ public class Lighting {
         }
     }
 
-    private void startSpotLight(){
+    public void startSpotLight(){
         if (radius > 0) {
             radius -= shrinkingRate;
             setLightRadius(radius);
         } else {
             radius = 0;
-            spotLight = false;
+            spotLightIn = false;
         }
     }
 
-    private void endSpotLight(int x , int y){
+    public void endSpotLight(){
         if(radius < mp.getBestLightingRadius()){
             radius += shrinkingRate;
             setLightRadius(radius);
         } else {
             radius = mp.getBestLightingRadius();
-            spotLight = false;
+            spotLightIn = false;
+        }
+    }
+
+    public void blindFadein(int radius){
+        transitCounter++;
+        radius = mp.getBestLightingRadius() - 50 * transitCounter;
+        setLightRadius(radius);
+        if(radius < mp.player.blindRadius){
+            transit = false;
+            fadeIn = false;
+            setLightRadius(mp.player.blindRadius);
+            transitCounter = 0;
         }
     }
 }

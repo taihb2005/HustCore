@@ -1,5 +1,6 @@
 package entity.mob;
 
+import ai.Node;
 import entity.Entity;
 import entity.effect.Effect;
 import entity.projectile.Projectile;
@@ -222,6 +223,7 @@ public class Monster extends Entity {
             speed = last_speed;
         }
     }
+
 
     @Override
     public void update() {
