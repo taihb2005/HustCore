@@ -1,4 +1,4 @@
-package level.progress;
+package level.progress.level02;
 
 import level.EventRectangle;
 import level.Level;
@@ -11,7 +11,7 @@ import map.MapParser;
 
 public class Level02 extends Level {
     private Npc_CorruptedHustStudent npc;
-    private EventHandler02 eventHandler;
+    private EventHandler02 eventHandler02;
 
     public Level02(GamePanel gp) {
         this.gp = gp;
@@ -20,23 +20,17 @@ public class Level02 extends Level {
         map.gp = gp;
         init();
         createNpc();
-        eventHandler = new EventHandler02(this, "res/level/level02/enemy_level02.json", npc);
+       eventHandler02= new EventHandler02(this, "res/level/level02/enemy_level02.json", npc);
         setter.setFilePathObject("res/level/level02/object_level02.json");
         setter.setFilePathNpc("res/level/level02/npc_level02.json");
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
+        setter.loadAll();
 
-        eventHandler.setEnemy();
+        eventHandler02.setEnemy();
         changeMapEventRect = new EventRectangle(0, 0, 0, 0);
     }
 
-    private void createNpc() {
-        npc = new Npc_CorruptedHustStudent(map, "Corrupted Hust Student", 2, new String[]{"Tôi sẽ cho bạn số khi bạn tiêu diệt đủ kẻ thù!"}, 100, 200);
-        map.addObject(npc, map.npc);
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        eventHandler.update();
+    public void updateProgress(){
+       eventHandler02.update();
     }
 }

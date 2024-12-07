@@ -1,0 +1,13 @@
+{
+  "root": [
+    {
+      "name": "Chill Guy",
+      "dialogue": [
+        "Tôi sẽ cho bạn số khi bạn tiêu diệt đủ kẻ thù!",
+        "Con số bạn nhận được là: %d."
+      ],
+      "direction": "right",
+      "position": {"x": 768 , "y": 1856}
+    }
+  ]
+}
