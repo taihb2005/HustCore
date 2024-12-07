@@ -10,10 +10,9 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Currency;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.Queue;
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 import static main.GamePanel.camera;
 
@@ -97,6 +96,11 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     public void addNumberToProvide(int number) {
         numbersToProvide.add(number);
+    }
+
+    public void addDialogue(String message) {
+        dialogues[dialogueSet] = new String[]{message};
+        dialogueSet++;
     }
 
     private void getNpcImage()

@@ -15,8 +15,8 @@ public class Level02 extends Level {
 
     public Level02(GamePanel gp) {
         this.gp = gp;
-        MapParser.loadMap("map_special", "res/map/map_special.tmx");
-        map = MapManager.getGameMap("map_special");
+        MapParser.loadMap("map2", "res/map/map2.tmx");
+        map = MapManager.getGameMap("map2");
         map.gp = gp;
         init();
         setter.setFilePathObject("res/level/level02/object_level02.json");
@@ -27,7 +27,7 @@ public class Level02 extends Level {
 
         eventHandler02.setEnemy();
         eventHandler02.setNpc();
-        changeMapEventRect = new EventRectangle(0, 0, 0, 0);
+        changeMapEventRect = new EventRectangle(768, 768, 200, 200);
     }
 
     public void updateProgress(){

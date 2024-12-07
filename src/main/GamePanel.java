@@ -74,10 +74,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void loadMap()
     {
         switch(levelProgress){
-            case 0 : currentLevel = new Level00(this); break;
-            case 1 : currentLevel = new Level01(this); break;
+            case 0 : currentLevel = new Level02(this); break;
+            case 1 : currentLevel = new Level02(this); break;
             case 2 : currentLevel = new Level02(this); break;
-            case 3 : currentLevel = new Level03(this); break;
+            case 3 : currentLevel = new Level02(this); break;
         }
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;

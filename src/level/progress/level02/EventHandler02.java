@@ -21,7 +21,7 @@ public class EventHandler02 extends EventHandler {
     private String filePathNpc;
     private int enemiesDefeated = 0;
     private int rewardIndex = 0;
-    private final int[] rewards = {1, 2, 3, 4};
+    private final int[] rewards = {1, 0, 5, 6};
 
     public EventHandler02(Level lvl, String filePathEnemy, String filePathNpc) {
         super(lvl);
