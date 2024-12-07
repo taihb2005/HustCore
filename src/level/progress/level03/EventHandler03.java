@@ -1,6 +1,7 @@
 package level.progress.level03;
 
 import entity.Entity;
+import entity.effect.type.Stun;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.Obj_Door;
 import level.EventHandler;
@@ -12,26 +13,35 @@ import java.util.TimerTask;
 
 public class EventHandler03 extends EventHandler {
     private EventRectangle beginRoom1;
+
     private EventRectangle beginRoom2;
     private EventRectangle endRoom2;
+
     private EventRectangle beginRoom3;
+    private boolean inRoom3 = false;
+    private EventRectangle endRoom3;
+
     private EventRectangle beginRoom4;
     private final Entity[] eventEntity = new Entity[10];
     private int time = 0;
+
+    private Stun temp;
 
     public EventHandler03(Level lvl) {
         super(lvl);
         setFirstDialogue();
         setEventRect();
+        temp = new Stun(lvl.map.player);
 //        setEventEntity();
-        time = 3000;
+        time = 10000;
     }
 
     private void setEventRect(){
         beginRoom1 = new EventRectangle(896 , 1408 , 128, 64 , true);
-        beginRoom2 = new EventRectangle(320 , 1230 , 64 , 32 , true);
+        beginRoom2 = new EventRectangle(384 , 320 , 128 , 32 , true);
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
-        beginRoom3 = new EventRectangle(1408 , 992 , 128 , 32 , true);
+        beginRoom3 = new EventRectangle(1536 , 512 , 128 , 32 , true);
+        endRoom3 = new EventRectangle(1536 , 832 , 10 , 128 , true);
     }
 
     void checkForTutorialEvent(){
@@ -83,6 +93,7 @@ public class EventHandler03 extends EventHandler {
         eventMaster.startDialogue(eventMaster,1);
         lvl.map.player.speed=1;
         lvl.map.player.projectile.speed = 1;
+        lvl.map.player.projectile.maxHP = 150;
     }
 
     private void startThirdDialogue(){
@@ -95,6 +106,21 @@ public class EventHandler03 extends EventHandler {
         eventMaster.dialogues[2][2] = "Player: Trời ơi… sắp tối thui \n" +
                 "màn hình rồi còn bắt đọc hết đống thoại này...\n";
         eventMaster.startDialogue(eventMaster,2);
+        lvl.map.player.speed=3;
+        lvl.map.player.projectile.speed = 10;
+        lvl.map.player.projectile.maxHP = 30;
+    }
+
+    private void startFourthDialogue(){
+        eventMaster.dialogues[3][0] = "Boss: Ngươi khá lắm, nhưng mà \n" +
+                "chưa xong đâu,";
+        eventMaster.dialogues[3][1] = "Boss: căn phòng này ta đã thiết kế\n" +
+                " để khi bước vào sau 4s ngươi \n" +
+                "sẽ bị bất động trong 1s,";
+        eventMaster.dialogues[3][2] = "Boss: đồng thời ngươi phải đối đầu với\n" +
+                " những tên lính tinh nhuệ nhất \n" +
+                "do ta tự tay chuẩn bị tặng cho ngươi hahaha…";
+        eventMaster.startDialogue(eventMaster,3);
     }
 
     public void checkIfCompleteFirstDialogue() {
@@ -122,7 +148,6 @@ public class EventHandler03 extends EventHandler {
                 lvl.map.player.currentHP = 0;
             }
             if(!beginRoom2.eventFinished && triggerEvent(beginRoom2)) {
-                System.out.println("jiafei");
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startSecondDialogue();
             }
@@ -130,6 +155,26 @@ public class EventHandler03 extends EventHandler {
             if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startThirdDialogue();
+            }
+
+            if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
+                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                startFourthDialogue();
+                inRoom3 = true;
+            }
+
+            if(inRoom3) {
+                if (time % 500 == 400) {
+                    temp.add();
+                    temp.affect();
+                }
+                if (time % 500 == 0) {
+                    temp.remove();
+                }
+            }
+
+            if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
+                inRoom3 = false;
             }
         }
     }
