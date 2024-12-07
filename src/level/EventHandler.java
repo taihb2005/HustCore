@@ -1,11 +1,13 @@
 package level;
 
 import entity.Entity;
+import map.GameMap;
 
 import java.util.*;
 import java.awt.*;
 
 public class EventHandler {
+    public GameMap mp;
     protected Entity eventMaster = new Entity();
     protected Level lvl;
     public Timer timer;

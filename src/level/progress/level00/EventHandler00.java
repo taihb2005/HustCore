@@ -5,6 +5,7 @@ import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.Obj_Door;
 import level.EventHandler;
 import level.Level;
+import map.GameMap;
 
 import java.util.TimerTask;
 

@@ -16,7 +16,7 @@ import static main.GamePanel.*;
 public class UI {
     private final GamePanel gp;
     public Player player;
-    Graphics2D g2;
+    public Graphics2D g2;
     public Font joystix;
     public Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
