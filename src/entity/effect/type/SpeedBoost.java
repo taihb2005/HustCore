@@ -16,7 +16,9 @@ public class SpeedBoost extends Effect {
     }
 
     public void affect(){
-        player.speed = player.last_speed + 2;
+        if(!player.effectManager.containsKey("Slow")) {
+            player.speed = player.last_speed + 2;
+        }
     }
 
     public void remove(){

@@ -33,7 +33,7 @@ public class EventHandler03 extends EventHandler {
         setEventRect();
         temp = new Stun(lvl.map.player);
 //        setEventEntity();
-        time = 10000;
+        time = 9999999;
     }
 
     private void setEventRect(){
@@ -42,24 +42,6 @@ public class EventHandler03 extends EventHandler {
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
         beginRoom3 = new EventRectangle(1536 , 512 , 128 , 32 , true);
         endRoom3 = new EventRectangle(1536 , 832 , 10 , 128 , true);
-    }
-
-    void checkForTutorialEvent(){
-        for(Entity npc : lvl.map.npc){
-            if(npc != null && npc.idName.equals("Chill Guy")){
-                Npc_CorruptedHustStudent npc_tmp = (Npc_CorruptedHustStudent) npc;
-                lvl.finishedTutorialDialogue = npc_tmp.hasTalkYet();
-            }
-        }
-    }
-
-    void openTutorialDoor(){
-        for(Entity object: lvl.map.activeObj){
-            if(object != null && (object.idName.equals("Begin DoorMap 01") || object.idName.equals("Begin DoorMap 02") || object.idName.equals("Begin DoorMap 03"))){
-                Obj_Door door = (Obj_Door) object;
-                door.canChangeState = true;
-            }
-        }
     }
 
     void startingDialogue(){
