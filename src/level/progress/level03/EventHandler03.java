@@ -8,6 +8,7 @@ import level.EventHandler;
 import level.EventRectangle;
 import level.Level;
 import main.GamePanel;
+import main.GameState;
 
 import java.util.TimerTask;
 
@@ -22,6 +23,8 @@ public class EventHandler03 extends EventHandler {
     private EventRectangle endRoom3;
 
     private EventRectangle beginRoom4;
+
+    private EventRectangle quizArea;
     private final Entity[] eventEntity = new Entity[10];
     private int time = 0;
 
@@ -40,8 +43,10 @@ public class EventHandler03 extends EventHandler {
         beginRoom1 = new EventRectangle(896 , 1408 , 128, 64 , true);
         beginRoom2 = new EventRectangle(384 , 320 , 128 , 32 , true);
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
-        beginRoom3 = new EventRectangle(1536 , 512 , 128 , 32 , true);
-        endRoom3 = new EventRectangle(1536 , 832 , 10 , 128 , true);
+        beginRoom3 = new EventRectangle(1536 , 515 , 128 , 12 , true);
+        endRoom3 = new EventRectangle(1536 , 900 , 128 , 64 , true);
+        beginRoom4 = new EventRectangle(1536 , 1540 , 128 , 32 , true);
+        quizArea = new EventRectangle(1472 , 1600 , 64 , 64 , true);
     }
 
     void startingDialogue(){
@@ -105,6 +110,13 @@ public class EventHandler03 extends EventHandler {
         eventMaster.startDialogue(eventMaster,3);
     }
 
+    private void startFifthDialogue(){
+        eventMaster.dialogues[4][0] = "Boss: Chào mừng ngươi đến với căn phòng cuối cùng của tầng hầm.\n";
+        eventMaster.dialogues[4][1] = "Boss: chú ý ngươi chỉ có 1 lần trả lời duy nhất, nếu sai ngươi sẽ bỏ mạng tại đây:";
+        eventMaster.dialogues[4][1] = "Boss: Hãy đến chiếc máy tính để nhận câu hỏi";
+        eventMaster.startDialogue(eventMaster,4);
+    }
+
     public void checkIfCompleteFirstDialogue() {
         if (lvl.finishedBeginingDialogue) {
             for(Entity e : lvl.map.activeObj) {
@@ -157,6 +169,18 @@ public class EventHandler03 extends EventHandler {
 
             if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
                 inRoom3 = false;
+                lvl.map.player.effect.removeIf(effect -> effect.effectFinished);
+            }
+
+            if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
+                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                startFifthDialogue();
+
+            }
+
+            if(!quizArea.eventFinished && triggerEvent(quizArea)) {
+                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                GamePanel.gameState = GameState.QUIZ_STATE;
             }
         }
     }

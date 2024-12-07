@@ -22,7 +22,7 @@ public class Level03 extends Level {
         init();
         setter.setFilePathObject("res/level/level03/object_level03.json");
 //        setter.setFilePathNpc("res/level/level03/npc_level03.json");
-//        setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
+        setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = true;
         changeMapEventRect = new EventRectangle(0, 0, 0, 0);

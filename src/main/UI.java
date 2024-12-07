@@ -34,6 +34,8 @@ public class UI {
     int slotX = inventoryX + 15;
     int slotWidth = 50;
     int slotHeight = 50;
+    public int selectedOption = -1;
+    public final int correctAnswer = 0;
     private BufferedImage gameOverBackground;
 
     int selectedSlot = -1;
@@ -48,7 +50,7 @@ public class UI {
 
     private BufferedImage titleImage;
 
-    private BufferedImage Key1Image;
+    private BufferedImage Key1Image, quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -485,6 +487,42 @@ public class UI {
         if(gameState == GameState.SETTING_STATE){
             drawSettingScreen();
         }
+        if(gameState == GameState.QUIZ_STATE){
+            drawQuiz();
+        }
+    }
+
+    private void drawQuiz() {
+        try {
+            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int frameX = 0;
+        int frameY = 0;
+        int frameWidth = 978;
+        int frameHeight = 514;
+        String message = "";
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        g2.drawImage(quizImage,frameX, frameY, 600, 300, null);
+        if (selectedOption > -1) {
+            if (selectedOption == 4) {
+                message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";
+            } else if (selectedOption == 5) {
+                message = "Rất tiếc, bạn đã trả lời sai. Nhấn Enter để game over.";
+            } else {
+                message = "Bạn chọn đáp án " + (char) ('A' + selectedOption) + ". Nhấn Enter để xem kết quả";
+            }
+            drawMessage(message);
+        }
+
+    }
+
+    public void drawMessage(String message) {
+        g2.setFont(new Font("Arial", Font.PLAIN, 24));
+        g2.setColor(Color.BLACK);
+
+        g2.drawString(message , 30, 550);
     }
     public void drawSettingScreen(){
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);

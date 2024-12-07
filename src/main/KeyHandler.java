@@ -1,10 +1,12 @@
 package main;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.awt.Color.BLACK;
 import static java.lang.System.exit;
 import static main.GamePanel.environmentManager;
 
@@ -25,6 +27,7 @@ public class KeyHandler implements KeyListener{
     public static boolean key3pressed;
     public static boolean key4pressed;
     public static boolean key5pressed;
+
     private Timer timer = new Timer();
 
 
@@ -317,6 +320,27 @@ public class KeyHandler implements KeyListener{
                     if (GamePanel.ui.commandNum == 3) {
                         GamePanel.gameState = GameState.MENU_STATE;
                     }
+                }
+            }
+        }
+        else if (GamePanel.gameState == GameState.QUIZ_STATE) {
+            if (keyCode == KeyEvent.VK_A) {
+                GamePanel.ui.selectedOption = 0; // Đáp án A
+            } else if (keyCode == KeyEvent.VK_B) {
+                GamePanel.ui.selectedOption = 1; // Đáp án B
+            } else if (keyCode == KeyEvent.VK_C) {
+                GamePanel.ui.selectedOption = 2; // Đáp án C
+            } else if (keyCode == KeyEvent.VK_D) {
+                GamePanel.ui.selectedOption = 3; // Đáp án D
+            }
+
+            if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) GamePanel.gameState = GameState.PLAY_STATE;
+
+            if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
+                if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
+                    GamePanel.ui.selectedOption = 4;
+                } else {
+                    GamePanel.ui.selectedOption = 5;
                 }
             }
         }
