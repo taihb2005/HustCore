@@ -10,8 +10,9 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Currency;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 import static main.GamePanel.camera;
 
@@ -49,6 +50,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private int rng = 0;
     private final Random generator = new Random();
 
+    private Queue<Integer> numbersToProvide ;
 
     public Npc_CorruptedHustStudent(GameMap mp)
     {
@@ -71,6 +73,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         this.idName = name;
         super.width = 64;
         super.height = 64;
+        this.numbersToProvide = new LinkedList<>();
 
         npc_animator_corruptedStudent = new Animation();
 
@@ -89,6 +92,15 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
                 this.dialogues[i][j] = dialogue[i][j];
             }
         }
+    }
+
+    public void addNumberToProvide(int number) {
+        numbersToProvide.add(number);
+    }
+
+    public void addDialogue(String message) {
+        dialogues[dialogueSet] = new String[]{message};
+        dialogueSet++;
     }
 
     private void getNpcImage()
@@ -243,3 +255,4 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     public boolean hasTalkYet(){return talkOnce;}
 }
+
