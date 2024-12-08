@@ -591,18 +591,19 @@ public class UI {
         int x = 100;
         int y = 100;
         int width = gp.getWidth() - tileSize * 4;
-        int height = 100;
+        int height = 200;
 
         drawSubWindow(x, y, width, height);
 
         g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Arial", Font.PLAIN, 24));
-        g2.drawString("Nhập mật khẩu:", x + 20, y + 50);
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
+        drawSubWindow(x+300,y+55,200,30);
 
         maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
-        g2.drawString(maskedPassword, x + 20, y + 100);
+        g2.drawString(maskedPassword, x + 310, y + 75);
 
-        g2.setFont(new Font("Arial", Font.ITALIC, 18));
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
         g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
     }
     public void handlePasswordPressed(){
@@ -630,6 +631,12 @@ public class UI {
 
         currentLevel.enteredPassword += charPressed;
 
+        if (keyBackspacepressed) {
+            keyBackspacepressed = false;
+            if (!currentLevel.enteredPassword.isEmpty()) {
+                currentLevel.enteredPassword = currentLevel.enteredPassword.substring(0, currentLevel.enteredPassword.length() - 1);
+            }
+        }
         if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
     }
 }

@@ -16,7 +16,7 @@ import java.util.TimerTask;
 import static main.KeyHandler.*;
 
 public class EventHandler02 extends EventHandler {
-    private final int totalEnemy;
+    private final int totalEnemy ;
     private int enemiesDefeated = 0;
     private boolean allEnemyDefeated;
     private boolean hasPopUpHint;

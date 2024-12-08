@@ -33,6 +33,7 @@ public class KeyHandler implements KeyListener{
     public static boolean key7pressed;
     public static boolean key8pressed;
     public static boolean key9pressed;
+    public static boolean keyBackspacepressed;
     private final Timer timer = new Timer();
 
 
@@ -118,6 +119,7 @@ public class KeyHandler implements KeyListener{
             if (keyCode == KeyEvent.VK_9) key9pressed = true;
             if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
             if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
+            if (keyCode == KeyEvent.VK_BACK_SPACE) keyBackspacepressed = true;
         }
         else
         if(GamePanel.gameState == GameState.PAUSE_STATE)
@@ -327,6 +329,7 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_7: key7pressed = false; break;
             case KeyEvent.VK_8: key8pressed = false; break;
             case KeyEvent.VK_9: key9pressed = false; break;
+            case KeyEvent.VK_BACK_SPACE: keyBackspacepressed = false; break;
         }
     }
 
