@@ -295,7 +295,7 @@
     "active": [
       {
         "object": "Obj_Door",
-        "name": "Begin DoorMap 01",
+        "name": "EndDoor",
         "size": "big",
         "state": "inactive",
         "position": { "x": 192, "y": 0 }
@@ -309,10 +309,17 @@
       },
       {
         "object": "Obj_Door",
-        "name": "Begin DoorMap 03",
+        "name": "EndDoor",
         "size": "big",
         "state": "inactive",
         "position": { "x": 1280, "y": 0 }
+      },
+      {
+        "object": "Obj_Door",
+        "name": "Password Door",
+        "size": "small",
+        "state": "inactive",
+        "position": { "x": 832, "y": 768 }
       }
     ]
 }

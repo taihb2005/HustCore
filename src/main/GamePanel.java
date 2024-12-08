@@ -46,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 2;
+    public static int levelProgress = 2;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -74,10 +74,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void loadMap()
     {
         switch(levelProgress){
-            case 0 : currentLevel = new Level02(this); break;
-            case 1 : currentLevel = new Level02(this); break;
+            case 0 : currentLevel = new Level00(this); break;
+            case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
-            case 3 : currentLevel = new Level02(this); break;
+            case 3 : currentLevel = new Level03(this); break;
         }
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;
@@ -140,17 +140,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE ||gameState == GameState.PASSWORD_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
             resumeMusic(0);
             currentMap.update();
             currentLevel.updateProgress();
             if(currentLevel.canChangeMap) lvlManager.update();
+            environmentManager.lighting.update();
+            ui.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
             pauseMusic(0);;
         }
-        environmentManager.lighting.update();
     }
 
     @Override
@@ -161,9 +162,9 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
-        currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
+        tileManager.render(g2);
         g2.dispose();
     }
 

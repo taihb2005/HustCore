@@ -46,7 +46,7 @@ public class Player extends Entity {
     private boolean isShooting;
     public boolean isDying = false;
 
-    private boolean attackCanceled;
+    public boolean attackCanceled;
     public final int screenX, screenY;
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];

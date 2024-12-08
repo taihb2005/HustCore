@@ -27,6 +27,8 @@ public class Level02 extends Level {
         eventHandler02 = new EventHandler02(this);
 
         changeMapEventRect = new EventRectangle(768, 768, 200, 200);
+        correctPassword = "1234";
+        enteredPassword = "";
     }
 
     public void updateProgress(){

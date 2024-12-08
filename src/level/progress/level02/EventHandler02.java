@@ -1,6 +1,8 @@
 package level.progress.level02;
 
 import entity.Entity;
+import entity.object.Obj_Door;
+import level.EventRectangle;
 import level.Level;
 import level.EventHandler;
 import main.GamePanel;
@@ -13,76 +15,81 @@ import java.util.TimerTask;
 import static main.KeyHandler.*;
 
 public class EventHandler02 extends EventHandler {
+    private final int totalEnemy;
     private int enemiesDefeated = 0;
-    private final String correctPassword = "0156";
-    private boolean showPasswordInput = false;
-    private String enteredPassword = "";
+    private boolean allEnemyDefeated;
+    private boolean hasPopUpHint;
+    private boolean isInRegion;
+    private final EventRectangle showPasswordInput;
 
     public EventHandler02(Level lvl) {
         super(lvl);
+
+        totalEnemy = 20;
+        showPasswordInput = new EventRectangle(822 , 694 , 74 , 74 , false);
+
     }
 
-    public void onEnemyDefeated() {
-        for (Entity e : lvl.map.enemy) {
-            if (e != null && e.canbeDestroyed) {
-                enemiesDefeated++;
+    public void onDefeatEnemy(){
+        for(Entity e : lvl.map.enemy){
+            if(e != null && e.canbeDestroyed) enemiesDefeated++;
+        }
+    }
+
+    private void popUpPasswordHint(){
+        if(enemiesDefeated % 5 == 0 && enemiesDefeated != 0 && !hasPopUpHint){
+            eventMaster.dialogues[0][0] = "Gợi ý cho mật khẩu là: " + lvl.correctPassword.charAt(enemiesDefeated / 5 - 1);
+            hasPopUpHint = true;
+            eventMaster.startDialogue(eventMaster , 0);
+        }
+    }
+
+    public void checkForPasswordDoor(){
+        if(enemiesDefeated == totalEnemy){
+            allEnemyDefeated = true;
+            for(Entity e : lvl.map.activeObj){
+                if(e != null && e.idName != null){
+                    if(e.idName.equals("Password Door")) {
+                        Obj_Door door_tmp = (Obj_Door) e;
+                        door_tmp.canChangeState = true;
+                    }
+                }
             }
         }
-        if (enemiesDefeated == 1) {
-            eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 0";
-            eventMaster.startDialogue(eventMaster, 0);
+    }
 
-//                } else if (enemiesDefeated == 10) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 1";
-//                    eventMaster.startDialogue(eventMaster, 0);
-            //               } else if (enemiesDefeated == 15) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 5";
-//                    eventMaster.startDialogue(eventMaster, 0);
-//                } else if (enemiesDefeated == 20) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 6";
-//                    eventMaster.startDialogue(eventMaster, 0);
+    private void checkForCompletingLevel(){
+        for(Entity e : lvl.map.activeObj) {
+            if (e != null && e.idName.equals("EndDoor")) {
+                Obj_Door tmp = (Obj_Door) e;
+                tmp.canChangeState = true;
+                break;
+            }
         }
     }
 
-
-    public void update() {
-        if(!showPasswordInput)onEnemyDefeated();
-        if (enemiesDefeated == 1) {
+    private void checkForShowPasswordInput(){
+        if(triggerEvent(showPasswordInput) && !showPasswordInput.eventFinished && !isInRegion){
+            isInRegion = true;
             GamePanel.gameState = GameState.PASSWORD_STATE;
-            handlePasswordPressed();
+            lvl.map.player.attackCanceled = true;
+        }
+        if(!triggerEvent(showPasswordInput)){
+            isInRegion = false;
+            showPasswordInput.eventFinished = false;
         }
     }
+
+    public void update(){
+        onDefeatEnemy();
+        checkForPasswordDoor();
+        if(!allEnemyDefeated) popUpPasswordHint();
+        if(allEnemyDefeated) checkForShowPasswordInput();
+        if(lvl.levelFinished) checkForCompletingLevel();
+    }
+
     public void render(Graphics2D g2){
 
-    }
-
-    public void handlePasswordPressed(){
-        String charPressed = "";
-        if(enterPressed){
-            enterPressed = false;
-            if (enteredPassword.equals(correctPassword)) {
-                System.out.println("Mật khẩu đúng! Qua màn!");
-                showPasswordInput = false;
-            } else {
-                System.out.println("Mật khẩu sai. Hãy thử lại!");
-                GamePanel.gameState = GameState.PLAY_STATE;
-                enteredPassword = "";
-            }
-        }
-        if(key0pressed) {charPressed = "0"; key0pressed = false;} else
-        if(key1pressed) {charPressed = "1"; key1pressed = false;} else
-        if(key2pressed) {charPressed = "2"; key2pressed = false;} else
-        if(key3pressed) {charPressed = "3"; key3pressed = false;} else
-        if(key4pressed) {charPressed = "4"; key4pressed = false;} else
-        if(key5pressed) {charPressed = "5"; key5pressed = false;} else
-        if(key6pressed) {charPressed = "6"; key6pressed = false;} else
-        if(key7pressed) {charPressed = "7"; key7pressed = false;} else
-        if(key8pressed) {charPressed = "8"; key8pressed = false;} else
-        if(key9pressed) {charPressed = "9"; key9pressed = false;}
-
-        enteredPassword += charPressed;
-
-        if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
     }
 
 }

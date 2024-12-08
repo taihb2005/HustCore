@@ -12,6 +12,7 @@ import java.util.Objects;
 
 
 import static main.GamePanel.*;
+import static main.KeyHandler.*;
 
 public class UI {
     private final GamePanel gp;
@@ -35,6 +36,7 @@ public class UI {
     int slotWidth = 50;
     int slotHeight = 50;
     private BufferedImage gameOverBackground;
+    String maskedPassword;
 
     int selectedSlot = -1;
 
@@ -425,7 +427,10 @@ public class UI {
             drawManaBar();
             drawInventory();
         }else if(gameState == GameState.PASSWORD_STATE){
-        drawPasswordInputBox();
+            drawPasswordInputBox();
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -457,6 +462,13 @@ public class UI {
             drawSettingScreen();
         }
     }
+    public void update(){
+        if(gameState == GameState.PASSWORD_STATE){
+            handlePasswordPressed();
+            maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        }
+    }
+
     public void drawSettingScreen(){
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
         g2.setColor(Color.white);
@@ -578,7 +590,7 @@ public class UI {
     private void drawPasswordInputBox() {
         int x = 100;
         int y = 100;
-        int width = 100;
+        int width = gp.getWidth() - tileSize * 4;
         int height = 100;
 
         drawSubWindow(x, y, width, height);
@@ -587,10 +599,37 @@ public class UI {
         g2.setFont(new Font("Arial", Font.PLAIN, 24));
         g2.drawString("Nhập mật khẩu:", x + 20, y + 50);
 
-//        String maskedPassword = "*".repeat(enteredPassword.length());
-//        g2.drawString(maskedPassword, x + 20, y + 100);
+        maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        g2.drawString(maskedPassword, x + 20, y + 100);
 
         g2.setFont(new Font("Arial", Font.ITALIC, 18));
         g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
+    }
+    public void handlePasswordPressed(){
+        String charPressed = "";
+        if(enterPressed){
+            enterPressed = false;
+            if (currentLevel.enteredPassword.equals(currentLevel.correctPassword)) {
+                currentLevel.levelFinished = true;
+                System.out.println("Mật khẩu đúng! Qua màn!");
+            } else {
+                System.out.println("Mật khẩu sai. Hãy thử lại!");
+                currentLevel.enteredPassword = "";
+            }
+        }
+        if(key0pressed) {charPressed = "0"; key0pressed = false;} else
+        if(key1pressed) {charPressed = "1"; key1pressed = false;} else
+        if(key2pressed) {charPressed = "2"; key2pressed = false;} else
+        if(key3pressed) {charPressed = "3"; key3pressed = false;} else
+        if(key4pressed) {charPressed = "4"; key4pressed = false;} else
+        if(key5pressed) {charPressed = "5"; key5pressed = false;} else
+        if(key6pressed) {charPressed = "6"; key6pressed = false;} else
+        if(key7pressed) {charPressed = "7"; key7pressed = false;} else
+        if(key8pressed) {charPressed = "8"; key8pressed = false;} else
+        if(key9pressed) {charPressed = "9"; key9pressed = false;}
+
+        currentLevel.enteredPassword += charPressed;
+
+        if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
     }
 }
