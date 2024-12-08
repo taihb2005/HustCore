@@ -11,7 +11,7 @@ public class StatusManager {
     private int savedMana;
     private int savedLevel;
     private int savedExp;
-    private final Item [] savedInventory = new Item[100];
+    private Item [] savedInventory = new Item[100];
     private String direction;
 
     public StatusManager(){
@@ -28,10 +28,11 @@ public class StatusManager {
     public void setSavedMana(int mana){savedMana = mana;}
     public void setLevel(int level){savedLevel = level;}
     public void setExp(int exp){savedExp = exp;}
-    public void setInventory(Item[] item){
-        Arrays.fill(savedInventory , null);
+    public void setInventory(Item[] item)
+    {
+        savedInventory = new Item[100];
         for(int i = 0 ; i < item.length ; i++){
-            if(item[i] != null) savedInventory[i] = item[i];
+            if(item[i] != null) savedInventory[i] = item[i].clone();
         }
     }
     public void setDirection(String dir){direction = dir;}

@@ -3,7 +3,6 @@ package level.progress.level03;
 import entity.Entity;
 import level.EventRectangle;
 import level.Level;
-import level.progress.level03.EventHandler03;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -25,7 +24,7 @@ public class Level03 extends Level {
         setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = true;
-        changeMapEventRect = new EventRectangle(0, 0, 0, 0);
+        changeMapEventRect1 = new EventRectangle(0, 0, 0, 0);
     }
     public void updateProgress() {
         eventHandler03.update();

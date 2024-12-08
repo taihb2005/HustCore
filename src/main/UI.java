@@ -18,8 +18,8 @@ public class UI {
     private final GamePanel gp;
     public Player player;
     public Graphics2D g2;
-    public Font joystix;
-    public Font maru;
+    public static Font joystix;
+    public static Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -38,6 +38,7 @@ public class UI {
     public int selectedOption = -1;
     public final int correctAnswer = 0;
     private BufferedImage gameOverBackground;
+    Color checkPassword = new Color(0 , 0 , 0);
     String maskedPassword;
 
     int selectedSlot = -1;
@@ -642,9 +643,12 @@ public class UI {
         g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
         drawSubWindow(x+300,y+55,200,30);
 
+        if(currentLevel.enteredPassword.isEmpty()) checkPassword = Color.white;
+        g2.setColor(checkPassword);
         maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
         g2.drawString(maskedPassword, x + 310, y + 75);
 
+        g2.setColor(Color.WHITE);
         g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
         g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
     }
@@ -654,9 +658,9 @@ public class UI {
             enterPressed = false;
             if (currentLevel.enteredPassword.equals(currentLevel.correctPassword)) {
                 currentLevel.levelFinished = true;
-                System.out.println("Mật khẩu đúng! Qua màn!");
+                checkPassword = Color.GREEN;
             } else {
-                System.out.println("Mật khẩu sai. Hãy thử lại!");
+                checkPassword = Color.RED;
                 currentLevel.enteredPassword = "";
             }
         }
@@ -671,7 +675,7 @@ public class UI {
         if(key8pressed) {charPressed = "8"; key8pressed = false;} else
         if(key9pressed) {charPressed = "9"; key9pressed = false;}
 
-        currentLevel.enteredPassword += charPressed;
+        if(currentLevel.enteredPassword.length() < 12) currentLevel.enteredPassword += charPressed;
 
         if (keyBackspacepressed) {
             keyBackspacepressed = false;

@@ -2,9 +2,6 @@ package level.progress.level02;
 
 import level.EventRectangle;
 import level.Level;
-import level.AssetSetter;
-import level.progress.level02.EventHandler02;
-import entity.npc.Npc_CorruptedHustStudent;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -21,12 +18,13 @@ public class Level02 extends Level {
         map.gp = gp;
         init();
         setter.setFilePathObject("res/level/level02/object_level02.json");
-        setter.setFilePathNpc(null);
+        setter.setFilePathNpc("res/level/level02/npc_level02.json");
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
         setter.loadAll();
         eventHandler02 = new EventHandler02(this);
 
-        changeMapEventRect = new EventRectangle(768, 768, 200, 200);
+        changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
+        changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);
         correctPassword = "1234";
         enteredPassword = "";
     }

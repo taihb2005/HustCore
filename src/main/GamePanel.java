@@ -46,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
+    public static int previousLevelProgress = 1;
+    public static int levelProgress = 1;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -85,8 +85,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void restart(){
-        currentLevel.map.player.resetValue();
         loadMap();
+        currentLevel.map.player.resetValue();
     }
 
     public void setup()
@@ -162,6 +162,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
+        currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
         tileManager.render(g2);

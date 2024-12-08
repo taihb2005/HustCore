@@ -1,10 +1,8 @@
 package level;
 
 import ai.PathFinder;
-import entity.mob.Mon_Shooter;
 import entity.mob.Monster;
 import graphics.environment.EnvironmentManager;
-import ai.PathFinder2;
 import main.GamePanel;
 import map.GameMap;
 
@@ -17,7 +15,8 @@ public class Level{
     public GamePanel gp;
     public GameMap map;
     protected AssetSetter setter;
-    public EventRectangle changeMapEventRect;
+    public EventRectangle changeMapEventRect1;
+    public EventRectangle changeMapEventRect2;
     public boolean canChangeMap;
 
     public boolean levelFinished;

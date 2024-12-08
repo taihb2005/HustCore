@@ -72,7 +72,7 @@ public class Player extends Entity {
         this.mp = mp;
         width = 64;
         height = 64;
-        speed = 3;
+        speed = 10;
         last_speed = speed;
 
         hitbox = new Rectangle(25 , 40 , 15 , 20);
@@ -123,7 +123,6 @@ public class Player extends Entity {
         worldX = sManager.getWorldX();
         worldY = sManager.getWorldY();
         newWorldX = worldX; newWorldY = worldY;
-        Arrays.fill(inventory , null);
         inventory = sManager.getSavedInventory();
         set();
     }

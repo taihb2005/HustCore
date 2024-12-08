@@ -2,7 +2,6 @@ package level.progress.level01;
 
 import level.EventRectangle;
 import level.Level;
-import level.progress.level00.EventHandler00;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -23,7 +22,7 @@ public class Level01 extends Level {
         levelFinished = false;
         canChangeMap = false;
 
-        changeMapEventRect = new EventRectangle(768 , 1856 , 128 , 32 , true);
+        changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , true);
     }
 
     public void updateProgress(){

@@ -35,6 +35,7 @@ public class EventHandler01 extends EventHandler {
         countEnemyRoom1 = 2;
         countEnemyRoom2 = 1;
         countEnemyRoom3 = 2;
+        room3Completed = true;
     }
 
     private void setEventEntity(){
@@ -138,7 +139,7 @@ public class EventHandler01 extends EventHandler {
             if (e != null && e.idName.equals("EndDoor")) {
                 Obj_Door tmp = (Obj_Door) e;
                 tmp.canChangeState = true;
-                lvl.canChangeMap = true;
+                lvl.levelFinished = true;
                 break;
             }
         }
@@ -168,7 +169,7 @@ public class EventHandler01 extends EventHandler {
         if(room3Completed) checkForCompletingLevel();
 
         //LEVEL COMPLETED
-        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
+        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
 
 }
