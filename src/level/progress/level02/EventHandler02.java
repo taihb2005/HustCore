@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.TimerTask;
 
+
 import static main.KeyHandler.*;
 
 public class EventHandler02 extends EventHandler {
@@ -21,6 +22,7 @@ public class EventHandler02 extends EventHandler {
     private boolean hasPopUpHint;
     private boolean isInRegion;
     private final EventRectangle showPasswordInput;
+
 
     public EventHandler02(Level lvl) {
         super(lvl);
