@@ -37,7 +37,7 @@
       "position": { "x": 512, "y": 576 }
     },
     {
-      "enemy": "Obj_HustGuardian",
+      "enemy": "Mon_HustGuardian",
       "position": { "x": 960, "y": 1024 }
     },
     {
