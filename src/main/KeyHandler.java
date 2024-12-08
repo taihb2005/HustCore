@@ -1,7 +1,9 @@
 package main;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,12 +22,18 @@ public class KeyHandler implements KeyListener{
     public static boolean showHitbox = false;
     public static boolean godModeOn = false;
     public static boolean keyEpressed = false;
+    public static boolean keyEscpressed;
+    public static boolean key0pressed;
     public static boolean key1pressed;
     public static boolean key2pressed;
     public static boolean key3pressed;
     public static boolean key4pressed;
     public static boolean key5pressed;
-    private Timer timer = new Timer();
+    public static boolean key6pressed;
+    public static boolean key7pressed;
+    public static boolean key8pressed;
+    public static boolean key9pressed;
+    private final Timer timer = new Timer();
 
 
     public KeyHandler(GamePanel gp)
@@ -65,6 +73,7 @@ public class KeyHandler implements KeyListener{
                             gp.restart();
                             GamePanel.gameState = GameState.PLAY_STATE;
                             gp.lighter = true;
+                            timer.cancel();
                         }
                     };
                     timer.schedule(startToPlayAnimation , 1500);
@@ -80,64 +89,37 @@ public class KeyHandler implements KeyListener{
         }
 
         if(GamePanel.gameState == GameState.PLAY_STATE) {
-            if (keyCode == KeyEvent.VK_S) {
-                downPressed = true;
-            }
-
-            if (keyCode == KeyEvent.VK_W) {
-                upPressed = true;
-            }
-
-            if (keyCode == KeyEvent.VK_D) {
-                rightPressed = true;
-            }
-
-            if (keyCode == KeyEvent.VK_A) {
-                leftPressed = true;
-            }
-
-            if (keyCode == KeyEvent.VK_ESCAPE) {
-                GamePanel.gameState = GameState.PAUSE_STATE;
-            }
-            if (keyCode == KeyEvent.VK_F3) {
-                showDebugMenu = !showDebugMenu;
-            }
-
-            if (keyCode == KeyEvent.VK_F4) {
-                showHitbox = !showHitbox;
-            }
-            if(keyCode == KeyEvent.VK_F2){
-                godModeOn = true;
-            }
-            if(keyCode == KeyEvent.VK_ENTER)
-            {
-                enterPressed = true;
-            }
-            if(keyCode == KeyEvent.VK_E){
-                keyEpressed = true;
-            }
-            if(keyCode == KeyEvent.VK_1)
-            {
-                key1pressed = true;
-            }
-            if(keyCode == KeyEvent.VK_2)
-            {
-                key2pressed = true;
-            }
-            if(keyCode == KeyEvent.VK_3)
-            {
-                key3pressed = true;
-            }
-            if(keyCode == KeyEvent.VK_4)
-            {
-                key4pressed = true;
-            }
-            if(keyCode == KeyEvent.VK_5)
-            {
-                key5pressed = true;
-            }
-
+            if (keyCode == KeyEvent.VK_S) downPressed = true;
+            if (keyCode == KeyEvent.VK_W) upPressed = true;
+            if (keyCode == KeyEvent.VK_D) rightPressed = true;
+            if (keyCode == KeyEvent.VK_A) leftPressed = true;
+            if (keyCode == KeyEvent.VK_ESCAPE) GamePanel.gameState = GameState.PAUSE_STATE;
+            if (keyCode == KeyEvent.VK_F3) showDebugMenu = !showDebugMenu;
+            if (keyCode == KeyEvent.VK_F4) showHitbox = !showHitbox;
+            if (keyCode == KeyEvent.VK_F2) godModeOn = true;
+            if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
+            if (keyCode == KeyEvent.VK_E) keyEpressed = true;
+            if (keyCode == KeyEvent.VK_1) key1pressed = true;
+            if (keyCode == KeyEvent.VK_2) key2pressed = true;
+            if (keyCode == KeyEvent.VK_3) key3pressed = true;
+            if (keyCode == KeyEvent.VK_4) key4pressed = true;
+            if (keyCode == KeyEvent.VK_5) key5pressed = true;
         } else
+        if(GamePanel.gameState == GameState.PASSWORD_STATE){
+            if (keyCode == KeyEvent.VK_0) key0pressed = true;
+            if (keyCode == KeyEvent.VK_1) key1pressed = true;
+            if (keyCode == KeyEvent.VK_2) key2pressed = true;
+            if (keyCode == KeyEvent.VK_3) key3pressed = true;
+            if (keyCode == KeyEvent.VK_4) key4pressed = true;
+            if (keyCode == KeyEvent.VK_5) key5pressed = true;
+            if (keyCode == KeyEvent.VK_6) key6pressed = true;
+            if (keyCode == KeyEvent.VK_7) key7pressed = true;
+            if (keyCode == KeyEvent.VK_8) key8pressed = true;
+            if (keyCode == KeyEvent.VK_9) key9pressed = true;
+            if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
+            if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
+        }
+        else
         if(GamePanel.gameState == GameState.PAUSE_STATE)
         {
             if(keyCode == KeyEvent.VK_ESCAPE)
@@ -334,11 +316,17 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_W: upPressed = false; break;
             case KeyEvent.VK_ENTER: enterPressed = false; break;
             case KeyEvent.VK_E: keyEpressed = false ; break;
+            case KeyEvent.VK_ESCAPE:keyEscpressed = false; break;
+            case KeyEvent.VK_0: key0pressed = true; break;
             case KeyEvent.VK_1: key1pressed = false; break;
             case KeyEvent.VK_2: key2pressed = false; break;
             case KeyEvent.VK_3: key3pressed = false; break;
             case KeyEvent.VK_4: key4pressed = false; break;
             case KeyEvent.VK_5: key5pressed = false; break;
+            case KeyEvent.VK_6: key6pressed = false; break;
+            case KeyEvent.VK_7: key7pressed = false; break;
+            case KeyEvent.VK_8: key8pressed = false; break;
+            case KeyEvent.VK_9: key9pressed = false; break;
         }
     }
 
@@ -351,10 +339,16 @@ public class KeyHandler implements KeyListener{
         showHitbox = false;
         showDebugMenu = false;
         keyEpressed = false;
+        keyEscpressed = false;
+        key0pressed = false;
         key1pressed = false;
         key2pressed = false;
         key3pressed = false;
         key4pressed = false;
         key5pressed = false;
+        key6pressed = false;
+        key7pressed = false;
+        key8pressed = false;
+        key9pressed = false;
     }
 }
