@@ -76,11 +76,11 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void startSecondDialogue(){
-        eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng nề vậy nhỉ?";
-        eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã thiết kế đặc biệt, mọi hành động \n " +
-                "kể cả tốc độ viên đạn của ngươi đều bị giảm đi,";
-        eventMaster.dialogues[1][2] = "Boss:  hãy chuẩn bị bỏ mạng đi…\n";
-        eventMaster.startDialogue(eventMaster,1);
+        eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng\nnề vậy nhỉ?";
+        eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã \nthiết kế đặc biệt, mọi hành động\n" +
+                "kể cả tốc độ viên đạn của ngươi \nđều bị giảm đi,";
+        eventMaster.dialogues[1][2] = "Boss: hãy chuẩn bị bỏ mạng đi…\n";
+        eventMaster.startDialogue(eventMaster,0);
         lvl.map.player.speed=1;
         lvl.map.player.projectile.speed = 1;
         lvl.map.player.projectile.maxHP = 150;
@@ -94,8 +94,8 @@ public class EventHandler03 extends EventHandler {
                 "người chỉ có 10 giây để chạy thôi \n" +
                 "nhóc con của ta";
         eventMaster.dialogues[2][2] = "Player: Trời ơi… sắp tối thui \n" +
-                "màn hình rồi còn bắt đọc hết đống thoại này...\n";
-        eventMaster.startDialogue(eventMaster,2);
+                "màn hình rồi còn bắt đọc hết đống\nthoại này...\n";
+        eventMaster.startDialogue(eventMaster,0);
         lvl.map.player.speed=3;
         lvl.map.player.projectile.speed = 10;
         lvl.map.player.projectile.maxHP = 30;
@@ -104,20 +104,20 @@ public class EventHandler03 extends EventHandler {
     private void startFourthDialogue(){
         eventMaster.dialogues[3][0] = "Boss: Ngươi khá lắm, nhưng mà \n" +
                 "chưa xong đâu,";
-        eventMaster.dialogues[3][1] = "Boss: căn phòng này ta đã thiết kế\n" +
-                " để khi bước vào sau 4s ngươi \n" +
+        eventMaster.dialogues[3][1] = "Boss: căn phòng này ta đã thiết\nkế" +
+                " để khi bước vào sau 4s ngươi\n" +
                 "sẽ bị bất động trong 1s,";
-        eventMaster.dialogues[3][2] = "Boss: đồng thời ngươi phải đối đầu với\n" +
-                " những tên lính tinh nhuệ nhất \n" +
-                "do ta tự tay chuẩn bị tặng cho ngươi hahaha…";
-        eventMaster.startDialogue(eventMaster,3);
+        eventMaster.dialogues[3][2] = "Boss: đồng thời ngươi phải đối\nđầu với" +
+                " những tên lính tinh nhuệ\nnhất " +
+                "do ta tự tay chuẩn bị tặng\ncho ngươi hahaha…";
+        eventMaster.startDialogue(eventMaster,0);
     }
 
     private void startFifthDialogue(){
-        eventMaster.dialogues[4][0] = "Boss: Chào mừng ngươi đến với căn phòng cuối cùng của tầng hầm.\n";
+        eventMaster.dialogues[4][0] = "Boss: Chào mừng ngươi đến với căn\nphòng cuối cùng của tầng hầm.\n";
         eventMaster.dialogues[4][1] = "Boss: chú ý ngươi chỉ có 1 lần trả lời duy nhất, nếu sai ngươi sẽ bỏ mạng tại đây:";
-        eventMaster.dialogues[4][1] = "Boss: Hãy đến chiếc máy tính để nhận câu hỏi";
-        eventMaster.startDialogue(eventMaster,4);
+        eventMaster.dialogues[4][1] = "Boss: Hãy đến chiếc máy tính để\nnhận câu hỏi";
+        eventMaster.startDialogue(eventMaster,0);
     }
 
     public void update() {

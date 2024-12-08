@@ -273,20 +273,14 @@ public class KeyHandler implements KeyListener{
                 if (GamePanel.ui.commandNum < 0) {
                     GamePanel.ui.commandNum = 3;
                 }
-                GamePanel.ui.cursor--;
-                if (GamePanel.ui.cursor < 0) {
-                    GamePanel.ui.cursor = 4;
-                }
+
             }
             if (keyCode == KeyEvent.VK_S) {
                 GamePanel.ui.commandNum++;
                 if (GamePanel.ui.commandNum > 3) {
                     GamePanel.ui.commandNum = 0;
                 }
-                GamePanel.ui.cursor++;
-                if (GamePanel.ui.cursor > 4) {
-                    GamePanel.ui.cursor = 0;
-                }
+
             }
             if (keyCode == KeyEvent.VK_A) {
                 if (GamePanel.ui.subState == 0) {
