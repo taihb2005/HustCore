@@ -9,8 +9,9 @@ import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
 
+import java.awt.*;
+
 public class Level02 extends Level {
-    private Npc_CorruptedHustStudent npc;
     private EventHandler02 eventHandler02;
 
     public Level02(GamePanel gp) {
@@ -20,15 +21,18 @@ public class Level02 extends Level {
         map.gp = gp;
         init();
         setter.setFilePathObject("res/level/level02/object_level02.json");
-        setter.setFilePathNpc("res/level/level02/npc_level02.json");
+        setter.setFilePathNpc(null);
         setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
         setter.loadAll();
-        eventHandler02 = new EventHandler02(this, setter.getFilePathEnemy(), setter.getFilePathNpc());
+        eventHandler02 = new EventHandler02(this);
 
         changeMapEventRect = new EventRectangle(768, 768, 200, 200);
+        correctPassword = "1234";
+        enteredPassword = "";
     }
 
     public void updateProgress(){
        eventHandler02.update();
     }
+    public void render(Graphics2D g2){eventHandler02.render(g2);}
 }

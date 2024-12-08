@@ -7,6 +7,7 @@ import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
 import level.EventRectangle;
+import level.Level;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
@@ -152,7 +153,7 @@ public class GameMap {
 
     public void update()
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE) {
+        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE || GamePanel.gameState == GameState.PASSWORD_STATE) {
 
             //UPDATE ENTITY
             for(int i = 0 ; i < activeObj.length ; i++){

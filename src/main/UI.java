@@ -12,6 +12,7 @@ import java.util.Objects;
 
 
 import static main.GamePanel.*;
+import static main.KeyHandler.*;
 
 public class UI {
     private final GamePanel gp;
@@ -37,6 +38,7 @@ public class UI {
     public int selectedOption = -1;
     public final int correctAnswer = 0;
     private BufferedImage gameOverBackground;
+    String maskedPassword;
 
     int selectedSlot = -1;
 
@@ -67,35 +69,8 @@ public class UI {
 
         try {
             hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/hpFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            titleImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/1.2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Key1Image  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try{
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
         } catch (IOException e) {
             e.printStackTrace();
@@ -325,8 +300,8 @@ public class UI {
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        switch(subState) {
-            case 0: options_top(frameX, frameY); break;
+        if (subState == 0) {
+            options_top(frameX, frameY);
         }
     }
     public void options_top(int frameX, int frameY) {
@@ -457,6 +432,11 @@ public class UI {
             drawHPBar();
             drawManaBar();
             drawInventory();
+        }else if(gameState == GameState.PASSWORD_STATE){
+            drawPasswordInputBox();
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -524,6 +504,13 @@ public class UI {
 
         g2.drawString(message , 30, 550);
     }
+    public void update(){
+        if(gameState == GameState.PASSWORD_STATE){
+            handlePasswordPressed();
+            maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        }
+    }
+
     public void drawSettingScreen(){
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
         g2.setColor(Color.white);
@@ -641,5 +628,57 @@ public class UI {
         textY+=tileSize;
 
         g2.drawString("ENTER", textX, textY);
+    }
+    private void drawPasswordInputBox() {
+        int x = 100;
+        int y = 100;
+        int width = gp.getWidth() - tileSize * 4;
+        int height = 200;
+
+        drawSubWindow(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
+        drawSubWindow(x+300,y+55,200,30);
+
+        maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        g2.drawString(maskedPassword, x + 310, y + 75);
+
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
+    }
+    public void handlePasswordPressed(){
+        String charPressed = "";
+        if(enterPressed){
+            enterPressed = false;
+            if (currentLevel.enteredPassword.equals(currentLevel.correctPassword)) {
+                currentLevel.levelFinished = true;
+                System.out.println("Mật khẩu đúng! Qua màn!");
+            } else {
+                System.out.println("Mật khẩu sai. Hãy thử lại!");
+                currentLevel.enteredPassword = "";
+            }
+        }
+        if(key0pressed) {charPressed = "0"; key0pressed = false;} else
+        if(key1pressed) {charPressed = "1"; key1pressed = false;} else
+        if(key2pressed) {charPressed = "2"; key2pressed = false;} else
+        if(key3pressed) {charPressed = "3"; key3pressed = false;} else
+        if(key4pressed) {charPressed = "4"; key4pressed = false;} else
+        if(key5pressed) {charPressed = "5"; key5pressed = false;} else
+        if(key6pressed) {charPressed = "6"; key6pressed = false;} else
+        if(key7pressed) {charPressed = "7"; key7pressed = false;} else
+        if(key8pressed) {charPressed = "8"; key8pressed = false;} else
+        if(key9pressed) {charPressed = "9"; key9pressed = false;}
+
+        currentLevel.enteredPassword += charPressed;
+
+        if (keyBackspacepressed) {
+            keyBackspacepressed = false;
+            if (!currentLevel.enteredPassword.isEmpty()) {
+                currentLevel.enteredPassword = currentLevel.enteredPassword.substring(0, currentLevel.enteredPassword.length() - 1);
+            }
+        }
+        if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
     }
 }

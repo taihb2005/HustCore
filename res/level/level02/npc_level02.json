@@ -3,10 +3,13 @@
     {
       "name": "Chill Guy",
       "dialogue": [
-        [
-        "Tôi sẽ cho bạn số khi bạn tiêu diệt đủ kẻ thù!",
-        "Con số bạn nhận được là: %d."
-        ]
+      [
+        "Tôi sẽ cho bạn số khi bạn tiêu diệt đủ kẻ thù!"
+      ],
+        ["Con số bạn nhận được là: 1 "],
+        ["Con số bạn nhận được là: 0 "],
+        ["Con số bạn nhận được là: 5 "],
+        ["Con số bạn nhận được là: 6 "]
       ],
       "direction": "right",
       "position": {"x": 768 , "y": 768}

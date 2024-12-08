@@ -140,26 +140,25 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
             resumeMusic(0);
             currentMap.update();
             currentLevel.updateProgress();
-            if(currentLevel.canChangeMap) {
-                lvlManager.update();
-            }
+            if(currentLevel.canChangeMap) lvlManager.update();
+            environmentManager.lighting.update();
+            ui.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
             pauseMusic(0);;
         }
-        environmentManager.lighting.update();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
