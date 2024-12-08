@@ -10,7 +10,7 @@ import map.MapParser;
 
 public class Level03 extends Level {
     private Entity[] phase = new Entity[100];
-    EventHandler03 eventHandler03;
+    public EventHandler03 eventHandler03;
 
     public Level03(GamePanel gp) {
         this.gp = gp;

@@ -60,8 +60,7 @@ public class EventHandler01 extends EventHandler {
             room1Completed = true;
             for(Entity e : lvl.map.activeObj)
                 if(e != null && e.idName.equals("Room2 Door")){
-                    Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    e.isOpening = true;
                 }
         }
     }

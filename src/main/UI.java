@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
+import static level.progress.level03.EventHandler03.time;
 import static main.GamePanel.*;
 
 public class UI {
@@ -35,7 +36,7 @@ public class UI {
     int slotWidth = 50;
     int slotHeight = 50;
     public int selectedOption = -1;
-    public final int correctAnswer = 0;
+    public final int correctAnswer = 3;
     private BufferedImage gameOverBackground;
 
     int selectedSlot = -1;
@@ -452,7 +453,15 @@ public class UI {
     }
     public void render(Graphics2D g2) {
         this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
-        if(gameState == GameState.PLAY_STATE)
+        if(gameState == GameState.PLAY_STATE && levelProgress == 3)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+            g2.setFont(new Font("Arial", Font.ITALIC, 24));
+            g2.drawString("Thời gian còn lại: " + time, 500, 550);
+        }
+        else if(gameState == GameState.PLAY_STATE)
         {
             drawHPBar();
             drawManaBar();
@@ -504,7 +513,7 @@ public class UI {
         int frameHeight = 514;
         String message = "";
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        g2.drawImage(quizImage,frameX, frameY, 600, 300, null);
+        g2.drawImage(quizImage,frameX, frameY, 768, 576, null);
         if (selectedOption > -1) {
             if (selectedOption == 4) {
                 message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";

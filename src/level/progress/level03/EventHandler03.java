@@ -26,7 +26,7 @@ public class EventHandler03 extends EventHandler {
 
     private EventRectangle quizArea;
     private final Entity[] eventEntity = new Entity[10];
-    private int time = 0;
+    public static int time = 0;
 
     private Stun temp;
 
@@ -35,8 +35,8 @@ public class EventHandler03 extends EventHandler {
         setFirstDialogue();
         setEventRect();
         temp = new Stun(lvl.map.player);
+        time = 2000;
 //        setEventEntity();
-        time = 9999999;
     }
 
     private void setEventRect(){
@@ -117,25 +117,14 @@ public class EventHandler03 extends EventHandler {
         eventMaster.startDialogue(eventMaster,4);
     }
 
-    public void checkIfCompleteFirstDialogue() {
-        if (lvl.finishedBeginingDialogue) {
-            for(Entity e : lvl.map.activeObj) {
-                if (e != null && e.idName.equals("Room1 Door")) {
-                    Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
-                }
-            }
-        };
-    }
-
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
         else {
+            System.out.println(time);
             if (time > 0) {
                 time--;
-                int currentRadius = time;
-                // Cập nhật bán kính ánh sáng bằng cách gọi hàm blindFadein.
-                GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
+                int currentRadius = (int) (time*0.4);
+                if(lvl.map.player.effect.isEmpty())GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
             }
             else {
                 GamePanel.environmentManager.lighting.setLightRadius(200);
@@ -143,6 +132,7 @@ public class EventHandler03 extends EventHandler {
             }
             if(!beginRoom2.eventFinished && triggerEvent(beginRoom2)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                time+=1000;
                 startSecondDialogue();
             }
 
@@ -153,6 +143,7 @@ public class EventHandler03 extends EventHandler {
 
             if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                time+=1000;
                 startFourthDialogue();
                 inRoom3 = true;
             }
@@ -173,6 +164,7 @@ public class EventHandler03 extends EventHandler {
             }
 
             if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
+                time+=1000;
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startFifthDialogue();
 
