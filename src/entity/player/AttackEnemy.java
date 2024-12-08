@@ -55,6 +55,10 @@ public class AttackEnemy {
         }
     }
 
+    public void damageEffectDealer(int index){
+        //do nothing;
+    }
+
     public void damageSpectron(int index){
 
     }

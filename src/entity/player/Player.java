@@ -322,11 +322,11 @@ public class Player extends Entity {
 
     public void damageEnemy(int index){
         if(index != -1){
-            projectile.active = false;
             switch (mp.enemy[index].name){
-                case "Shooter": mp.playerAttack.damageShooter(index); break;
-                case "Hust Guardian": mp.playerAttack.damageGuardian(index); break;
-                case "Cyborgon"   : mp.playerAttack.damageCyborgon(index);
+                case "Shooter": mp.playerAttack.damageShooter(index); projectile.active = false; break;
+                case "Hust Guardian": mp.playerAttack.damageGuardian(index); projectile.active = false; break;
+                case "Cyborgon"   : mp.playerAttack.damageCyborgon(index); projectile.active = false; break;
+                case "Effect Dealer": mp.playerAttack.damageEffectDealer(index); break;
                 default       : mp.playerAttack.damageEnemy(index);   break;
             }
             if(mp.enemy[index].currentHP <= 0){
@@ -347,8 +347,8 @@ public class Player extends Entity {
     }
 
     public void receiveDamage(Monster attacker){
-        currentHP = currentHP - (20 + attacker.strength) + (defense);
-        System.out.println("Receive " + ((20 + attacker.strength) - (defense)) + " damage");
+        currentHP = currentHP - (attacker.strength) + (defense);
+        System.out.println("Receive " + ((attacker.strength) - (defense)) + " damage");
     }
 
     public void updateInventory(){
@@ -442,7 +442,7 @@ public class Player extends Entity {
             nextLevelUp += 30;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
-            dialogues[0][0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";
             startDialogue(this , 0);
         }
     }
