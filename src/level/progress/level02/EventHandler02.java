@@ -3,15 +3,19 @@ package level.progress.level02;
 import entity.Entity;
 import level.Level;
 import level.EventHandler;
+import main.GamePanel;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
 
 public class EventHandler02 extends EventHandler {
     private int enemiesDefeated = 0;
     private final String correctPassword = "0156";
     private boolean showPasswordInput = false;
     private String enteredPassword = "";
+    private final int[] reward = {0, 1, 5, 6};
+    private int rewardIndex = 0;
     public Graphics2D g2;
 
     public EventHandler02(Level lvl) {
@@ -24,19 +28,11 @@ public class EventHandler02 extends EventHandler {
                 enemiesDefeated++;
                 System.out.println("Enemy defeated: " + enemiesDefeated);
 
-                if (enemiesDefeated == 5) {
-                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 0";
+                if (enemiesDefeated % 5 == 0 && rewardIndex < reward.length) {
+                    int digit = reward[rewardIndex];
+                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: " + digit;
                     eventMaster.startDialogue(eventMaster, 0);
-
-//                } else if (enemiesDefeated == 10) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 1";
-//                    eventMaster.startDialogue(eventMaster, 0);
- //               } else if (enemiesDefeated == 15) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 5";
-//                    eventMaster.startDialogue(eventMaster, 0);
-//                } else if (enemiesDefeated == 20) {
-//                    eventMaster.dialogues[0][0] = "Chữ số bạn nhận được: 6";
-//                    eventMaster.startDialogue(eventMaster, 0);
+                    rewardIndex++;
                 }
             }
         }
@@ -44,13 +40,14 @@ public class EventHandler02 extends EventHandler {
 
     public void update() {
         onEnemyDefeated();
-        if (enemiesDefeated == 5 && !showPasswordInput) {
+        if (enemiesDefeated == 6 && !showPasswordInput) {
             showPasswordInput = true;
         }
-        draw();
+        draw(g2);
     }
-    public void draw() {
 
+    public void draw(Graphics2D g2) {
+        this.g2 = g2;
         if (showPasswordInput) {
             drawPasswordInputBox();
         }
@@ -79,7 +76,7 @@ public class EventHandler02 extends EventHandler {
         if (showPasswordInput) {
             int key = e.getKeyCode();
 
-            if ((key >= KeyEvent.VK_0 && key <= KeyEvent.VK_9) ) {
+            if ((key >= KeyEvent.VK_0 && key <= KeyEvent.VK_9)) {
                 enteredPassword += e.getKeyChar();
             } else if (key == KeyEvent.VK_BACK_SPACE && enteredPassword.length() > 0) {
                 enteredPassword = enteredPassword.substring(0, enteredPassword.length() - 1);
@@ -105,4 +102,5 @@ public class EventHandler02 extends EventHandler {
         g2.setStroke(new BasicStroke(5));
         g2.drawRoundRect(x, y, width, height, 25, 25);
     }
+
 }
