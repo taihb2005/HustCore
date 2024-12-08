@@ -54,13 +54,13 @@ public class KeyHandler implements KeyListener{
             if(keyCode == KeyEvent.VK_W){
                 GamePanel.ui.commandNum--;
                 if(GamePanel.ui.commandNum < 0){
-                    GamePanel.ui.commandNum = 0;
+                    GamePanel.ui.commandNum = 2;
                 }
             }
             if(keyCode == KeyEvent.VK_S){
                 GamePanel.ui.commandNum++;
                 if(GamePanel.ui.commandNum > 2){
-                    GamePanel.ui.commandNum = 2;
+                    GamePanel.ui.commandNum = 0;
                 }
             }
             if (keyCode == KeyEvent.VK_ENTER) {
@@ -250,22 +250,16 @@ public class KeyHandler implements KeyListener{
             if (keyCode == KeyEvent.VK_W) {
                 GamePanel.ui.commandNum--;
                 if (GamePanel.ui.commandNum < 0) {
-                    GamePanel.ui.commandNum = maxCommandNum;
+                    GamePanel.ui.commandNum = 3;
                 }
-                GamePanel.ui.cursor--;
-                if (GamePanel.ui.cursor < 0) {
-                    GamePanel.ui.cursor = 4;
-                }
+
             }
             if (keyCode == KeyEvent.VK_S) {
                 GamePanel.ui.commandNum++;
-                if (GamePanel.ui.commandNum > maxCommandNum) {
+                if (GamePanel.ui.commandNum > 3) {
                     GamePanel.ui.commandNum = 0;
                 }
-                GamePanel.ui.cursor++;
-                if (GamePanel.ui.cursor > 4) {
-                    GamePanel.ui.cursor = 0;
-                }
+
             }
             if (keyCode == KeyEvent.VK_A) {
                 if (GamePanel.ui.subState == 0) {
@@ -298,6 +292,7 @@ public class KeyHandler implements KeyListener{
                     }
                     if (GamePanel.ui.commandNum == 3) {
                         GamePanel.gameState = GameState.MENU_STATE;
+                        GamePanel.ui.commandNum = 0;
                     }
                 }
             }
