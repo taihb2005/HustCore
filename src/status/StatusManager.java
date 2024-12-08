@@ -2,6 +2,8 @@ package status;
 
 import entity.items.Item;
 
+import java.util.Arrays;
+
 public class StatusManager {
     private int worldX;
     private int worldY;
@@ -26,7 +28,12 @@ public class StatusManager {
     public void setSavedMana(int mana){savedMana = mana;}
     public void setLevel(int level){savedLevel = level;}
     public void setExp(int exp){savedExp = exp;}
-    public void setInventory(Item[] item){System.arraycopy(item , 0 , savedInventory , 0 ,  100);}
+    public void setInventory(Item[] item){
+        Arrays.fill(savedInventory , null);
+        for(int i = 0 ; i < item.length ; i++){
+            if(item[i] != null) savedInventory[i] = item[i];
+        }
+    }
     public void setDirection(String dir){direction = dir;}
 
     public int getWorldX(){return worldX;}

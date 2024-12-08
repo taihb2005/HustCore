@@ -56,7 +56,7 @@ public class Player extends Entity {
     public int nextLevelUp = 30;
 
     //PLAYER STATUS
-    public int blindRadius = 100;
+    public int blindRadius = 200;
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
@@ -122,6 +122,7 @@ public class Player extends Entity {
         worldX = sManager.getWorldX();
         worldY = sManager.getWorldY();
         newWorldX = worldX; newWorldY = worldY;
+        Arrays.fill(inventory , null);
         inventory = sManager.getSavedInventory();
         set();
     }

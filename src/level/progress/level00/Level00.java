@@ -18,7 +18,7 @@ public class Level00 extends Level {
         init();
         setter.setFilePathObject("res/level/level00/object_level00.json");
         setter.setFilePathNpc("res/level/level00/npc_level00.json");
-        setter.setFilePathEnemy("res/level/level01/enemy_level00.json");
+        setter.setFilePathEnemy(null);
         setter.loadAll();
 
         levelFinished = true;
