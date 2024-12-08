@@ -8,6 +8,8 @@ import ai.PathFinder2;
 import main.GamePanel;
 import map.GameMap;
 
+import java.awt.*;
+
 import static main.GamePanel.*;
 import static main.GamePanel.environmentManager;
 
@@ -34,7 +36,6 @@ public class Level{
         canChangeMap = false;
         levelFinished = false;
     };
-    public void updateProgress(){
-
-    }
+    public void updateProgress(){}
+    public void render(Graphics2D g2){};
 }

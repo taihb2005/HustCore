@@ -46,10 +46,6 @@ public class UI {
 
     private BufferedImage titleBackground;
 
-    private BufferedImage titleImage;
-
-    private BufferedImage Key1Image;
-
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -65,35 +61,8 @@ public class UI {
 
         try {
             hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/hpFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            titleImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/1.2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Key1Image  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try{
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
         } catch (IOException e) {
             e.printStackTrace();
@@ -323,8 +292,8 @@ public class UI {
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        switch(subState) {
-            case 0: options_top(frameX, frameY); break;
+        if (subState == 0) {
+            options_top(frameX, frameY);
         }
     }
     public void options_top(int frameX, int frameY) {
@@ -455,6 +424,8 @@ public class UI {
             drawHPBar();
             drawManaBar();
             drawInventory();
+        }else if(gameState == GameState.PASSWORD_STATE){
+        drawPasswordInputBox();
         }
         else if(gameState == GameState.MENU_STATE)
         {
@@ -603,5 +574,23 @@ public class UI {
         textY+=tileSize;
 
         g2.drawString("ENTER", textX, textY);
+    }
+    private void drawPasswordInputBox() {
+        int x = 100;
+        int y = 100;
+        int width = 100;
+        int height = 100;
+
+        drawSubWindow(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.PLAIN, 24));
+        g2.drawString("Nhập mật khẩu:", x + 20, y + 50);
+
+//        String maskedPassword = "*".repeat(enteredPassword.length());
+//        g2.drawString(maskedPassword, x + 20, y + 100);
+
+        g2.setFont(new Font("Arial", Font.ITALIC, 18));
+        g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
     }
 }

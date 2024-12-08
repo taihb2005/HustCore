@@ -40,7 +40,7 @@
       "size": "big",
       "state": "off",
       "type": 1,
-      "frame": 2,
+      "frame": 0,
       "position": {"x": 1024 , "y": 0}
     },
     {

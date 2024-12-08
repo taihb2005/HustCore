@@ -9,6 +9,8 @@ import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
 
+import java.awt.*;
+
 public class Level02 extends Level {
     private EventHandler02 eventHandler02;
 
@@ -30,4 +32,5 @@ public class Level02 extends Level {
     public void updateProgress(){
        eventHandler02.update();
     }
+    public void render(Graphics2D g2){eventHandler02.render(g2);}
 }
