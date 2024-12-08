@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
+import static level.progress.level03.EventHandler03.time;
 import static main.GamePanel.*;
 import static main.KeyHandler.*;
 
@@ -36,7 +37,7 @@ public class UI {
     int slotWidth = 50;
     int slotHeight = 50;
     public int selectedOption = -1;
-    public final int correctAnswer = 0;
+    public final int correctAnswer = 3;
     private BufferedImage gameOverBackground;
     Color checkPassword = new Color(0 , 0 , 0);
     String maskedPassword;
@@ -427,7 +428,7 @@ public class UI {
         }
     }
     public void render(Graphics2D g2) {
-        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        this.g2 = g2;
         if(gameState == GameState.PLAY_STATE)
         {
             drawHPBar();
@@ -485,12 +486,12 @@ public class UI {
         int frameHeight = 514;
         String message = "";
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        g2.drawImage(quizImage,frameX, frameY, 600, 300, null);
+        g2.drawImage(quizImage,frameX, frameY, 768, 576, null);
         if (selectedOption > -1) {
             if (selectedOption == 4) {
                 message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";
             } else if (selectedOption == 5) {
-                message = "Rất tiếc, bạn đã trả lời sai. Nhấn Enter để game over.";
+                message = "Rất tiếc, bạn đã trả lời sai. Nhấn Enter để tiếp tục.";
             } else {
                 message = "Bạn chọn đáp án " + (char) ('A' + selectedOption) + ". Nhấn Enter để xem kết quả";
             }

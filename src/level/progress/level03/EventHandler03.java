@@ -10,7 +10,12 @@ import level.Level;
 import main.GamePanel;
 import main.GameState;
 
+import java.awt.*;
 import java.util.TimerTask;
+
+import static main.GamePanel.gameState;
+import static main.GamePanel.levelProgress;
+import static main.UI.joystix;
 
 public class EventHandler03 extends EventHandler {
     private EventRectangle beginRoom1;
@@ -26,7 +31,7 @@ public class EventHandler03 extends EventHandler {
 
     private EventRectangle quizArea;
     private final Entity[] eventEntity = new Entity[10];
-    private int time = 0;
+    public static int time = 0;
 
     private Stun temp;
 
@@ -35,8 +40,8 @@ public class EventHandler03 extends EventHandler {
         setFirstDialogue();
         setEventRect();
         temp = new Stun(lvl.map.player);
+        time = 1700;
 //        setEventEntity();
-        time = 9999999;
     }
 
     private void setEventRect(){
@@ -55,6 +60,7 @@ public class EventHandler03 extends EventHandler {
             public void run() {
                 eventMaster.startDialogue(eventMaster , 0);
                 lvl.finishedBeginingDialogue = true;
+                timer.cancel();
             }
         };
         timer.schedule(beginGameDialogue , 800);
@@ -62,20 +68,23 @@ public class EventHandler03 extends EventHandler {
 
     private void setFirstDialogue(){
         eventMaster.dialogues[0][0] = "Player: Chuyện gì vậy?";
-        eventMaster.dialogues[0][1] = "Boss: Chào mừng ngươi đến với tầng hầm đặc biệt của BK\n" +
-                ", một khi ngươi bước vào thì gần như ngươi không thể thoát ra ngoài,\n" +
-                " trừ khi ngươi có thể vượt qua các câu hỏi đặc biệt ở mỗi cửa ngươi bước vào\n";
-        eventMaster.dialogues[0][2] = "Player: Haha! Ngươi đang trêu ngươi ta phải không?";
-        eventMaster.dialogues[0][3] = "Boss: Không đơn giản như ngươi nghĩ đâu, căn phòng này được thiết kế đặc biệt,\n" +
-                " ánh sáng càng ngày càng giảm sau 1 khoảng thời gian nhất định";
-        eventMaster.dialogues[0][4] = "Boss: từ đó nếu ngươi không thể thoát khi ánh sáng còn, ngươi sẽ bị nhốt vĩnh viễn ở nơi này";
-        eventMaster.dialogues[0][5] = "Boss: Vì vậy ta chúc ngươi may mắn đó, tên nhóc liều mạng của ta ….\n";
+        eventMaster.dialogues[0][1] = "Boss: Chào mừng ngươi đến với\n" +
+                "tầng hầm đặc biệt của BK.";
+        eventMaster.dialogues[0][2] = "Boss: Một khi ngươi bước vào thì \n" +
+                "gần như ngươi không thể thoát ra \n" +
+                "ngoài..." ;
+        eventMaster.dialogues[0][3] = "Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!";
+        eventMaster.dialogues[0][4] = "Player: Haha! Ngươi đang trêu \nngươi ta phải không?";
+        eventMaster.dialogues[0][5] = "Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.";
+        eventMaster.dialogues[0][6] = "Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định";
+        eventMaster.dialogues[0][7] = "Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này";
+        eventMaster.dialogues[0][8] = "Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n";
     }
 
     private void startSecondDialogue(){
-        eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng nề vậy nhỉ?";
-        eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã thiết kế đặc biệt, mọi hành động \n " +
-                "kể cả tốc độ viên đạn của ngươi đều bị giảm đi,";
+        eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng\nnề vậy nhỉ?";
+        eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã\nthiết kế đặc biệt, mọi hành động\n " +
+                "kể cả tốc độ viên đạn của ngươi\nđều bị giảm đi,";
         eventMaster.dialogues[1][2] = "Boss:  hãy chuẩn bị bỏ mạng đi…\n";
         eventMaster.startDialogue(eventMaster,1);
         lvl.map.player.speed=1;
@@ -117,25 +126,13 @@ public class EventHandler03 extends EventHandler {
         eventMaster.startDialogue(eventMaster,4);
     }
 
-    public void checkIfCompleteFirstDialogue() {
-        if (lvl.finishedBeginingDialogue) {
-            for(Entity e : lvl.map.activeObj) {
-                if (e != null && e.idName.equals("Room1 Door")) {
-                    Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
-                }
-            }
-        };
-    }
-
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
         else {
             if (time > 0) {
                 time--;
-                int currentRadius = time;
-                // Cập nhật bán kính ánh sáng bằng cách gọi hàm blindFadein.
-                GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
+                int currentRadius = (int) (time*0.4);
+                if(lvl.map.player.effect.isEmpty())GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
             }
             else {
                 GamePanel.environmentManager.lighting.setLightRadius(200);
@@ -143,6 +140,7 @@ public class EventHandler03 extends EventHandler {
             }
             if(!beginRoom2.eventFinished && triggerEvent(beginRoom2)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                time+=1000;
                 startSecondDialogue();
             }
 
@@ -153,6 +151,7 @@ public class EventHandler03 extends EventHandler {
 
             if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                time+=1000;
                 startFourthDialogue();
                 inRoom3 = true;
             }
@@ -173,15 +172,23 @@ public class EventHandler03 extends EventHandler {
             }
 
             if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
+                time+=1000;
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startFifthDialogue();
-
             }
 
             if(!quizArea.eventFinished && triggerEvent(quizArea)) {
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 GamePanel.gameState = GameState.QUIZ_STATE;
             }
+
+            lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
         }
+    }
+
+    public void render(Graphics2D g2){
+        g2.setFont(joystix.deriveFont(Font.PLAIN,  18));
+        g2.setColor(Color.WHITE);
+        g2.drawString("Thời gian còn lại: " + time, 400, 550);
     }
 }

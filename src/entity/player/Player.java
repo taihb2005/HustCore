@@ -72,7 +72,7 @@ public class Player extends Entity {
         this.mp = mp;
         width = 64;
         height = 64;
-        speed = 10;
+        speed = 3;
         last_speed = speed;
 
         hitbox = new Rectangle(25 , 40 , 15 , 20);

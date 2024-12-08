@@ -11,6 +11,7 @@ import level.progress.level00.Level00;
 import level.progress.level01.Level01;
 import level.progress.level02.Level02;
 import level.progress.level03.Level03;
+import level.progress.level04.Level04;
 import map.*;
 import status.StatusManager;
 import util.Camera;
@@ -38,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static Sound music = new Sound();
     public static Sound se = new Sound();
     public static PathFinder pFinder;
+    public static PathFinder2 pFinder2;
     public TileManager tileManager;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
@@ -46,8 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 1;
-    public static int levelProgress = 1;
+    public static int previousLevelProgress = 3;
+    public static int levelProgress = 3;
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -73,11 +75,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void loadMap()
     {
-        switch(previousLevelProgress){
+        switch(levelProgress){
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
             case 3 : currentLevel = new Level03(this); break;
+            case 4 : currentLevel = new Level04(this); break;
         }
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;
@@ -140,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
+        if(gameState == GameState.PLAY_STATE) {
             resumeMusic(0);
             currentMap.update();
             currentLevel.updateProgress();

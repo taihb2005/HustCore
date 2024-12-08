@@ -1,13 +1,16 @@
 package entity.mob;
 
 import entity.Actable;
+import entity.Entity;
 import entity.effect.type.EffectNone;
+import entity.object.Obj_Door;
 import entity.projectile.Proj_ExplosivePlasma;
 import entity.projectile.Proj_Flame;
 import entity.projectile.Proj_TrackingPlasma;
 import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
+import level.AssetSetter;
 import map.GameMap;
 
 import java.awt.*;
@@ -38,6 +41,9 @@ public class Mon_Boss extends Monster implements Actable {
 
     private int shootTimer = 0;
     private int shootInterval = 10;
+
+    private boolean nearlyDie = false;
+    private boolean fullyDie = false;
 
     private int spawnPointX;
     private int spawnPointY;
@@ -100,7 +106,7 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 400;
+        maxHP = 2000;
         currentHP = maxHP;
         strength = 10;
         level = 1;
@@ -118,6 +124,7 @@ public class Mon_Boss extends Monster implements Actable {
 
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
+        setDialogue();
 
         CURRENT_ACTION = IDLE;
         PREVIOUS_ACTION = IDLE;
@@ -165,6 +172,21 @@ public class Mon_Boss extends Monster implements Actable {
         move();
         mon_animator_boss.update();
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
+        if (currentHP <= 0 && fullyDie) {
+            this.startDialogue(this, 1);
+            fullyDie = true;
+        }
+        else if (2*currentHP < maxHP && !nearlyDie) {
+            this.startDialogue(this, 0);
+            nearlyDie = true;
+            AssetSetter setter = new AssetSetter(mp);
+            setter.setFilePathEnemy("res/level/level04/enemy_level04.json");
+            setter.setEnemy();
+            for(Entity e : mp.activeObj)
+                if(e != null && e.idName.equals("Door 7")){
+                    e.canbeDestroyed = true;
+                }
+        }
     }
 
     @Override
@@ -270,7 +292,10 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void setDialogue() {
-
+        this.dialogues[0][0] = "Ngươi cũng mạnh phết đấy.";
+        this.dialogues[0][1] = "Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.";
+        this.dialogues[1][0] = "Á hự... Không thể tin ngươi đã đánh bại được ta...";
+        this.dialogues[1][1] = "Huhuhu...";
     }
 
     @Override
@@ -334,7 +359,7 @@ public class Mon_Boss extends Monster implements Actable {
         int isLeft = (worldX < mp.player.worldX)?-1:1;
         int desCol = playerCol;
         int desRow = playerRow;
-        searchPath(desCol , desRow);
+        searchPathforBoss(desCol , desRow);
         decideToMove();
 
         boolean check3TilesAway = (Math.abs(desCol - posCol) <= 12) || (Math.abs(desRow - posRow) <= 12);
@@ -380,5 +405,4 @@ public class Mon_Boss extends Monster implements Actable {
             }
         }
     }
-
 }

@@ -7,9 +7,10 @@ import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
 
+import java.awt.*;
+
 public class Level03 extends Level {
-    private Entity[] phase = new Entity[100];
-    EventHandler03 eventHandler03;
+    public EventHandler03 eventHandler03;
 
     public Level03(GamePanel gp) {
         this.gp = gp;
@@ -24,9 +25,10 @@ public class Level03 extends Level {
         setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = true;
-        changeMapEventRect1 = new EventRectangle(0, 0, 0, 0);
+        changeMapEventRect1 = new EventRectangle(1536, 1888, 128, 32);
     }
     public void updateProgress() {
         eventHandler03.update();
     }
+    public void render(Graphics2D g2){eventHandler03.render(g2);}
 }
