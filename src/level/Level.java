@@ -25,7 +25,7 @@ public class Level{
     public boolean finishedTutorialDialogue = false;
 
     public String enteredPassword = "";
-    public String correctPassword;
+    public String correctPassword ;
 
     public Monster[] monster = new Monster[100];
 
