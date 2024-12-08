@@ -62,14 +62,17 @@ public class EventHandler03 extends EventHandler {
 
     private void setFirstDialogue(){
         eventMaster.dialogues[0][0] = "Player: Chuyện gì vậy?";
-        eventMaster.dialogues[0][1] = "Boss: Chào mừng ngươi đến với tầng hầm đặc biệt của BK\n" +
-                ", một khi ngươi bước vào thì gần như ngươi không thể thoát ra ngoài,\n" +
-                " trừ khi ngươi có thể vượt qua các câu hỏi đặc biệt ở mỗi cửa ngươi bước vào\n";
-        eventMaster.dialogues[0][2] = "Player: Haha! Ngươi đang trêu ngươi ta phải không?";
-        eventMaster.dialogues[0][3] = "Boss: Không đơn giản như ngươi nghĩ đâu, căn phòng này được thiết kế đặc biệt,\n" +
-                " ánh sáng càng ngày càng giảm sau 1 khoảng thời gian nhất định";
-        eventMaster.dialogues[0][4] = "Boss: từ đó nếu ngươi không thể thoát khi ánh sáng còn, ngươi sẽ bị nhốt vĩnh viễn ở nơi này";
-        eventMaster.dialogues[0][5] = "Boss: Vì vậy ta chúc ngươi may mắn đó, tên nhóc liều mạng của ta ….\n";
+        eventMaster.dialogues[0][1] = "Boss: Chào mừng ngươi đến với\n" +
+                "tầng hầm đặc biệt của BK.";
+        eventMaster.dialogues[0][2] = "Boss: Một khi ngươi bước vào thì \n" +
+                "gần như ngươi không thể thoát ra \n" +
+                "ngoài..." ;
+        eventMaster.dialogues[0][3] = "Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!";
+        eventMaster.dialogues[0][4] = "Player: Haha! Ngươi đang trêu \nngươi ta phải không?";
+        eventMaster.dialogues[0][5] = "Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.";
+        eventMaster.dialogues[0][6] = "Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định";
+        eventMaster.dialogues[0][7] = "Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này";
+        eventMaster.dialogues[0][8] = "Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n";
     }
 
     private void startSecondDialogue(){
@@ -120,7 +123,6 @@ public class EventHandler03 extends EventHandler {
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
         else {
-            System.out.println(time);
             if (time > 0) {
                 time--;
                 int currentRadius = (int) (time*0.4);
