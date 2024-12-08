@@ -42,6 +42,22 @@ public class Obj_Heart extends Entity {
         setDefault();
     }
 
+    public Obj_Heart(GameMap mp , int x , int y) {
+        super(x , y);
+        this.mp = mp;
+        name = "Heart";
+        super.width = 32;
+        super.height = 32;
+
+        CURRENT_ACTION = IDLE;
+        PREVIOUS_ACTION = IDLE;
+        isInteracting = false;
+        isIdle = true;
+        getImage();
+        setDefault();
+        dialogueSet = -1;
+    }
+
     private void getImage(){
         obj_heart[IDLE] = new Sprite("/entity/object/heartNormal.png", width, height).getSpriteArrayRow(0);
         obj_heart[TOUCHED] = new Sprite("/entity/object/heartTouched.png", width, height).getSpriteArrayRow(0);
@@ -54,6 +70,8 @@ public class Obj_Heart extends Entity {
         hitbox = new Rectangle(9 , 12 , 14 , 12);
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
+
+        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
     }
 
     private void handleAnimationState() {
@@ -81,9 +99,12 @@ public class Obj_Heart extends Entity {
 
     private void collect() {
         mp.player.currentHP += hpReward;
-        dialogues[0] = "Bạn đã được hồi " + hpReward + " máu!";
-        GamePanel.gameState = GameState.DIALOGUE_STATE;
-        startDialogue(this);
+        dialogueSet++;
+        if(dialogues[dialogueSet][0] == null) {
+            dialogueIndex = 0;
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
     }
 
     @Override

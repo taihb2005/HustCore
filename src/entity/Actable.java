@@ -7,5 +7,4 @@ public interface Actable {
     void talk();
     void attack();
     void loot();
-    void pathFinding();
 }

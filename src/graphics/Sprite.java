@@ -4,6 +4,7 @@ import main.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 import static main.GamePanel.tileSize;
 
@@ -57,10 +58,12 @@ public class Sprite {
     {
         BufferedImage sprite = null;
         try{
-            sprite = ImageIO.read(getClass().getResourceAsStream(filepath));
+            sprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(filepath)));
         } catch(Exception e)
         {
+            sprite = new BufferedImage(256 , 256 , BufferedImage.TYPE_INT_RGB);
             System.out.println("Failed to load sprite: " + filepath);
+            System.out.println("Sai tên file ở đâu đó kìa má! Xem lại mau");
         }
         return sprite;
     }
@@ -77,7 +80,7 @@ public class Sprite {
 
     public BufferedImage getSprite(int x , int y) //get sub image from the sprite, at the position x , y from the img
     {
-        return SPRITESHEET.getSubimage(y * w , x * h , w , h);
+        return SPRITESHEET.getSubimage(y * w , x * h , w , h );
     }
 
 

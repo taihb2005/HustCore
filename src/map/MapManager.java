@@ -12,12 +12,10 @@ public class MapManager {
         mapRef.put(id , mp);
     }
 
-
     public static GameMap getGameMap(String id)
     {
         return mapRef.get(id);
     }
-
 
     public static void dispose()
     {

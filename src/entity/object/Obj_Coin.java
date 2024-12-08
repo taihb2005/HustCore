@@ -42,6 +42,21 @@ public class Obj_Coin extends Entity {
         setDefault();
     }
 
+    public Obj_Coin(GameMap mp , int x , int y) {
+        super(x , y);
+        this.mp = mp;
+        name = "Coin";
+        super.width = 32;
+        super.height = 32;
+
+        CURRENT_ACTION = IDLE;
+        PREVIOUS_ACTION = IDLE;
+        isInteracting = false;
+        isIdle = true;
+        getImage();
+        setDefault();
+    }
+
     private void getImage(){
         obj_coin[IDLE] = new Sprite("/entity/object/coinNormal.png", width, height).getSpriteArrayRow(0);
         obj_coin[TOUCHED] = new Sprite("/entity/object/coinTouched.png", width, height).getSpriteArrayRow(0);
@@ -80,9 +95,8 @@ public class Obj_Coin extends Entity {
     }
 
     private void collect() {
-        dialogues[0] = "Bạn đã nhận được " + coin + " xu!";
-        GamePanel.gameState = GameState.DIALOGUE_STATE;
-        startDialogue(this);
+        dialogues[0][0] = "Bạn đã nhận được " + coin + " xu!";
+        startDialogue(this , 0);
     }
 
     @Override

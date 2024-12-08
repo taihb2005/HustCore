@@ -1,9 +1,12 @@
 package map;
 
 import entity.Entity;
+import entity.mob.Monster;
 import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
+import entity.projectile.Projectile;
+import level.EventRectangle;
 import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
@@ -19,21 +22,24 @@ public class GameMap {
 
     public GamePanel gp;
     public Player player = new Player(this);
-    public AssetSetter setter = new AssetSetter(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
+    public static int childNodeSize = 32;
+
     private final int mapWidth;
     private final int mapHeight;
+    public int maxWorldCol;
+    public int maxWorldRow;
 
     public ArrayList<TileLayer> mapLayer;
 
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
     public Entity [] npc;//Danh sách target ở trên map
-    public Entity [] enemy;
-    public Entity [] projectiles;
-    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồn player , target,...
+    public Monster [] enemy;
+    public Projectile[] projectiles;
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồm player , target,...
 
     //MAP STAT
     private int bestLightingRadius = 2000;
@@ -42,77 +48,46 @@ public class GameMap {
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
-        inactiveObj = new Entity[100];
+        inactiveObj = new Entity[500];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
-        enemy       = new Entity[100];
-        projectiles = new Entity[100];
+        enemy       = new Monster[100];
+        projectiles = new Projectile[100];
         objList     = new ArrayList<>();
         dispose();
 
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-
-        setter.setObject();
-        setter.setNpc();
-        setter.setEnemy();
+        this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
+        this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
     }
 
     public void render(Graphics2D g2)
     {
-
         objList.add(player);
-        for (Entity entity : inactiveObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
+        for (Entity entity : inactiveObj) if(entity != null) objList.add(entity);
+        for (Entity entity : activeObj) if(entity != null) objList.add(entity);
+        for (Entity entity : npc) if(entity != null) objList.add(entity);
+        for (Entity entity : enemy) if(entity != null) objList.add(entity);
 
-        for (Entity entity : activeObj) {
-            if (entity != null)
-                objList.add(entity);
-        }
-
-        for(Entity entity : npc)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-        for(Entity entity : enemy)
-        {
-            if(entity != null)
-            {
-                objList.add(entity);
-            }
-        }
-
-
-            //System.out.println(target.get(0) == null);
-
-            Collections.sort(objList, new Comparator<Entity>() {
-                @Override
-                public int compare(Entity e1, Entity e2) {
-                    int index;
-
-                    index = Integer.compare(e1.worldY, e2.worldY);
-                    return index;
-                }
-            });
+        Collections.sort(objList, (e1, e2) -> {
+            int index;
+            index = Integer.compare(e1.worldY, e2.worldY);
+            return index;
+        });
 
         long lasttime = System.nanoTime();
+        mapLayer.get(0).render(g2);
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList)
         {
-            if(mapObject != null) mapObject.render(g2);
+            if(mapObject != null && !mapObject.isCollected) mapObject.render(g2);
         }
         for(Entity projectile : projectiles)
         {
             if(projectile != null) projectile.render(g2);
         }
-        mapLayer.get(3).render(g2); //Decor layer
 
         long currenttime = System.nanoTime();
         long drawTime;
@@ -131,7 +106,7 @@ public class GameMap {
             g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
             g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
             g2.drawString("Draw time: " + drawTime, x, y + lineHeight * 4);
-            g2.drawString("Time has passed: " + (System.nanoTime() - startTime) / 1000000000 , x , y + lineHeight * 5);
+            g2.drawString("FPS: " + gp.currentFPS , x , y + lineHeight * 5);
         }
 
         //DEBUG HITBOX
@@ -139,6 +114,8 @@ public class GameMap {
         {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(1));
+            EventRectangle x = new EventRectangle(896 , 1408 , 128, 64 , true);
+            g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
             for (Entity e : objList) {
                 if (e != null) {
                     g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
@@ -193,6 +170,7 @@ public class GameMap {
                     if(!projectiles[i].active) projectiles[i] = null;
                 }
             }
+            //UPDATE ITEM
             for(Entity entity : inactiveObj) if(entity != null) entity.update();
             for(Entity entity : activeObj) if(entity != null) entity.update();
             for(Entity entity : npc) if(entity != null) entity.update();
@@ -213,10 +191,14 @@ public class GameMap {
                 int tileID = layer.tileLayerDataIndex[i][j];
                 int index = layer.getIndexTileSet(layer.tileLayerDataIndex[i][j]);
 
-                Obj_Wall wall = new Obj_Wall (layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
-                wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
-                wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
-                addObject(wall , inactiveObj);
+                if(layer.tileSetList.get(index).objects.get(tileID - 1) != null) {
+
+
+                    Obj_Wall wall = new Obj_Wall(layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
+                    wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
+                    wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
+                    addObject(wall, inactiveObj);
+                }
 //                inactiveObj[inactiveObjIndex] = wall;
 //                inactiveObjIndex++;
             }
@@ -251,6 +233,4 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
-
-
 }

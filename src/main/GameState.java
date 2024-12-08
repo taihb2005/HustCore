@@ -8,6 +8,6 @@ public enum GameState {
      DIALOGUE_STATE,
      LEVELUP_STATE,
      LOSE_STATE,
-     SETTING_STATE
-
+     SETTING_STATE,
+     QUIZ_STATE
 }

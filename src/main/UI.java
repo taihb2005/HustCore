@@ -2,34 +2,44 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
-import main.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 
+import static level.progress.level03.EventHandler03.time;
 import static main.GamePanel.*;
 
 public class UI {
     private final GamePanel gp;
     public Player player;
-    Graphics2D g2;
+    public Graphics2D g2;
     public Font joystix;
+    public Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
-    int dialogueCount;
     int cursor = 0;
+    boolean isInventoryOpen = false;
+    int inventoryX = tileSize / 4;
+    int inventoryY = tileSize / 2 + 80;
+    int inventoryWidth = tileSize * 2 - 18;
+    int inventoryHeight = tileSize * 6 + 32;
+    int slotX = inventoryX + 15;
+    int slotWidth = 50;
+    int slotHeight = 50;
+    public int selectedOption = -1;
+    public final int correctAnswer = 3;
+    private BufferedImage gameOverBackground;
 
-    private boolean slotselected = true;
-    int selectedSlot = 0;
+    int selectedSlot = -1;
 
     public int commandNum = 0;
 
@@ -41,51 +51,56 @@ public class UI {
 
     private BufferedImage titleImage;
 
-    private BufferedImage Key1Image;
+    private BufferedImage Key1Image, quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
-        this.player = gp.currentMap.player;
+        this.player = currentMap.player;
         try {
-            InputStream is = getClass().getResourceAsStream("/font/joystix monospace.otf");
-            joystix = Font.createFont(Font.TRUETYPE_FONT, is);
+            InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
+            InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
+            joystix = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(is1));
+            maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
         try {
-            hpFrame = ImageIO.read(getClass().getResourceAsStream("/ui/hpFrame.png"));
+            hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/hpFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            manaFrame = ImageIO.read(getClass().getResourceAsStream("/ui/manaFrame.png"));
+            manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            titleBackground = ImageIO.read(getClass().getResourceAsStream("/ui/Background.png"));
+            titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            titleImage  = ImageIO.read(getClass().getResourceAsStream("/ui/1.2.png"));
+            titleImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/1.2.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            Key1Image  = ImageIO.read(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png"));
+            Key1Image  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Bắt đầu đoạn hội thoại ngay khi khởi tạo UI
-        // DEMO
-        //startDialogue("Tôi là siêu anh hùng đến từ HUST.\nCon hồ ly tinh này đáng sợ quá");
+
+        try{
+            gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void startDialogue(String dialogue) {
         currentDialogue = dialogue;
@@ -101,8 +116,8 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(target.dialogues[target.dialogueIndex] != null) {
-            currentDialogue = target.dialogues[target.dialogueIndex];
+        if(target.dialogues[target.dialogueSet][target.dialogueIndex] != null) {
+            currentDialogue = target.dialogues[target.dialogueSet][target.dialogueIndex];
             drawSubWindow(x, y, width, height);
 
             frameCounter++;
@@ -117,35 +132,33 @@ public class UI {
             }
             if(KeyHandler.enterPressed)
             {
+                KeyHandler.enterPressed = false;
                 textIndex = 0;
                 displayedText = "";
                 if(gameState == GameState.DIALOGUE_STATE )
                 {
                     target.dialogueIndex++;
-                    KeyHandler.enterPressed = false;
                 }
             }
         }else
         {
-            target.dialogueIndex--;
+            target.dialogueIndex = 0;
             if(gameState == GameState.DIALOGUE_STATE)
             {
                 gameState = GameState.PLAY_STATE;
             }
         }
 
-        // Vẽ đoạn hội thoại từng dòng
-        x += tileSize;
+        x += tileSize - 10;
         y += tileSize;
         for (String line : displayedText.split("\n")) { // splits dialogue until "\n" as a line
             g2.drawString(line, x, y);
             y += 40;
         }
-
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
-        Color c = new Color(0,0,0, 100); //BLACK
+        Color c = new Color(0,0,0, 178); //BLACK
         g2.setColor(c);
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
@@ -178,28 +191,28 @@ public class UI {
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "PLAY";
+        text = "BẮT ĐẦU";
         x = getXforCenteredText(text);
         y = windowHeight*3/5;
         g2.drawString(text, x, y);
         if(commandNum == 0){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
 
-        text = "OPTIONS";
+        text = "TÙY CHỈNH";
         x = getXforCenteredText(text);
         y = windowHeight*7/10;
         g2.drawString(text, x, y);
         if(commandNum == 1){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
 
-        text = "QUIT";
+        text = "THOÁT";
         x = getXforCenteredText(text);
         y = windowHeight*4/5;
         g2.drawString(text, x, y);
         if(commandNum == 2){
-            g2.drawString(">",x-gp.tileSize, y);
+            g2.drawString(">",x- tileSize, y);
         }
     }
 
@@ -218,52 +231,8 @@ public class UI {
     public int getXforCenteredText(String text)
     {
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        int x = windowWidth / 2 - length / 2;
-        return x;
+        return windowWidth / 2 - length / 2;
     }
-
-    public void render(Graphics2D g2) {
-        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
-        if(gameState == GameState.PLAY_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        else if(gameState == GameState.MENU_STATE)
-        {
-            drawTitleScreen();
-        }
-        else if(gameState == GameState.DIALOGUE_STATE)
-        {
-            drawDialogueScreen();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        if(gameState == GameState.LEVELUP_STATE){
-            drawDialogueScreen();
-        } else
-        if(gameState == GameState.PAUSE_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawPausedScreen();
-            drawOptionsScreen();
-            drawInventory();
-        }
-        if(gameState == GameState.LOSE_STATE){
-            gp.currentMap.dispose();
-            drawGameOverScreen();
-        }
-        if(gameState == GameState.SETTING_STATE){
-
-            drawSettingScreen();
-
-        }
-    }
-
-    public Font getFont(){return joystix;};
 
     public void drawHPBar() {
         int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
@@ -293,15 +262,6 @@ public class UI {
         g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
     }
 
-    public void drawRewardWindow(){
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
-        int x = tileSize * 2;
-        int y = tileSize / 2;
-        int width = gp.getWidth() - tileSize * 4;
-        int height = tileSize * 4;
-        drawSubWindow(x , y , width , height);
-    }
-
     public void drawLevelUpWindow(){
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         int x = tileSize * 2;
@@ -311,38 +271,45 @@ public class UI {
         drawSubWindow(x , y , width , height);
     }
 
-    public void drawGameOverScreen()
-    {
-        g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
-        String text = "You sucked!";
-        int x = getXforCenteredText(text);
-        int y = windowHeight *2/5;
-        g2.drawString(text , x , y);
-
-        g2.setColor(Color.black);
-        g2.drawString(text,x+5,y+5);
-
-        //Colour
+        public void drawGameOverScreen() {
+        //BACKGROUND
+        g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
+        //MENU
+        g2.setFont(joystix.deriveFont(Font.BOLD, 35f));
         g2.setColor(Color.white);
-        g2.drawString(text , x , y );
 
-        //RETRY
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
-        text = "RETRY";
-        x = getXforCenteredText(text);
-        y = windowHeight*3/5;
+        String text = "RETRY";
+        int x = getXforCenteredText(text);
+        int y = windowHeight / 2;
+        int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+
         g2.drawString(text, x, y);
-        if(commandNum == 0){
-            g2.drawString(">",x-gp.tileSize, y);
+        //BOUND
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 - 10, tileSize + 10, 40, 40);
+        if(commandNum == 0) {
+            g2.drawString(">", x - tileSize - 10, y);
+        }
+
+        text = "MENU";
+        x = getXforCenteredText(text);
+        y += tileSize + 20;
+        g2.drawString(text, x, y);
+        //BOUND
+        length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3, tileSize + 10, 40, 40);
+        if(commandNum == 1) {
+            g2.drawString(">", x - tileSize - 10, y);
         }
 
         text = "QUIT";
         x = getXforCenteredText(text);
-        y = windowHeight*7/10;
+        y += tileSize + 20;
         g2.drawString(text, x, y);
-        if(commandNum == 1){
-            g2.drawString(">",x-gp.tileSize, y);
+        //BOUND
+        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 , tileSize + 10, 40, 40);
+        if(commandNum == 2) {
+            g2.drawString(">", x - tileSize - 10, y);
         }
     }
 
@@ -352,17 +319,16 @@ public class UI {
 
         // SUB WINDOW
 
-        int frameX = gp.tileSize * 4;
-        int frameY = gp.tileSize;
-        int frameWidth = gp.tileSize * 8;
-        int frameHeight = gp.tileSize * 10;
+        int frameX = tileSize * 4;
+        int frameY = tileSize;
+        int frameWidth = tileSize * 8;
+        int frameHeight = tileSize * 10;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
         switch(subState) {
             case 0: options_top(frameX, frameY); break;
         }
-
     }
     public void options_top(int frameX, int frameY) {
         int textX, textY;
@@ -379,7 +345,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 0) {
@@ -391,7 +357,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 1) {
@@ -415,36 +381,50 @@ public class UI {
         }
     }
     public void drawInventory() {
+        if(KeyHandler.keyEpressed){
+            KeyHandler.keyEpressed = false;
+            isInventoryOpen = !isInventoryOpen;
+        }
+        if (isInventoryOpen && inventoryWidth < (tileSize * 2 - 18)) {
+            inventoryWidth += 10;
+            inventoryX += 10;
+        }
 
-        int frameX = tileSize / 4;
-        int frameY = tileSize / 2 + 80;
-        int frameWidth = tileSize * 2 - 18;
-        int frameHeight = tileSize * 6 + 32;
-        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        if (!isInventoryOpen && inventoryWidth > -64) {
+            inventoryWidth -= 10;
+            inventoryX -= 10;
+        }
 
-        int slotX = frameX + 15;
-        int slotY = frameY + 12;
+        if (isInventoryOpen && slotWidth < 50) {
+            slotWidth += 10;
+            slotX += 10;
+        }
+
+        if (!isInventoryOpen && slotWidth > -64) {
+            slotWidth -= 10;
+            slotX -= 10;
+        }
+
+        drawSubWindow(inventoryX, inventoryY, inventoryWidth, inventoryHeight);
+
+        int slotY = inventoryY + 12;
+
         int slotSize = tileSize / 4;
 
         if (KeyHandler.key1pressed) {
             selectedSlot = 0;
-            slotselected = true;
             KeyHandler.key1pressed = false;
         } else if (KeyHandler.key2pressed) {
             selectedSlot = 1;
-            slotselected = true;
             KeyHandler.key2pressed = false;
         } else if (KeyHandler.key3pressed) {
             selectedSlot = 2;
-            slotselected = true;
             KeyHandler.key3pressed = false;
         } else if (KeyHandler.key4pressed) {
             selectedSlot = 3;
-            slotselected = true;
             KeyHandler.key4pressed = false;
         } else if (KeyHandler.key5pressed) {
             selectedSlot = 4;
-            slotselected = true;
             KeyHandler.key5pressed = false;
         }
 
@@ -453,21 +433,105 @@ public class UI {
         for (int i = 0; i < 5; i++) {
             int currentslotY = slotY + i * (slotSize + 50);
             g2.setColor(new Color(0, 0, 0, 100));
-            g2.fillRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+            g2.fillRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
 
             g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
-            g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
-
-            String numSlot = Integer.toString(i + 1);
-            g2.drawString(numSlot , slotX + 33 , currentslotY + 44);
-
-            if (slotselected && i == selectedSlot)
-            {
-                g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(slotX, currentslotY, 50, 50, 10, 10);
+            g2.drawRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
+        }
+        if (currentMap.player.inventory != null) for (int i = 0; i < currentMap.player.inventory.length; i++) {
+            int currentSlotY = slotY + i * (slotSize + 50);
+            if (currentMap.player.inventory[i] != null) {
+                // Vẽ icon của item
+                g2.drawImage(currentMap.player.inventory[i].getIcon(), slotX + 8, currentSlotY + 8, 33, 33, null);
+                g2.setFont(maru.deriveFont(Font.PLAIN , 25));
+                String quantity = Integer.toString( currentMap.player.inventory[i].getQuantity());
+                g2.drawString( quantity , slotX + 37 , currentSlotY + 46);
+                // Hiển thị viền slot được chọn
             }
         }
+    }
+    public void render(Graphics2D g2) {
+        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        if(gameState == GameState.PLAY_STATE && levelProgress == 3)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+            g2.setFont(new Font("Arial", Font.ITALIC, 24));
+            g2.drawString("Thời gian còn lại: " + time, 500, 550);
+        }
+        else if(gameState == GameState.PLAY_STATE)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+        }
+        else if(gameState == GameState.MENU_STATE)
+        {
+            drawTitleScreen();
+        }
+        else if(gameState == GameState.DIALOGUE_STATE)
+        {
+            drawDialogueScreen();
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+        }
+        if(gameState == GameState.LEVELUP_STATE){
+            drawDialogueScreen();
+        } else
+        if(gameState == GameState.PAUSE_STATE)
+        {
+            drawHPBar();
+            drawManaBar();
+            drawPausedScreen();
+            drawOptionsScreen();
+            drawInventory();
+        }
+        if(gameState == GameState.LOSE_STATE){
+            currentMap.dispose();
+            drawGameOverScreen();
+        }
+        if(gameState == GameState.SETTING_STATE){
+            drawSettingScreen();
+        }
+        if(gameState == GameState.QUIZ_STATE){
+            drawQuiz();
+        }
+    }
+
+    private void drawQuiz() {
+        try {
+            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int frameX = 0;
+        int frameY = 0;
+        int frameWidth = 978;
+        int frameHeight = 514;
+        String message = "";
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        g2.drawImage(quizImage,frameX, frameY, 768, 576, null);
+        if (selectedOption > -1) {
+            if (selectedOption == 4) {
+                message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";
+            } else if (selectedOption == 5) {
+                message = "Rất tiếc, bạn đã trả lời sai. Nhấn Enter để game over.";
+            } else {
+                message = "Bạn chọn đáp án " + (char) ('A' + selectedOption) + ". Nhấn Enter để xem kết quả";
+            }
+            drawMessage(message);
+        }
+
+    }
+
+    public void drawMessage(String message) {
+        g2.setFont(new Font("Arial", Font.PLAIN, 24));
+        g2.setColor(Color.BLACK);
+
+        g2.drawString(message , 30, 550);
     }
     public void drawSettingScreen(){
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
@@ -476,10 +540,10 @@ public class UI {
 
         // SUB WINDOW
 
-        int frameX = gp.tileSize * 4;
-        int frameY = gp.tileSize;
-        int frameWidth = gp.tileSize * 8;
-        int frameHeight = gp.tileSize * 10;
+        int frameX = tileSize * 4;
+        int frameY = tileSize;
+        int frameWidth = tileSize * 8;
+        int frameHeight = tileSize * 10;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
@@ -502,7 +566,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("Music", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 0) {
@@ -514,7 +578,7 @@ public class UI {
         textY += tileSize*2;
         g2.drawString("SE", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
-        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY);
+        g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
         g2.drawString("+",textX+280, textY);
         if (commandNum == 1) {
@@ -524,7 +588,7 @@ public class UI {
         //CONTROL
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("CONTROL", textX, textY);
+        g2.drawString("ĐIỀU KHIỂN", textX, textY);
         if (commandNum == 2) {
             g2.drawString(">", textX-25, textY);
         }
@@ -532,7 +596,7 @@ public class UI {
         // EXIT
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Exit", textX, textY);
+        g2.drawString("Quay lại", textX, textY);
         if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
         }
@@ -586,7 +650,5 @@ public class UI {
         textY+=tileSize;
 
         g2.drawString("ENTER", textX, textY);
-
-
     }
 }

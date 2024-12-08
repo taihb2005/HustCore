@@ -1,8 +1,8 @@
 package entity.mob;
 
 import entity.Actable;
-import entity.Entity;
-import entity.projectile.Obj_BasicGreenProjectile;
+import entity.effect.type.Slow;
+import entity.projectile.Proj_BasicGreenProjectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
@@ -22,8 +22,7 @@ Mô tả:
 +Kĩ năng: Có thể bay qua các vật thể một cách dễ dàng
 */
 
-public class Mon_Spectron extends Entity implements Actable {
-    GameMap mp;
+public class Mon_Spectron extends Monster implements Actable {
     final private static int IDLE = 0;
     final private static int RUN = 1;
     final private static int SHOOT = 2;
@@ -32,13 +31,6 @@ public class Mon_Spectron extends Entity implements Actable {
     final private static int RIGHT = 0;
     final private static int LEFT = 1;
 
-    private int PREVIOUS_ACTION;
-    private int CURRENT_ACTION;
-    private int CURRENT_DIRECTION;
-
-    private boolean isRunning;
-    private boolean isShooting;
-    private boolean isIdle;
 
     final private BufferedImage [][][] mon_spectron = new BufferedImage[4][][];
     final private Animation mon_animator_spectron = new Animation();
@@ -48,7 +40,6 @@ public class Mon_Spectron extends Entity implements Actable {
     private int changeDirCounter = 120;
     private int shootInterval = 120;
 
-    private int CURRENT_FRAME;
     private int lastHP;
 
     //DEMO
@@ -57,12 +48,40 @@ public class Mon_Spectron extends Entity implements Actable {
 
     public Mon_Spectron(GameMap mp)
     {
-        super();
+        super(mp);
         name = "Spectron";
         this.mp = mp;
         super.width = 64;
         super.height = 64;
         this.canbeDestroyed = false;
+        onPath = false;
+
+        set();
+    }
+
+    public Mon_Spectron(GameMap mp , int x , int y)
+    {
+        super(mp , x , y);
+        name = "Spectron";
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+        this.canbeDestroyed = false;
+        onPath = false;
+
+        set();
+    }
+
+    public Mon_Spectron(GameMap mp , int x , int y , String idName)
+    {
+        super(mp , x , y);
+        name = "Spectron";
+        this.idName = idName;
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+        this.canbeDestroyed = false;
+        onPath = false;
 
         set();
     }
@@ -77,7 +96,7 @@ public class Mon_Spectron extends Entity implements Actable {
 
     private void setDefault()
     {
-        projectile = new Obj_BasicGreenProjectile(mp);
+        projectile = new Proj_BasicGreenProjectile(mp);
         invincibleDuration = 40; // 1s
         maxHP = 40;
         currentHP = maxHP;
@@ -85,10 +104,12 @@ public class Mon_Spectron extends Entity implements Actable {
         strength = 10;
         speed = 1;
         last_speed = speed;
+        effectDealOnTouch = new Slow(mp.player , 60);
+        effectDealByProjectile = new Slow(mp.player , 180);
 
         expDrop = 10;
 
-        solidArea1 = new Rectangle(20 , 19 , 26 , 15);
+        solidArea1 = new Rectangle(20 , 19 , 26 , 20);
         hitbox = new Rectangle(20 , 8 , 27 , 32);
         //solidArea2 = new Rectangle(0 , 0 , 0 ,0);
         super.setDefaultSolidArea();
@@ -114,14 +135,9 @@ public class Mon_Spectron extends Entity implements Actable {
 
     public void loot() {
         spawnHeart();
-        spawnCoin();
     }
 
-    public void pathFinding() {
-
-    }
-
-    private void changeDirection()
+    private void changeAnimationDirection()
     {
         switch(direction)
         {
@@ -182,43 +198,34 @@ public class Mon_Spectron extends Entity implements Actable {
     private void setAction()
     {
         //SPEED
-        if(currentHP <= 15){
-            speed = 2;
-            changeDirCounter = 60;
-            shootInterval = 60;
-        }
         //MOVE
         actionLockCounter++;
-        if(actionLockCounter >= changeDirCounter && !isDying && !isShooting)
-        {
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
             up = down = left = right = false;
             Random random = new Random();
             int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if(i <= 28)
-            {
+            if (i <= 28) {
                 direction = "up";
                 up = true;
             }
-            if(i>28 && i <= 50)
-            {
+            if (i > 28 && i <= 50) {
                 direction = "down";
                 down = true;
             }
-            if(i>50 && i <= 75)
-            {
+            if (i > 50 && i <= 75) {
                 direction = "left";
                 left = true;
             }
-            if(i>75 && i < 100)
-            {
+            if (i > 75 && i < 100) {
                 direction = "right";
                 right = true;
             }
             actionLockCounter = 0; // reset
-            isRunning = !isShooting;
+            isRunning = !isShooting && (right | left | up | down);
         }
 
         //ATTACK
+        damagePlayer();
         if(lastHP > currentHP){
             lastHP = currentHP;
             reactForDamage();
@@ -245,31 +252,11 @@ public class Mon_Spectron extends Entity implements Actable {
 
     public void attack() {
         projectile.set(worldX , worldY , direction , true , this);
-        for(int i = 0; i < mp.projectiles.length; i++)
-        {
-            if(mp.projectiles[i] == null)
-            {
-                mp.projectiles[i] = projectile;
-                break;
-            }
-        }
+        mp.addObject(projectile , mp.projectiles);
     }
 
-    public void reactForDamage(){
-        switch (mp.player.projectile.direction){
-            case "right": direction = "left"; left = true ; break;
-            case "left" : direction = "right"; right = true ; break;
-            case "up"   : direction = "down" ; down = true; break;
-            case "down" : direction = "up"   ; up = true; break;
-        }
-    }
 
     public void move() {
-        boolean contactPlayer = mp.cChecker.checkPlayer(this);
-        if(contactPlayer && !mp.player.isInvincible){
-            mp.player.receiveDamage(this);
-            mp.player.isInvincible = true;
-        }
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;
@@ -306,7 +293,7 @@ public class Mon_Spectron extends Entity implements Actable {
     public void update() {
         setAction();
         move();
-        changeDirection();
+        changeAnimationDirection();
         handleAnimationState();
         mon_animator_spectron.update();
         CURRENT_FRAME = mon_animator_spectron.getCurrentFrames();

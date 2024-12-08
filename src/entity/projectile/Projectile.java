@@ -1,9 +1,8 @@
 package entity.projectile;
 
-import entity.Effect;
+import entity.effect.EffectType;
 import entity.Entity;
 import graphics.Animation;
-import main.GamePanel;
 import map.GameMap;
 
 import java.awt.image.BufferedImage;
@@ -25,8 +24,12 @@ public class Projectile extends Entity {
     protected int CURRENT_DIRECTION;
     protected int CURRENT_FRAME;
 
+    public int manaCost;
+    public boolean active;
+
+
     public int base_damage;
-    public Effect effectType;
+    public EffectType effectType;
     public int slowDuration;
 
     public Projectile(GameMap mp)
@@ -68,38 +71,16 @@ public class Projectile extends Entity {
         return check1 | check2 | check3 | check4;
     }
 
-    public void slow(Entity e){
-        e.speed =(int)(e.last_speed * 0.5f);
-    }
-
-    public void stun(Entity e){
-        e.speed = 0;
-    }
-
     public void update() {
         if(user == mp.player){
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
-           //System.out.println(index);
             mp.player.damageEnemy(index);
         } else{
             boolean contactPlayer = mp.cChecker.checkPlayer(this);
             if(!mp.player.isInvincible && contactPlayer){
-                if(name.equals("Plasma")) {
-                    if(mp.player.getEffect == Effect.NONE) {
-                        GamePanel.environmentManager.lighting.transit = true;
-                        GamePanel.environmentManager.lighting.fadeIn = true;
-                    }
-                    mp.player.getEffect = Effect.BLIND;
-                    effManager.setEffectDuration(600);
-                } else if(name.equals("Basic Green Projectile")){
-                    if(mp.player.getEffect == Effect.NONE) {
-                        mp.player.getEffect = Effect.SLOW;
-                        slow(mp.player);
-                        effManager.setEffectDuration(150);
-                    }
-                }
                 active = false;
                 mp.player.receiveDamage(this , user);
+                user.projectileCauseEffect();
                 mp.player.isInvincible = true;
             }
         }
@@ -135,6 +116,8 @@ public class Projectile extends Entity {
     }
     public void render(Graphics2D g2) {
         if (active) {
+//            System.out.println((projectile_sprite.length-1)+" "+(projectile_sprite[CURRENT_DIRECTION].length-1));
+//            System.out.println(CURRENT_DIRECTION+" "+CURRENT_FRAME);
             g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() ,
                          width , height , null);
         }
