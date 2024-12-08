@@ -82,6 +82,7 @@ public class EventHandler03 extends EventHandler {
         eventMaster.dialogues[1][2] = "Boss: hãy chuẩn bị bỏ mạng đi…\n";
         eventMaster.startDialogue(eventMaster,1);
         lvl.map.player.speed=1;
+        lvl.map.player.last_speed=1;
         lvl.map.player.projectile.speed = 1;
         lvl.map.player.projectile.maxHP = 150;
     }
@@ -98,6 +99,7 @@ public class EventHandler03 extends EventHandler {
                 "màn hình rồi còn bắt đọc hết đống\nthoại này...\n";
         eventMaster.startDialogue(eventMaster,2);
         lvl.map.player.speed=3;
+        lvl.map.player.last_speed=3;
         lvl.map.player.projectile.speed = 10;
         lvl.map.player.projectile.maxHP = 30;
     }
