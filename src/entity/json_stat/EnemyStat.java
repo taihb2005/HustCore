@@ -1,10 +1,13 @@
 package entity.json_stat;
 
+import entity.effect.Effect;
+
 public class EnemyStat {
     private String enemy;
     private String name;
     private int type;
     private Position position;
+    private Effect effect;
     private DetectionRect detection;
     private String direction;
     private boolean isAlwaysUp;
@@ -34,6 +37,7 @@ public class EnemyStat {
 
     public int getAttackCycle() {return attackCycle;}
 
+    public Effect getEffect(){return effect;}
     public class Position {
         private int x;
         private int y;
@@ -54,6 +58,13 @@ public class EnemyStat {
         public int getY(){return y;}
         public int getWidth(){return width;}
         public int getHeight(){return height;}
+    }
+    public class Effect{
+        private String type;
+        private int duration;
+
+        public String getEffectType(){return type;}
+        public int getDuration(){return duration;}
     }
 }
 

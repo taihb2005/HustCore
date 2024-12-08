@@ -2,6 +2,10 @@ package level;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import entity.effect.Effect;
+import entity.effect.type.Blind;
+import entity.effect.type.Slow;
+import entity.effect.type.SpeedBoost;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.items.Item_Potion;
@@ -21,6 +25,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
+import static main.GamePanel.currentMap;
 import static main.GamePanel.sManager;
 
 public class AssetSetter {
@@ -167,11 +172,22 @@ public class AssetSetter {
                             ), mp.enemy);
                         };
                         break;
+                    case "Mon_EffectDealer":
+                        Effect effect = null;
+                        String effectType = enemy.getEffect().getEffectType();
+                        int duration = enemy.getEffect().getDuration();
+                        switch(effectType){
+                            case "Slow": effect = new Slow(mp.player , duration); break;
+                            case "SpeedBoost": effect = new SpeedBoost(mp.player , duration); break;
+                            case "Blind": effect = new Blind(mp.player , duration);
+                        }
+                        mp.addObject(new Mon_EffectDealer(mp , effect ,enemy.getX() , enemy.getY()) , mp.enemy);
                 }
             }
 
         } catch (Exception e) {
             System.out.println("Không sao hết, chỉ là bàn này không có quái thôi");
+            e.printStackTrace();
         }
     }
 

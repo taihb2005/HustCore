@@ -24,7 +24,7 @@ public class EventHandler03 extends EventHandler {
         setFirstDialogue();
         setEventRect();
 //        setEventEntity();
-        time = 3000;
+        time = 9999999;
     }
 
     private void setEventRect(){
@@ -32,24 +32,6 @@ public class EventHandler03 extends EventHandler {
         beginRoom2 = new EventRectangle(320 , 1230 , 64 , 32 , true);
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
         beginRoom3 = new EventRectangle(1408 , 992 , 128 , 32 , true);
-    }
-
-    void checkForTutorialEvent(){
-        for(Entity npc : lvl.map.npc){
-            if(npc != null && npc.idName.equals("Chill Guy")){
-                Npc_CorruptedHustStudent npc_tmp = (Npc_CorruptedHustStudent) npc;
-                lvl.finishedTutorialDialogue = npc_tmp.hasTalkYet();
-            }
-        }
-    }
-
-    void openTutorialDoor(){
-        for(Entity object: lvl.map.activeObj){
-            if(object != null && (object.idName.equals("Begin DoorMap 01") || object.idName.equals("Begin DoorMap 02") || object.idName.equals("Begin DoorMap 03"))){
-                Obj_Door door = (Obj_Door) object;
-                door.canChangeState = true;
-            }
-        }
     }
 
     void startingDialogue(){
@@ -95,17 +77,6 @@ public class EventHandler03 extends EventHandler {
         eventMaster.dialogues[2][2] = "Player: Trời ơi… sắp tối thui \n" +
                 "màn hình rồi còn bắt đọc hết đống thoại này...\n";
         eventMaster.startDialogue(eventMaster,2);
-    }
-
-    public void checkIfCompleteFirstDialogue() {
-        if (lvl.finishedBeginingDialogue) {
-            for(Entity e : lvl.map.activeObj) {
-                if (e != null && e.idName.equals("Room1 Door")) {
-                    Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
-                }
-            }
-        };
     }
 
     public void update() {

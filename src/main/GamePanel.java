@@ -9,6 +9,7 @@ import level.Level;
 import level.LevelManager;
 import level.progress.level00.Level00;
 import level.progress.level01.Level01;
+import level.progress.level02.EventHandler02;
 import level.progress.level02.Level02;
 import level.progress.level03.Level03;
 import map.*;
