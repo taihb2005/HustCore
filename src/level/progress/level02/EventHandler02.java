@@ -27,7 +27,7 @@ public class EventHandler02 extends EventHandler {
     public EventHandler02(Level lvl) {
         super(lvl);
 
-        totalEnemy = 20;
+        totalEnemy = 1;
         showPasswordInput = new EventRectangle(822 , 694 , 74 , 74 , false);
 
     }
@@ -36,6 +36,7 @@ public class EventHandler02 extends EventHandler {
         for(Entity e : lvl.map.enemy){
             if(e != null && e.canbeDestroyed) enemiesDefeated++;
         }
+        System.out.println(enemiesDefeated);
     }
 
     private void popUpPasswordHint(){
@@ -44,6 +45,7 @@ public class EventHandler02 extends EventHandler {
             hasPopUpHint = true;
             eventMaster.startDialogue(eventMaster , 0);
         }
+        if(enemiesDefeated % 5 != 0 && hasPopUpHint) hasPopUpHint = false;
     }
 
     public void checkForPasswordDoor(){
