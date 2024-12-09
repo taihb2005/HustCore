@@ -260,13 +260,6 @@ public class KeyHandler implements KeyListener{
 
             }
             // FOR OPTIONS
-            int maxCommandNum = 0;
-            switch (GamePanel.ui.subState) {
-                case 0:
-                    maxCommandNum = 3;
-                case 1:
-                    maxCommandNum = 5;
-            }
 
             if (keyCode == KeyEvent.VK_W) {
                 GamePanel.ui.commandNum--;
