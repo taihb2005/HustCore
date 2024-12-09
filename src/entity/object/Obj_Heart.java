@@ -22,8 +22,8 @@ public class Obj_Heart extends Entity {
 
     private int CURRENT_ACTION;
     private int PREVIOUS_ACTION;
-    final private BufferedImage[][] obj_heart = new BufferedImage[2][];
-    final private Animation obj_animator_heart = new Animation();
+    private BufferedImage[][] obj_heart = new BufferedImage[2][];
+    private Animation obj_animator_heart = new Animation();
 
     int hpReward = 40;
 
@@ -122,5 +122,16 @@ public class Obj_Heart extends Entity {
                     worldY - camera.getY() ,
                     width, height, null);
     }
-
+    public void dispose(){
+        obj_animator_heart.dispose();
+        obj_animator_heart = null;
+        for(int i = 0 ; i < obj_heart.length ; i++) {
+            for (int j = 0; j < obj_heart[i].length; j++) {
+                obj_heart[i][j].flush();
+                obj_heart[i][j] = null;
+            }
+            obj_heart[i] = null;
+        }
+        obj_heart = null;
+    }
 }

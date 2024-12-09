@@ -13,7 +13,7 @@ public class Obj_Television extends Entity {
     public static int SMALL = 0;
     public static int BIG = 1;
     private final BufferedImage[] obj_television;
-    private final Animation obj_animator_television;
+    private Animation obj_animator_television;
     private int currentFrames = 0;
     public String state;
     public int type;
@@ -63,5 +63,14 @@ public class Obj_Television extends Entity {
     @Override
     public void render(Graphics2D g2) {
         g2.drawImage(obj_television[currentFrames] , worldX - camera.getX() , worldY - camera.getY() , width ,height , null);
+    }
+
+    public void dispose(){
+        obj_animator_television.dispose();
+        obj_animator_television = null;
+        for(int i = 0 ; i < obj_television.length ; i++){
+            obj_television[i].flush();
+            obj_television[i] = null;
+        }
     }
 }

@@ -372,7 +372,7 @@
       "position": { "x": 1152, "y": 1664 },
       "items": [
         { "name": "Item_Kit", "quantity": 1 },
-        { "name": "Item_SpeedGem" , "quantity": 2}
+        { "name": "Item_SpeedGem" , "quantity": 1}
       ]
     },
     {

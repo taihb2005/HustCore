@@ -33,7 +33,7 @@ public class EventHandler03 extends EventHandler {
     private final Entity[] eventEntity = new Entity[10];
     public static int time = 0;
 
-    private Stun temp;
+    private final Stun temp;
 
     public EventHandler03(Level lvl) {
         super(lvl);
@@ -56,7 +56,6 @@ public class EventHandler03 extends EventHandler {
 
     void startingDialogue(){
         TimerTask beginGameDialogue = new TimerTask() {
-            //Con điên, sao k để chạy thoại của eventMastr luôn tách ra làm đ gì
             public void run() {
                 eventMaster.startDialogue(eventMaster , 0);
                 lvl.finishedBeginingDialogue = true;
@@ -138,6 +137,7 @@ public class EventHandler03 extends EventHandler {
                 if(lvl.map.player.effect.isEmpty())GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
             }
             else {
+                time = 0;
                 GamePanel.environmentManager.lighting.setLightRadius(200);
                 lvl.map.player.currentHP = 0;
             }
@@ -182,9 +182,12 @@ public class EventHandler03 extends EventHandler {
             }
 
             if(!quizArea.eventFinished && triggerEvent(quizArea)) {
+                lvl.levelFinished = true;
                 lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 GamePanel.gameState = GameState.QUIZ_STATE;
             }
+
+            if(lvl.levelFinished) GamePanel.environmentManager.lighting.setLightRadius(lvl.map.getBestLightingRadius());
 
             lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
         }

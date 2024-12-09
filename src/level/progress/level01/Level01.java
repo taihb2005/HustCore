@@ -22,7 +22,7 @@ public class Level01 extends Level {
         levelFinished = false;
         canChangeMap = false;
 
-        changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , true);
+        changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , false);
     }
 
     public void updateProgress(){

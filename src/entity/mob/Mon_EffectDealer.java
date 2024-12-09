@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Mon_EffectDealer extends Monster{
-    private BufferedImage effect_dealer;
     public Mon_EffectDealer(GameMap mp, int x, int y) {
         super(mp, x, y);
         width = 64; height = 64;
@@ -42,12 +41,16 @@ public class Mon_EffectDealer extends Monster{
         hitbox = new Rectangle(0 , 0 , 64 , 64);
         //solidArea2 = new Rectangle(0 , 0 , 0 ,0);
         super.setDefaultSolidArea();
-
-        effect_dealer = new Sprite("/entity/mob/effect_dealer/effect_dealer.png" , width , height).getSpriteSheet();
     }
 
     public void update(){
         damagePlayer();
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
     }
 
     public void setEffectDealOnTouch(Effect eff){this.effectDealOnTouch = eff;}

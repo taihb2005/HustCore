@@ -225,12 +225,7 @@ public class Entity {
 
     public void render(Graphics2D g2){};
 
-    public void dispose() {
-        solidArea1 = null;
-        solidArea2 = null;
-        interactionDetectionArea = null;
-        dialogues = null;
-    }
+    public void dispose(){};
 
     public String getOppositeDirection(String direction){
         return  switch (direction) {

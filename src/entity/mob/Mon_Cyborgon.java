@@ -32,7 +32,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     public int state;
 
     private final BufferedImage [][][] mon_cyborgon = new BufferedImage[7][][];
-    private final Animation mon_animator_cyborgon = new Animation();
+    private Animation mon_animator_cyborgon = new Animation();
 
     private int diameter = 100;
     private int newDiameter = diameter;
@@ -325,6 +325,23 @@ public class Mon_Cyborgon extends Monster implements Actable {
                 exposureTime = 0;
             }
         }
+    }
 
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_cyborgon = null;
+        for(int i = 0 ; i < mon_cyborgon.length ; i++){
+            for(int j = 0 ; j < mon_cyborgon[i].length ; j++){
+                for(int k = 0 ; k < mon_cyborgon[i][j].length ; k++){
+                    mon_cyborgon[i][j][k].flush();
+                    mon_cyborgon[i][j][k] = null;
+                }
+            }
+        }
+        projectile = null;
+        projectile_name = null;
     }
 }

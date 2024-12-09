@@ -18,6 +18,7 @@ import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 // swing library
 import javax.swing.JPanel;
@@ -48,8 +49,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 2;
+    public static int levelProgress = 2;
+    public static ArrayList<Level> completedLevel = new ArrayList<>();
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -82,9 +84,12 @@ public class GamePanel extends JPanel implements Runnable {
             case 3 : currentLevel = new Level03(this); break;
             case 4 : currentLevel = new Level04(this); break;
         }
+        completedLevel.add(currentLevel);
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;
         ui = new UI(this);
+        for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
+        completedLevel.removeIf(level -> level.levelFinished);
     }
 
     public void restart(){
@@ -143,7 +148,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
             resumeMusic(0);
             currentMap.update();
             currentLevel.updateProgress();

@@ -17,6 +17,7 @@ import java.awt.*;
 import java.util.*;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.scale;
 
 
 public class GameMap {
@@ -52,7 +53,7 @@ public class GameMap {
         inactiveObj = new Entity[500];
         activeObj   = new Entity[100];
         npc         = new Entity[100];
-        enemy       = new Monster[100];
+        enemy       = new Monster[50];
         projectiles = new Projectile[100];
         objList     = new ArrayList<>();
         dispose();
@@ -65,6 +66,7 @@ public class GameMap {
 
     public void render(Graphics2D g2)
     {
+        objList.clear();
         objList.add(player);
         for (Entity entity : inactiveObj) if(entity != null) objList.add(entity);
         for (Entity entity : activeObj) if(entity != null) objList.add(entity);
@@ -148,7 +150,6 @@ public class GameMap {
                 }
             }
         }
-        objList.clear();
     }
 
     public void update()
@@ -158,17 +159,25 @@ public class GameMap {
             //UPDATE ENTITY
             for(int i = 0 ; i < activeObj.length ; i++){
                 if(activeObj[i] != null){
-                    if(activeObj[i].canbeDestroyed) activeObj[i] = null;
+                    if(activeObj[i].canbeDestroyed){
+                        activeObj[i].dispose();
+                        activeObj[i] = null;
+                    }
                 }
             }
             for(int i = 0 ; i < enemy.length ; i++){
                 if(enemy[i] != null){
-                    if(enemy[i].canbeDestroyed) enemy[i] = null;
+                    if(enemy[i].canbeDestroyed) {
+                        enemy[i].dispose();
+                        enemy[i] = null;
+                    }
                 }
             }
             for(int i = 0 ; i < projectiles.length ; i++){
                 if(projectiles[i] != null){
-                    if(!projectiles[i].active) projectiles[i] = null;
+                    if(!projectiles[i].active){
+                        projectiles[i] = null;
+                    }
                 }
             }
             //UPDATE ITEM
@@ -178,7 +187,6 @@ public class GameMap {
             for(Entity entity : enemy) if(entity != null) entity.update();
             for(Entity entity : projectiles) if(entity != null) entity.update();
             player.update();
-
         }
     }
 
@@ -207,6 +215,9 @@ public class GameMap {
     }
 
     public void dispose(){
+        for(Entity e : activeObj) if(e != null) e.dispose();
+        for(Entity e : enemy) if(e != null) e.dispose();
+        for(Entity e : projectiles) if(e != null) e.dispose();
         Arrays.fill(inactiveObj, null);
         Arrays.fill(activeObj, null);
         Arrays.fill(npc, null);
@@ -234,4 +245,5 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
+
 }
