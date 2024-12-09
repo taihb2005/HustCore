@@ -18,11 +18,11 @@ public class Level00 extends Level {
         init();
         setter.setFilePathObject("res/level/level00/object_level00.json");
         setter.setFilePathNpc("res/level/level00/npc_level00.json");
-        setter.setFilePathEnemy("res/level/level01/enemy_level00.json");
+        setter.setFilePathEnemy(null);
         setter.loadAll();
 
         levelFinished = true;
-        changeMapEventRect = new EventRectangle(1088 , 2280 , 64 , 32);
+        changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
     }
 
     public void updateProgress(){

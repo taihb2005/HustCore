@@ -40,7 +40,7 @@ public class Mon_Shooter extends Monster implements Actable {
     private int shootSpeed = 10;
 
     private final BufferedImage[][][] mon_shooter = new BufferedImage[4][][];
-    private final Animation mon_animator_shooter = new Animation();
+    private Animation mon_animator_shooter = new Animation();
     public int type;
 
     private ArrayList<Projectile> proj;
@@ -308,5 +308,27 @@ public class Mon_Shooter extends Monster implements Actable {
     public void setDirection(String dir){
         direction = dir;
         changeAnimationDirection();
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_shooter = null;
+        for(int i = 0 ; i < mon_shooter.length ; i++){
+            for(int j = 0 ; j < mon_shooter[i].length ; j++){
+                for(int k = 0 ; k < mon_shooter[i][j].length ; k++){
+                    mon_shooter[i][j][k].flush();
+                    mon_shooter[i][j][k] = null;
+                }
+            }
+        }
+        projectile = null;
+        proj.clear();
+        proj = null;
+        projectile_name = null;
+        effectDealByProjectile = null;
+        effectDealOnTouch = null;
     }
 }

@@ -21,6 +21,7 @@ import map.GameMap;
 
 import java.awt.*;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
@@ -39,45 +40,45 @@ public class AssetSetter {
         this.mp = mp;
     }
 
-    public void setObject()
+    public void setObject() throws IOException
     {
-        try {
-            Reader reader = new FileReader(filePathObject);
+        try (Reader reader = new FileReader(filePathObject)) {
             Gson gson = new Gson();
 
-            Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {}.getType());
+            Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {
+            }.getType());
 
             List<GameObject> player = data.get("player");
             List<GameObject> activeObjects = data.get("active");
             List<GameObject> inactiveObjects = data.get("inactive");
 
-            mp.player.setPosition(player.get(0).getX() , player.get(0).getY());
-            sManager.setPos(player.get(0).getX() , player.get(0).getY());
+            mp.player.setPosition(player.get(0).getX(), player.get(0).getY());
+            sManager.setPos(player.get(0).getX(), player.get(0).getY());
 
             for (GameObject obj : inactiveObjects) {
                 int X = obj.getPosition().getX();
                 int Y = obj.getPosition().getY();
-                switch(obj.getObject()) {
+                switch (obj.getObject()) {
                     case "Obj_Tank":
-                        mp.addObject(new Obj_Tank(obj.getState() ,obj.getType() , X , Y), mp.inactiveObj);
+                        mp.addObject(new Obj_Tank(obj.getState(), obj.getType(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_Television":
-                        mp.addObject(new Obj_Television(obj.getState() , obj.getSize(), obj.getFrame(),obj.getType() , X , Y), mp.inactiveObj);
+                        mp.addObject(new Obj_Television(obj.getState(), obj.getSize(), obj.getFrame(), obj.getType(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_Chair":
-                        mp.addObject(new Obj_Chair(obj.getDirection(), obj.getType() , X , Y), mp.inactiveObj);
+                        mp.addObject(new Obj_Chair(obj.getDirection(), obj.getType(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_PasswordAuth":
-                        mp.addObject(new Obj_PasswordAuth(obj.getState() , X , Y) , mp.inactiveObj);
+                        mp.addObject(new Obj_PasswordAuth(obj.getState(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_Bin":
-                        mp.addObject(new Obj_Bin(obj.getType() , X , Y) , mp.inactiveObj);
+                        mp.addObject(new Obj_Bin(obj.getType(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_Computer":
-                        mp.addObject(new Obj_Computer(obj.getState() , obj.getDirection() , X ,  Y) , mp.inactiveObj);
+                        mp.addObject(new Obj_Computer(obj.getState(), obj.getDirection(), X, Y), mp.inactiveObj);
                         break;
                     case "Obj_Vault":
-                        mp.addObject(new Obj_Vault(obj.getState() , obj.getType() , X , Y) , mp.inactiveObj);
+                        mp.addObject(new Obj_Vault(obj.getState(), obj.getType(), X, Y), mp.inactiveObj);
                         break;
                 }
             }
@@ -87,11 +88,11 @@ public class AssetSetter {
                 int Y = obj.getY();
                 switch (obj.getObject()) {
                     case "Obj_Door":
-                        Obj_Door door = new Obj_Door(obj.getSize(), obj.getState() , obj.getName() ,X , Y);
+                        Obj_Door door = new Obj_Door(obj.getSize(), obj.getState(), obj.getName(), X, Y);
                         mp.addObject(door, mp.activeObj);
                         break;
                     case "Obj_Chest":
-                        Obj_Chest chest = new Obj_Chest(mp , X , Y , obj.getName());
+                        Obj_Chest chest = new Obj_Chest(mp, X, Y, obj.getName());
                         for (ItemStat item : obj.getItems()) {
                             switch (item.getName()) {
                                 case "Item_Kit":
@@ -101,10 +102,10 @@ public class AssetSetter {
                                     chest.setLoot(new Item_Battery(), item.getQuantity());
                                     break;
                                 case "Item_SpeedGem":
-                                    chest.setLoot(new Item_SpeedGem() , item.getQuantity());
+                                    chest.setLoot(new Item_SpeedGem(), item.getQuantity());
                                     break;
                                 case "Item_Potion":
-                                    chest.setLoot(new Item_Potion() , item.getQuantity());
+                                    chest.setLoot(new Item_Potion(), item.getQuantity());
                                     break;
                             }
                             chest.setDialogue();
@@ -120,10 +121,9 @@ public class AssetSetter {
         }
     }
 
-    public void setNpc()
+    public void setNpc() throws IOException
     {
-        try{
-            Reader reader = new FileReader(filePathNpc);
+        try(Reader reader = new FileReader(filePathNpc)){
             Gson gson = new Gson();
             Map<String, List<NpcStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<NpcStat>>>() {}.getType());
 
@@ -139,9 +139,8 @@ public class AssetSetter {
         }
     }
 
-    public void setEnemy(){
-        try {
-            Reader reader = new FileReader(filePathEnemy);
+    public void setEnemy() throws IOException{
+        try(Reader reader = new FileReader(filePathEnemy);) {
             Gson gson = new Gson();
 
             Map<String, List<EnemyStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<EnemyStat>>>() {}.getType());
@@ -192,9 +191,13 @@ public class AssetSetter {
     }
 
     public void loadAll(){
-        if(filePathObject != null) setObject();
-        if(filePathNpc != null) setNpc();
-        if(filePathEnemy != null) setEnemy();
+        try {
+            if (filePathObject != null) setObject();
+            if (filePathNpc != null) setNpc();
+            if (filePathEnemy != null) setEnemy();
+        } catch(IOException ioe){
+            throw new RuntimeException("Unknown error in AssetSetter");
+        }
     }
 
     public void setFilePathObject(String filePathObject){this.filePathObject = filePathObject;}

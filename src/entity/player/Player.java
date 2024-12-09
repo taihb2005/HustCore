@@ -13,6 +13,7 @@ import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 import status.StatusManager;
+import level.progress.level02.EventHandler02;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,7 +46,7 @@ public class Player extends Entity {
     private boolean isShooting;
     public boolean isDying = false;
 
-    private boolean attackCanceled;
+    public boolean attackCanceled;
     public final int screenX, screenY;
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
@@ -56,7 +57,7 @@ public class Player extends Entity {
     public int nextLevelUp = 30;
 
     //PLAYER STATUS
-    public int blindRadius = 100;
+    public int blindRadius = 200;
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
@@ -333,7 +334,9 @@ public class Player extends Entity {
                 System.out.println("Current exp: " + exp);
                 mp.enemy[index].currentHP = 0;
                 mp.enemy[index].die();
+
                 checkForLevelUp();
+
             }
         }
     }

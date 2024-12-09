@@ -5,7 +5,6 @@ import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.Obj_Door;
 import level.EventHandler;
 import level.Level;
-import map.GameMap;
 
 import java.util.TimerTask;
 
@@ -56,7 +55,7 @@ public class EventHandler00 extends EventHandler {
         checkForTutorialEvent();
         if(!finishedBeginingDialogue && !lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
         if(finishedTutorialDialogue) openTutorialDoor();
-        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
+        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
 
 }

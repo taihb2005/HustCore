@@ -1,136 +1,112 @@
 package level.progress.level02;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import entity.json_stat.EnemyStat;
-import entity.json_stat.NpcStat;
-import entity.mob.*;
-import entity.npc.Npc_CorruptedHustStudent;
-import level.EventHandler;
+import entity.Entity;
+import entity.object.Obj_Door;
+import level.EventRectangle;
 import level.Level;
-import map.GameMap;
+import level.EventHandler;
+import main.GamePanel;
+import main.GameState;
 
 import java.awt.*;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.List;
-import java.util.Map;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.TimerTask;
+
+
+import static main.KeyHandler.*;
+import static main.UI.joystix;
 
 public class EventHandler02 extends EventHandler {
-    private final String filePathEnemy;
-    private String filePathNpc;
+    private final int totalEnemy ;
     private int enemiesDefeated = 0;
-    private int rewardIndex = 0;
-    private final int[] rewards = {1, 0, 5, 6};
+    private boolean allEnemyDefeated;
+    private boolean hasPopUpHint;
+    private boolean isInRegion;
+    private final EventRectangle showPasswordInput;
+    ArrayList<String> hint = new ArrayList<>();
 
-    public EventHandler02(Level lvl, String filePathEnemy, String filePathNpc) {
+
+    public EventHandler02(Level lvl) {
         super(lvl);
-        this.filePathEnemy = filePathEnemy;
-        this.filePathNpc = filePathNpc;
+
+        totalEnemy = 20;
+        showPasswordInput = new EventRectangle(822 , 694 , 74 , 74 , false);
+
     }
 
-    public void onEnemyDefeated() {
-        enemiesDefeated++;
-        if (enemiesDefeated % 5 == 0 && rewardIndex < rewards.length) {
-            int reward = rewards[rewardIndex];
-            rewardIndex++;
+    public void onDefeatEnemy(){
+        for(Entity e : lvl.map.enemy){
+            if(e != null && e.canbeDestroyed) enemiesDefeated++;
+        }
+    }
 
-            for (Object npcObj : lvl.map.npc) {
-                if (npcObj instanceof Npc_CorruptedHustStudent) {
-                    Npc_CorruptedHustStudent npc = (Npc_CorruptedHustStudent) npcObj;
-                    npc.addDialogue("Bạn nhận được con số: " + reward);
+    private void popUpPasswordHint(){
+        if(enemiesDefeated % 5 == 0 && enemiesDefeated != 0 && !hasPopUpHint){
+            eventMaster.dialogues[0][0] = "Gợi ý cho mật khẩu là: " + lvl.correctPassword.charAt(enemiesDefeated / 5 - 1);
+            hint.add(String.valueOf(lvl.correctPassword.charAt(enemiesDefeated / 5 - 1)));
+            hasPopUpHint = true;
+            eventMaster.startDialogue(eventMaster , 0);
+        }
+        if(enemiesDefeated % 5 != 0) hasPopUpHint = false;
+    }
+
+    public void checkForPasswordDoor(){
+        if(enemiesDefeated == totalEnemy){
+            allEnemyDefeated = true;
+            for(Entity e : lvl.map.activeObj){
+                if(e != null && e.idName != null){
+                    if(e.idName.equals("Password Door")) {
+                        Obj_Door door_tmp = (Obj_Door) e;
+                        door_tmp.canChangeState = true;
+                    }
                 }
             }
         }
     }
 
-    public void setEnemy() {
-        try (Reader reader = new FileReader(filePathEnemy)) {
-            Gson gson = new Gson();
-
-            Map<String, List<EnemyStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<EnemyStat>>>() {}.getType());
-            List<EnemyStat> enemies = data.get("root");
-
-            for (EnemyStat enemy : enemies) {
-                int X = enemy.getX();
-                int Y = enemy.getY();
-
-                switch (enemy.getEnemy()) {
-                    case "Mon_Cyborgon":
-                        lvl.map.addObject(new Mon_Cyborgon(lvl.map, X, Y, enemy.getName()) {
-                            public void onDeath() {
-                                onEnemyDefeated();
-                            }
-                        }, lvl.map.enemy);
-                        break;
-
-                    case "Mon_HustGuardian":
-                        lvl.map.addObject(new Mon_HustGuardian(lvl.map, X, Y, enemy.getName()) {
-                            public void onDeath() {
-                                onEnemyDefeated();
-                            }
-                        }, lvl.map.enemy);
-                        break;
-
-                    case "Mon_Spectron":
-                        lvl.map.addObject(new Mon_Spectron(lvl.map, X, Y, enemy.getName()) {
-                            public void onDeath() {
-                                onEnemyDefeated();
-                            }
-                        }, lvl.map.enemy);
-                        break;
-
-                    case "Mon_Shooter":
-                        if (enemy.getDetection() == null) {
-                            lvl.map.addObject(new Mon_Shooter(lvl.map, enemy.getDirection(), enemy.getType(),
-                                    enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getName(), X, Y) {
-                                public void onDeath() {
-                                    onEnemyDefeated();
-                                }
-                            }, lvl.map.enemy);
-                        } else {
-                            Rectangle detect = new Rectangle(enemy.getDetection().getX(), enemy.getDetection().getY(),
-                                    enemy.getDetection().getWidth(), enemy.getDetection().getHeight());
-                            lvl.map.addObject(new Mon_Shooter(lvl.map, enemy.getDirection(), enemy.getType(),
-                                    enemy.isAlwaysUp(), enemy.getAttackCycle(), detect, enemy.getName(), X, Y) {
-                                public void onDeath() {
-                                    onEnemyDefeated();
-                                }
-                            }, lvl.map.enemy);
-                        }
-                        break;
-                }
+    private void checkForCompletingLevel(){
+        for(Entity e : lvl.map.activeObj) {
+            if (e != null && e.idName.equals("EndDoor")) {
+                Obj_Door tmp = (Obj_Door) e;
+                tmp.canChangeState = true;
             }
-
-        } catch (Exception e) {
-            System.out.println("Không tìm thấy quái trong bản đồ.");
-            e.printStackTrace();
         }
+        if(triggerEvent(lvl.changeMapEventRect1) || triggerEvent(lvl.changeMapEventRect2)) lvl.canChangeMap = true;
     }
-    public void setNpc() {
-        try {
-            Reader reader = new FileReader(filePathNpc);
-            Gson gson = new Gson();
 
-            Map<String, List<NpcStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<NpcStat>>>() {}.getType());
-            List<NpcStat> npcs = data.get("root");
-
-            for (NpcStat npcStat : npcs) {
-                int x = npcStat.getX();
-                int y = npcStat.getY();
-                String[][] dialogues = npcStat.getDialogue();
-
-                Npc_CorruptedHustStudent npc = new Npc_CorruptedHustStudent(lvl.map, npcStat.getName(), npcStat.getDirection(), dialogues, x, y);
-
-                lvl.map.addObject(npc, lvl.map.npc);
-            }
-        } catch (Exception e) {
-            System.out.println("Lỗi khi tạo NPC từ file JSON.");
-            e.printStackTrace();
+    private void checkForShowPasswordInput(){
+        if(triggerEvent(showPasswordInput) && !showPasswordInput.eventFinished && !isInRegion){
+            isInRegion = true;
+            GamePanel.gameState = GameState.PASSWORD_STATE;
+            lvl.enteredPassword = "";
+            lvl.map.player.attackCanceled = true;
+        }
+        if(!triggerEvent(showPasswordInput)){
+            isInRegion = false;
+            showPasswordInput.eventFinished = false;
         }
     }
 
-    @Override
-    public void update() {
+
+    public void update(){
+        onDefeatEnemy();
+        checkForPasswordDoor();
+        popUpPasswordHint();
+        if(allEnemyDefeated) checkForShowPasswordInput();
+        if(lvl.levelFinished) checkForCompletingLevel();
     }
+
+    public void render(Graphics2D g2){
+        int lineHeight = 20;
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
+        g2.setColor(Color.white);
+        g2.drawString("Còn lại:" + (totalEnemy - enemiesDefeated) , 10 , 20);
+        g2.setFont(joystix.deriveFont(Font.ITALIC, 14));
+        g2.setColor(Color.RED);
+        for(int i = 0 ; i < hint.size() ; i++){
+            g2.drawString("Gợi ý:" + hint.get(i) , 10 , 60 + lineHeight * i);
+        }
+    }
+
 }

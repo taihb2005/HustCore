@@ -65,35 +65,35 @@
       "position": { "x": 64, "y": 640 },
       "direction": "right",
       "isAlwaysUp": true,
-      "attackCycle": 60
+      "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
       "position": { "x": 1408, "y": 896 },
       "direction": "down",
       "isAlwaysUp": true,
-      "attackCycle": 60
+      "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
       "position": { "x": 576, "y": 192 },
       "direction": "left",
       "isAlwaysUp": true,
-      "attackCycle": 60
+      "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
       "position": { "x": 768, "y": 384 },
       "direction": "down",
       "isAlwaysUp": true,
-      "attackCycle": 60
+      "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
       "position": { "x": 192, "y": 1472 },
       "direction": "up",
       "isAlwaysUp": true,
-      "attackCycle": 60
+      "attackCycle": 120
     }
   ]
 }

@@ -15,6 +15,7 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -106,7 +107,7 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 400;
+        maxHP = 2000;
         currentHP = maxHP;
         strength = 10;
         level = 1;
@@ -181,7 +182,7 @@ public class Mon_Boss extends Monster implements Actable {
             nearlyDie = true;
             AssetSetter setter = new AssetSetter(mp);
             setter.setFilePathEnemy("res/level/level04/enemy_level04.json");
-            setter.setEnemy();
+            try{setter.setEnemy();} catch(IOException ioe){throw new RuntimeException("Lỗi tên file trong boss r kìa");}
             for(Entity e : mp.activeObj)
                 if(e != null && e.idName.equals("Door 7")){
                     e.canbeDestroyed = true;

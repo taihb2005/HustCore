@@ -2,7 +2,6 @@ package level.progress.level01;
 
 import level.EventRectangle;
 import level.Level;
-import level.progress.level00.EventHandler00;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -17,13 +16,13 @@ public class Level01 extends Level {
         init();
         setter.setFilePathObject("res/level/level01/object_level01.json");
         setter.setFilePathEnemy("res/level/level01/enemy_level01.json");
-        setter.setFilePathNpc(null);
+        setter.setFilePathNpc("res/level/level01/npc_level01.json");
         setter.loadAll();
 
         levelFinished = false;
         canChangeMap = false;
 
-        changeMapEventRect = new EventRectangle(768 , 1856 , 128 , 32 , true);
+        changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , false);
     }
 
     public void updateProgress(){

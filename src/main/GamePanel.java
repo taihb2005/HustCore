@@ -18,6 +18,7 @@ import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 // swing library
 import javax.swing.JPanel;
@@ -48,8 +49,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
+    public static ArrayList<Level> completedLevel = new ArrayList<>();
     public static Level currentLevel;
     public static GameMap currentMap;
 
@@ -82,14 +84,17 @@ public class GamePanel extends JPanel implements Runnable {
             case 3 : currentLevel = new Level03(this); break;
             case 4 : currentLevel = new Level04(this); break;
         }
+        completedLevel.add(currentLevel);
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;
         ui = new UI(this);
+        for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
+        completedLevel.removeIf(level -> level.levelFinished);
     }
 
     public void restart(){
-        currentLevel.map.player.resetValue();
         loadMap();
+        currentLevel.map.player.resetValue();
     }
 
     public void setup()
@@ -143,27 +148,29 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
             resumeMusic(0);
             currentMap.update();
             currentLevel.updateProgress();
             if(currentLevel.canChangeMap) lvlManager.update();
+            environmentManager.lighting.update();
+            ui.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
             pauseMusic(0);;
         }
-        environmentManager.lighting.update();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
+        currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
         tileManager.render(g2);

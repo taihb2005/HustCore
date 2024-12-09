@@ -313,14 +313,4 @@ public class Monster extends Entity {
             speed = last_speed;
         }
     }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void render(Graphics2D g2) {
-
-    }
 }

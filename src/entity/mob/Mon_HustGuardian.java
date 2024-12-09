@@ -26,7 +26,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     private final BufferedImage[][][] mon_hust_guardian = new BufferedImage[4][][];
     private BufferedImage exclaimation;
-    private final Animation mon_animator_hust_guardian = new Animation();
+    private Animation mon_animator_hust_guardian = new Animation();
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
@@ -318,6 +318,27 @@ public class Mon_HustGuardian extends Monster implements Actable {
         g2.drawImage(mon_hust_guardian[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
         if(isDetectPlayer) g2.drawImage(exclaimation , worldX - camera.getX() + 54 , worldY - camera.getY() , null);
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_hust_guardian = null;
+        for(int i = 0 ; i < mon_hust_guardian.length ; i++){
+            for(int j = 0 ; j < mon_hust_guardian[i].length ; j++){
+                for(int k = 0 ; k < mon_hust_guardian[i][j].length ; k++){
+                    mon_hust_guardian[i][j][k].flush();
+                    mon_hust_guardian[i][j][k] = null;
+                }
+            }
+        }
+        exclaimation.flush(); exclaimation = null;
+        projectile = null;
+        projectile_name = null;
+        effectDealByProjectile = null;
+        effectDealOnTouch = null;
     }
 
 }

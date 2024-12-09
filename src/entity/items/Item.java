@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 import static main.GamePanel.ui;
 
-public class Item extends Entity {
+public class Item extends Entity implements Cloneable{
     protected int id;
     protected String name;
     protected String description;
@@ -28,7 +28,6 @@ public class Item extends Entity {
                 return;
             }
         }
-        // Nếu không tìm thấy, thêm Item mới vào mảng (nếu còn chỗ)
         for (int i = 0; i < items.length; i++) {
             if (items[i] == null) {
                 items[i] = this;
@@ -46,6 +45,15 @@ public class Item extends Entity {
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity;}
     public BufferedImage getIcon() { return icon; }
+
+    @Override
+    public Item clone() {
+        try {
+            return (Item) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning failed!");
+        }
+    }
 
     @Override
     public void update() {

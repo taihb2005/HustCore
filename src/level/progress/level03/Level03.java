@@ -3,13 +3,13 @@ package level.progress.level03;
 import entity.Entity;
 import level.EventRectangle;
 import level.Level;
-import level.progress.level03.EventHandler03;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
 
+import java.awt.*;
+
 public class Level03 extends Level {
-    private Entity[] phase = new Entity[100];
     public EventHandler03 eventHandler03;
 
     public Level03(GamePanel gp) {
@@ -24,10 +24,11 @@ public class Level03 extends Level {
 //        setter.setFilePathNpc("res/level/level03/npc_level03.json");
         setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
-        levelFinished = true;
-        changeMapEventRect = new EventRectangle(0, 0, 0, 0);
+        levelFinished = false;
+        changeMapEventRect1 = new EventRectangle(1536, 1888, 128, 32);
     }
     public void updateProgress() {
         eventHandler03.update();
     }
+    public void render(Graphics2D g2){eventHandler03.render(g2);}
 }

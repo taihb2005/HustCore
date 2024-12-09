@@ -33,7 +33,7 @@ public class Level04 extends Level {
         Mon_Boss boss = new Mon_Boss(map, 800, 900);
         map.addObject(boss, map.enemy);
         levelFinished = true;
-        changeMapEventRect = new EventRectangle(0, 0, 0, 0);
+        changeMapEventRect1 = new EventRectangle(0, 0, 0, 0);
     }
     public void updateProgress() {
         eventHandler04.update();

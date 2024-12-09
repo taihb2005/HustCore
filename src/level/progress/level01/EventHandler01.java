@@ -56,11 +56,11 @@ public class EventHandler01 extends EventHandler {
         for(Entity e : lvl.map.enemy){
             if(e != null && e.idName.equals("Room1Spectron") && e.canbeDestroyed) countEnemyRoom1--;
         }
-        if(countEnemyRoom1 == 0) {
+        if(countEnemyRoom1 <= 0) {
             room1Completed = true;
             for(Entity e : lvl.map.activeObj)
                 if(e != null && e.idName.equals("Room2 Door")){
-                    e.isOpening = true;
+                    e.canChangeState = true;
                 }
         }
     }
@@ -74,7 +74,7 @@ public class EventHandler01 extends EventHandler {
         for(Entity e : lvl.map.enemy){
             if(e != null && e.idName.equals("Room2Enemy") && e.canbeDestroyed) countEnemyRoom2--;
         }
-        if(countEnemyRoom2 == 0) {
+        if(countEnemyRoom2 <= 0) {
             room2Completed = true;
             for(Entity e : lvl.map.activeObj) {
                 if (e != null && e.idName.equals("Room1 Door")) {
@@ -137,8 +137,7 @@ public class EventHandler01 extends EventHandler {
             if (e != null && e.idName.equals("EndDoor")) {
                 Obj_Door tmp = (Obj_Door) e;
                 tmp.canChangeState = true;
-                lvl.canChangeMap = true;
-                break;
+                lvl.levelFinished = true;
             }
         }
     }
@@ -167,7 +166,7 @@ public class EventHandler01 extends EventHandler {
         if(room3Completed) checkForCompletingLevel();
 
         //LEVEL COMPLETED
-        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect);
+        lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
 
 }

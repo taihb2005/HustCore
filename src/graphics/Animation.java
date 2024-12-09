@@ -80,4 +80,12 @@ public class Animation{
     public int getCurrentFrames(){return currentFrames;}
     public int getFrameCounts(){return frameCounts;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
+
+    public void dispose(){
+        for(BufferedImage bf : ani_sprite){
+            if(bf != null) bf.flush();
+        }
+        ani_sprite.clear();
+        ani_sprite = null;
+    }
 }
