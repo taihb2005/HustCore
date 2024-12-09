@@ -2,6 +2,7 @@ package level.progress.level03;
 
 import entity.Entity;
 import entity.effect.type.Stun;
+import entity.mob.Monster;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.Obj_Door;
 import level.EventHandler;
@@ -10,6 +11,7 @@ import level.Level;
 import main.GamePanel;
 import main.GameState;
 
+import java.util.Arrays;
 import java.util.TimerTask;
 
 public class EventHandler03 extends EventHandler {
@@ -76,6 +78,8 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void startSecondDialogue(){
+        eventMaster.dialogues[0] = null;
+
         eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng\nnề vậy nhỉ?";
         eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã \nthiết kế đặc biệt, mọi hành động\n" +
                 "kể cả tốc độ viên đạn của ngươi \nđều bị giảm đi.";
@@ -88,6 +92,8 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void startThirdDialogue(){
+        eventMaster.dialogues[1] = null;
+
         eventMaster.dialogues[2][0] = "Player: Ủa tại sao mình lại dừng \n" +
                 "một chỗ vậy?";
         eventMaster.dialogues[2][1] = "Boss: Muahaha, ta đã bỏ một " +
@@ -105,6 +111,8 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void startFourthDialogue(){
+        eventMaster.dialogues[2] = null;
+
         eventMaster.dialogues[3][0] = "Boss: Ngươi khá lắm, nhưng mà \n" +
                 "chưa xong đâu.";
         eventMaster.dialogues[3][1] = "Boss: căn phòng này ta đã thiết\nkế" +
@@ -117,6 +125,8 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void startFifthDialogue(){
+        eventMaster.dialogues[3] = null;
+
         eventMaster.dialogues[4][0] = "Boss: Chào mừng ngươi đến với căn\nphòng cuối cùng của tầng hầm.\n";
         eventMaster.dialogues[4][1] = "Boss: chú ý ngươi chỉ có 1 lần\ntrả lời duy nhất, nếu sai ngươi\nsẽ bỏ mạng tại đây.";
         eventMaster.dialogues[4][2] = "Boss: Hãy đến chiếc máy tính để\nnhận câu hỏi.";
@@ -136,18 +146,15 @@ public class EventHandler03 extends EventHandler {
                 lvl.map.player.currentHP = 0;
             }
             if(!beginRoom2.eventFinished && triggerEvent(beginRoom2)) {
-                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 time+=1000;
                 startSecondDialogue();
             }
 
             if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
-                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startThirdDialogue();
             }
 
             if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
-                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 time+=1000;
                 startFourthDialogue();
                 inRoom3 = true;
@@ -170,13 +177,14 @@ public class EventHandler03 extends EventHandler {
 
             if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
                 time+=1000;
-                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
                 startFifthDialogue();
 
             }
 
             if(!quizArea.eventFinished && triggerEvent(quizArea)) {
-                lvl.map.addObject(eventEntity[0] , lvl.map.activeObj);
+                eventMaster.dialogues[4] = null;
+                Arrays.fill(lvl.map.enemy, null);
+                System.gc();
                 GamePanel.gameState = GameState.QUIZ_STATE;
             }
         }
