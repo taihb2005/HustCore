@@ -21,7 +21,7 @@ public class Level00 extends Level {
         setter.setFilePathEnemy(null);
         setter.loadAll();
 
-        levelFinished = true;
+        levelFinished = false;
         changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
     }
 

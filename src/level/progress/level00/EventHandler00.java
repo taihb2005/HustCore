@@ -55,7 +55,8 @@ public class EventHandler00 extends EventHandler {
         checkForTutorialEvent();
         if(!finishedBeginingDialogue && !lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
         if(finishedTutorialDialogue) openTutorialDoor();
-        if(lvl.levelFinished) lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
+        lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
+        if(lvl.canChangeMap) lvl.levelFinished = true;
     }
 
 }
