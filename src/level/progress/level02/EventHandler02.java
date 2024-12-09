@@ -30,7 +30,7 @@ public class EventHandler02 extends EventHandler {
     public EventHandler02(Level lvl) {
         super(lvl);
 
-        totalEnemy = 1;
+        totalEnemy = 20;
         showPasswordInput = new EventRectangle(822 , 694 , 74 , 74 , false);
 
     }
