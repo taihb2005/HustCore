@@ -160,7 +160,6 @@ public class GameMap {
             for(int i = 0 ; i < activeObj.length ; i++){
                 if(activeObj[i] != null){
                     if(activeObj[i].canbeDestroyed){
-                        activeObj[i].dispose();
                         activeObj[i] = null;
                     }
                 }
@@ -168,7 +167,6 @@ public class GameMap {
             for(int i = 0 ; i < enemy.length ; i++){
                 if(enemy[i] != null){
                     if(enemy[i].canbeDestroyed) {
-                        enemy[i].dispose();
                         enemy[i] = null;
                     }
                 }
