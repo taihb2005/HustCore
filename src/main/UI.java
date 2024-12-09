@@ -76,7 +76,6 @@ public class UI {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
             quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
-            quizImage = UtilityTool.scaleImage(quizImage, 768,576);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -484,7 +483,7 @@ public class UI {
         int frameHeight = 514;
         String message = "";
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        g2.drawImage(quizImage,frameX, frameY, null);
+        g2.drawImage(quizImage,frameX, frameY, 770, 578, null);
         if (selectedOption > -1) {
             if (selectedOption == 4) {
                 message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";

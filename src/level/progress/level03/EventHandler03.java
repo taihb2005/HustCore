@@ -27,6 +27,8 @@ public class EventHandler03 extends EventHandler {
     private EventRectangle beginRoom4;
 
     private EventRectangle quizArea;
+
+    private EventRectangle completeArea;
     private final Entity[] eventEntity = new Entity[10];
     public static int time = 0;
 
@@ -49,6 +51,7 @@ public class EventHandler03 extends EventHandler {
         endRoom3 = new EventRectangle(1536 , 900 , 128 , 64 , true);
         beginRoom4 = new EventRectangle(1536 , 1540 , 128 , 32 , true);
         quizArea = new EventRectangle(1472 , 1600 , 64 , 64 , true);
+        completeArea = new EventRectangle(1536 , 1900 , 128 , 64 , true);
     }
 
     void startingDialogue(){
@@ -150,17 +153,17 @@ public class EventHandler03 extends EventHandler {
                 startSecondDialogue();
             }
 
-            if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
+            else if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
                 startThirdDialogue();
             }
 
-            if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
+            else if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
                 time+=1000;
                 startFourthDialogue();
                 inRoom3 = true;
             }
 
-            if(inRoom3) {
+            else if(inRoom3) {
                 if (time % 500 == 400) {
                     temp.add();
                     temp.affect();
@@ -170,23 +173,27 @@ public class EventHandler03 extends EventHandler {
                 }
             }
 
-            if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
+            else if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
                 inRoom3 = false;
                 lvl.map.player.effect.removeIf(effect -> effect.effectFinished);
             }
 
-            if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
+            else if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
                 time+=1000;
                 startFifthDialogue();
 
             }
 
-            if(!quizArea.eventFinished && triggerEvent(quizArea)) {
+            else if(!quizArea.eventFinished && triggerEvent(quizArea) && GamePanel.ui.selectedOption == -1) {
                 eventMaster.dialogues[4] = null;
-                Arrays.fill(lvl.map.enemy, null);
                 System.gc();
                 GamePanel.gameState = GameState.QUIZ_STATE;
             }
+
+            else if (GamePanel.ui.selectedOption == 5) lvl.map.player.currentHP = 0;
+            else if (!completeArea.eventFinished && triggerEvent(completeArea) && GamePanel.ui.selectedOption == 4) {
+                lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
+                }
+            }
         }
-    }
 }
