@@ -13,7 +13,7 @@ public class Sound {
     FloatControl fc;
     int volumeScale = 6;
     float volume;
-    int volumePercentage = 0;
+    int volumePercentage = 40;
     long savedPos = 0;
     public Sound()
     {
@@ -64,7 +64,9 @@ public class Sound {
     }
     public void stop()
     {
-        clip.stop();
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
     }
     public void checkVolume(int volumePercentage) {
         if (volumePercentage < 0 || volumePercentage > 100) {

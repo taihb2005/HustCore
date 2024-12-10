@@ -26,7 +26,6 @@ public class LevelManager {
             TimerTask changeMapAnimation = new TimerTask() {
                 @Override
                 public void run() {
-                    previousLevelProgress = levelProgress;
                     gp.loadMap();
                     gp.lighter = true;
                 }

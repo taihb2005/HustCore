@@ -71,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
+        stopMusic();
         setup();
         currentMap.player.storeValue();
     }
@@ -90,6 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
         ui = new UI(this);
         for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
         completedLevel.removeIf(level -> level.levelFinished);
+        previousLevelProgress = levelProgress;
     }
 
     public void restart(){
@@ -148,20 +150,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
             if(!music.clip.isRunning()) {
-                playMusic(6);
+                resumeMusic();
             }
             currentMap.update();
             currentLevel.updateProgress();
+            ui.update();
             if(currentLevel.canChangeMap) lvlManager.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
-            pauseMusic(0);;
-        }
-        else if(gameState == GameState.DIALOGUE_STATE){
-            stopMusic(0);
+            pauseMusic();;
         }
         environmentManager.lighting.update();
     }
@@ -212,23 +212,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void playMusic(int index)
+    public static void playMusic(int index)
     {
         music.setFile(index);
         music.play();
         music.loop();
     }
-    public void pauseMusic(int index){
+    public static void pauseMusic(){
         music.pause();
     }
-    public void resumeMusic(int index){
+    public static void resumeMusic(){
         music.resume();
     }
-    public void stopMusic(int index)
+    public static void stopMusic()
     {
         music.stop();
     }
-    public void playSE(int index)
+    public static void playSE(int index)
     {
         se.setFile(index);
         se.play();

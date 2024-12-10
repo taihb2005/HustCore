@@ -11,5 +11,5 @@ public enum GameState {
      LOSE_STATE,
      SETTING_STATE,
      QUIZ_STATE,
-     PASSWORD_STATE
+     WIN_STATE
 }

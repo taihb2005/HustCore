@@ -343,12 +343,12 @@ public class Player extends Entity {
 
     public void receiveDamage(Projectile proj , Entity attacker){
         currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
-        System.out.println("Receive " + ((proj.base_damage + attacker.strength) - (defense)) + " damage");
+        System.out.println("Receive " + ((proj.base_damage + attacker.strength)) + " damage");
     }
 
     public void receiveDamage(Monster attacker){
         currentHP = currentHP - (attacker.strength) + (defense);
-        System.out.println("Receive " + ((attacker.strength) - (defense)) + " damage");
+        System.out.println("Receive " + ((attacker.strength)) + " damage");
     }
 
     public void updateInventory(){
@@ -392,7 +392,7 @@ public class Player extends Entity {
         if(!hasResource() && isShooting){
             isShooting = false;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            dialogues[0][0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
+            dialogues[0][0] = "Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn";
             startDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
@@ -402,7 +402,7 @@ public class Player extends Entity {
         manaHealCounter++;
         if(manaHealCounter >= manaHealInterval){
             manaHealCounter = 0;
-            currentMana += 10;
+            currentMana += 20;
         }
         updateMana();
     }
@@ -419,7 +419,7 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 10;
+        strength = 5;
         damage = projectile.base_damage + strength * level ;
     }
     private void setDefense(){
@@ -439,7 +439,11 @@ public class Player extends Entity {
             level++;
             set();
             exp = nextLevelUp;
-            nextLevelUp += 30;
+            if(level == 1) nextLevelUp = 30; else
+            if(level == 2) nextLevelUp = 150; else
+            if(level == 3) nextLevelUp = 300; else
+            if(level == 4) nextLevelUp = 700; else
+            if(level == 5) nextLevelUp = 999999999;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
             dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";

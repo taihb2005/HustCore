@@ -7,6 +7,7 @@ import map.MapManager;
 import map.MapParser;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Level02 extends Level {
     private EventHandler02 eventHandler02;
@@ -25,8 +26,20 @@ public class Level02 extends Level {
 
         changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
         changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);
-        correctPassword = "1234";
+        passwordGenerator();
         enteredPassword = "";
+    }
+
+    private void passwordGenerator(){
+        Random random = new Random();
+        StringBuilder correctPassword_tmp = new StringBuilder();
+
+        for (int i = 0; i < 4; i++) {
+            int nextChar = random.nextInt(10);
+            correctPassword_tmp.append(nextChar);
+        }
+        correctPassword = correctPassword_tmp.toString();
+
     }
 
     public void updateProgress(){

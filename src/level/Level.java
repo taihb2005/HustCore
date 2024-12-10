@@ -4,6 +4,7 @@ import ai.PathFinder;
 import entity.mob.Monster;
 import graphics.environment.EnvironmentManager;
 import main.GamePanel;
+import main.GameState;
 import map.GameMap;
 
 import java.awt.*;
@@ -37,6 +38,9 @@ public class Level{
         environmentManager.lighting.setLightRadius(map.getBestLightingRadius());
         canChangeMap = false;
         levelFinished = false;
+
+        stopMusic();
+        playMusic(6);
     };
     public void updateProgress(){}
     public void render(Graphics2D g2){};
