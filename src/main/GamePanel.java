@@ -144,7 +144,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         updateDarkness();
         if(gameState == GameState.PLAY_STATE) {
-            resumeMusic(0);
+            if(!music.clip.isRunning()) {
+                playMusic(6);
+            }
             currentMap.update();
             currentLevel.updateProgress();
             if(currentLevel.canChangeMap) lvlManager.update();
@@ -152,6 +154,9 @@ public class GamePanel extends JPanel implements Runnable {
         if(gameState == GameState.PAUSE_STATE )
         {
             pauseMusic(0);;
+        }
+        else if(gameState == GameState.DIALOGUE_STATE){
+            stopMusic(0);
         }
         environmentManager.lighting.update();
     }
