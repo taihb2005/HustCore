@@ -2,6 +2,7 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
+import util.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -73,6 +74,7 @@ public class UI {
             manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
+            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -474,18 +476,13 @@ public class UI {
     }
 
     private void drawQuiz() {
-        try {
-            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         int frameX = 0;
         int frameY = 0;
         int frameWidth = 978;
         int frameHeight = 514;
         String message = "";
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        g2.drawImage(quizImage,frameX, frameY, 768, 576, null);
+        g2.drawImage(quizImage,frameX, frameY, 770, 578, null);
         if (selectedOption > -1) {
             if (selectedOption == 4) {
                 message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";

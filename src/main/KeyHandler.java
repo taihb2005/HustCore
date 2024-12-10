@@ -298,14 +298,16 @@ public class KeyHandler implements KeyListener{
             }
         }
         else if (GamePanel.gameState == GameState.QUIZ_STATE) {
-            if (keyCode == KeyEvent.VK_A) {
-                GamePanel.ui.selectedOption = 0; // Đáp án A
-            } else if (keyCode == KeyEvent.VK_B) {
-                GamePanel.ui.selectedOption = 1; // Đáp án B
-            } else if (keyCode == KeyEvent.VK_C) {
-                GamePanel.ui.selectedOption = 2; // Đáp án C
-            } else if (keyCode == KeyEvent.VK_D) {
-                GamePanel.ui.selectedOption = 3; // Đáp án D
+            if (GamePanel.ui.selectedOption < 4) {
+                if (keyCode == KeyEvent.VK_A) {
+                    GamePanel.ui.selectedOption = 0; // Đáp án A
+                } else if (keyCode == KeyEvent.VK_B) {
+                    GamePanel.ui.selectedOption = 1; // Đáp án B
+                } else if (keyCode == KeyEvent.VK_C) {
+                    GamePanel.ui.selectedOption = 2; // Đáp án C
+                } else if (keyCode == KeyEvent.VK_D) {
+                    GamePanel.ui.selectedOption = 3; // Đáp án D
+                }
             }
 
             if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) GamePanel.gameState = GameState.PLAY_STATE;

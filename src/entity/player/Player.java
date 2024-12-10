@@ -54,7 +54,7 @@ public class Player extends Entity {
 
     private int CURRENT_FRAME;
     public int SHOOT_INTERVAL ;
-    public int nextLevelUp = 30;
+    public int nextLevelUp = 60;
 
     //PLAYER STATUS
     public int blindRadius = 200;
@@ -63,7 +63,7 @@ public class Player extends Entity {
     private int manaHealCounter = 0;
     public HashMap<String , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
-    public Item [] inventory = new Item[100];
+    public Item [] inventory = new Item[5];
     public ItemHandler iHandler = new ItemHandler();
 
     public Player(GameMap mp) {

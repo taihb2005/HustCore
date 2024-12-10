@@ -16,7 +16,6 @@ public class TileLayer {
     GameMap mp;
 
     BufferedImage[][] tileLayerData;
-    BufferedImage[] temporaryTile = new BufferedImage[851];
     int[][] tileLayerDataIndex;
 
     final ArrayList<TileSet> tileSetList;

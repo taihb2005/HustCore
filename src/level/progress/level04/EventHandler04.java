@@ -35,7 +35,7 @@ public class EventHandler04 extends EventHandler {
     }
 
     private void setFirstDialogue() {
-        eventMaster.dialogues[0][0] = "Boss: Ngươi rỏi lắm mới đến được đây";
+        eventMaster.dialogues[0][0] = "Boss: Ngươi giỏi lắm mới đến \nđược đây";
         eventMaster.dialogues[0][1] = "Boss: Ngắm gà khoả thân mau!";
     }
 
