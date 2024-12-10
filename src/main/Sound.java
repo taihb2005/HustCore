@@ -17,10 +17,14 @@ public class Sound {
     long savedPos = 0;
     public Sound()
     {
-        soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
+        soundURL[0] = getClass().getResource("/sound/TitleScreen2.wav");
         soundURL[1] = getClass().getResource("/sound/speak.wav");
         soundURL[2] = getClass().getResource("/sound/shoot.wav");
         soundURL[3] = getClass().getResource("/sound/levelup.wav");
+        soundURL[4] = getClass().getResource("/sound/Thua.wav");
+        soundURL[5] = getClass().getResource("/sound/Boss.wav");
+        soundURL[6] = getClass().getResource("/sound/NhacLevel.wav");
+        soundURL[7] = getClass().getResource("/sound/Quizz.wav");
     }
 
     public void setFile(int index)  {

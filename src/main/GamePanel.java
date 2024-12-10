@@ -148,18 +148,22 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
-            resumeMusic(0);
+        if(gameState == GameState.PLAY_STATE) {
+            if(!music.clip.isRunning()) {
+                playMusic(6);
+            }
             currentMap.update();
             currentLevel.updateProgress();
             if(currentLevel.canChangeMap) lvlManager.update();
-            environmentManager.lighting.update();
-            ui.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
             pauseMusic(0);;
         }
+        else if(gameState == GameState.DIALOGUE_STATE){
+            stopMusic(0);
+        }
+        environmentManager.lighting.update();
     }
 
     @Override

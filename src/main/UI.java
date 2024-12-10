@@ -27,7 +27,6 @@ public class UI {
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
-    int cursor = 0;
     boolean isInventoryOpen = false;
     int inventoryX = tileSize / 4;
     int inventoryY = tileSize / 2 + 80;
@@ -595,23 +594,18 @@ public class UI {
         textY += tileSize;
 
         g2.drawString("MOVE", textX, textY);
-        if(cursor == 0) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("ATTACK", textX, textY);
-        if(cursor ==1) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("BUY/USE ITEMS", textX, textY);
-        if(cursor ==2) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("PAUSE/ESCAPE", textX, textY);
-        if(cursor == 3) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("COMMUNICATE", textX, textY);
-        if(cursor == 4) g2.drawString(">", textX-25, textY);
 
         //THONG TIN
         textX = frameX + tileSize*11/2;
