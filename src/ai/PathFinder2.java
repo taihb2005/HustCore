@@ -105,7 +105,7 @@ public class PathFinder2 {
     }
 
     public boolean search() {
-        while (!goalReached && step < 5000) {
+        while (!goalReached && step < 6000) {
             currentNode = getBestNode();
 
             if (currentNode == null) {
