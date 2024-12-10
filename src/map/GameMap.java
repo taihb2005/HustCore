@@ -16,8 +16,7 @@ import util.CollisionHandler;
 import java.awt.*;
 import java.util.*;
 
-import static main.GamePanel.camera;
-import static main.GamePanel.scale;
+import static main.GamePanel.*;
 
 
 public class GameMap {

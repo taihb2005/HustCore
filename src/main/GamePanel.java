@@ -3,7 +3,6 @@ package main;
 // awt library
 import ai.PathFinder;
 import ai.PathFinder2;
-import level.AssetSetter;
 import graphics.environment.EnvironmentManager;
 import level.Level;
 import level.LevelManager;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 
 // swing library
 import javax.swing.JPanel;
+
+import static main.KeyHandler.disableKey;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -42,6 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static PathFinder pFinder;
     public static PathFinder2 pFinder2;
     public TileManager tileManager;
+    public static Credit credit;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
@@ -49,11 +51,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 4;
+    public static int levelProgress = 4;
     public static ArrayList<Level> completedLevel = new ArrayList<>();
     public static Level currentLevel;
     public static GameMap currentMap;
+    public static boolean gameCompleted;
 
     public static BufferedImage darknessFilter;
     private float darknessOpacity = 0.0f;
@@ -73,6 +76,7 @@ public class GamePanel extends JPanel implements Runnable {
         loadMap();
         stopMusic();
         setup();
+        credit = new Credit(this);
         currentMap.player.storeValue();
     }
 
@@ -150,8 +154,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE) {
-            if(!music.clip.isRunning()) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
+            if(!music.clip.isRunning() && !gameCompleted) {
                 resumeMusic();
             }
             currentMap.update();
@@ -177,7 +181,10 @@ public class GamePanel extends JPanel implements Runnable {
         currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
-        tileManager.render(g2);
+        if(gameCompleted) {
+            disableKey();
+            credit.render(g2);
+        }
         g2.dispose();
     }
 

@@ -94,7 +94,7 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 2000;
+        maxHP = 50;
         currentHP = maxHP;
         strength = 10;
         level = 1;
@@ -108,7 +108,7 @@ public class Mon_Boss extends Monster implements Actable {
         effectDealByProjectile = new EffectNone(mp.player);
 
         SHOOT_INTERVAL = 45;
-        expDrop = 100;
+        expDrop = 0;
 
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
@@ -345,14 +345,11 @@ public class Mon_Boss extends Monster implements Actable {
         int posCol = (worldX + solidArea1.x) / childNodeSize;
         int posRow = (worldY + solidArea1.y) / childNodeSize;
         int isLeft = (worldX < mp.player.worldX)?-1:1;
-        int desCol = playerCol;
-        int desRow = playerRow;
-        searchPathforBoss(desCol , desRow);
+        searchPathforBoss(playerCol, playerRow);
         decideToMove();
-
-        boolean check3TilesAway = (Math.abs(desCol - posCol) <= 12) || (Math.abs(desRow - posRow) <= 12);
+        boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
         boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
-        boolean checkIfConcurent = (Math.abs(desCol - posCol) == 0) || (Math.abs(desRow - posRow) == 0);
+        boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
         if (check3TilesAway && checkShootInterval && checkIfConcurent) {
             isShooting2 = true;
             if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {

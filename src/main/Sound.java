@@ -25,6 +25,8 @@ public class Sound {
         soundURL[5] = getClass().getResource("/sound/Boss.wav");
         soundURL[6] = getClass().getResource("/sound/NhacLevel.wav");
         soundURL[7] = getClass().getResource("/sound/Quizz.wav");
+        soundURL[8] = getClass().getResource("/sound/creditMusic.wav");
+        soundURL[9] = getClass().getResource("/sound/fanfare.wav");
     }
 
     public void setFile(int index)  {

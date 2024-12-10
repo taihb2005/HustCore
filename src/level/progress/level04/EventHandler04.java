@@ -1,44 +1,57 @@
 package level.progress.level04;
 
-import entity.Entity;
-import entity.effect.type.Stun;
 import level.EventHandler;
-import level.EventRectangle;
 import level.Level;
-import main.GamePanel;
 import main.GameState;
 
 import java.util.TimerTask;
 
+import static main.GamePanel.gameCompleted;
+import static main.GamePanel.gameState;
+
 public class EventHandler04 extends EventHandler {
-    private EventRectangle beginRoom1;
-
-    private EventRectangle beginRoom2;
-    private EventRectangle endRoom2;
-
-    private EventRectangle beginRoom3;
-    private boolean inRoom3 = false;
-    private EventRectangle endRoom3;
-
-    private EventRectangle beginRoom4;
-
-    private EventRectangle quizArea;
-    private final Entity[] eventEntity = new Entity[10];
-    public static int time = 0;
-
-
+    private boolean finishedEndingDialogue;
     public EventHandler04(Level lvl) {
         super(lvl);
         setEventRect();
-//        setEventEntity();
     }
 
     private void setFirstDialogue() {
         eventMaster.dialogues[0][0] = "Boss: Ngươi giỏi lắm mới đến \nđược đây";
         eventMaster.dialogues[0][1] = "Boss: Ngắm gà khoả thân mau!";
+
+        eventMaster.dialogues[1][0] = "Boss: Ta sẽ còn quay lại.";
+        eventMaster.dialogues[1][1] = "Boss: Hãy đợi đấy!!!!!!!";
     }
 
     private void setEventRect(){
+    }
+
+    private void checkForBossDeath(){
+        if(!finishedEndingDialogue) {
+            for (int i = 0; i < lvl.map.enemy.length; i++) {
+                if (lvl.map.enemy[i] != null && lvl.map.enemy[i].name.equals("Boss")) {
+                    if (lvl.map.enemy[i].currentHP == 0) {
+                        finishedEndingDialogue = true;
+                        killAllEntity();
+                        startingEndingDialogue();
+                    }
+                }
+            }
+        }
+    }
+
+    void killAllEntity(){
+        for(int i = 0 ; i < lvl.map.enemy.length ; i++){
+            if(lvl.map.enemy[i] != null) lvl.map.enemy[i].currentHP = 0;
+        }
+        for(int i = 0 ; i < lvl.map.projectiles.length ; i++){
+            if(lvl.map.projectiles[i] != null) lvl.map.projectiles[i].currentHP = 0;
+        }
+    }
+
+    void startingEndingDialogue(){
+        eventMaster.startDialogue(eventMaster , 1);
     }
 
     void startingDialogue(){
@@ -56,5 +69,10 @@ public class EventHandler04 extends EventHandler {
 
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
+        checkForBossDeath();
+        if(finishedEndingDialogue && gameState == GameState.PLAY_STATE) {
+            gameCompleted = true;
+        }
+        if(gameCompleted) killAllEntity();
     }
 }

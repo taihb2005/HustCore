@@ -23,6 +23,15 @@ public class StatusManager {
         direction = "right";
     }
 
+    public void reset(){
+        worldX = 0; worldY = 0;
+        savedHP = 100;
+        savedMana = 100;
+        savedLevel = 1;
+        savedExp = 0;
+        direction = "right";
+    }
+
     public void setPos(int x , int y){worldX = x; worldY = y;};
     public void setSavedHP(int HP){savedHP = HP;}
     public void setSavedMana(int mana){savedMana = mana;}

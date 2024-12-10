@@ -284,12 +284,17 @@ public class Mon_Shooter extends Monster implements Actable {
         }
     }
 
+    private void updateHP(){
+        if(currentHP == 0) isDying = true;
+    }
+
     @Override
     public void update() {
         if(!isAlwaysUp)checkForPlayer();
         updateAttackCycle();
         updateInvincibility();
         handleAnimationState();
+        updateHP();
         mon_animator_shooter.update();
         CURRENT_FRAME = mon_animator_shooter.getCurrentFrames();
     }
