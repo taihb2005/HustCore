@@ -310,7 +310,6 @@ public class Monster extends Entity {
             onPath = false;
             up = down = right = left = false;
             isRunning = false;
-            speed = last_speed;
         }
     }
 }

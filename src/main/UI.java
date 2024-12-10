@@ -213,13 +213,13 @@ public class UI {
     }
 
     public void drawHPBar() {
-        int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
+        int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
         int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 70;
+        int x = 40;
         int y = windowHeight - 80;
         int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
         // Vẽ nền (màu xám) cho thanh HP
-        g2.drawImage(hpFrame, x-52, y-8, 251, 28, null);
+        g2.drawImage(hpFrame, x-31, y-10, 213, 32, null);
 
         // Vẽ thanh HP hiện tại (màu đỏ)
         g2.setColor(Color.RED);
@@ -227,13 +227,13 @@ public class UI {
     }
 
     public void drawManaBar() {
-        int fullManaWidth = 63;  // Chiều dài tối đa của thanh HP
+        int fullManaWidth = 66;  // Chiều dài tối đa của thanh HP
         int ManaBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 70;
-        int y = windowHeight - 45;
+        int x = 40;
+        int y = windowHeight - 40;
         int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
         // Vẽ nền (màu xám) cho thanh Mana
-        g2.drawImage(manaFrame, x-52, y-8, 139, 28, null);
+        g2.drawImage(manaFrame, x-31, y-10, 101, 32, null);
 
         // Vẽ thanh HP hiện tại (màu xanh)
         g2.setColor(Color.BLUE);

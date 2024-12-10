@@ -153,7 +153,7 @@ public class EventHandler03 extends EventHandler {
                 startSecondDialogue();
             }
 
-            else if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
+            if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
                 startThirdDialogue();
             }
 

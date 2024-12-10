@@ -256,7 +256,6 @@ public class Mon_Boss extends Monster implements Actable {
     @Override
     public void move() {
         collisionOn = false;
-        System.out.println(speed);
         if(up && isRunning && !isDying) newWorldY = worldY - speed; //Gì đây hả cđl
         else if(down && isRunning && !isDying) newWorldY = worldY + speed;
         else if(left && isRunning && !isDying) newWorldX = worldX - speed;
