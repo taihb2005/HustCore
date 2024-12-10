@@ -29,7 +29,6 @@ public class LevelManager {
                     previousLevelProgress = levelProgress;
                     gp.loadMap();
                     gp.lighter = true;
-                    timer.cancel();
                 }
             };
             timer.schedule(changeMapAnimation , 1500);
