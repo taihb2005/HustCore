@@ -131,7 +131,6 @@ public class PathFinder2 {
 
             step++;
         }
-
         return goalReached;
     }
 

@@ -56,6 +56,5 @@ public class EventHandler04 extends EventHandler {
 
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
-
     }
 }
