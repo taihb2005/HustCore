@@ -48,7 +48,7 @@ public class EventHandler03 extends EventHandler {
         beginRoom2 = new EventRectangle(384 , 320 , 128 , 32 , true);
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
         beginRoom3 = new EventRectangle(1536 , 515 , 128 , 12 , true);
-        endRoom3 = new EventRectangle(1536 , 900 , 128 , 64 , true);
+        endRoom3 = new EventRectangle(1536 , 960 , 128 , 64 , true);
         beginRoom4 = new EventRectangle(1536 , 1540 , 128 , 32 , true);
         quizArea = new EventRectangle(1472 , 1600 , 64 , 64 , true);
         completeArea = new EventRectangle(1536 , 1900 , 128 , 64 , true);
@@ -153,17 +153,17 @@ public class EventHandler03 extends EventHandler {
                 startSecondDialogue();
             }
 
-            else if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
+            if(!endRoom2.eventFinished && triggerEvent(endRoom2)) {
                 startThirdDialogue();
             }
 
-            else if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
+            if(!beginRoom3.eventFinished && triggerEvent(beginRoom3)) {
                 time+=1000;
                 startFourthDialogue();
                 inRoom3 = true;
             }
 
-            else if(inRoom3) {
+            if(inRoom3) {
                 if (time % 500 == 400) {
                     temp.add();
                     temp.affect();
@@ -173,18 +173,18 @@ public class EventHandler03 extends EventHandler {
                 }
             }
 
-            else if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
+            if(!endRoom3.eventFinished && triggerEvent(endRoom3)) {
                 inRoom3 = false;
                 lvl.map.player.effect.removeIf(effect -> effect.effectFinished);
             }
 
-            else if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
+            if(!beginRoom4.eventFinished && triggerEvent(beginRoom4)) {
                 time+=1000;
                 startFifthDialogue();
 
             }
 
-            else if(!quizArea.eventFinished && triggerEvent(quizArea) && GamePanel.ui.selectedOption == -1) {
+            if(!quizArea.eventFinished && triggerEvent(quizArea) && GamePanel.ui.selectedOption == -1) {
                 eventMaster.dialogues[4] = null;
                 System.gc();
                 GamePanel.gameState = GameState.QUIZ_STATE;

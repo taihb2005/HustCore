@@ -38,35 +38,22 @@ public class Mon_Boss extends Monster implements Actable {
     private final BufferedImage[][][] mon_boss = new BufferedImage[7][][];
     private final Animation mon_animator_boss = new Animation();
     private int actionLockCounter = 550;
-    private final int changeDirCounter = 240;
 
     private int shootTimer = 0;
-    private int shootInterval = 10;
 
     private boolean nearlyDie = false;
     private boolean fullyDie = false;
 
-    private int spawnPointX;
-    private int spawnPointY;
-    private int posX;
-    private int posY;
     private int rangeRadius;
 
-    private int detectionCounter = 0;
-    private final int detectionToSetAggro = 180;
     private Projectile projectile1, projectile2, projectile3;
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
     private boolean shoot3;
-
-//    private int flameColumnDelayCounter = 0; // Bộ đếm delay giữa các cột
-//    private int flameCurrentColumn = 1;     // Cột hiện tại đang được bắn
-//    private int maxFlameColumns = 5;        // Tổng số cột flame
+    // Tổng số cột flame
     private boolean shooting = false;      // Trạng thái đang bắn flame
 
-
-    private int testTime = 0;
     public Mon_Boss(GameMap mp){
         super(mp);
         name = "Boss";
@@ -270,9 +257,9 @@ public class Mon_Boss extends Monster implements Actable {
     public void move() {
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed; //Gì đây hả cđl
-        if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        else if(down && isRunning && !isDying) newWorldY = worldY + speed;
+        else if(left && isRunning && !isDying) newWorldX = worldX - speed;
+        else if(right && isRunning && !isDying) newWorldX = worldX + speed;
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);

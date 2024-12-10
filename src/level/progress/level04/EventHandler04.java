@@ -29,7 +29,6 @@ public class EventHandler04 extends EventHandler {
 
     public EventHandler04(Level lvl) {
         super(lvl);
-        setFirstDialogue();
         setEventRect();
 //        setEventEntity();
     }
@@ -46,6 +45,7 @@ public class EventHandler04 extends EventHandler {
         TimerTask beginGameDialogue = new TimerTask() {
             //Con điên, sao k để chạy thoại của eventMastr luôn tách ra làm đ gì
             public void run() {
+                setFirstDialogue();
                 eventMaster.startDialogue(eventMaster , 0);
                 lvl.finishedBeginingDialogue = true;
             }
@@ -56,6 +56,5 @@ public class EventHandler04 extends EventHandler {
 
     public void update() {
         if(!lvl.finishedBeginingDialogue) startingDialogue();
-
     }
 }

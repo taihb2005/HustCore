@@ -33,6 +33,7 @@ public class Level04 extends Level {
         map.addObject(boss, map.enemy);
         levelFinished = false;
         changeMapEventRect1 = new EventRectangle(0, 0, 0, 0);
+        GamePanel.environmentManager.lighting.setLightRadius(1000);
     }
     public void updateProgress() {
         eventHandler04.update();
