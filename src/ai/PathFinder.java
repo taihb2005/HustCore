@@ -1,70 +1,88 @@
 package ai;
 
 import entity.Entity;
+import main.GamePanel;
 import map.GameMap;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class PathFinder {
 
     GameMap mp;
-    Node[][] node;
-    ArrayList<Node> openList = new ArrayList<>();
+    public Node[][] node;
+    //ArrayList<Node> openList = new ArrayList<>();
+    public PriorityQueue<Node> openList = new PriorityQueue<>(new Comparator<Node>() {
+        @Override
+        public int compare(Node n1, Node n2) {
+            // So sánh fCost theo thứ tự giảm dần
+            if (n1.fCost != n2.fCost) {
+                return Integer.compare(n1.fCost, n2.fCost); //
+            }
+            // Nếu fCost bằng nhau, so sánh gCost theo thứ tự giảm dần
+            return Integer.compare(n1.gCost, n2.gCost);
+        }
+    });
     public ArrayList<Node> pathList = new ArrayList<>();
     Node startNode, goalNode, currentNode;
-    boolean goalReached = false;
+    public boolean goalReached = false;
     int step = 0;
 
-    public PathFinder(GameMap mp) {
+    public PathFinder(GameMap mp)
+    {
         this.mp = mp;
         instantiateNodes();
     }
-
-    public void instantiateNodes() {
+    public void instantiateNodes()
+    {
         node = new Node[mp.maxWorldCol][mp.maxWorldRow];
 
         int col = 0;
         int row = 0;
 
-        while (col < mp.maxWorldCol && row < mp.maxWorldRow) {
-            node[col][row] = new Node(col, row);
+        while(col < mp.maxWorldCol && row < mp.maxWorldRow)
+        {
+            node[col][row] = new Node(col,row);
 
             col++;
-            if (col == mp.maxWorldCol) {
+            if(col == mp.maxWorldCol)
+            {
                 col = 0;
                 row++;
             }
         }
     }
 
-    // Reset trạng thái của các Node
-    public void resetNodes() {
+    //reset previous pathfinding result
+    public void resetNodes()
+    {
         int col = 0;
         int row = 0;
-
-        while (col < mp.maxWorldCol && row < mp.maxWorldRow) {
+        while(col < mp.maxWorldCol && row < mp.maxWorldRow)
+        {
+            //reset open, checked and solid state
             node[col][row].open = false;
             node[col][row].checked = false;
             node[col][row].solid = false;
 
             col++;
-            if (col == mp.maxWorldCol) {
+            if(col == mp.maxWorldCol)
+            {
                 col = 0;
                 row++;
             }
         }
-
+        //reset other settings
         openList.clear();
         pathList.clear();
         goalReached = false;
         step = 0;
     }
-
-    public void setNodes(int startCol, int startRow, int goalCol, int goalRow) {
+    public void setNodes(int startCol, int startRow, int goalCol, int goalRow)
+    {
         resetNodes();
-
-        // Đặt nút bắt đầu và nút mục tiêu
+        //set Start and Goal node
         startNode = node[startCol][startRow];
         currentNode = startNode;
         goalNode = node[goalCol][goalRow];
@@ -73,23 +91,29 @@ public class PathFinder {
         int col = 0;
         int row = 0;
 
-        // Xử lý trạng thái solid từ các đối tượng trong bản đồ
         checkForSolidTile(mp.inactiveObj);
         checkForSolidTile(mp.activeObj);
         checkForSolidTile(mp.npc);
 
-        while (col < mp.maxWorldCol && row < mp.maxWorldRow) {
+        while(col < mp.maxWorldCol && row < mp.maxWorldRow)
+        {
+            //SET SOLID NODE
+
+            //CHECK TILES
+
+            //SET COST
             getCost(node[col][row]);
 
             col++;
-            if (col == mp.maxWorldCol) {
+            if(col == mp.maxWorldCol)
+            {
                 col = 0;
                 row++;
             }
         }
     }
-
-    public void getCost(Node node) {
+    public void getCost(Node node)
+    {
         // G Cost
         int xDistance = Math.abs(node.col - startNode.col);
         int yDistance = Math.abs(node.row - startNode.row);
@@ -103,27 +127,37 @@ public class PathFinder {
         // F Cost
         node.fCost = node.gCost + node.hCost;
     }
-
-    public boolean search() {
-        while (!goalReached && step < 5000) {
-            currentNode = getBestNode();
+    public boolean search()
+    {
+        while(!goalReached && step < 1000)
+        {
+            currentNode = openList.poll();
 
             if (currentNode == null) {
                 break; // Không còn nút để kiểm tra
             }
 
-            currentNode.checked = true;
-
-            // Mở các nút lân cận
             int col = currentNode.col;
             int row = currentNode.row;
 
-            if (row - 1 >= 0) openNode(node[col][row - 1]); // Lên
-            if (col - 1 >= 0) openNode(node[col - 1][row]); // Trái
-            if (row + 1 < mp.maxWorldRow) openNode(node[col][row + 1]); // Xuống
-            if (col + 1 < mp.maxWorldCol) openNode(node[col + 1][row]); // Phải
+            // Đánh dấu nút hiện tại đã kiểm tra
+            currentNode.checked = true;
 
-            // Kiểm tra đạt đến mục tiêu
+            // Mở các nút lân cận
+            if (row - 1 >= 0) {
+                openNode(node[col][row - 1]);
+            }
+            if (col - 1 >= 0) {
+                openNode(node[col - 1][row]);
+            }
+            if (row + 1 < mp.maxWorldRow) {
+                openNode(node[col][row + 1]);
+            }
+            if (col + 1 < mp.maxWorldCol) {
+                openNode(node[col + 1][row]);
+            }
+
+            // Kiểm tra xem đã đạt đến nút mục tiêu chưa
             if (currentNode == goalNode) {
                 goalReached = true;
                 trackThePath();
@@ -131,72 +165,60 @@ public class PathFinder {
 
             step++;
         }
-
         return goalReached;
     }
-
-    private Node getBestNode() {
-        Node bestNode = null;
-        int bestCost = Integer.MAX_VALUE;
-
-        for (Node node : openList) {
-            if (node.fCost < bestCost || (node.fCost == bestCost && node.gCost < bestCost)) {
-                bestNode = node;
-                bestCost = node.fCost;
-            }
-        }
-
-        if (bestNode != null) {
-            openList.remove(bestNode);
-        }
-
-        return bestNode;
-    }
-
-    public void openNode(Node node) {
-        if (!node.open && !node.checked && !node.solid) {
+    public void openNode(Node node)
+    {
+        if(!node.open && !node.checked && !node.solid)
+        {
             node.open = true;
             node.parent = currentNode;
             openList.add(node);
         }
     }
-
-    public void trackThePath() {
+    public void trackThePath()
+    {
         Node current = goalNode;
 
-        while (current != startNode) {
-            pathList.add(0, current);
+        while(current != startNode)
+        {
+            pathList.add(0,current); //last added node is in the [0]
             current = current.parent;
         }
     }
 
-    private void checkForSolidTile(Entity[] list) {
-        for (Entity entity : list) {
-            if (entity != null) {
-                if (entity.solidArea1 != null) {
-                    markSolidTiles(entity, entity.solidArea1);
+    private void checkForSolidTile(Entity[] list){
+        for(int i = 0 ; i < list.length ; i++){
+            if(list[i] != null ){
+                if(list[i].solidArea1 != null) {
+                    int worldCol = (list[i].worldX + list[i].solidArea1.x) / mp.childNodeSize;
+                    int worldRow = (list[i].worldY + list[i].solidArea1.y) / mp.childNodeSize;
+                    int totalWidth = (list[i].solidArea1.x + list[i].solidArea1.width);
+                    int totalHeight = (list[i].solidArea1.y + list[i].solidArea1.height);
+                    int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;
+                    int yOffSet = (totalHeight % mp.childNodeSize == 0) ? totalHeight / mp.childNodeSize : totalHeight / mp.childNodeSize + 1;
+                    for (int x = worldCol; x < worldCol + xOffSet; x++) {
+                        for (int y = worldRow; y < worldRow + yOffSet; y++) {
+                            node[x][y].solid = true;
+                        }
+                    }
                 }
-                if (entity.solidArea2 != null) {
-                    markSolidTiles(entity, entity.solidArea2);
+                if(list[i].solidArea2 != null){
+                    int worldCol = (list[i].worldX + list[i].solidArea2.x) / mp.childNodeSize;
+                    int worldRow = (list[i].worldY + list[i].solidArea2.y) / mp.childNodeSize;
+                    int totalWidth = (list[i].solidArea2.x + list[i].solidArea2.width);
+                    int totalHeight = (list[i].solidArea2.y + list[i].solidArea2.height);
+                    int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;
+                    int yOffSet = (totalHeight % mp.childNodeSize == 0) ? totalHeight / mp.childNodeSize : totalHeight / mp.childNodeSize + 1;
+                    for (int x = worldCol; x < worldCol + xOffSet; x++) {
+                        for (int y = worldRow; y < worldRow + yOffSet; y++) {
+                            node[x][y].solid = true;
+                        }
+                    }
                 }
             }
         }
-    }
 
-    private void markSolidTiles(Entity entity, Rectangle solidArea) {
-        int worldCol = (entity.worldX + solidArea.x) / GameMap.childNodeSize;
-        int worldRow = (entity.worldY + solidArea.y) / GameMap.childNodeSize;
-        int xOffSet = (solidArea.width + solidArea.x) / GameMap.childNodeSize;
-        int yOffSet = (solidArea.height + solidArea.y) / GameMap.childNodeSize;
-
-        for (int x = worldCol; x <= worldCol + xOffSet; x++) {
-            for (int y = worldRow; y <= worldRow + yOffSet; y++) {
-                if (x < mp.maxWorldCol && y < mp.maxWorldRow) {
-                    node[x][y].solid = true;
-                }
-            }
-        }
     }
 }
-
 

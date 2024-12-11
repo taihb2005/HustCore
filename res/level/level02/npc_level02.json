@@ -1,0 +1,20 @@
+{
+  "root": [
+    {
+      "name": "Chill Guy",
+      "dialogue": [
+        [
+          "Đây là cái bẫy thứ hai của nó.",
+          "Bạn cần tiêu diệt hết những con\nlính trong phòng này.",
+          "Và nhập mật khẩu vào máy tính\ngiữa căn phòng để có thể mở\nđược cửa hai góc trên cùng.",
+          "Với mỗi 5 con lính bạn tiêu diệt.\nBạn sẽ nhận đuợc một gợi ý.",
+          "Tiêu diệt hết cửa ở giữa sẽ mở.",
+          "Lời khuyên:\nLính canh khá ngu ngốc.",
+          "Lời khuyên:\nHãy tận dụng điều ấy."
+        ]
+      ],
+      "direction": "right",
+      "position": {"x": 704 , "y": 128}
+    }
+  ]
+}

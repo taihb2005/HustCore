@@ -11,24 +11,21 @@ public class Level00 extends Level {
 
     public Level00(GamePanel gp){
         this.gp = gp;
-        MapParser.loadMap( "map0" ,"res/map/map0.tmx");
+        MapParser.loadMap( "map0" ,"/map/map0.tmx");
         map = MapManager.getGameMap("map0");
         map.gp = gp;
 
         init();
-        setter.setFilePathObject("res/level/level00/object_level00.json");
-        setter.setFilePathNpc("res/level/level00/npc_level00.json");
-        setter.setFilePathEnemy("res/level/level01/enemy_level00.json");
+        setter.setFilePathObject("/level/level00/object_level00.json");
+        setter.setFilePathNpc("/level/level00/npc_level00.json");
+        setter.setFilePathEnemy(null);
         setter.loadAll();
 
-        levelFinished = true;
-        changeMapEventRect = new EventRectangle(1088 , 2280 , 64 , 32);
+        levelFinished = false;
+        changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
     }
 
     public void updateProgress(){
-        eventHandler00.checkForTutorialEvent();
-        if(!finishedBeginingDialogue &&!gp.darker && !gp.lighter) eventHandler00.startingDialogue();
-        if(finishedTutorialDialogue) eventHandler00.openTutorialDoor();
-        if(levelFinished) eventHandler00.detectForMapChange();
+        eventHandler00.update();
     }
 }

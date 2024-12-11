@@ -1,17 +1,21 @@
 package entity.mob;
 
 import entity.Actable;
+import entity.Entity;
 import entity.effect.type.EffectNone;
+import entity.object.Obj_Door;
 import entity.projectile.Proj_ExplosivePlasma;
 import entity.projectile.Proj_Flame;
 import entity.projectile.Proj_TrackingPlasma;
 import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
+import level.AssetSetter;
 import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -34,32 +38,22 @@ public class Mon_Boss extends Monster implements Actable {
     private final BufferedImage[][][] mon_boss = new BufferedImage[7][][];
     private final Animation mon_animator_boss = new Animation();
     private int actionLockCounter = 550;
-    private final int changeDirCounter = 240;
 
     private int shootTimer = 0;
-    private int shootInterval = 10;
 
-    private int spawnPointX;
-    private int spawnPointY;
-    private int posX;
-    private int posY;
+    private boolean nearlyDie = false;
+    private boolean fullyDie = false;
+
     private int rangeRadius;
 
-    private int detectionCounter = 0;
-    private final int detectionToSetAggro = 180;
     private Projectile projectile1, projectile2, projectile3;
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
     private boolean shoot3;
-
-//    private int flameColumnDelayCounter = 0; // Bộ đếm delay giữa các cột
-//    private int flameCurrentColumn = 1;     // Cột hiện tại đang được bắn
-//    private int maxFlameColumns = 5;        // Tổng số cột flame
+    // Tổng số cột flame
     private boolean shooting = false;      // Trạng thái đang bắn flame
 
-
-    private int testTime = 0;
     public Mon_Boss(GameMap mp){
         super(mp);
         name = "Boss";
@@ -100,9 +94,9 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 400;
+        maxHP = 2000;
         currentHP = maxHP;
-        strength = 10;
+        strength = 50;
         level = 1;
         defense = 10;
         rangeRadius = 200;
@@ -114,10 +108,11 @@ public class Mon_Boss extends Monster implements Actable {
         effectDealByProjectile = new EffectNone(mp.player);
 
         SHOOT_INTERVAL = 45;
-        expDrop = 100;
+        expDrop = 0;
 
         direction = "right";
         CURRENT_DIRECTION = RIGHT;
+        setDialogue();
 
         CURRENT_ACTION = IDLE;
         PREVIOUS_ACTION = IDLE;
@@ -165,6 +160,21 @@ public class Mon_Boss extends Monster implements Actable {
         move();
         mon_animator_boss.update();
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
+        if (currentHP <= 0 && fullyDie) {
+            this.startDialogue(this, 1);
+            fullyDie = true;
+        }
+        else if (2*currentHP < maxHP && !nearlyDie) {
+            this.startDialogue(this, 0);
+            nearlyDie = true;
+            AssetSetter setter = new AssetSetter(mp);
+            setter.setFilePathEnemy("/level/level04/enemy_level04.json");
+            try{setter.setEnemy();} catch(IOException ioe){throw new RuntimeException("Lỗi tên file trong boss r kìa");}
+            for(Entity e : mp.activeObj)
+                if(e != null && e.idName.equals("Door 7")){
+                    e.canbeDestroyed = true;
+                }
+        }
     }
 
     @Override
@@ -247,9 +257,9 @@ public class Mon_Boss extends Monster implements Actable {
     public void move() {
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed; //Gì đây hả cđl
-        if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        else if(down && isRunning && !isDying) newWorldY = worldY + speed;
+        else if(left && isRunning && !isDying) newWorldX = worldX - speed;
+        else if(right && isRunning && !isDying) newWorldX = worldX + speed;
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -270,7 +280,10 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void setDialogue() {
-
+        this.dialogues[0][0] = "Ngươi cũng mạnh phết đấy.";
+        this.dialogues[0][1] = "Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.";
+        this.dialogues[1][0] = "Á hự... Không thể tin ngươi đã đánh bại được ta...";
+        this.dialogues[1][1] = "Huhuhu...";
     }
 
     @Override
@@ -332,14 +345,11 @@ public class Mon_Boss extends Monster implements Actable {
         int posCol = (worldX + solidArea1.x) / childNodeSize;
         int posRow = (worldY + solidArea1.y) / childNodeSize;
         int isLeft = (worldX < mp.player.worldX)?-1:1;
-        int desCol = playerCol;
-        int desRow = playerRow;
-        searchPath(desCol , desRow);
+        searchPathforBoss(playerCol, playerRow);
         decideToMove();
-
-        boolean check3TilesAway = (Math.abs(desCol - posCol) <= 12) || (Math.abs(desRow - posRow) <= 12);
+        boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
         boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
-        boolean checkIfConcurent = (Math.abs(desCol - posCol) == 0) || (Math.abs(desRow - posRow) == 0);
+        boolean checkIfConcurent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
         if (check3TilesAway && checkShootInterval && checkIfConcurent) {
             isShooting2 = true;
             if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {
@@ -380,5 +390,4 @@ public class Mon_Boss extends Monster implements Actable {
             }
         }
     }
-
 }

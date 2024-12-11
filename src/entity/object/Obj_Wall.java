@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import static main.GamePanel.camera;
 
 public class Obj_Wall extends Entity {
-    private final BufferedImage objectImage;
+    private BufferedImage objectImage;
 
     public Obj_Wall(BufferedImage objectImage , Rectangle[] solidAreaList)
     {
@@ -27,15 +27,16 @@ public class Obj_Wall extends Entity {
         }
     }
 
-
-    @Override
-    public void update() {
-
-    }
-
     @Override
     public void render(Graphics2D g2) {
         g2.drawImage(objectImage , worldX - camera.getX(), worldY - camera.getY(), 64 , 64  , null );
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        objectImage.flush();
+        objectImage = null;
     }
 
 }

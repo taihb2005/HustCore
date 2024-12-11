@@ -1,0 +1,100 @@
+{
+  "root": [
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 192, "y": 128 }
+    },
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 192, "y": 1344 }
+    },
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 1216, "y": 256 }
+    },
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 1216, "y": 1344 }
+    },
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 896, "y": 256 }
+    },
+    {
+      "enemy": "Mon_Cyborgon",
+      "position": { "x": 512, "y": 896 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 448, "y": 192 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 448, "y": 1408 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 512, "y": 576 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 960, "y": 1024 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 1344, "y": 192 }
+    },
+    {
+      "enemy": "Mon_HustGuardian",
+      "position": { "x": 1344, "y": 1088 }
+    },
+    {
+      "enemy": "Mon_Spectron",
+      "position": { "x": 1088, "y": 576 }
+    },
+    {
+      "enemy": "Mon_Spectron",
+      "position": { "x": 768, "y": 1216 }
+    },
+    {
+      "enemy": "Mon_Spectron",
+      "position": { "x": 1472, "y": 512 }
+    },
+    {
+      "enemy": "Mon_Shooter",
+      "position": { "x": 64, "y": 640 },
+      "direction": "right",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    },
+    {
+      "enemy": "Mon_Shooter",
+      "position": { "x": 1408, "y": 896 },
+      "direction": "down",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    },
+    {
+      "enemy": "Mon_Shooter",
+      "position": { "x": 576, "y": 192 },
+      "direction": "left",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    },
+    {
+      "enemy": "Mon_Shooter",
+      "position": { "x": 768, "y": 384 },
+      "direction": "down",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    },
+    {
+      "enemy": "Mon_Shooter",
+      "position": { "x": 192, "y": 1472 },
+      "direction": "up",
+      "isAlwaysUp": true,
+      "attackCycle": 120
+    }
+  ]
+}
+

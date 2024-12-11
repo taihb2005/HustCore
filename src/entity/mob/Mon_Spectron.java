@@ -33,7 +33,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
 
     final private BufferedImage [][][] mon_spectron = new BufferedImage[4][][];
-    final private Animation mon_animator_spectron = new Animation();
+    private Animation mon_animator_spectron = new Animation();
 
     private int actionLockCounter = 0;
     private int attackLockCounter = 0;
@@ -41,10 +41,6 @@ public class Mon_Spectron extends Monster implements Actable {
     private int shootInterval = 120;
 
     private int lastHP;
-
-    //DEMO
-    private Obj_Heart heart;
-    private Obj_Coin coin;
 
     public Mon_Spectron(GameMap mp)
     {
@@ -63,6 +59,20 @@ public class Mon_Spectron extends Monster implements Actable {
     {
         super(mp , x , y);
         name = "Spectron";
+        this.mp = mp;
+        super.width = 64;
+        super.height = 64;
+        this.canbeDestroyed = false;
+        onPath = false;
+
+        set();
+    }
+
+    public Mon_Spectron(GameMap mp , int x , int y , String idName)
+    {
+        super(mp , x , y);
+        name = "Spectron";
+        this.idName = idName;
         this.mp = mp;
         super.width = 64;
         super.height = 64;
@@ -95,7 +105,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
         expDrop = 10;
 
-        solidArea1 = new Rectangle(20 , 19 , 26 , 15);
+        solidArea1 = new Rectangle(20 , 19 , 26 , 20);
         hitbox = new Rectangle(20 , 8 , 27 , 32);
         //solidArea2 = new Rectangle(0 , 0 , 0 ,0);
         super.setDefaultSolidArea();
@@ -121,7 +131,6 @@ public class Mon_Spectron extends Monster implements Actable {
 
     public void loot() {
         spawnHeart();
-        spawnCoin();
     }
 
     private void changeAnimationDirection()
@@ -264,15 +273,16 @@ public class Mon_Spectron extends Monster implements Actable {
     }
 
     private void spawnHeart() {
-        heart = new Obj_Heart(mp);
+        //DEMO
+        Obj_Heart heart = new Obj_Heart(mp);
         heart.worldX = worldX + 16; heart.worldY = worldY + 16;
-        mp.addObject(heart , mp.activeObj);
+        mp.addObject(heart, mp.activeObj);
     }
 
     private void spawnCoin() {
-        coin = new Obj_Coin(mp);
+        Obj_Coin coin = new Obj_Coin(mp);
         coin.worldX = worldX; coin.worldY = worldY + 30;
-        mp.addObject(coin , mp.activeObj);
+        mp.addObject(coin, mp.activeObj);
     }
 
 
@@ -293,5 +303,25 @@ public class Mon_Spectron extends Monster implements Actable {
         }
         g2.drawImage(mon_spectron[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_spectron = null;
+        for(int i = 0 ; i < mon_spectron.length ; i++){
+            for(int j = 0 ; j < mon_spectron[i].length ; j++){
+                for(int k = 0 ; k < mon_spectron[i][j].length ; k++){
+                    mon_spectron[i][j][k].flush();
+                    mon_spectron[i][j][k] = null;
+                }
+            }
+        }
+        projectile = null;
+        projectile_name = null;
+        effectDealByProjectile = null;
+        effectDealOnTouch = null;
     }
 }

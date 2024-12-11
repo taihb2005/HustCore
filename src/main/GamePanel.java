@@ -3,7 +3,6 @@ package main;
 // awt library
 import ai.PathFinder;
 import ai.PathFinder2;
-import level.AssetSetter;
 import graphics.environment.EnvironmentManager;
 import level.Level;
 import level.LevelManager;
@@ -11,15 +10,19 @@ import level.progress.level00.Level00;
 import level.progress.level01.Level01;
 import level.progress.level02.Level02;
 import level.progress.level03.Level03;
+import level.progress.level04.Level04;
 import map.*;
 import status.StatusManager;
 import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 // swing library
 import javax.swing.JPanel;
+
+import static main.KeyHandler.disableKey;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -37,8 +40,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static PathFinder2 pFinder;
+    public static PathFinder pFinder;
+    public static PathFinder2 pFinder2;
     public TileManager tileManager;
+    public static Credit credit;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
@@ -46,10 +51,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
+    public static int previousLevelProgress = 1;
+    public static int levelProgress = 1;
+    public static ArrayList<Level> completedLevel = new ArrayList<>();
     public static Level currentLevel;
     public static GameMap currentMap;
+    public static boolean gameCompleted;
 
     public static BufferedImage darknessFilter;
     private float darknessOpacity = 0.0f;
@@ -67,7 +74,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         loadMap();
+        stopMusic();
         setup();
+        credit = new Credit(this);
         currentMap.player.storeValue();
     }
 
@@ -77,15 +86,21 @@ public class GamePanel extends JPanel implements Runnable {
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
             case 2 : currentLevel = new Level02(this); break;
+            case 3 : currentLevel = new Level03(this); break;
+            case 4 : currentLevel = new Level04(this); break;
         }
+        completedLevel.add(currentLevel);
         tileManager = new TileManager(this);
         currentMap = currentLevel.map;
         ui = new UI(this);
+        for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
+        completedLevel.removeIf(level -> level.levelFinished);
+        previousLevelProgress = levelProgress;
     }
 
     public void restart(){
-        currentLevel.map.player.resetValue();
         loadMap();
+        currentLevel.map.player.resetValue();
     }
 
     public void setup()
@@ -139,15 +154,18 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if(gameState == GameState.PLAY_STATE) {
-            resumeMusic(0);
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
+            if(!music.clip.isRunning() && !gameCompleted) {
+                resumeMusic();
+            }
             currentMap.update();
             currentLevel.updateProgress();
+            ui.update();
             if(currentLevel.canChangeMap) lvlManager.update();
         } else
         if(gameState == GameState.PAUSE_STATE )
         {
-            pauseMusic(0);;
+            pauseMusic();;
         }
         environmentManager.lighting.update();
     }
@@ -156,13 +174,17 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE) {
+        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
+        currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
-        tileManager.render(g2);
+        if(gameCompleted) {
+            disableKey();
+            credit.render(g2);
+        }
         g2.dispose();
     }
 
@@ -197,23 +219,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void playMusic(int index)
+    public static void playMusic(int index)
     {
         music.setFile(index);
         music.play();
         music.loop();
     }
-    public void pauseMusic(int index){
+    public static void pauseMusic(){
         music.pause();
     }
-    public void resumeMusic(int index){
+    public static void resumeMusic(){
         music.resume();
     }
-    public void stopMusic(int index)
+    public static void stopMusic()
     {
         music.stop();
     }
-    public void playSE(int index)
+    public static void playSE(int index)
     {
         se.setFile(index);
         se.play();

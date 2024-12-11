@@ -31,4 +31,12 @@ public class Obj_Vault extends Entity {
     public void render(Graphics2D g2) {
         g2.drawImage(obj_vault , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
     }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        obj_vault.flush();
+        obj_vault = null;
+
+    }
 }

@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="test:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/test_jar</output-path>
+    <root id="archive" name="test.jar">
+      <element id="module-output" name="test" />
+      <element id="module-output" name="jsonreader" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

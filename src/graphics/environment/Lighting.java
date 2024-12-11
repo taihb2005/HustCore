@@ -129,4 +129,16 @@ public class Lighting {
             spotLightIn = false;
         }
     }
+
+    public void blindFadein(int radius){
+        transitCounter++;
+        radius = mp.getBestLightingRadius() - 50 * transitCounter;
+        setLightRadius(radius);
+        if(radius < mp.player.blindRadius){
+            transit = false;
+            fadeIn = false;
+            setLightRadius(mp.player.blindRadius);
+            transitCounter = 0;
+        }
+    }
 }

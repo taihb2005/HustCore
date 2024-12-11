@@ -2,6 +2,7 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
+import util.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,21 +12,22 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
+import static level.progress.level03.EventHandler03.time;
 import static main.GamePanel.*;
+import static main.KeyHandler.*;
 
 public class UI {
     private final GamePanel gp;
     public Player player;
-    Graphics2D g2;
-    public Font joystix;
-    public Font maru;
+    public Graphics2D g2;
+    public static Font joystix;
+    public static Font maru;
     String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
     int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
     int subState = 0;
-    int cursor = 0;
     boolean isInventoryOpen = false;
     int inventoryX = tileSize / 4;
     int inventoryY = tileSize / 2 + 80;
@@ -34,7 +36,11 @@ public class UI {
     int slotX = inventoryX + 15;
     int slotWidth = 50;
     int slotHeight = 50;
+    public int selectedOption = -1;
+    public final int correctAnswer = 3;
     private BufferedImage gameOverBackground;
+    Color checkPassword = new Color(0 , 0 , 0);
+    String maskedPassword;
 
     int selectedSlot = -1;
 
@@ -48,7 +54,7 @@ public class UI {
 
     private BufferedImage titleImage;
 
-    private BufferedImage Key1Image;
+    private BufferedImage Key1Image, quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -65,36 +71,10 @@ public class UI {
 
         try {
             hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/hpFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/manaFrame.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            titleImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/1.2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Key1Image  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Screenshot 2024-11-29 233940.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try{
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
+            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -232,13 +212,13 @@ public class UI {
     }
 
     public void drawHPBar() {
-        int fullHPWidth = 175;  // Chiều dài tối đa của thanh HP
+        int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
         int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 70;
+        int x = 40;
         int y = windowHeight - 80;
         int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
         // Vẽ nền (màu xám) cho thanh HP
-        g2.drawImage(hpFrame, x-52, y-8, 251, 28, null);
+        g2.drawImage(hpFrame, x-31, y-10, 213, 32, null);
 
         // Vẽ thanh HP hiện tại (màu đỏ)
         g2.setColor(Color.RED);
@@ -246,13 +226,13 @@ public class UI {
     }
 
     public void drawManaBar() {
-        int fullManaWidth = 63;  // Chiều dài tối đa của thanh HP
+        int fullManaWidth = 66;  // Chiều dài tối đa của thanh HP
         int ManaBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 70;
-        int y = windowHeight - 45;
+        int x = 40;
+        int y = windowHeight - 40;
         int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
         // Vẽ nền (màu xám) cho thanh Mana
-        g2.drawImage(manaFrame, x-52, y-8, 139, 28, null);
+        g2.drawImage(manaFrame, x-31, y-10, 101, 32, null);
 
         // Vẽ thanh HP hiện tại (màu xanh)
         g2.setColor(Color.BLUE);
@@ -323,8 +303,8 @@ public class UI {
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        switch(subState) {
-            case 0: options_top(frameX, frameY); break;
+        if (subState == 0) {
+            options_top(frameX, frameY);
         }
     }
     public void options_top(int frameX, int frameY) {
@@ -449,9 +429,14 @@ public class UI {
         }
     }
     public void render(Graphics2D g2) {
-        this.g2 = g2; // Gán đối tượng g2 vào để sử dụng
+        this.g2 = g2;
         if(gameState == GameState.PLAY_STATE)
         {
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+        }else if(gameState == GameState.PASSWORD_STATE){
+            drawPasswordInputBox();
             drawHPBar();
             drawManaBar();
             drawInventory();
@@ -485,7 +470,45 @@ public class UI {
         if(gameState == GameState.SETTING_STATE){
             drawSettingScreen();
         }
+        if(gameState == GameState.QUIZ_STATE){
+            drawQuiz();
+        }
     }
+
+    private void drawQuiz() {
+        int frameX = 0;
+        int frameY = 0;
+        int frameWidth = 978;
+        int frameHeight = 514;
+        String message = "";
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        g2.drawImage(quizImage,frameX, frameY, 770, 578, null);
+        if (selectedOption > -1) {
+            if (selectedOption == 4) {
+                message = "Chúc mừng bạn đã trả lời đúng! Nhấn Enter để tiếp tục.";
+            } else if (selectedOption == 5) {
+                message = "Rất tiếc, bạn đã trả lời sai. Nhấn Enter để tiếp tục.";
+            } else {
+                message = "Bạn chọn đáp án " + (char) ('A' + selectedOption) + ". Nhấn Enter để xem kết quả";
+            }
+            drawMessage(message);
+        }
+
+    }
+
+    public void drawMessage(String message) {
+        g2.setFont(new Font("Arial", Font.PLAIN, 24));
+        g2.setColor(Color.BLACK);
+
+        g2.drawString(message , 30, 550);
+    }
+    public void update(){
+        if(gameState == GameState.PASSWORD_STATE){
+            handlePasswordPressed();
+            maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        }
+    }
+
     public void drawSettingScreen(){
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
         g2.setColor(Color.white);
@@ -568,23 +591,18 @@ public class UI {
         textY += tileSize;
 
         g2.drawString("MOVE", textX, textY);
-        if(cursor == 0) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("ATTACK", textX, textY);
-        if(cursor ==1) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("BUY/USE ITEMS", textX, textY);
-        if(cursor ==2) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("PAUSE/ESCAPE", textX, textY);
-        if(cursor == 3) g2.drawString(">", textX-25, textY);
         textY+=tileSize;
 
         g2.drawString("COMMUNICATE", textX, textY);
-        if(cursor == 4) g2.drawString(">", textX-25, textY);
 
         //THONG TIN
         textX = frameX + tileSize*11/2;
@@ -603,5 +621,60 @@ public class UI {
         textY+=tileSize;
 
         g2.drawString("ENTER", textX, textY);
+    }
+    private void drawPasswordInputBox() {
+        int x = 100;
+        int y = 100;
+        int width = gp.getWidth() - tileSize * 4;
+        int height = 200;
+
+        drawSubWindow(x, y, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
+        drawSubWindow(x+300,y+55,200,30);
+
+        if(currentLevel.enteredPassword.isEmpty()) checkPassword = Color.white;
+        g2.setColor(checkPassword);
+        maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        g2.drawString(maskedPassword, x + 310, y + 75);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
+        g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
+    }
+    public void handlePasswordPressed(){
+        String charPressed = "";
+        if(enterPressed){
+            enterPressed = false;
+            if (currentLevel.enteredPassword.equals(currentLevel.correctPassword)) {
+                currentLevel.levelFinished = true;
+                checkPassword = Color.GREEN;
+            } else {
+                checkPassword = Color.RED;
+                currentLevel.enteredPassword = "";
+            }
+        }
+        if(key0pressed) {charPressed = "0"; key0pressed = false;} else
+        if(key1pressed) {charPressed = "1"; key1pressed = false;} else
+        if(key2pressed) {charPressed = "2"; key2pressed = false;} else
+        if(key3pressed) {charPressed = "3"; key3pressed = false;} else
+        if(key4pressed) {charPressed = "4"; key4pressed = false;} else
+        if(key5pressed) {charPressed = "5"; key5pressed = false;} else
+        if(key6pressed) {charPressed = "6"; key6pressed = false;} else
+        if(key7pressed) {charPressed = "7"; key7pressed = false;} else
+        if(key8pressed) {charPressed = "8"; key8pressed = false;} else
+        if(key9pressed) {charPressed = "9"; key9pressed = false;}
+
+        if(currentLevel.enteredPassword.length() < 12) currentLevel.enteredPassword += charPressed;
+
+        if (keyBackspacepressed) {
+            keyBackspacepressed = false;
+            if (!currentLevel.enteredPassword.isEmpty()) {
+                currentLevel.enteredPassword = currentLevel.enteredPassword.substring(0, currentLevel.enteredPassword.length() - 1);
+            }
+        }
+        if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
     }
 }

@@ -40,12 +40,33 @@ public class Mon_Shooter extends Monster implements Actable {
     private int shootSpeed = 10;
 
     private final BufferedImage[][][] mon_shooter = new BufferedImage[4][][];
-    private final Animation mon_animator_shooter = new Animation();
+    private Animation mon_animator_shooter = new Animation();
     public int type;
 
     private ArrayList<Projectile> proj;
 
-    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , int x , int y){
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , String idName ,int x , int y){
+        super(mp , x , y);
+        this.mp = mp;
+        name = "Shooter";
+        this.idName = idName;
+        this.type = type;
+        this.isAlwaysUp = isAlwaysUp;
+        if(isAlwaysUp) this.type = ACTIVE;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+        this.direction = direction;
+        changeAnimationDirection();
+        setInterval(shotInterval);
+        shootSpeed = Math.max(shotInterval / 5 , 1);
+    }
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, int x , int y){
         super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
@@ -64,7 +85,32 @@ public class Mon_Shooter extends Monster implements Actable {
         changeAnimationDirection();
         setInterval(shotInterval);
         shootSpeed = Math.max(shotInterval / 5 , 1);
+        interactionDetectionArea = detectionArea;
     }
+
+    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, String idName ,int x , int y){
+        super(mp , x , y);
+        this.mp = mp;
+        name = "Shooter";
+        this.type = type;
+        this.idName = idName;
+        this.isAlwaysUp = isAlwaysUp;
+        if(isAlwaysUp) this.type = ACTIVE;
+        width = 64;
+        height = 64;
+        speed = 0;
+        strength = 10;
+        level = 1;
+
+        getImage();
+        setDefault();
+        this.direction = direction;
+        changeAnimationDirection();
+        setInterval(shotInterval);
+        shootSpeed = Math.max(shotInterval / 5 , 1);
+        interactionDetectionArea = detectionArea;
+    }
+
 
     private void setDefault(){
         maxHP = 200;
@@ -238,12 +284,17 @@ public class Mon_Shooter extends Monster implements Actable {
         }
     }
 
+    private void updateHP(){
+        if(currentHP == 0) isDying = true;
+    }
+
     @Override
     public void update() {
         if(!isAlwaysUp)checkForPlayer();
         updateAttackCycle();
         updateInvincibility();
         handleAnimationState();
+        updateHP();
         mon_animator_shooter.update();
         CURRENT_FRAME = mon_animator_shooter.getCurrentFrames();
     }
@@ -262,5 +313,27 @@ public class Mon_Shooter extends Monster implements Actable {
     public void setDirection(String dir){
         direction = dir;
         changeAnimationDirection();
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_shooter = null;
+        for(int i = 0 ; i < mon_shooter.length ; i++){
+            for(int j = 0 ; j < mon_shooter[i].length ; j++){
+                for(int k = 0 ; k < mon_shooter[i][j].length ; k++){
+                    mon_shooter[i][j][k].flush();
+                    mon_shooter[i][j][k] = null;
+                }
+            }
+        }
+        projectile = null;
+        proj.clear();
+        proj = null;
+        projectile_name = null;
+        effectDealByProjectile = null;
+        effectDealOnTouch = null;
     }
 }

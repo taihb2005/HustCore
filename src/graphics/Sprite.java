@@ -16,7 +16,7 @@ import static main.GamePanel.tileSize;
  */
 
 public class Sprite {
-    final private BufferedImage SPRITESHEET;
+    private BufferedImage SPRITESHEET;
     private BufferedImage[][] spriteArray;
 
     public int w;
@@ -92,4 +92,16 @@ public class Sprite {
 
     public int getSpriteCols(){return spriteCols;};
     public int getSpriteRows(){return spriteRows;};
+
+    public void dispose(){
+        for(int i = 0 ; i < spriteArray.length ; i++){
+            for(int j = 0 ; j < spriteArray[i].length ; j++){
+                spriteArray[i][j].flush();
+                spriteArray[i][j] = null;
+            }
+        }
+
+        SPRITESHEET.flush();
+        SPRITESHEET = null;
+    }
 }

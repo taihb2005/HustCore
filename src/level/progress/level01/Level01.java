@@ -7,17 +7,25 @@ import map.MapManager;
 import map.MapParser;
 
 public class Level01 extends Level {
+    final EventHandler01 eventHandler01 = new EventHandler01(this);
     public Level01(GamePanel gp){
         this.gp = gp;
-        MapParser.loadMap( "map1" ,"res/map/map1.tmx");
+        MapParser.loadMap( "map1" ,"/map/map1.tmx");
         map = MapManager.getGameMap("map1");
         map.gp = gp;
         init();
-        setter.setFilePathObject("res/level/level01/object_level01.json");
-        setter.setFilePathEnemy(null);
-        setter.setFilePathNpc(null);
+        setter.setFilePathObject("/level/level01/object_level01.json");
+        setter.setFilePathEnemy("/level/level01/enemy_level01.json");
+        setter.setFilePathNpc("/level/level01/npc_level01.json");
         setter.loadAll();
 
-        changeMapEventRect = new EventRectangle(64 , 0 , 128 , 32);
+        levelFinished = false;
+        canChangeMap = false;
+
+        changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , false);
+    }
+
+    public void updateProgress(){
+        eventHandler01.update();
     }
 }

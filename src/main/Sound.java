@@ -13,14 +13,20 @@ public class Sound {
     FloatControl fc;
     int volumeScale = 6;
     float volume;
-    int volumePercentage = 0;
+    int volumePercentage = 40;
     long savedPos = 0;
     public Sound()
     {
-        soundURL[0] = getClass().getResource("/sound/sound_testing.wav");
+        soundURL[0] = getClass().getResource("/sound/TitleScreen2.wav");
         soundURL[1] = getClass().getResource("/sound/speak.wav");
         soundURL[2] = getClass().getResource("/sound/shoot.wav");
         soundURL[3] = getClass().getResource("/sound/levelup.wav");
+        soundURL[4] = getClass().getResource("/sound/Thua.wav");
+        soundURL[5] = getClass().getResource("/sound/Boss.wav");
+        soundURL[6] = getClass().getResource("/sound/NhacLevel.wav");
+        soundURL[7] = getClass().getResource("/sound/Quizz.wav");
+        soundURL[8] = getClass().getResource("/sound/creditMusic.wav");
+        soundURL[9] = getClass().getResource("/sound/fanfare.wav");
     }
 
     public void setFile(int index)  {
@@ -60,7 +66,10 @@ public class Sound {
     }
     public void stop()
     {
-        clip.stop();
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+            clip = null;
+        }
     }
     public void checkVolume(int volumePercentage) {
         if (volumePercentage < 0 || volumePercentage > 100) {

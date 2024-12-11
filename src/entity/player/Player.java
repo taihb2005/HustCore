@@ -13,6 +13,7 @@ import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 import status.StatusManager;
+import level.progress.level02.EventHandler02;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,7 +46,7 @@ public class Player extends Entity {
     private boolean isShooting;
     public boolean isDying = false;
 
-    private boolean attackCanceled;
+    public boolean attackCanceled;
     public final int screenX, screenY;
 
     private final BufferedImage[][][] player_gun = new BufferedImage[7][][];
@@ -53,16 +54,16 @@ public class Player extends Entity {
 
     private int CURRENT_FRAME;
     public int SHOOT_INTERVAL ;
-    public int nextLevelUp = 30;
+    public int nextLevelUp = 60;
 
     //PLAYER STATUS
-    public int blindRadius = 100;
+    public int blindRadius = 200;
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
     public HashMap<String , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
-    public Item [] inventory = new Item[100];
+    public Item [] inventory = new Item[5];
     public ItemHandler iHandler = new ItemHandler();
 
     public Player(GameMap mp) {
@@ -203,6 +204,8 @@ public class Player extends Entity {
         if (!animator.isPlaying() && isDying){
             isDying = false;
             GamePanel.gameState = GameState.LOSE_STATE;
+            stopMusic();
+            playMusic(4);
         }
     }
 
@@ -321,11 +324,11 @@ public class Player extends Entity {
 
     public void damageEnemy(int index){
         if(index != -1){
-            projectile.active = false;
             switch (mp.enemy[index].name){
-                case "Shooter": mp.playerAttack.damageShooter(index); break;
-                case "Hust Guardian": mp.playerAttack.damageGuardian(index); break;
-                case "Cyborgon"   : mp.playerAttack.damageCyborgon(index);
+                case "Shooter": mp.playerAttack.damageShooter(index); projectile.active = false; break;
+                case "Hust Guardian": mp.playerAttack.damageGuardian(index); projectile.active = false; break;
+                case "Cyborgon"   : mp.playerAttack.damageCyborgon(index); projectile.active = false; break;
+                case "Effect Dealer": mp.playerAttack.damageEffectDealer(index); break;
                 default       : mp.playerAttack.damageEnemy(index);   break;
             }
             if(mp.enemy[index].currentHP <= 0){
@@ -333,19 +336,21 @@ public class Player extends Entity {
                 System.out.println("Current exp: " + exp);
                 mp.enemy[index].currentHP = 0;
                 mp.enemy[index].die();
+
                 checkForLevelUp();
+
             }
         }
     }
 
     public void receiveDamage(Projectile proj , Entity attacker){
-        currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
-        System.out.println("Receive " + ((proj.base_damage + attacker.strength) - (defense)) + " damage");
+        currentHP = currentHP - (proj.base_damage + attacker.strength) ;
+        System.out.println("Receive " + ((proj.base_damage + attacker.strength)) + " damage");
     }
 
     public void receiveDamage(Monster attacker){
-        currentHP = currentHP - (20 + attacker.strength) + (defense);
-        System.out.println("Receive " + ((20 + attacker.strength) - (defense)) + " damage");
+        currentHP = currentHP - (attacker.strength);
+        System.out.println("Receive " + ((attacker.strength)) + " damage");
     }
 
     public void updateInventory(){
@@ -389,7 +394,7 @@ public class Player extends Entity {
         if(!hasResource() && isShooting){
             isShooting = false;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            dialogues[0][0] = "Not enough mana!\nYou need " + projectile.manaCost + " mana(s) to shoot";
+            dialogues[0][0] = "Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn";
             startDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
@@ -399,7 +404,7 @@ public class Player extends Entity {
         manaHealCounter++;
         if(manaHealCounter >= manaHealInterval){
             manaHealCounter = 0;
-            currentMana += 10;
+            currentMana += 20;
         }
         updateMana();
     }
@@ -416,7 +421,7 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 10;
+        strength = 5;
         damage = projectile.base_damage + strength * level ;
     }
     private void setDefense(){
@@ -436,10 +441,14 @@ public class Player extends Entity {
             level++;
             set();
             exp = nextLevelUp;
-            nextLevelUp += 30;
+            if(level == 1) nextLevelUp = 30; else
+            if(level == 2) nextLevelUp = 150; else
+            if(level == 3) nextLevelUp = 300; else
+            if(level == 4) nextLevelUp = 700; else
+            if(level == 5) nextLevelUp = 999999999;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
-            dialogues[0][0] = "Level up!\nYou are level " + level + " now!\nYou feel stronger!";
+            dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";
             startDialogue(this , 0);
         }
     }
