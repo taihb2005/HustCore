@@ -38,7 +38,7 @@ public class Mon_Spectron extends Monster implements Actable {
     private int actionLockCounter = 0;
     private int attackLockCounter = 0;
     private int changeDirCounter = 120;
-    private int shootInterval = 120;
+    private int shootInterval = 90;
 
     private int lastHP;
 

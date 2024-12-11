@@ -325,11 +325,12 @@ public class Player extends Entity {
     public void damageEnemy(int index){
         if(index != -1){
             switch (mp.enemy[index].name){
+                case "Spectron": mp.playerAttack.damageEnemy(index); projectile.active = false ; break;
                 case "Shooter": mp.playerAttack.damageShooter(index); projectile.active = false; break;
                 case "Hust Guardian": mp.playerAttack.damageGuardian(index); projectile.active = false; break;
                 case "Cyborgon"   : mp.playerAttack.damageCyborgon(index); projectile.active = false; break;
                 case "Effect Dealer": mp.playerAttack.damageEffectDealer(index); break;
-                default       : mp.playerAttack.damageEnemy(index);   break;
+                case "Boss": mp.playerAttack.damageEnemy(index); projectile.active = false; break;
             }
             if(mp.enemy[index].currentHP <= 0){
                 exp += mp.enemy[index].expDrop;

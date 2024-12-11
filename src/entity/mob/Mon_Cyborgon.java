@@ -90,7 +90,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 40;
-        maxHP = 140;
+        maxHP = 200;
         currentHP = maxHP;
         strength = 30;
         level = 1;
@@ -98,7 +98,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         projectile = new Proj_GreenBullet(mp);
         effectDealOnTouch = new EffectNone(mp.player);
         effectDealByProjectile = new EffectNone(mp.player);
-        speed = 2;
+        speed = 3;
         last_speed = speed;
 
         expDrop = 20;

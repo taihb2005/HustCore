@@ -9,6 +9,9 @@ import map.MapParser;
 import java.awt.*;
 import java.util.Random;
 
+import static main.GamePanel.playMusic;
+import static main.GamePanel.stopMusic;
+
 public class Level02 extends Level {
     private EventHandler02 eventHandler02;
 
@@ -23,6 +26,8 @@ public class Level02 extends Level {
         setter.setFilePathEnemy("/level/level02/enemy_level02.json");
         setter.loadAll();
         eventHandler02 = new EventHandler02(this);
+        stopMusic();
+        playMusic(6);
 
         changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
         changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);

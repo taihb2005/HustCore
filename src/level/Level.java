@@ -39,8 +39,6 @@ public class Level{
         canChangeMap = false;
         levelFinished = false;
 
-        stopMusic();
-        playMusic(6);
     };
     public void updateProgress(){}
     public void render(Graphics2D g2){};

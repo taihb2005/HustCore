@@ -62,7 +62,6 @@ public class Credit {
 
     public void scene_ending()
     {
-        System.out.println(scenePhase);
         if(scenePhase == 0)
         {
             //Play the fanfare

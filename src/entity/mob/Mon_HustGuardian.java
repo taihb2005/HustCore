@@ -92,7 +92,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         effectDealOnTouch = new EffectNone(mp.player);
         effectDealByProjectile = new EffectNone(mp.player);
 
-        SHOOT_INTERVAL = projectile.maxHP + 5;
+        SHOOT_INTERVAL = projectile.maxHP + 20;
         expDrop = 30;
 
         direction = "right";
@@ -166,16 +166,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
         }
         isRunning = (up | down | right | left) & (!isShooting);
         damagePlayer();
-    }
-
-    private void checkIfInRange(){
-        posX = (worldX + solidArea1.x) + solidArea1.width / 2;
-        posY = (worldY + solidArea1.y) + solidArea1.height / 2;
-        double distance = UtilityTool.distance(posX , posY , spawnPointX , spawnPointY);
-        if(distance > rangeRadius){
-            direction = getOppositeDirection(direction);
-            decideToMove();
-        }
     }
 
     private void actionWhenNeutral(){

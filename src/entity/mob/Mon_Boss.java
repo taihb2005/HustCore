@@ -94,9 +94,9 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 2000;
+        maxHP = 3000;
         currentHP = maxHP;
-        strength = 50;
+        strength = 70;
         level = 1;
         defense = 10;
         rangeRadius = 200;
