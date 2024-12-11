@@ -52,12 +52,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 3;
-    public static int levelProgress = 3;
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
-    public static Timer timer = new Timer();
 
     public static BufferedImage darknessFilter;
     private float darknessOpacity = 0.0f;
@@ -78,14 +77,12 @@ public class GamePanel extends JPanel implements Runnable {
         setup();
         credit = new Credit(this);
         ui = new UI(this);
-        //currentMap.player.storeValue();
     }
 
     public void loadMap()
     {
         if(currentLevel != null) {
             currentLevel.dispose();
-            currentLevel = null;
             System.gc();
         }
         switch(levelProgress){
@@ -97,7 +94,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         assert currentLevel != null;
         currentMap = currentLevel.map;
-        ui = new UI(this);
+        ui.player = currentMap.player;
         previousLevelProgress = levelProgress;
     }
 

@@ -10,7 +10,7 @@ import static main.GamePanel.camera;
 public class Effect {
     protected Player player;
     protected int id;
-    public String name;
+    public StringBuilder name;
     protected int effectDuration;
     protected int effectDurationCounter = 0;
     public boolean effectFinished ;
@@ -33,7 +33,7 @@ public class Effect {
             player.effect.add(this);
         } else{         //Nếu như tồn tại rồi thì check một vài thứ sau
             for(Effect eff : player.effect){
-                if(eff.name.equals(name)) {   //Tìm đến cái effect đã tồn tại
+                if(eff.name.compareTo(name) == 0) {   //Tìm đến cái effect đã tồn tại
                     int effectRemainingTime = player.effectManager.get(name) - effectDurationCounter;
                     if(effectRemainingTime < effectDuration) { //Nếu như thời gian effect còn lại nhỏ hơn thì mới set cái mới
                         eff.setEffectDuration(effectDuration);

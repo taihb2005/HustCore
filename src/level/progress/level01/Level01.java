@@ -24,6 +24,7 @@ public class Level01 extends Level {
         stopMusic();
         playMusic(6);
 
+
         levelFinished = false;
         canChangeMap = false;
 
@@ -32,5 +33,11 @@ public class Level01 extends Level {
 
     public void updateProgress(){
         eventHandler01.update();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        eventHandler01.dispose();
     }
 }

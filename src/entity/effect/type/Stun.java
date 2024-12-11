@@ -11,7 +11,7 @@ public class Stun extends Effect {
         super(player);
         setEffectDuration(100);
         id = 3;
-        name = "Stun";
+        name = new StringBuilder("Stun");
         icon = new Sprite("/effect/stun.png" , 32 , 32).getSpriteSheet();
     }
 

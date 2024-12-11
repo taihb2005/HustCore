@@ -161,6 +161,10 @@ public class GameMap {
         Arrays.fill(enemy, null);
         Arrays.fill(projectiles, null);
         objList.clear();
+
+        for(TileLayer layer : mapLayer){
+            layer.dispose();
+        }
     }
 
     public void addObject(Entity entity , Entity[] list){

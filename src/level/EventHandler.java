@@ -34,6 +34,11 @@ public class EventHandler {
         return false;
     }
 
+    public void dispose(){
+        timer = null;
+        eventMaster.dispose();
+    }
+
     public void update(){};
     public void render(Graphics2D g2){};
 }

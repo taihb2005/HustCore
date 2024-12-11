@@ -227,7 +227,7 @@ public class Entity {
     public void render(Graphics2D g2){};
 
     public void dispose(){
-        for(StringBuilder[] s: dialogues) Arrays.fill(s , null);
+        for(StringBuilder[] s: dialogues) if(s != null) Arrays.fill(s , null);
     };
 
     public String getOppositeDirection(String direction){

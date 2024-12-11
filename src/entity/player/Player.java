@@ -61,7 +61,7 @@ public class Player extends Entity {
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
-    public HashMap<String , Integer> effectManager = new HashMap<>();
+    public HashMap<StringBuilder , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[5];
     public ItemHandler iHandler = new ItemHandler();
@@ -123,7 +123,7 @@ public class Player extends Entity {
         worldX = sManager.getWorldX();
         worldY = sManager.getWorldY();
         newWorldX = worldX; newWorldY = worldY;
-        inventory = sManager.getSavedInventory();
+        sManager.getSavedInventory(inventory);
         set();
     }
 
@@ -448,7 +448,7 @@ public class Player extends Entity {
             if(level == 4) nextLevelUp = 700; else
             if(level == 5) nextLevelUp = 999999999;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
-            mp.gp.playSE(3);
+            playSE(3);
             dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
             startDialogue(this , 0);
         }

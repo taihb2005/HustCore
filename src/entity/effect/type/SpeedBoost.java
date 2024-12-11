@@ -11,7 +11,7 @@ public class SpeedBoost extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 4;
-        name = "Speed Boost";
+        name = new StringBuilder("Speed Boost");
         icon = new Sprite("/effect/speed_boost.png" , 32  ,32).getSpriteSheet();
     }
 

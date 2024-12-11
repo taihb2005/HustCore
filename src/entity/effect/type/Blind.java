@@ -13,7 +13,7 @@ public class Blind extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 2;
-        name = "Blind";
+        name = new StringBuilder("Blind");
         icon = new Sprite("/effect/blind.png").getSpriteSheet();
     }
 

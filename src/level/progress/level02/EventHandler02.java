@@ -23,7 +23,7 @@ public class EventHandler02 extends EventHandler {
     private boolean allEnemyDefeated;
     private boolean hasPopUpHint;
     private boolean isInRegion;
-    private final EventRectangle showPasswordInput;
+    private EventRectangle showPasswordInput;
     ArrayList<String> hint = new ArrayList<>();
 
 
@@ -94,7 +94,10 @@ public class EventHandler02 extends EventHandler {
         checkForPasswordDoor();
         popUpPasswordHint();
         if(allEnemyDefeated) checkForShowPasswordInput();
-        if(lvl.levelFinished) checkForCompletingLevel();
+        if(lvl.levelFinished) {
+            checkForCompletingLevel();
+            lvl.map.player.storeValue();
+        }
     }
 
     public void render(Graphics2D g2){
@@ -109,4 +112,9 @@ public class EventHandler02 extends EventHandler {
         }
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        hint.clear();
+    }
 }

@@ -1,6 +1,5 @@
 package entity.projectile;
 
-import entity.effect.EffectType;
 import entity.Entity;
 import graphics.Animation;
 import map.GameMap;

@@ -49,8 +49,6 @@ public class Mon_Boss extends Monster implements Actable {
     private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
     private boolean shoot3;
-    // Tổng số cột flame
-    private boolean shooting = false;      // Trạng thái đang bắn flame
 
     public Mon_Boss(GameMap mp){
         super(mp);
@@ -91,7 +89,7 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 3000;
+        maxHP = 1000;
         currentHP = maxHP;
         strength = 70;
         level = 1;
@@ -289,11 +287,6 @@ public class Mon_Boss extends Monster implements Actable {
     @Override
     public void loot() {
 
-    }
-
-    public void shoot3() {
-        shooting = true; // Đặt trạng thái bắn
-        currentColumn = 1; // Bắt đầu từ cột đầu tiên
     }
 
     public void shoot1() {

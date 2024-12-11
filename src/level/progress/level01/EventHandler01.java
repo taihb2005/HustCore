@@ -32,6 +32,9 @@ public class EventHandler01 extends EventHandler {
         setEventRect();
         setEventEntity();
 
+        room3Completed = true;
+        lvl.levelFinished = true;
+
         countEnemyRoom1 = 2;
         countEnemyRoom2 = 1;
         countEnemyRoom3 = 2;
@@ -171,10 +174,12 @@ public class EventHandler01 extends EventHandler {
             anounceTaskRoom3();
         }
         if(!room3Completed && room1Completed && room2Completed) checkForCompletingRoom3();
-        if(room3Completed) checkForCompletingLevel();
+        if(room3Completed) {
+            checkForCompletingLevel();
+            lvl.map.player.storeValue();
+        }
 
         //LEVEL COMPLETED
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
-
 }

@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.TimerTask;
 
 public class EventHandler03 extends EventHandler {
-    private EventRectangle beginRoom1;
-
     private EventRectangle beginRoom2;
     private EventRectangle endRoom2;
 
@@ -29,7 +27,6 @@ public class EventHandler03 extends EventHandler {
     private EventRectangle quizArea;
 
     private EventRectangle completeArea;
-    private final Entity[] eventEntity = new Entity[10];
     public static int time = 0;
 
     private Stun temp;
@@ -44,7 +41,6 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void setEventRect(){
-        beginRoom1 = new EventRectangle(896 , 1408 , 128, 64 , true);
         beginRoom2 = new EventRectangle(384 , 320 , 128 , 32 , true);
         endRoom2 = new EventRectangle(704 , 128 , 10 , 128 , true);
         beginRoom3 = new EventRectangle(1536 , 515 , 128 , 12 , true);
@@ -192,8 +188,11 @@ public class EventHandler03 extends EventHandler {
 
             else if (GamePanel.ui.selectedOption == 5) lvl.map.player.currentHP = 0;
             else if (!completeArea.eventFinished && triggerEvent(completeArea) && GamePanel.ui.selectedOption == 4) {
+                lvl.map.player.storeValue();
                 lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
                 }
             }
         }
+
+
 }
