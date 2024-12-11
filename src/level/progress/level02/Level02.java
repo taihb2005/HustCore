@@ -14,13 +14,13 @@ public class Level02 extends Level {
 
     public Level02(GamePanel gp) {
         this.gp = gp;
-        MapParser.loadMap("map2", "res/map/map2.tmx");
+        MapParser.loadMap("map2", "/map/map2.tmx");
         map = MapManager.getGameMap("map2");
         map.gp = gp;
         init();
-        setter.setFilePathObject("res/level/level02/object_level02.json");
-        setter.setFilePathNpc("res/level/level02/npc_level02.json");
-        setter.setFilePathEnemy("res/level/level02/enemy_level02.json");
+        setter.setFilePathObject("/level/level02/object_level02.json");
+        setter.setFilePathNpc("/level/level02/npc_level02.json");
+        setter.setFilePathEnemy("/level/level02/enemy_level02.json");
         setter.loadAll();
         eventHandler02 = new EventHandler02(this);
 

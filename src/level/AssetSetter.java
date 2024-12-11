@@ -17,6 +17,7 @@ import entity.json_stat.NpcStat;
 import entity.mob.*;
 import entity.npc.Npc_CorruptedHustStudent;
 import entity.object.*;
+import main.ResourceLoader;
 import map.GameMap;
 
 import java.awt.*;
@@ -42,7 +43,7 @@ public class AssetSetter {
 
     public void setObject() throws IOException
     {
-        try (Reader reader = new FileReader(filePathObject)) {
+        try (Reader reader = ResourceLoader.getReader(filePathObject)) {
             Gson gson = new Gson();
 
             Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {
@@ -123,7 +124,7 @@ public class AssetSetter {
 
     public void setNpc() throws IOException
     {
-        try(Reader reader = new FileReader(filePathNpc)){
+        try(Reader reader = ResourceLoader.getReader(filePathNpc)){
             Gson gson = new Gson();
             Map<String, List<NpcStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<NpcStat>>>() {}.getType());
 
@@ -140,7 +141,7 @@ public class AssetSetter {
     }
 
     public void setEnemy() throws IOException{
-        try(Reader reader = new FileReader(filePathEnemy);) {
+        try(Reader reader = ResourceLoader.getReader(filePathEnemy)) {
             Gson gson = new Gson();
 
             Map<String, List<EnemyStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<EnemyStat>>>() {}.getType());

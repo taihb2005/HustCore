@@ -14,15 +14,15 @@ public class Level03 extends Level {
 
     public Level03(GamePanel gp) {
         this.gp = gp;
-        MapParser.loadMap("map3", "res/map/untitled.tmx");
+        MapParser.loadMap("map3", "/map/map3.tmx");
         map = MapManager.getGameMap("map3");
         if (map == null) System.out.println("null3");
         map.gp = gp;
         eventHandler03 = new EventHandler03(this);
         init();
-        setter.setFilePathObject("res/level/level03/object_level03.json");
+        setter.setFilePathObject("/level/level03/object_level03.json");
 //        setter.setFilePathNpc("res/level/level03/npc_level03.json");
-        setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
+        setter.setFilePathEnemy("/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = false;
         changeMapEventRect1 = new EventRectangle(1536, 1888, 128, 32);

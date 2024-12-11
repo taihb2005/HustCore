@@ -342,12 +342,12 @@ public class Player extends Entity {
     }
 
     public void receiveDamage(Projectile proj , Entity attacker){
-        currentHP = currentHP - (proj.base_damage + attacker.strength) + (defense);
+        currentHP = currentHP - (proj.base_damage + attacker.strength) ;
         System.out.println("Receive " + ((proj.base_damage + attacker.strength)) + " damage");
     }
 
     public void receiveDamage(Monster attacker){
-        currentHP = currentHP - (attacker.strength) + (defense);
+        currentHP = currentHP - (attacker.strength);
         System.out.println("Receive " + ((attacker.strength)) + " damage");
     }
 

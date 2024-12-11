@@ -19,12 +19,12 @@ public class Level04 extends Level {
 
     public Level04(GamePanel gp) {
         this.gp = gp;
-        MapParser.loadMap("map4", "res/map/map4.tmx");
+        MapParser.loadMap("map4", "/map/map4.tmx");
         map = MapManager.getGameMap("map4");
         map.gp = gp;
         eventHandler04 = new EventHandler04(this);
         init();
-        setter.setFilePathObject("res/level/level04/object_level04.json");
+        setter.setFilePathObject("/level/level04/object_level04.json");
 //        setter.setFilePathNpc("res/level/level03/npc_level03.json");
 //        setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();

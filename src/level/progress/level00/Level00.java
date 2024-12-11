@@ -11,13 +11,13 @@ public class Level00 extends Level {
 
     public Level00(GamePanel gp){
         this.gp = gp;
-        MapParser.loadMap( "map0" ,"res/map/map0.tmx");
+        MapParser.loadMap( "map0" ,"/map/map0.tmx");
         map = MapManager.getGameMap("map0");
         map.gp = gp;
 
         init();
-        setter.setFilePathObject("res/level/level00/object_level00.json");
-        setter.setFilePathNpc("res/level/level00/npc_level00.json");
+        setter.setFilePathObject("/level/level00/object_level00.json");
+        setter.setFilePathNpc("/level/level00/npc_level00.json");
         setter.setFilePathEnemy(null);
         setter.loadAll();
 

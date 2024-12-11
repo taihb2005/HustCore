@@ -94,9 +94,9 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 50;
+        maxHP = 2000;
         currentHP = maxHP;
-        strength = 10;
+        strength = 50;
         level = 1;
         defense = 10;
         rangeRadius = 200;
@@ -168,7 +168,7 @@ public class Mon_Boss extends Monster implements Actable {
             this.startDialogue(this, 0);
             nearlyDie = true;
             AssetSetter setter = new AssetSetter(mp);
-            setter.setFilePathEnemy("res/level/level04/enemy_level04.json");
+            setter.setFilePathEnemy("/level/level04/enemy_level04.json");
             try{setter.setEnemy();} catch(IOException ioe){throw new RuntimeException("Lỗi tên file trong boss r kìa");}
             for(Entity e : mp.activeObj)
                 if(e != null && e.idName.equals("Door 7")){
