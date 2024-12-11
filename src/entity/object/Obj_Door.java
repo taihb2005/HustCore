@@ -108,7 +108,7 @@ public class Obj_Door extends Entity{
     }
 
     private void setDialogue(){
-        dialogues[0][0] = "Hmm... Nó đã bị khóa!";
+        dialogues[0][0] = new StringBuilder("Hmm... Nó đã bị khóa!");
     }
 
     public void talk(){

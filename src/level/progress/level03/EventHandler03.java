@@ -66,27 +66,27 @@ public class EventHandler03 extends EventHandler {
     }
 
     private void setFirstDialogue(){
-        eventMaster.dialogues[0][0] = "Player: Chuyện gì vậy?";
-        eventMaster.dialogues[0][1] = "Boss: Chào mừng ngươi đến với\n" +
-                "tầng hầm đặc biệt của BK.";
-        eventMaster.dialogues[0][2] = "Boss: Một khi ngươi bước vào thì \n" +
+        eventMaster.dialogues[0][0] = new StringBuilder("Player: Chuyện gì vậy?");
+        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Chào mừng ngươi đến với\n" +
+                "tầng hầm đặc biệt của BK.");
+        eventMaster.dialogues[0][2] = new StringBuilder("Boss: Một khi ngươi bước vào thì \n" +
                 "gần như ngươi không thể thoát ra \n" +
-                "ngoài..." ;
-        eventMaster.dialogues[0][3] = "Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!";
-        eventMaster.dialogues[0][4] = "Player: Haha! Ngươi đang trêu \nngươi ta phải không?";
-        eventMaster.dialogues[0][5] = "Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.";
-        eventMaster.dialogues[0][6] = "Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định.";
-        eventMaster.dialogues[0][7] = "Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này.";
-        eventMaster.dialogues[0][8] = "Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n";
+                "ngoài...");
+        eventMaster.dialogues[0][3] = new StringBuilder("Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!");
+        eventMaster.dialogues[0][4] = new StringBuilder("Player: Haha! Ngươi đang trêu \nngươi ta phải không?");
+        eventMaster.dialogues[0][5] = new StringBuilder("Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.");
+        eventMaster.dialogues[0][6] = new StringBuilder("Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định.");
+        eventMaster.dialogues[0][7] = new StringBuilder("Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này.");
+        eventMaster.dialogues[0][8] = new StringBuilder("Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n");
     }
 
     private void startSecondDialogue(){
         eventMaster.dialogues[0] = null;
 
-        eventMaster.dialogues[1][0] = "Player: Sao mình cảm giác nặng\nnề vậy nhỉ?";
-        eventMaster.dialogues[1][1] = "Boss: Haha, căn phòng này ta đã \nthiết kế đặc biệt, mọi hành động\n" +
-                "kể cả tốc độ viên đạn của ngươi \nđều bị giảm đi.";
-        eventMaster.dialogues[1][2] = "Boss: hãy chuẩn bị bỏ mạng đi…\n";
+        eventMaster.dialogues[1][0] = new StringBuilder("Player: Sao mình cảm giác nặng\nnề vậy nhỉ?");
+        eventMaster.dialogues[1][1] = new StringBuilder("Boss: Haha, căn phòng này ta đã \nthiết kế đặc biệt, mọi hành động\n" +
+                "kể cả tốc độ viên đạn của ngươi \nđều bị giảm đi.");
+        eventMaster.dialogues[1][2] = new StringBuilder("Boss: hãy chuẩn bị bỏ mạng đi…\n");
         eventMaster.startDialogue(eventMaster,1);
         lvl.map.player.speed=1;
         lvl.map.player.last_speed=1;
@@ -97,15 +97,15 @@ public class EventHandler03 extends EventHandler {
     private void startThirdDialogue(){
         eventMaster.dialogues[1] = null;
 
-        eventMaster.dialogues[2][0] = "Player: Ủa tại sao mình lại dừng \n" +
-                "một chỗ vậy?";
-        eventMaster.dialogues[2][1] = "Boss: Muahaha, ta đã bỏ một " +
+        eventMaster.dialogues[2][0] = new StringBuilder("Player: Ủa tại sao mình lại dừng \n" +
+                "một chỗ vậy?");
+        eventMaster.dialogues[2][1] = new StringBuilder("Boss: Muahaha, ta đã bỏ một " +
                 "quả\nbom dọc hành lang này " +
                 "ngươi chỉ\n" +
                 "có 10 giây để chạy thôi " +
-                "nhóc con\ncủa ta.";
-        eventMaster.dialogues[2][2] = "Player: Trời ơi… sắp tối thui \n" +
-                "màn hình rồi còn bắt đọc hết đống\nthoại này...\n";
+                "nhóc con\ncủa ta.");
+        eventMaster.dialogues[2][2] = new StringBuilder("Player: Trời ơi… sắp tối thui \n" +
+                "màn hình rồi còn bắt đọc hết đống\nthoại này...\n");
         eventMaster.startDialogue(eventMaster,2);
         lvl.map.player.speed=3;
         lvl.map.player.last_speed=3;
@@ -116,23 +116,23 @@ public class EventHandler03 extends EventHandler {
     private void startFourthDialogue(){
         eventMaster.dialogues[2] = null;
 
-        eventMaster.dialogues[3][0] = "Boss: Ngươi khá lắm, nhưng mà \n" +
-                "chưa xong đâu.";
-        eventMaster.dialogues[3][1] = "Boss: căn phòng này ta đã thiết\nkế" +
+        eventMaster.dialogues[3][0] = new StringBuilder("Boss: Ngươi khá lắm, nhưng mà \n" +
+                "chưa xong đâu.");
+        eventMaster.dialogues[3][1] = new StringBuilder("Boss: căn phòng này ta đã thiết\nkế" +
                 " để khi bước vào sau 4s ngươi\n" +
-                "sẽ bị bất động trong 1s.";
-        eventMaster.dialogues[3][2] = "Boss: đồng thời ngươi phải đối\nđầu với" +
+                "sẽ bị bất động trong 1s.");
+        eventMaster.dialogues[3][2] = new StringBuilder("Boss: đồng thời ngươi phải đối\nđầu với" +
                 " những tên lính tinh nhuệ\nnhất " +
-                "do ta tự tay chuẩn bị tặng\ncho ngươi hahaha…";
+                "do ta tự tay chuẩn bị tặng\ncho ngươi hahaha…");
         eventMaster.startDialogue(eventMaster,3);
     }
 
     private void startFifthDialogue(){
         eventMaster.dialogues[3] = null;
 
-        eventMaster.dialogues[4][0] = "Boss: Chào mừng ngươi đến với căn\nphòng cuối cùng của tầng hầm.\n";
-        eventMaster.dialogues[4][1] = "Boss: chú ý ngươi chỉ có 1 lần\ntrả lời duy nhất, nếu sai ngươi\nsẽ bỏ mạng tại đây.";
-        eventMaster.dialogues[4][2] = "Boss: Hãy đến chiếc máy tính để\nnhận câu hỏi.";
+        eventMaster.dialogues[4][0] = new StringBuilder("Boss: Chào mừng ngươi đến với căn\nphòng cuối cùng của tầng hầm.\n");
+        eventMaster.dialogues[4][1] = new StringBuilder("Boss: chú ý ngươi chỉ có 1 lần\ntrả lời duy nhất, nếu sai ngươi\nsẽ bỏ mạng tại đây.");
+        eventMaster.dialogues[4][2] = new StringBuilder("Boss: Hãy đến chiếc máy tính để\nnhận câu hỏi.");
         eventMaster.startDialogue(eventMaster,4);
     }
 

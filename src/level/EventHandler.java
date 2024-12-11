@@ -23,9 +23,13 @@ public class EventHandler {
         int newSolidAreaY1 = lvl.map.player.worldY + lvl.map.player.solidArea1.y;
 
         Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , lvl.map.player.solidArea1.width , lvl.map.player.solidArea1.height);
-        if(tmp1.intersects(e)) {
-            if(e.oneTimeOnlyEvent) e.eventFinished = true;
-            return true;
+        try {
+            if (tmp1.intersects(e)) {
+                if (e.oneTimeOnlyEvent) e.eventFinished = true;
+                return true;
+            }
+        } catch(NullPointerException exception){
+            return false;
         }
         return false;
     }

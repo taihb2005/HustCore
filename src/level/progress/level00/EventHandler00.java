@@ -45,10 +45,10 @@ public class EventHandler00 extends EventHandler {
     }
 
     private void setDialogue(){
-        eventMaster.dialogues[0][0] = "Năm 2700, bạn nhận được nhiệm vụ\ngiải cứu một đại học...";
-        eventMaster.dialogues[0][1] = "Nhưng ngay sau khi nhận nhiệm vụ\nbạn thấy mình nằm trong một căn\nphòng kì lạ!";
-        eventMaster.dialogues[0][2] = "...Cùng với một gã lạ mặt....";
-        eventMaster.dialogues[0][3] = "Thử đến nói chuyện xem sao.";
+        eventMaster.dialogues[0][0] = new StringBuilder("Năm 2700, bạn nhận được nhiệm vụ\ngiải cứu một đại học...");
+        eventMaster.dialogues[0][1] = new StringBuilder("Nhưng ngay sau khi nhận nhiệm vụ\nbạn thấy mình nằm trong một căn\nphòng kì lạ!");
+        eventMaster.dialogues[0][2] = new StringBuilder("...Cùng với một gã lạ mặt....");
+        eventMaster.dialogues[0][3] = new StringBuilder("Thử đến nói chuyện xem sao.");
     }
 
     public void update(){

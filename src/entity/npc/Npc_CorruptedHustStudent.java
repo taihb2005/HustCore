@@ -50,8 +50,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private int rng = 0;
     private final Random generator = new Random();
 
-    private Queue<Integer> numbersToProvide ;
-
     public Npc_CorruptedHustStudent(GameMap mp)
     {
         super();
@@ -66,14 +64,13 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         setDialogue();
     }
 
-    public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , String[][] dialogue , int x , int y)
+    public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , StringBuilder[][] dialogue , int x , int y)
     {
         super(x , y);
         this.mp = mp;
         this.idName = name;
         super.width = 64;
         super.height = 64;
-        this.numbersToProvide = new LinkedList<>();
 
         npc_animator_corruptedStudent = new Animation();
 
@@ -94,15 +91,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         }
     }
 
-    public void addNumberToProvide(int number) {
-        numbersToProvide.add(number);
-    }
-
-    public void addDialogue(String message) {
-        dialogues[dialogueSet] = new String[]{message};
-        dialogueSet++;
-    }
-
     private void getNpcImage()
     {
         npc_corruptedStudent_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_idle1.png" , width , height).getSpriteArray();
@@ -112,6 +100,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         npc_corruptedStudentGlowing_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle1.png" , width , height).getSpriteArray();
         npc_corruptedStudentGlowing_sprite[IDLE_TYPE2] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle2.png" , width , height).getSpriteArray();
         npc_corruptedStudentGlowing_sprite[TALK] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_talk.png" , width , height).getSpriteArray();
+        System.gc();
     }
 
     private void setDefault()
@@ -246,11 +235,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     @Override
     public void render(Graphics2D g2) {
         g2.drawImage(currentSprite[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY(), null);
-    }
-
-    @Override
-    public void dispose() {
-
     }
 
     public boolean hasTalkYet(){return talkOnce;}

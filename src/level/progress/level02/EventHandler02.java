@@ -43,7 +43,7 @@ public class EventHandler02 extends EventHandler {
 
     private void popUpPasswordHint(){
         if(enemiesDefeated % 5 == 0 && enemiesDefeated != 0 && !hasPopUpHint){
-            eventMaster.dialogues[0][0] = "Gợi ý cho mật khẩu là: " + lvl.correctPassword.charAt(enemiesDefeated / 5 - 1);
+            eventMaster.dialogues[0][0] = new StringBuilder("Gợi ý cho mật khẩu là: " + lvl.correctPassword.charAt(enemiesDefeated / 5 - 1));
             hint.add(String.valueOf(lvl.correctPassword.charAt(enemiesDefeated / 5 - 1)));
             hasPopUpHint = true;
             eventMaster.startDialogue(eventMaster , 0);

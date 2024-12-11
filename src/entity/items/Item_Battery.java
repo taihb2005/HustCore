@@ -13,7 +13,7 @@ public class Item_Battery extends Item {
         super(1, new Sprite("/entity/object/ITEM_battery.png", 32, 32).getSprite(0,0));
         name = "Pin năng lương";
         description = "Sử dụng để hồi năng lượng";
-        dialogues[0][0] = "Bạn được hồi " + manaReward + " năng lượng!";
+        dialogues[0][0] = new StringBuilder("Bạn được hồi " + manaReward + " năng lượng!");
     }
 
     public void use(Player player){

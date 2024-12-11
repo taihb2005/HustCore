@@ -13,7 +13,7 @@ public class Item_Kit extends Item {
         super(2, new Sprite("/entity/object/ITEM_box.png", 32, 32).getSprite(0,0));
         name = "Bộ cứu thương";
         description = "Sử dụng để hồi máu";
-        dialogues[0][0] = "Bạn được hồi " + hpReward + " máu!";
+        dialogues[0][0] = new StringBuilder("Bạn được hồi " + hpReward + " máu!");
     }
     public void use(Player player){
         quantity--;

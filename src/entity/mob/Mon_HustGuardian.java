@@ -145,6 +145,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         if(!mon_animator_hust_guardian.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
+            loot();
         }
 
     }
@@ -286,7 +287,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
     }
 
     public void loot() {
-
+        spawnHeart();
     }
 
     @Override

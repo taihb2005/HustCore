@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Actable;
 import entity.effect.type.EffectNone;
+import entity.effect.type.Slow;
 import entity.projectile.Proj_GreenBullet;
 import level.progress.level02.EventHandler02;
 import level.progress.level02.Level02;
@@ -97,8 +98,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
         defense = 0;
         projectile = new Proj_GreenBullet(mp);
         effectDealOnTouch = new EffectNone(mp.player);
-        effectDealByProjectile = new EffectNone(mp.player);
-        speed = 3;
+        effectDealByProjectile = new Slow(mp.player , 20);
+        speed = 2;
         last_speed = speed;
 
         expDrop = 20;

@@ -17,11 +17,11 @@ public class EventHandler04 extends EventHandler {
     }
 
     private void setFirstDialogue() {
-        eventMaster.dialogues[0][0] = "Boss: Ngươi giỏi lắm mới đến \nđược đây";
-        eventMaster.dialogues[0][1] = "Boss: Ngắm gà khoả thân mau!";
+        eventMaster.dialogues[0][0] = new StringBuilder("Boss: Ngươi giỏi lắm mới đến \nđược đây");
+        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Ngắm gà khoả thân mau!");
 
-        eventMaster.dialogues[1][0] = "Boss: Ta sẽ còn quay lại.";
-        eventMaster.dialogues[1][1] = "Boss: Hãy đợi đấy!!!!!!!";
+        eventMaster.dialogues[1][0] = new StringBuilder("Boss: Ta sẽ còn quay lại.");
+        eventMaster.dialogues[1][1] = new StringBuilder("Boss: Hãy đợi đấy!!!!!!!");
     }
 
     private void setEventRect(){

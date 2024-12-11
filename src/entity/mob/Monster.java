@@ -3,6 +3,7 @@ package entity.mob;
 import ai.Node;
 import entity.Entity;
 import entity.effect.Effect;
+import entity.object.Obj_Heart;
 import entity.projectile.Projectile;
 import map.GameMap;
 
@@ -311,5 +312,10 @@ public class Monster extends Entity {
             up = down = right = left = false;
             isRunning = false;
         }
+    }
+    public void spawnHeart() {
+        Obj_Heart heart = new Obj_Heart(mp);
+        heart.worldX = worldX + 16; heart.worldY = worldY + 16;
+        mp.addObject(heart, mp.activeObj);
     }
 }

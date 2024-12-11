@@ -22,7 +22,7 @@ public class UI {
     public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
-    String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
+    StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
@@ -59,13 +59,14 @@ public class UI {
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
-        this.player = currentMap.player;
         try {
+            if(currentMap != null )this.player = currentMap.player;
             InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(is1));
             maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
-        } catch (FontFormatException | IOException e) {
+        } catch (FontFormatException | IOException | NullPointerException e) {
+            this.player = null;
             e.printStackTrace();
         }
 
@@ -80,7 +81,7 @@ public class UI {
         }
     }
     public void startDialogue(String dialogue) {
-        currentDialogue = dialogue;
+        currentDialogue = new StringBuilder(dialogue);
         displayedText = "";
         textIndex = 0;
         frameCounter = 0;
@@ -168,26 +169,29 @@ public class UI {
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "BẮT ĐẦU";
+        text = "Bắt đầu";
         x = getXforCenteredText(text);
-        y = windowHeight*3/5;
-        g2.drawString(text, x, y);
+        y = windowHeight*3/5 - tileSize;
+        g2.drawString(text, x, y - 5);
+        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
         if(commandNum == 0){
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "TÙY CHỈNH";
-        x = getXforCenteredText(text);
-        y = windowHeight*7/10;
-        g2.drawString(text, x, y);
+        text = "Cài đặt";
+        y = windowHeight*7/10 + 20 - tileSize;
+        g2.drawString(text, x, y - 8);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 1){
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "THOÁT";
-        x = getXforCenteredText(text);
-        y = windowHeight*4/5;
-        g2.drawString(text, x, y);
+        text = "Thoát";
+        //x = getXforCenteredText(text);
+        y = windowHeight*4/5 + 40 - tileSize;
+        g2.drawString(text, x + 20, y - 8);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 2){
             g2.drawString(">",x- tileSize, y);
         }
@@ -216,7 +220,12 @@ public class UI {
         int hpBarHeight = 12;   // Chiều cao của thanh HP
         int x = 40;
         int y = windowHeight - 80;
-        int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) player.currentHP / player.maxHP * fullHPWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
         // Vẽ nền (màu xám) cho thanh HP
         g2.drawImage(hpFrame, x-31, y-10, 213, 32, null);
 
@@ -230,7 +239,12 @@ public class UI {
         int ManaBarHeight = 12;   // Chiều cao của thanh HP
         int x = 40;
         int y = windowHeight - 40;
-        int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) player.currentMana / player.maxMana * fullManaWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
         // Vẽ nền (màu xám) cho thanh Mana
         g2.drawImage(manaFrame, x-31, y-10, 101, 32, null);
 
@@ -357,7 +371,7 @@ public class UI {
             g2.drawString(">", textX-25, textY);
         }
     }
-    public void drawInventory() {
+    public void drawInventory() throws NullPointerException {
         if(KeyHandler.keyEpressed){
             KeyHandler.keyEpressed = false;
             isInventoryOpen = !isInventoryOpen;
@@ -430,48 +444,46 @@ public class UI {
     }
     public void render(Graphics2D g2) {
         this.g2 = g2;
-        if(gameState == GameState.PLAY_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }else if(gameState == GameState.PASSWORD_STATE){
-            drawPasswordInputBox();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        else if(gameState == GameState.MENU_STATE)
-        {
-            drawTitleScreen();
-        }
-        else if(gameState == GameState.DIALOGUE_STATE)
-        {
-            drawDialogueScreen();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        if(gameState == GameState.LEVELUP_STATE){
-            drawDialogueScreen();
-        } else
-        if(gameState == GameState.PAUSE_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawPausedScreen();
-            drawOptionsScreen();
-            drawInventory();
-        }
-        if(gameState == GameState.LOSE_STATE){
-            currentMap.dispose();
-            drawGameOverScreen();
-        }
-        if(gameState == GameState.SETTING_STATE){
-            drawSettingScreen();
-        }
-        if(gameState == GameState.QUIZ_STATE){
-            drawQuiz();
+        try {
+            if(gameState == GameState.PLAY_STATE)
+            {
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+            }else if (gameState == GameState.MENU_STATE) {
+                drawTitleScreen();
+            } else if (gameState == GameState.DIALOGUE_STATE) {
+                drawDialogueScreen();
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+            }
+            if (gameState == GameState.LEVELUP_STATE) {
+                drawDialogueScreen();
+            } else if (gameState == GameState.PAUSE_STATE) {
+                drawHPBar();
+                drawManaBar();
+                drawPausedScreen();
+                drawOptionsScreen();
+                drawInventory();
+            }
+            if (gameState == GameState.LOSE_STATE) {
+                currentMap.dispose();
+                drawGameOverScreen();
+            }
+            if (gameState == GameState.SETTING_STATE) {
+                drawSettingScreen();
+            }
+            if (gameState == GameState.QUIZ_STATE) {
+                drawQuiz();
+            }
+        }catch(NullPointerException e){
+            if (gameState == GameState.MENU_STATE) {
+                drawTitleScreen();
+            } else
+            if (gameState == GameState.SETTING_STATE) {
+                drawSettingScreen();
+            }
         }
     }
 

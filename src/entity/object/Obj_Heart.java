@@ -25,7 +25,7 @@ public class Obj_Heart extends Entity {
     private BufferedImage[][] obj_heart = new BufferedImage[2][];
     private Animation obj_animator_heart = new Animation();
 
-    int hpReward = 40;
+    int hpReward = 60;
 
     public Obj_Heart(GameMap mp) {
         super();
@@ -71,7 +71,7 @@ public class Obj_Heart extends Entity {
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
 
-        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
+        dialogues[0][0] = new StringBuilder("Bạn đã được hồi " + hpReward + " máu!");
     }
 
     private void handleAnimationState() {

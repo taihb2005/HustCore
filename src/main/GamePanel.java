@@ -18,6 +18,7 @@ import util.Camera;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Timer;
 
 // swing library
 import javax.swing.JPanel;
@@ -51,12 +52,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 2;
-    public static int levelProgress = 2;
-    public static ArrayList<Level> completedLevel = new ArrayList<>();
+    public static int previousLevelProgress = 3;
+    public static int levelProgress = 3;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
+    public static Timer timer = new Timer();
 
     public static BufferedImage darknessFilter;
     private float darknessOpacity = 0.0f;
@@ -73,15 +74,20 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        loadMap();
         stopMusic();
         setup();
         credit = new Credit(this);
-        currentMap.player.storeValue();
+        ui = new UI(this);
+        //currentMap.player.storeValue();
     }
 
     public void loadMap()
     {
+        if(currentLevel != null) {
+            currentLevel.dispose();
+            currentLevel = null;
+            System.gc();
+        }
         switch(levelProgress){
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
@@ -89,12 +95,9 @@ public class GamePanel extends JPanel implements Runnable {
             case 3 : currentLevel = new Level03(this); break;
             case 4 : currentLevel = new Level04(this); break;
         }
-        completedLevel.add(currentLevel);
-        tileManager = new TileManager(this);
+        assert currentLevel != null;
         currentMap = currentLevel.map;
         ui = new UI(this);
-        for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
-        completedLevel.removeIf(level -> level.levelFinished);
         previousLevelProgress = levelProgress;
     }
 
@@ -167,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
         {
             pauseMusic();;
         }
-        environmentManager.lighting.update();
+        if(environmentManager != null)environmentManager.lighting.update();
     }
 
     @Override
@@ -178,7 +181,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentMap.render(g2);
             environmentManager.draw(g2);
         }
-        currentLevel.render(g2);
+        if(currentLevel !=  null)currentLevel.render(g2);
         ui.render(g2);
         drawDarkness(g2);
         if(gameCompleted) {

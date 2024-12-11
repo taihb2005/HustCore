@@ -44,8 +44,6 @@ public class Mon_Boss extends Monster implements Actable {
     private boolean nearlyDie = false;
     private boolean fullyDie = false;
 
-    private int rangeRadius;
-
     private Projectile projectile1, projectile2, projectile3;
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
@@ -90,7 +88,6 @@ public class Mon_Boss extends Monster implements Actable {
         hitbox = new Rectangle(20 , 40 , 80 , 80);
         solidArea1 = new Rectangle(20 , 110 , 90 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-        interactionDetectionArea = new Rectangle(-50 , -50 , width + 100 , height + 100);
         setDefaultSolidArea();
 
         invincibleDuration = 30;
@@ -99,7 +96,6 @@ public class Mon_Boss extends Monster implements Actable {
         strength = 70;
         level = 1;
         defense = 10;
-        rangeRadius = 200;
         projectile1 = new Proj_TrackingPlasma(mp);
         projectile2 = new Proj_ExplosivePlasma(mp);
         projectile3 = new Proj_Flame(mp);
@@ -280,10 +276,10 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void setDialogue() {
-        this.dialogues[0][0] = "Ngươi cũng mạnh phết đấy.";
-        this.dialogues[0][1] = "Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.";
-        this.dialogues[1][0] = "Á hự... Không thể tin ngươi đã đánh bại được ta...";
-        this.dialogues[1][1] = "Huhuhu...";
+        this.dialogues[0][0] = new StringBuilder("Ngươi cũng mạnh phết đấy.");
+        this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.");
+        this.dialogues[1][0] = new StringBuilder("Á hự... Không thể tin ngươi đã đánh bại được ta...");
+        this.dialogues[1][1] = new StringBuilder("Huhuhu...");
     }
 
     @Override

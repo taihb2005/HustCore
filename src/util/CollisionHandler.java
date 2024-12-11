@@ -7,10 +7,9 @@ import map.GameMap;
 
 import java.awt.*;
 
-public class CollisionHandler {
+public class CollisionHandler{
 
     GameMap mp;
-
     public CollisionHandler(GameMap mp) {
         this.mp = mp;
     }
@@ -109,7 +108,6 @@ public class CollisionHandler {
                         index = i;
                         break;
                     }
-
                 }
             }
         }

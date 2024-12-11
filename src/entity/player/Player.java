@@ -395,7 +395,7 @@ public class Player extends Entity {
         if(!hasResource() && isShooting){
             isShooting = false;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            dialogues[0][0] = "Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn";
+            dialogues[0][0] = new StringBuilder("Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn");
             startDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
@@ -449,7 +449,7 @@ public class Player extends Entity {
             if(level == 5) nextLevelUp = 999999999;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
             mp.gp.playSE(3);
-            dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";
+            dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
             startDialogue(this , 0);
         }
     }

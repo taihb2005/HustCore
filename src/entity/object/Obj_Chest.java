@@ -82,12 +82,12 @@ public class Obj_Chest extends Entity implements Actable {
         }
         int dialogueIndex = 0;
         for(var item : map.entrySet()){
-            dialogues[0][dialogueIndex] = "Bạn nhận được " + item.getKey().getName() + " x" + item.getValue() +
-                            "\n" + item.getKey().getDescription();
+            dialogues[0][dialogueIndex] = new StringBuilder("Bạn nhận được " + item.getKey().getName() + " x" + item.getValue() +
+                    "\n" + item.getKey().getDescription());
             dialogueIndex++;
         }
 
-        dialogues[1][0] = "Nó đã được mở rồi!";
+        dialogues[1][0] = new StringBuilder("Nó đã được mở rồi!");
     }
 
     public void talk(){
