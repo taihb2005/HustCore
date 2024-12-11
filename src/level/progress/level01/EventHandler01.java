@@ -70,6 +70,14 @@ public class EventHandler01 extends EventHandler {
         eventMaster.startDialogue(eventMaster , 0);
     }
 
+    private void killAllRoom1Shooter(){
+        for(int i = 0 ; i < lvl.map.enemy.length ; i++){
+            if(lvl.map.enemy[i] != null && lvl.map.enemy[i].idName.equals("room1")){
+                lvl.map.enemy[i].currentHP = 0;
+            }
+        }
+    }
+
     private void checkForCompletingRoom2(){
         for(Entity e : lvl.map.enemy){
             if(e != null && e.idName.equals("Room2Enemy") && e.canbeDestroyed) countEnemyRoom2--;
@@ -90,7 +98,7 @@ public class EventHandler01 extends EventHandler {
                     tmp.canChangeState = true;
                 }
             }
-
+            killAllRoom1Shooter();
         }
     }
 
@@ -102,7 +110,7 @@ public class EventHandler01 extends EventHandler {
     //ROOM3
 
     private void anounceTaskRoom3(){
-        eventMaster.dialogues[0][0] = "Nhiệm vụ:\n\nMở rương ở giữa phòng!\nTiêu diệt toàn bộ Shooter trong phòng!";
+        eventMaster.dialogues[0][0] = "Nhiệm vụ:\n\nMở rương ở giữa phòng!\nTiêu diệt toàn bộ trụ súng.!";
         eventMaster.startDialogue(eventMaster , 0);
     }
 

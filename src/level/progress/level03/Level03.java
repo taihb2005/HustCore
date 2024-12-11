@@ -21,7 +21,6 @@ public class Level03 extends Level {
         eventHandler03 = new EventHandler03(this);
         init();
         setter.setFilePathObject("/level/level03/object_level03.json");
-//        setter.setFilePathNpc("res/level/level03/npc_level03.json");
         setter.setFilePathEnemy("/level/level03/enemy_level03.json");
         setter.loadAll();
         levelFinished = false;

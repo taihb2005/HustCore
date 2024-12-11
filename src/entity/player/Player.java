@@ -204,6 +204,8 @@ public class Player extends Entity {
         if (!animator.isPlaying() && isDying){
             isDying = false;
             GamePanel.gameState = GameState.LOSE_STATE;
+            stopMusic();
+            playMusic(4);
         }
     }
 

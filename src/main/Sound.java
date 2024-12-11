@@ -68,6 +68,7 @@ public class Sound {
     {
         if (clip != null && clip.isRunning()) {
             clip.stop();
+            clip = null;
         }
     }
     public void checkVolume(int volumePercentage) {

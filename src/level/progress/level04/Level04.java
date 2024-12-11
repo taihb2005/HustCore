@@ -25,8 +25,6 @@ public class Level04 extends Level {
         eventHandler04 = new EventHandler04(this);
         init();
         setter.setFilePathObject("/level/level04/object_level04.json");
-//        setter.setFilePathNpc("res/level/level03/npc_level03.json");
-//        setter.setFilePathEnemy("res/level/level03/enemy_level03.json");
         setter.loadAll();
         GamePanel.pFinder2 = new PathFinder2(map);
         Mon_Boss boss = new Mon_Boss(map, 500, 900);

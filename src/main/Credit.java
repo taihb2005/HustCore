@@ -27,7 +27,6 @@ public class Credit {
 
     private void set(){
         endCredit = "Ôi cuối cùng nó đã kết thúc :)))" +
-                "\n\n\n\n\n"+
                 "Ôi cuối cùng nó đã kết thúc :)))\n" +
                 "Ôi cuối cùng nó đã kết thúc :)))\n" +
                 "Ôi cuối cùng nó đã kết thúc :)))\n" +

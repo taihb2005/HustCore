@@ -89,15 +89,12 @@ public class KeyHandler implements KeyListener{
             }
 
             if (GamePanel.gameState == GameState.PLAY_STATE) {
-                if (keyCode == KeyEvent.VK_S) downPressed = true;
-                if (keyCode == KeyEvent.VK_W) upPressed = true;
-                if (keyCode == KeyEvent.VK_D) rightPressed = true;
-                if (keyCode == KeyEvent.VK_A) leftPressed = true;
+                if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
+                if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
+                if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
+                if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
                 if (keyCode == KeyEvent.VK_ESCAPE) GamePanel.gameState = GameState.PAUSE_STATE;
-                if (keyCode == KeyEvent.VK_F3) showDebugMenu = !showDebugMenu;
-                if (keyCode == KeyEvent.VK_F4) showHitbox = !showHitbox;
-                if (keyCode == KeyEvent.VK_F2) godModeOn = true;
-                if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
+                if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
                 if (keyCode == KeyEvent.VK_E) keyEpressed = true;
                 if (keyCode == KeyEvent.VK_1) key1pressed = true;
                 if (keyCode == KeyEvent.VK_2) key2pressed = true;
@@ -313,11 +310,11 @@ public class KeyHandler implements KeyListener{
 
         switch (keyCode)
         {
-            case KeyEvent.VK_S: downPressed = false; break;
-            case KeyEvent.VK_A: leftPressed = false; break;
-            case KeyEvent.VK_D: rightPressed = false; break;
-            case KeyEvent.VK_W: upPressed = false; break;
-            case KeyEvent.VK_ENTER: enterPressed = false; break;
+            case KeyEvent.VK_S, KeyEvent.VK_DOWN: downPressed = false; break;
+            case KeyEvent.VK_A, KeyEvent.VK_LEFT: leftPressed = false; break;
+            case KeyEvent.VK_D, KeyEvent.VK_RIGHT: rightPressed = false; break;
+            case KeyEvent.VK_W, KeyEvent.VK_UP: upPressed = false; break;
+            case KeyEvent.VK_ENTER , KeyEvent.VK_SPACE: enterPressed = false; break;
             case KeyEvent.VK_E: keyEpressed = false ; break;
             case KeyEvent.VK_ESCAPE:keyEscpressed = false; break;
             case KeyEvent.VK_0: key0pressed = true; break;

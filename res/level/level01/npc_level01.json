@@ -5,13 +5,14 @@
       "dialogue": [
         [
           "Xin chào!",
-          "Đây là thử thách đầu tiên mà nó\ndành cho bạn",
+          "Đây là thử thách đầu tiên dành\ncho bạn.",
           "Hãy đi đến từng căn phòng và\nhoàn thành nhiệm vụ của từng\nphòng.",
-          "Căn phòng ngay sau tôi đây có\nmột số món đồ mà có thể bạn thấy\nhữu ích.",
-          "Nếu bạn gặp ai giống tôi, có\nthể nói chuyện với họ. Họ sẽ đưa\nra lời khuyên hữu ích.",
-          "Tiếc là tôi không thể cung\ncấpthông tin gì thêm.",
+          "Căn phòng ngay sau tôi có\nmột số món đồ mà bạn có thể thấy\nhữu ích.",
+          "Nếu bạn gặp ai giống tôi, hãy\nnói chuyện với họ. Họ sẽ đưa\nra lời khuyên hữu ích.",
+          "Tiếc là tôi không thể cung\ncấp thông tin gì thêm.",
           "Chúc may mắn!"
         ]
+
       ],
       "direction": "right",
       "position": {"x": 704, "y": 128}
@@ -23,7 +24,7 @@
           "Thử thách ở đây theo thứ tự\ntừ căn phòng 1 đến 4.",
           "Hoàn thành thử thách thì căn\nphòng tiếp theo sẽ mở ra.",
           "Căn phòng đầu tiên là ngay dưới\nđây.Hãy mở cửa và bước vào, nhiệm\nvụ sẽ hiện lên.",
-          "Có một lời khuyên dành cho bạn:\nTrụ súng của kẻ địch không thể bị\ngây sát thường từ xa.",
+          "Có một lời khuyên dành cho bạn:\nTrụ súng của kẻ địch\nkhá mạnh.",
           "Nếu không phải tiêu diệt chúng\nthì đừng phí thời gian tiêu diệt\nchúng.Mà hãy né đạn của chúng."
         ]
       ],
@@ -34,6 +35,7 @@
       "name": "Chill Guy",
       "dialogue": [
         [
+          "Trụ súng chỉ có thể nhận sát\nthương nếu bạn bắn trước mặt\nchúng",
           "Đừng bao giờ đụng đến lính canh\nNếu không bạn sẽ phải hối hận."
         ]
       ],
