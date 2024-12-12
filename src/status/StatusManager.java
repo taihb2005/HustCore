@@ -16,7 +16,7 @@ public class StatusManager {
 
     public StatusManager(){
         worldX = 0; worldY = 0;
-        savedHP = 100;
+        savedHP = 150;
         savedMana = 100;
         savedLevel = 1;
         savedExp = 0;
@@ -25,7 +25,7 @@ public class StatusManager {
 
     public void reset(){
         worldX = 0; worldY = 0;
-        savedHP = 100;
+        savedHP = 150;
         savedMana = 100;
         savedLevel = 1;
         savedExp = 0;

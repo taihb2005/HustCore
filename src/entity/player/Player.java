@@ -422,14 +422,14 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 5;
+        strength = 10;
         damage = projectile.base_damage + strength * level ;
     }
     private void setDefense(){
         defense = level * 10;
     }
     private void setMaxHP(){
-        maxHP = 200 + (level - 1) * 20;
+        maxHP = 150 + (level - 1) * 40;
         currentHP = maxHP;
     }
     private void setMaxMana(){

@@ -48,17 +48,13 @@ public class UI {
     public int commandNum = 0;
 
     public static int bossHP = 0;
-    public static int boss_maxHP = 1400;
+    public static int boss_maxHP = 1700;
 
     public Entity target;
 
     private BufferedImage hpFrame, manaFrame, boss_hpFrame;
-
     private BufferedImage titleBackground;
-
-    private BufferedImage titleImage;
-
-    private BufferedImage Key1Image, quizImage;
+    private BufferedImage quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -235,6 +231,8 @@ public class UI {
         }
         // Vẽ nền (màu xám) cho thanh HP
         g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
+        g2.setFont(joystix.deriveFont(Font.PLAIN , 19f));
+        g2.drawString("AI đầu não" , x , y - 8);
 
         // Vẽ thanh HP hiện tại (màu đỏ)
         g2.setColor(new Color(255,0,255));
@@ -293,17 +291,26 @@ public class UI {
         g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
         //MENU
         g2.setFont(joystix.deriveFont(Font.BOLD, 30f));
+
         String text = "MÀN HÌNH CHÍNH";
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
         int x = getXforCenteredText(text);
 
+        g2.setColor(Color.WHITE);
+        text = "THUA";
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 50f));
 
-        g2.setColor(Color.black);
+        g2.setColor(Color.BLACK);
+        g2.drawString(text , getXforCenteredText(text) - 2 ,windowHeight / 4 + 5);
+        g2.setColor(Color.WHITE);
+        g2.drawString(text , getXforCenteredText(text) - 7 ,windowHeight / 4);
+
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 30f));
         text = "THỬ LẠI";
         int y = windowHeight / 2;
         g2.drawString(text, x + tileSize * 2, y-5);
         //BOUND
-            g2.setColor(Color.darkGray);
+        g2.setColor(Color.darkGray);
         g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
 
         if(commandNum == 0) {
@@ -311,7 +318,7 @@ public class UI {
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        g2.setColor(Color.black);
+        g2.setColor(Color.WHITE);
 
         text = "MÀN HÌNH CHÍNH";
         y += tileSize + 20;
@@ -324,7 +331,7 @@ public class UI {
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        g2.setColor(Color.black);
+        g2.setColor(Color.WHITE);
         text = "THOÁT";
         y += tileSize + 20;
         g2.drawString(text, x + tileSize * 3 - 20, y);
@@ -379,7 +386,7 @@ public class UI {
         // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("ÂM THANH HIỆU ỨNG", textX, textY);
+        g2.drawString("SFX", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);

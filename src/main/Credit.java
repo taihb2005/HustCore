@@ -13,7 +13,7 @@ public class Credit {
     int counter = 0;
     float alpha = 0f;
     int y;
-    String endCredit;
+    StringBuilder endCredit;
 
     //Scene Number
     public final int NA = 0;
@@ -25,49 +25,49 @@ public class Credit {
     }
 
     private void set(){
-        endCredit = "Nhóm 7 OOP:\n"
-                +   "Khương Anh Tài (Nhóm trưởng)\n"
-                +   "Hoàng Ngọc Nam\n"
-                +   "Nguyễn Văn Sáng\n"
-                +   "Nguyễn Ngọc Lê Minh\n"
-                +   "Nguyễn Đức Quý\n"
-                +   "\n\n\n\n"
-                +   "Coder:\n"
-                +   "Khương Anh Tài\n"
-                +   "Hoàng Ngọc Nam\n"
-                +   "Nguyễn Văn Sáng\n"
-                +   "Nguyễn Ngọc Lê Minh\n"
-                +   "Nguyễn Đức Quý\n"
-                +   "\n\n\n\n"
-                +   "Designer cho hình ảnh game:\n"
-                +   "Khương Anh Tài\n"
-                +   "Hoàng Ngọc Nam\n"
-                +   "\n\n\n\n"
-                +   "Designer cho ui:\n"
-                +   "Nguyễn Ngọc Lê Minh\n"
-                +   "Nguyễn Đức Quý\n"
-                +   "\n\n\n\n"
-                +   "Level designer:\n"
-                +   "Nguyễn Văn Sáng\n"
-                +   "Nguyễn Ngọc Lê Minh\n"
-                +   "\n\n\n\n"
-                +   "Âm thanh:\n"
-                +   "Nguyễn Ngọc Lê Minh\n"
-                +   "Ý tưởng:\n"
-                +   "Khương Anh Tài"
-                +   "\n\n\n\n"
-                +   "Giám sát:\n"
-                +   "Khương Anh Tài"
-                +   "\n\n\n\n\n\n\n\n"
-                +   "Special thanks to TrevorPumpkin for his amazing assets\n"
-                +   "Special thanks to Minh for his dedication to sound making\n"
-                +   "Special thanks to Nam for his effort in creating effects\n"
-                +   "Special thanks to Nguyen Thi Huyen for suggesting ideas\n"
-                +   "\n\n\n\n\n\n\n"
-                +   "Và big shoutout cho những ai xem được đến đây\n"
-                +   "\n\n\n\n\n\n\n\n"
-                +   "\n\n\n\n"
-                +   "Cảm ơn mọi người rất nhiều!";
+        endCredit = new StringBuilder("Nhóm 7 OOP:\n"
+                + "Khương Anh Tài (Nhóm trưởng)\n"
+                + "Hoàng Ngọc Nam\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Coder:\n"
+                + "Khương Anh Tài\n"
+                + "Hoàng Ngọc Nam\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Designer cho hình ảnh game:\n"
+                + "Khương Anh Tài\n"
+                + "Hoàng Ngọc Nam\n"
+                + "\n\n\n\n"
+                + "Designer cho ui:\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Level designer:\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "\n\n\n\n"
+                + "Âm thanh:\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Ý tưởng:\n"
+                + "Khương Anh Tài"
+                + "\n\n\n\n"
+                + "Giám sát:\n"
+                + "Khương Anh Tài"
+                + "\n\n\n\n\n\n\n\n"
+                + "Special thanks to TrevorPumpkin for his amazing assets\n"
+                + "Special thanks to Minh for his dedication to sound making\n"
+                + "Special thanks to Nam for his effort in creating effects\n"
+                + "Special thanks to Nguyen Thi Huyen for suggesting ideas\n"
+                + "\n\n\n\n\n\n\n"
+                + "Và big shoutout cho những ai xem được đến đây\n"
+                + "\n\n\n\n\n\n\n\n"
+                + "\n\n\n\n"
+                + "Cảm ơn mọi người rất nhiều!");
 
     }
 
@@ -151,7 +151,7 @@ public class Credit {
 
             y = windowHeight / 2 - 43;
             g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
-            drawString(alpha, 40f,  y, endCredit, 45);
+            drawString(alpha, 40f,  y, String.valueOf(endCredit), 45);
 
             if(counterReached(240) && alpha == 1f)
             {
@@ -165,7 +165,7 @@ public class Credit {
             g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
 
             y -= 2;
-            drawString(1f, 40f,  y, endCredit, 45);
+            drawString(1f, 40f,  y, String.valueOf(endCredit), 45);
             if(counterReached(2200))
             {
                 stopMusic();

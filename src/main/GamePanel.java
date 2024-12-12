@@ -45,7 +45,6 @@ public class GamePanel extends JPanel implements Runnable {
     public static Sound se = new Sound();
     public static PathFinder pFinder;
     public static PathFinder2 pFinder2;
-    public TileManager tileManager;
     public static Credit credit;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
