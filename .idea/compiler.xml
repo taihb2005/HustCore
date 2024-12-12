@@ -12,8 +12,5 @@
         <module name="jsonreader" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="untitled" target="23" />
-    </bytecodeTargetLevel>
   </component>
 </project>

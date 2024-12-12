@@ -7,10 +7,9 @@ import map.GameMap;
 
 import java.awt.*;
 
-public class CollisionHandler {
+public class CollisionHandler{
 
     GameMap mp;
-
     public CollisionHandler(GameMap mp) {
         this.mp = mp;
     }
@@ -109,7 +108,6 @@ public class CollisionHandler {
                         index = i;
                         break;
                     }
-
                 }
             }
         }
@@ -117,6 +115,14 @@ public class CollisionHandler {
     }
 
     public boolean checkPlayer(Entity entity){
+        int newHitBoxX = entity.hitbox.x + entity.worldX;
+        int newHitBoxY = entity.hitbox.y + entity.worldY;
+        Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);
+        Rectangle tmp2 = new Rectangle(mp.player.solidArea1.x + mp.player.worldX , mp.player.solidArea1.y + mp.player.worldY , mp.player.solidArea1.width , mp.player.solidArea1.height);
+        return tmp2.intersects(tmp1);
+    }
+
+    public boolean checkPlayerForDamage(Entity entity){
         int newHitBoxX = entity.hitbox.x + entity.worldX;
         int newHitBoxY = entity.hitbox.y + entity.worldY;
         Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);

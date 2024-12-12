@@ -1,8 +1,7 @@
 package map;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 public class MapParser {
@@ -26,9 +26,7 @@ public class MapParser {
     {
         try
         {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            Document doc = builder.parse(new File(filepath));
+            Document doc = loadXML(filepath);
             doc.getDocumentElement().normalize();
 
             Element root = doc.getDocumentElement();
@@ -123,14 +121,12 @@ public class MapParser {
 
     private static TileSet parseTSXfile(Element eElement) {
         String tmp_file = eElement.getAttribute("source");
-        String filepath = "res" + tmp_file.substring(2);
+        String filepath = tmp_file.substring(2);
 
         TileSet tileSet = null;
         int tileID = 0;
         try {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            Document doc = builder.parse(new File(filepath));
+            Document doc = loadXML(filepath);
             doc.getDocumentElement().normalize();
 
             Element root = doc.getDocumentElement();
@@ -181,5 +177,25 @@ public class MapParser {
             e.printStackTrace();
         }
         return tileSet;
+    }
+
+    private static Document loadXML(String filepath) throws Exception {
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document doc;
+
+        File file = new File(filepath);
+        if (file.exists()) {
+            try (InputStream inputStream = new FileInputStream(file)) {
+                doc = builder.parse(inputStream);
+            }
+        } else {
+            InputStream inputStream = MapParser.class.getResourceAsStream(filepath.startsWith("/") ? filepath : "/" + filepath);
+            if (inputStream == null) {
+                throw new FileNotFoundException("Resource not found: " + filepath);
+            }
+            doc = builder.parse(inputStream);
+        }
+        return doc;
     }
 }

@@ -1,7 +1,9 @@
 package entity.mob;
 
+import ai.Node;
 import entity.Entity;
 import entity.effect.Effect;
+import entity.object.Obj_Heart;
 import entity.projectile.Projectile;
 import map.GameMap;
 
@@ -9,8 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static main.GamePanel.currentMap;
-import static main.GamePanel.pFinder;
+import static main.GamePanel.*;
 
 public class Monster extends Entity {
     public GameMap mp;
@@ -87,6 +88,7 @@ public class Monster extends Entity {
 
     public void damagePlayer(){
         boolean contactPlayer = mp.cChecker.checkPlayer(this);
+        if(name.equals("Effect Dealer") && contactPlayer) effectDealOnTouch.add(); else
         if(contactPlayer && !mp.player.isInvincible){
             mp.player.isInvincible = true;
             mp.player.receiveDamage(this);
@@ -223,13 +225,97 @@ public class Monster extends Entity {
         }
     }
 
-    @Override
-    public void update() {
+    public void searchPathforBoss(int goalCol, int goalRow) {
+        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
+        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
+        pFinder2.setNodes(startCol,startRow,goalCol,goalRow);
+        if(pFinder2.search())
+        {
+            //Next WorldX and WorldY
+            if(pFinder2.pathList.isEmpty()){
+                onPath = false;
+                up = down = left = right = false;
+            } else {
+                int nextX = pFinder2.pathList.get(0).col * GameMap.childNodeSize;
+                int nextY = pFinder2.pathList.get(0).row * GameMap.childNodeSize;
 
+
+                //Entity's solidArea position
+                int enLeftX = worldX + solidArea1.x;
+                int enRightX = worldX + solidArea1.x + solidArea1.width;
+                int enTopY = worldY + solidArea1.y;
+                int enBottomY = worldY + solidArea1.y + solidArea1.height;
+
+                // TOP PATH
+                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                    direction = "up";
+                }
+                // BOTTOM PATH
+                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                    direction = "down";
+                }
+                // RIGHT - LEFT PATH
+                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
+                    //either left or right
+                    // LEFT PATH
+                    if (enLeftX > nextX) {
+                        direction = "left";
+                    }
+                    // RIGHT PATH
+                    if (enLeftX < nextX) {
+                        direction = "right";
+                    }
+                }
+                //OTHER EXCEPTIONS
+                else if (enTopY > nextY && enLeftX > nextX) {
+                    // up or left
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    //System.out.println(collisionOn);
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY > nextY && enLeftX < nextX) {
+                    // up or right
+                    direction = "up";
+                    newWorldY -= speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY += speed;
+                } else if (enTopY < nextY && enLeftX > nextX) {
+                    // down or left
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "left";
+                    }
+                    newWorldY -= speed;
+                } else if (enTopY < nextY && enLeftX < nextX) {
+                    // down or right
+                    direction = "down";
+                    newWorldY += speed;
+                    checkCollision();
+                    if (collisionOn) {
+                        direction = "right";
+                    }
+                    newWorldY -= speed;
+                }
+            }
+        } else {
+            getAggro = false;
+            onPath = false;
+            up = down = right = left = false;
+            isRunning = false;
+        }
     }
-
-    @Override
-    public void render(Graphics2D g2) {
-
+    public void spawnHeart() {
+        Obj_Heart heart = new Obj_Heart(mp);
+        heart.worldX = worldX + 16; heart.worldY = worldY + 16;
+        mp.addObject(heart, mp.activeObj);
     }
 }

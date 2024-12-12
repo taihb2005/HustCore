@@ -19,9 +19,9 @@ public class Obj_Door extends Entity{
 
     private final static int CLOSE = 0;
     private final static int OPEN = 1;
-    private final BufferedImage[][][] obj_door = new BufferedImage[2][2][];
+    private BufferedImage[][][] obj_door = new BufferedImage[2][2][];
     private final BufferedImage obj_door_effect;
-    private final Animation obj_animator_door;
+    private Animation obj_animator_door;
 
     private String size;
     private String state;
@@ -108,7 +108,7 @@ public class Obj_Door extends Entity{
     }
 
     private void setDialogue(){
-        dialogues[0][0] = "Hmm... Nó đã bị khóa!";
+        dialogues[0][0] = new StringBuilder("Hmm... Nó đã bị khóa!");
     }
 
     public void talk(){
@@ -135,4 +135,21 @@ public class Obj_Door extends Entity{
         g2.drawImage(obj_door[STATE][CURRENT_ACTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         if(isInteracting && !isOpening){g2.drawImage(obj_door_effect , worldX - camera.getX() , worldY - camera.getY() , width , height , null);}
     }
+    public void dispose(){
+        obj_animator_door.dispose();
+        obj_animator_door = null;
+        for(int i = 0 ; i < obj_door.length ; i++) {
+            for (int j = 0; j < obj_door[i].length; j++) {
+                if(obj_door[i][j] == null) continue;
+                for(int k = 0 ; k < obj_door[i][j].length ;k++){
+                    obj_door[i][j][k].flush();
+                    obj_door[i][j][k] = null;
+                }
+                obj_door[i][j] = null;
+            }
+            obj_door[i] = null;
+        }
+        obj_door = null;
+    }
+
 }

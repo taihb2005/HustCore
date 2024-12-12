@@ -2,7 +2,10 @@ package entity.mob;
 
 import entity.Actable;
 import entity.effect.type.EffectNone;
+import entity.effect.type.Slow;
 import entity.projectile.Proj_GreenBullet;
+import level.progress.level02.EventHandler02;
+import level.progress.level02.Level02;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
@@ -12,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.currentMap;
 import static map.GameMap.childNodeSize;
 
 public class Mon_Cyborgon extends Monster implements Actable {
@@ -29,7 +33,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     public int state;
 
     private final BufferedImage [][][] mon_cyborgon = new BufferedImage[7][][];
-    private final Animation mon_animator_cyborgon = new Animation();
+    private Animation mon_animator_cyborgon = new Animation();
 
     private int diameter = 100;
     private int newDiameter = diameter;
@@ -59,6 +63,18 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefault();
     }
 
+    public Mon_Cyborgon(GameMap mp , int x , int y , String idName){
+        super(mp , x , y);
+        name = "Cyborgon";
+        width = 64;
+        height = 64;
+        state = INACTIVE;
+
+        getImage();
+        setDefault();
+        this.idName = idName;
+    }
+
     private void getImage(){
         mon_cyborgon[INACTIVE] = new Sprite("/entity/mob/cyborgon/cyborgon_inactive.png" , 64 , 64).getSpriteArray();
         mon_cyborgon[IDLE1] = new Sprite("/entity/mob/cyborgon/cyborgon_idle1.png" , 64 , 64).getSpriteArray();
@@ -75,14 +91,14 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 40;
-        maxHP = 120;
+        maxHP = 200;
         currentHP = maxHP;
-        strength = 20;
+        strength = 30;
         level = 1;
         defense = 0;
         projectile = new Proj_GreenBullet(mp);
         effectDealOnTouch = new EffectNone(mp.player);
-        effectDealByProjectile = new EffectNone(mp.player);
+        effectDealByProjectile = new Slow(mp.player , 20);
         speed = 2;
         last_speed = speed;
 
@@ -171,12 +187,14 @@ public class Mon_Cyborgon extends Monster implements Actable {
             if(isIdle) mon_animator_cyborgon.setAnimationState(mon_cyborgon[INACTIVE][CURRENT_DIRECTION] , 120);
             if(canChangeState){
                 mon_animator_cyborgon.setAnimationState(mon_cyborgon[ACTIVE][CURRENT_DIRECTION] , 17);
+                isInvincible = true;
                 mon_animator_cyborgon.playOnce();
             }
         }
 
         if(!mon_animator_cyborgon.isPlaying() && canChangeState){
             canChangeState = false;
+            isInvincible = false;
             state = ACTIVE;
         }
     }
@@ -299,14 +317,32 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void updateDiameter(GameMap mp) {
-        newDiameter = 100 + (maxHP - currentHP)*20;
+        newDiameter = 100 + (maxHP - currentHP) * 5;
         if (diameter != newDiameter) diameter++;
-        if (Math.pow(worldX-mp.player.worldX,2) + Math.pow(worldY-mp.player.worldY,2) < diameter*diameter) {
+        if (Math.pow(worldX - mp.player.worldX, 2) + Math.pow(worldY - mp.player.worldY, 2) < diameter * diameter) {
             exposureTime++;
             if (exposureTime == 300) {
-                mp.player.currentHP = (int) (0.9*mp.player.currentHP);
+                mp.player.currentHP = (int) (0.9 * mp.player.currentHP);
                 exposureTime = 0;
             }
         }
+    }
+
+    public void dispose(){
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        interactionDetectionArea = null;
+        mon_animator_cyborgon = null;
+        for(int i = 0 ; i < mon_cyborgon.length ; i++){
+            for(int j = 0 ; j < mon_cyborgon[i].length ; j++){
+                for(int k = 0 ; k < mon_cyborgon[i][j].length ; k++){
+                    mon_cyborgon[i][j][k].flush();
+                    mon_cyborgon[i][j][k] = null;
+                }
+            }
+        }
+        projectile = null;
+        projectile_name = null;
     }
 }

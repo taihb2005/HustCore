@@ -129,7 +129,7 @@ public class PathFinder {
     }
     public boolean search()
     {
-        while(!goalReached && step < 5000)
+        while(!goalReached && step < 1000)
         {
             currentNode = openList.poll();
 
@@ -221,5 +221,4 @@ public class PathFinder {
 
     }
 }
-
 

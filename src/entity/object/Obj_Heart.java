@@ -22,10 +22,10 @@ public class Obj_Heart extends Entity {
 
     private int CURRENT_ACTION;
     private int PREVIOUS_ACTION;
-    final private BufferedImage[][] obj_heart = new BufferedImage[2][];
-    final private Animation obj_animator_heart = new Animation();
+    private BufferedImage[][] obj_heart = new BufferedImage[2][];
+    private Animation obj_animator_heart = new Animation();
 
-    int hpReward = 40;
+    int hpReward = 60;
 
     public Obj_Heart(GameMap mp) {
         super();
@@ -55,6 +55,7 @@ public class Obj_Heart extends Entity {
         isIdle = true;
         getImage();
         setDefault();
+        dialogueSet = -1;
     }
 
     private void getImage(){
@@ -69,6 +70,8 @@ public class Obj_Heart extends Entity {
         hitbox = new Rectangle(9 , 12 , 14 , 12);
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
+
+        dialogues[0][0] = new StringBuilder("Bạn đã được hồi " + hpReward + " máu!");
     }
 
     private void handleAnimationState() {
@@ -96,8 +99,12 @@ public class Obj_Heart extends Entity {
 
     private void collect() {
         mp.player.currentHP += hpReward;
-        dialogues[0][0] = "Bạn đã được hồi " + hpReward + " máu!";
-        startDialogue(this , 0);
+        dialogueSet++;
+        if(dialogues[dialogueSet][0] == null) {
+            dialogueIndex = 0;
+            dialogueSet--;
+        }
+        startDialogue(this , dialogueSet);
     }
 
     @Override
@@ -115,5 +122,16 @@ public class Obj_Heart extends Entity {
                     worldY - camera.getY() ,
                     width, height, null);
     }
-
+    public void dispose(){
+        obj_animator_heart.dispose();
+        obj_animator_heart = null;
+        for(int i = 0 ; i < obj_heart.length ; i++) {
+            for (int j = 0; j < obj_heart[i].length; j++) {
+                obj_heart[i][j].flush();
+                obj_heart[i][j] = null;
+            }
+            obj_heart[i] = null;
+        }
+        obj_heart = null;
+    }
 }

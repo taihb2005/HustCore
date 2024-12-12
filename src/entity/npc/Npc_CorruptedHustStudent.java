@@ -10,8 +10,9 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Currency;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 import static main.GamePanel.camera;
 
@@ -49,7 +50,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private int rng = 0;
     private final Random generator = new Random();
 
-
     public Npc_CorruptedHustStudent(GameMap mp)
     {
         super();
@@ -64,7 +64,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         setDialogue();
     }
 
-    public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , String[][] dialogue , int x , int y)
+    public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , StringBuilder[][] dialogue , int x , int y)
     {
         super(x , y);
         this.mp = mp;
@@ -100,6 +100,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         npc_corruptedStudentGlowing_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle1.png" , width , height).getSpriteArray();
         npc_corruptedStudentGlowing_sprite[IDLE_TYPE2] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle2.png" , width , height).getSpriteArray();
         npc_corruptedStudentGlowing_sprite[TALK] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_talk.png" , width , height).getSpriteArray();
+        System.gc();
     }
 
     private void setDefault()
@@ -236,10 +237,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         g2.drawImage(currentSprite[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY(), null);
     }
 
-    @Override
-    public void dispose() {
-
-    }
-
     public boolean hasTalkYet(){return talkOnce;}
 }
+

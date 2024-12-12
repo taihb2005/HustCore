@@ -16,7 +16,6 @@ public class TileLayer {
     GameMap mp;
 
     BufferedImage[][] tileLayerData;
-    BufferedImage[] temporaryTile = new BufferedImage[851];
     int[][] tileLayerDataIndex;
 
     final ArrayList<TileSet> tileSetList;
@@ -27,7 +26,7 @@ public class TileLayer {
     final int tileWidth;
     final int tileHeight;
 
-    public TileLayer(int numrows, int numcols, int[][] data, ArrayList<TileSet> tileSetList , GameMap mp) throws IOException {
+    public TileLayer(int numrows, int numcols, int[][] data, ArrayList<TileSet> tileSetList , GameMap mp) {
         super();
         this.mp = mp;
         this.numRows = numrows;
@@ -109,6 +108,16 @@ public class TileLayer {
                 tileLayerData[i][j] = ts.getTileSetSprite().getSubimage(tileCol * ts.getTileWidth(), tileRow * ts.getTileHeight(),
                         ts.getTileWidth(), ts.getTileHeight());
 
+            }
+        }
+    }
+
+    public void dispose(){
+        for(BufferedImage[] tile : tileLayerData){
+            if(tile == null) continue;
+            for(BufferedImage img : tile){
+                if(img == null) continue;
+                img.flush();
             }
         }
     }

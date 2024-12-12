@@ -9,7 +9,7 @@ public class Main
         JFrame gameWindow = new JFrame();
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setResizable(false);
-        gameWindow.setTitle("Demo");
+        gameWindow.setTitle("HUST CORE");
 
         GamePanel gamePanel = new GamePanel();
         gameWindow.add(gamePanel);

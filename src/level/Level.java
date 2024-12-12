@@ -1,11 +1,13 @@
 package level;
 
 import ai.PathFinder;
-import environment.EnvironmentManager;
+import entity.mob.Monster;
+import graphics.environment.EnvironmentManager;
 import main.GamePanel;
+import main.GameState;
 import map.GameMap;
-import map.MapManager;
-import map.MapParser;
+
+import java.awt.*;
 
 import static main.GamePanel.*;
 import static main.GamePanel.environmentManager;
@@ -13,12 +15,18 @@ import static main.GamePanel.environmentManager;
 public class Level{
     public GamePanel gp;
     public GameMap map;
-    protected EventHandler eventHandler;
     protected AssetSetter setter;
-    protected EventRectangle eventRect;
+    public EventRectangle changeMapEventRect1;
+    public EventRectangle changeMapEventRect2;
     public boolean canChangeMap;
 
-    protected boolean levelFinished;
+    public boolean levelFinished;
+    public boolean finishedBeginingDialogue = false;
+
+    public String enteredPassword = "";
+    public String correctPassword ;
+
+    public Monster[] monster = new Monster[100];
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
@@ -26,12 +34,16 @@ public class Level{
         setter = new AssetSetter(map);
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();
-        environmentManager.lighting.setLightSource(2000);
-        eventHandler = new EventHandler(this);
+        environmentManager.lighting.setLightRadius(map.getBestLightingRadius());
         canChangeMap = false;
         levelFinished = false;
+
     };
-    public void updateProgress(){
-        if(levelFinished) eventHandler.detectEvent();
+    public void updateProgress(){}
+    public void render(Graphics2D g2){};
+
+    public void dispose(){
+        map.dispose();
     }
 }
+

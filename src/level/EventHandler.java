@@ -1,26 +1,44 @@
 package level;
 
-import entity.player.Player;
+import entity.Entity;
+import map.GameMap;
 
+import java.util.*;
 import java.awt.*;
 
 public class EventHandler {
-    Level lvl;
+    public GameMap mp;
+    protected Entity eventMaster = new Entity();
+    protected Level lvl;
+    public Timer timer;
     public EventHandler(Level lvl){
         this.lvl = lvl;
+        timer = new Timer();
     }
 
-    public void detectEvent(){
+    public boolean triggerEvent(EventRectangle e){
         lvl.canChangeMap = false;
 
-        int newSolidAreaX1 = lvl.map.player.worldX + lvl.map.player.hitbox.x;
-        int newSolidAreaY1 = lvl.map.player.worldY + lvl.map.player.hitbox.y;
+        int newSolidAreaX1 = lvl.map.player.worldX + lvl.map.player.solidArea1.x;
+        int newSolidAreaY1 = lvl.map.player.worldY + lvl.map.player.solidArea1.y;
 
         Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , lvl.map.player.solidArea1.width , lvl.map.player.solidArea1.height);
-
-        if(tmp1.intersects(lvl.eventRect)){
-            lvl.canChangeMap = true;
+        try {
+            if (tmp1.intersects(e)) {
+                if (e.oneTimeOnlyEvent) e.eventFinished = true;
+                return true;
+            }
+        } catch(NullPointerException exception){
+            return false;
         }
-
+        return false;
     }
+
+    public void dispose(){
+        timer = null;
+        eventMaster.dispose();
+    }
+
+    public void update(){};
+    public void render(Graphics2D g2){};
 }

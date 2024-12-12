@@ -16,4 +16,10 @@ public class EventRectangle extends Rectangle {
         eventFinished = false;
         oneTimeOnlyEvent = false;
     }
+
+    public EventRectangle(int x , int y , int width , int height , boolean oneTimeOnly){
+        super(x , y , width , height);
+        eventFinished = false;
+        oneTimeOnlyEvent = oneTimeOnly;
+    }
 }

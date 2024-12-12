@@ -2,13 +2,15 @@ package entity;
 
 import entity.projectile.Projectile;
 import main.GameState;
+import main.KeyHandler;
 import map.GameMap;
 
 import java.awt.*;
+import java.util.Arrays;
 
 import static main.GamePanel.*;
 
-public abstract class Entity {
+public class Entity {
     protected int CURRENT_ACTION;
     protected int PREVIOUS_ACTION;
     protected int CURRENT_DIRECTION;
@@ -36,10 +38,10 @@ public abstract class Entity {
     public int width;
     public int height;
     //SOLID AREA
-    public Rectangle solidArea1;
-    public Rectangle solidArea2;
-    public Rectangle hitbox;
-    public Rectangle interactionDetectionArea;
+    public Rectangle solidArea1 = new Rectangle();
+    public Rectangle solidArea2 = new Rectangle();
+    public Rectangle hitbox = new Rectangle();
+    public Rectangle interactionDetectionArea = new Rectangle();
     public int solidAreaDefaultX1 = 0;
     public int solidAreaDefaultY1 = 0;
     public int solidAreaDefaultX2 = 0;
@@ -66,7 +68,7 @@ public abstract class Entity {
     public boolean left;
     public boolean right;
 
-    public String[][] dialogues = new String[5][30];
+    public StringBuilder[][] dialogues = new StringBuilder[5][30];
 
     public int dialogueIndex;
     public int dialogueSet = -1;
@@ -94,6 +96,7 @@ public abstract class Entity {
     }
 
     public void startDialogue(Entity entity, int dialogueSet) {
+        KeyHandler.enterPressed = false;
         gameState = GameState.DIALOGUE_STATE;
         ui.target = entity;
         ui.target.dialogueSet = dialogueSet;
@@ -219,16 +222,13 @@ public abstract class Entity {
         }
     }
 
-    public abstract void update();
+    public void update(){};
 
-    public abstract void render(Graphics2D g2);
+    public void render(Graphics2D g2){};
 
-    public void dispose() {
-        solidArea1 = null;
-        solidArea2 = null;
-        interactionDetectionArea = null;
-        dialogues = null;
-    }
+    public void dispose(){
+        for(StringBuilder[] s: dialogues) if(s != null) Arrays.fill(s , null);
+    };
 
     public String getOppositeDirection(String direction){
         return  switch (direction) {

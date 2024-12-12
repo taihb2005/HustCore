@@ -14,19 +14,15 @@ public class AttackEnemy {
         if(!mp.enemy[index].isInvincible) {
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
         }
     }
 
     public void damageShooter(int index){
         boolean checkDirection = player.projectile.checkOppositeDirection(mp.enemy[index]);
-        boolean checkDistanceX = Math.abs(player.worldX - mp.enemy[index].worldX) <= 64;
-        boolean checkDistanceY = Math.abs(player.worldY - mp.enemy[index].worldY) <= 64;
-        if(checkDirection && (checkDistanceX && checkDistanceY)){
+        if(checkDirection){
             if(!mp.enemy[index].isInvincible) {
                 mp.enemy[index].currentHP -= player.damage;
                 mp.enemy[index].isInvincible = true;
-                System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
             }
         }
     }
@@ -40,7 +36,6 @@ public class AttackEnemy {
             }
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
         }
     }
 
@@ -51,8 +46,11 @@ public class AttackEnemy {
             mp.enemy[index].onPath = true;
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
         }
+    }
+
+    public void damageEffectDealer(int index){
+        //do nothing;
     }
 
     public void damageSpectron(int index){

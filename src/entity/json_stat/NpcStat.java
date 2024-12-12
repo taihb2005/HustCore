@@ -3,7 +3,7 @@ package entity.json_stat;
 public class NpcStat {
     private String npc;
     private String name;
-    private String[][] dialogue;
+    private StringBuilder[][] dialogue;
     private String direction;
     private Position position;
     public String getNpc() {
@@ -14,13 +14,13 @@ public class NpcStat {
         this.npc = npc;
     }
 
-    public String[][] getDialogue() {
+    public StringBuilder[][] getDialogue() {
         return dialogue;
     }
 
     public String getName(){return name;}
 
-    public void setDialogue(String[][] dialogue) {
+    public void setDialogue(StringBuilder[][] dialogue) {
         this.dialogue = dialogue;
     }
 

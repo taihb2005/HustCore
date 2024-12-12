@@ -16,14 +16,14 @@ public class Proj_TrackingPlasma extends Projectile {
         name = "TrackingPlasma";
         width = 64;
         height = 64;
-        maxHP = 1000;
+        maxHP = 200;
         speed = 1;
         base_damage = 10;
         active = false;
         slowDuration = 180;
         manaCost = 20;
         direction = "right";
-        hitbox = new Rectangle(28 , 30 , 6 , 8);
+        hitbox = new Rectangle(28 , 30 , 12 , 12);
         solidArea1 = hitbox;
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();

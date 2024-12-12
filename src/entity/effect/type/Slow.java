@@ -12,22 +12,14 @@ public class Slow extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 1;
-        name = "Slow";
+        name = new StringBuilder("Slow");
         icon = new Sprite("/effect/slow.png" , 32 , 32).getSpriteSheet();
     }
 
     public void affect(){
-        if(player.effectManager.containsKey("Speed Boost")) {
-            player.effectManager.remove("Speed Boost");
-            remove();
-            for(Effect e : player.effect){
-                if(e.name.equals("Speed Boost")) {
-                    e.effectFinished = true;
-                    break;
-                }
-            }
+        if(!player.effectManager.containsKey("Speed Boost")) {
+            player.speed = player.last_speed / 2;
         }
-        player.speed = player.last_speed / 2;
     }
     public void remove(){
         player.speed = player.last_speed;

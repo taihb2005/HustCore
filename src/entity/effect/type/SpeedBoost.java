@@ -11,12 +11,14 @@ public class SpeedBoost extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 4;
-        name = "Speed Boost";
+        name = new StringBuilder("Speed Boost");
         icon = new Sprite("/effect/speed_boost.png" , 32  ,32).getSpriteSheet();
     }
 
     public void affect(){
-        player.speed = player.last_speed + 2;
+        if(!player.effectManager.containsKey("Slow")) {
+            player.speed = player.last_speed + 2;
+        }
     }
 
     public void remove(){

@@ -1,6 +1,5 @@
 package entity.projectile;
 
-import entity.effect.EffectType;
 import entity.Entity;
 import graphics.Animation;
 import map.GameMap;
@@ -29,7 +28,6 @@ public class Projectile extends Entity {
 
 
     public int base_damage;
-    public EffectType effectType;
     public int slowDuration;
 
     public Projectile(GameMap mp)
@@ -76,7 +74,7 @@ public class Projectile extends Entity {
             int index = mp.cChecker.checkEntityForDamage(this , mp.enemy);
             mp.player.damageEnemy(index);
         } else{
-            boolean contactPlayer = mp.cChecker.checkPlayer(this);
+            boolean contactPlayer = mp.cChecker.checkPlayerForDamage(this);
             if(!mp.player.isInvincible && contactPlayer){
                 active = false;
                 mp.player.receiveDamage(this , user);
@@ -120,6 +118,15 @@ public class Projectile extends Entity {
 //            System.out.println(CURRENT_DIRECTION+" "+CURRENT_FRAME);
             g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() ,
                          width , height , null);
+        }
+    }
+
+    public void dispose(){
+        for(int i = 0 ; i < projectile_sprite.length ; i++){
+            for(int j = 0 ; j < projectile_sprite[i].length ; j++) {
+                if(projectile_sprite[i][j] != null)projectile_sprite[i][j].flush();
+                projectile_sprite[i][j] = null;
+            }
         }
     }
 }
