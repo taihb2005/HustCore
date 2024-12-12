@@ -87,22 +87,6 @@
     },
     {
       "object": "Obj_Television",
-      "size": "big",
-      "state": "on",
-      "type": 1,
-      "frame": 0,
-      "position": {"x": 1408 , "y": 640}
-    },
-    {
-      "object": "Obj_Television",
-      "size": "big",
-      "state": "on",
-      "type": 1,
-      "frame": 0,
-      "position": {"x": 1664 , "y": 640}
-    },
-    {
-      "object": "Obj_Television",
       "size": "small",
       "state": "off",
       "type": 2,

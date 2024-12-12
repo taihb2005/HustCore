@@ -7,8 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static java.lang.System.exit;
-import static main.GamePanel.environmentManager;
-import static main.GamePanel.gameCompleted;
+import static main.GamePanel.*;
+import static main.GamePanel.playMusic;
 
 public class KeyHandler implements KeyListener{
 
@@ -289,10 +289,15 @@ public class KeyHandler implements KeyListener{
                     }
                 }
 
-                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4)
+                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
                     GamePanel.gameState = GameState.PLAY_STATE;
+                    stopMusic();
+                    playMusic(10);
+                }
 
                 if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
+                    stopMusic();
+                    playSE(11);
                     if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
                         GamePanel.ui.selectedOption = 4;
                     } else {

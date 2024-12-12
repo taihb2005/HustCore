@@ -323,8 +323,8 @@ public class Monster extends Entity {
         int maxHpWidth = 30;
         int currentHpWidth = (int) ((double) currentHP/maxHP * maxHpWidth);
         g2.setColor(Color.RED);
-        g2.fillRect(worldX-camera.getX()+18, worldY - camera.getY() , currentHpWidth, 5);
+        g2.fillRect(worldX-camera.getX()+17, worldY - camera.getY() , currentHpWidth, 5);
         g2.setColor(Color.BLACK);
-        g2.drawRect(worldX-camera.getX()+18, worldY - camera.getY() , maxHpWidth, 5);
+        g2.drawRect(worldX-camera.getX()+17, worldY - camera.getY() , maxHpWidth, 5);
     }
 }

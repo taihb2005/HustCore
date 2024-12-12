@@ -47,6 +47,10 @@ public class Mon_EffectDealer extends Monster{
         damagePlayer();
     }
 
+    public void render(Graphics2D g2){
+
+    }
+
     public void dispose(){
         solidArea1 = null;
         solidArea2 = null;
