@@ -59,7 +59,7 @@ public class Credit {
                 +   "Big Shoutout cho những ai xem được đến đây\n"
                 +   "\n\n\n\n\n\n\n\n"
                 +   "\n\n\n\n"
-                +   "Cảm ơn mọi người rất nhiều";
+                +   "Cảm ơn mọi người rất nhiều!";
 
     }
 
@@ -106,10 +106,10 @@ public class Credit {
 
             g2.setFont(bitcrusher.deriveFont(Font.PLAIN, 18f));
             String text = "Sau khi con AI trung tâm đã chết\n" +
-                          "Sinh viên đại học dần trở lại hình dáng ban đầu\n" +
-                         "Nhân vật chính trở về cuộc sống thường ngày\n" +
-                         "Biết đâu một ngày nào đó cái ác sẽ xuất hiện\n" +
-                         "...và cậu sẽ thành người hùng một lần nữa";
+                    "Sinh viên đại học dần trở lại hình dáng ban đầu\n" +
+                    "Nhân vật chính trở về cuộc sống thường ngày\n" +
+                    "Biết đâu một ngày nào đó cái ác sẽ xuất hiện\n" +
+                    "...và cậu sẽ thành người hùng một lần nữa";
 
             drawString(alpha, 38f, 180, text, 70);
 

@@ -292,40 +292,47 @@ public class UI {
         //BACKGROUND
         g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
         //MENU
-        g2.setFont(joystix.deriveFont(Font.BOLD, 35f));
-        g2.setColor(Color.white);
-
-        String text = "RETRY";
-        int x = getXforCenteredText(text);
-        int y = windowHeight / 2;
+        g2.setFont(joystix.deriveFont(Font.BOLD, 30f));
+        String text = "MÀN HÌNH CHÍNH";
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        int x = getXforCenteredText(text);
 
-        g2.drawString(text, x, y);
+
+        g2.setColor(Color.black);
+        text = "THỬ LẠI";
+        int y = windowHeight / 2;
+        g2.drawString(text, x + tileSize * 2, y-5);
         //BOUND
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 - 10, tileSize + 10, 40, 40);
+            g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
+
         if(commandNum == 0) {
+            g2.setColor(Color.white);
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        text = "MENU";
-        x = getXforCenteredText(text);
+        g2.setColor(Color.black);
+
+        text = "MÀN HÌNH CHÍNH";
         y += tileSize + 20;
         g2.drawString(text, x, y);
         //BOUND
-        length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3, tileSize + 10, 40, 40);
+            g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
         if(commandNum == 1) {
+            g2.setColor(Color.WHITE);
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        text = "QUIT";
-        x = getXforCenteredText(text);
+        g2.setColor(Color.black);
+        text = "THOÁT";
         y += tileSize + 20;
-        g2.drawString(text, x, y);
+        g2.drawString(text, x + tileSize * 3 - 20, y);
         //BOUND
-        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 , tileSize + 10, 40, 40);
+            g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
         if(commandNum == 2) {
+            g2.setColor(Color.white);
             g2.drawString(">", x - tileSize - 10, y);
         }
     }
@@ -352,7 +359,7 @@ public class UI {
         // Thử với Consolas
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
-        String text = "Options";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
@@ -360,7 +367,7 @@ public class UI {
         // MUSIC
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Music", textX, textY);
+        g2.drawString("NHẠC", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -372,7 +379,7 @@ public class UI {
         // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("SE", textX, textY);
+        g2.drawString("ÂM THANH HIỆU ỨNG", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -384,7 +391,7 @@ public class UI {
         // RETRY
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Restart", textX, textY);
+        g2.drawString("THỬ LẠI", textX, textY);
         if (commandNum == 2) {
             g2.drawString(">", textX-25, textY);
         }
@@ -392,7 +399,7 @@ public class UI {
         // EXIT
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Exit", textX, textY);
+        g2.drawString("THOÁT", textX, textY);
         if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
         }
@@ -580,14 +587,14 @@ public class UI {
         // Thử với Consolas
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
-        String text = "Options";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
         // MUSIC
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Music", textX, textY);
+        g2.drawString("NHẠC", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -599,7 +606,7 @@ public class UI {
         // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("SE", textX, textY);
+        g2.drawString("HIỆU ỨNG", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -628,7 +635,7 @@ public class UI {
         int textX, textY;
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         //TITLE
-        String text = "CONTROL";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
@@ -637,19 +644,19 @@ public class UI {
         textX = frameX + tileSize/2;
         textY += tileSize;
 
-        g2.drawString("MOVE", textX, textY);
+        g2.drawString("DI CHUYỂN", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("ATTACK", textX, textY);
+        g2.drawString("BẮN", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("BUY/USE ITEMS", textX, textY);
+        g2.drawString("DÙNG VẬT PHẨM", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("PAUSE/ESCAPE", textX, textY);
+        g2.drawString("DỪNG/QUAY LẠI", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("COMMUNICATE", textX, textY);
+        g2.drawString("QUA HỘI THOẠI", textX, textY);
 
         //THONG TIN
         textX = frameX + tileSize*11/2;
