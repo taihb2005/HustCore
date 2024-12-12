@@ -27,9 +27,12 @@ public class Monster extends Entity {
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
 
+
     public final ArrayList<String> validDirection = new ArrayList<>();
 
     protected int SHOOT_INTERVAL;
+    int counter = 0;
+    public boolean drawHPBar;
 
     public int expDrop = 0;
 
@@ -317,6 +320,37 @@ public class Monster extends Entity {
         Obj_Heart heart = new Obj_Heart(mp);
         heart.worldX = worldX + 16; heart.worldY = worldY + 16;
         mp.addObject(heart, mp.activeObj);
+    }
+
+    public boolean counterReached(int target)
+    {
+        boolean counterReached = false;
+        counter++;
+        if(counter > target)
+        {
+            counterReached = true;
+            counter = 0;
+        }
+        return counterReached;
+    }
+
+    public void resetCounter(){
+        drawHPBar = true;
+        counter = 0;
+    }
+
+    public void renderHPBar(Graphics2D g2 , int offsetX , int offsetY){
+        if(drawHPBar) {
+            int maxHpWidth = 30;
+            int currentHpWidth = (int) ((double) currentHP / maxHP * maxHpWidth);
+            g2.setColor(Color.WHITE);
+            g2.fillRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, maxHpWidth, 5);
+            g2.setColor(Color.RED);
+            g2.fillRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, currentHpWidth, 5);
+            g2.setColor(Color.BLACK);
+            g2.drawRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, maxHpWidth, 5);
+            if(counterReached(600)) drawHPBar = false;
+        }
     }
 
     public void render(Graphics2D g2) {

@@ -14,6 +14,7 @@ public class AttackEnemy {
         if(!mp.enemy[index].isInvincible) {
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
+            mp.enemy[index].resetCounter();
         }
     }
 
@@ -23,6 +24,7 @@ public class AttackEnemy {
             if(!mp.enemy[index].isInvincible) {
                 mp.enemy[index].currentHP -= player.damage;
                 mp.enemy[index].isInvincible = true;
+                mp.enemy[index].resetCounter();
             }
         }
     }
@@ -36,6 +38,7 @@ public class AttackEnemy {
             }
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
+            mp.enemy[index].resetCounter();
         }
     }
 
@@ -46,6 +49,7 @@ public class AttackEnemy {
             mp.enemy[index].onPath = true;
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
+            mp.enemy[index].resetCounter();
         }
     }
 

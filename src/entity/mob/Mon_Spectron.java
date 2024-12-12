@@ -283,7 +283,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
-        super.render(g2);
+        super.renderHPBar(g2 , 18 , 0);
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
