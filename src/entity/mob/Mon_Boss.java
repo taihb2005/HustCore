@@ -287,7 +287,7 @@ public class Mon_Boss extends Monster implements Actable {
     @Override
     public void setDialogue() {
         this.dialogues[0][0] = new StringBuilder("Ngươi cũng mạnh phết đấy.");
-        this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.");
+        this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ\ngiúp của thuộc hạ rồi.");
         this.dialogues[1][0] = new StringBuilder("Á hự... Không thể tin ngươi đã đánh bại được ta...");
         this.dialogues[1][1] = new StringBuilder("Huhuhu...");
     }
