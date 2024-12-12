@@ -27,6 +27,7 @@ public class EventHandler03 extends EventHandler {
     private EventRectangle quizArea;
 
     private EventRectangle completeArea;
+    private final Entity[] eventEntity = new Entity[10];
     public static int time = 0;
 
     private Stun temp;
@@ -193,6 +194,4 @@ public class EventHandler03 extends EventHandler {
                 }
             }
         }
-
-
 }

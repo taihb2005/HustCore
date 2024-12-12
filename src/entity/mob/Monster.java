@@ -318,4 +318,13 @@ public class Monster extends Entity {
         heart.worldX = worldX + 16; heart.worldY = worldY + 16;
         mp.addObject(heart, mp.activeObj);
     }
+
+    public void render(Graphics2D g2) {
+        int maxHpWidth = 30;
+        int currentHpWidth = (int) ((double) currentHP/maxHP * maxHpWidth);
+        g2.setColor(Color.RED);
+        g2.fillRect(worldX-camera.getX()+18, worldY - camera.getY() , currentHpWidth, 5);
+        g2.setColor(Color.BLACK);
+        g2.drawRect(worldX-camera.getX()+18, worldY - camera.getY() , maxHpWidth, 5);
+    }
 }

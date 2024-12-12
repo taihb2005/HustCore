@@ -24,7 +24,6 @@ public class Level01 extends Level {
         stopMusic();
         playMusic(6);
 
-
         levelFinished = false;
         canChangeMap = false;
 

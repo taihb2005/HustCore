@@ -179,4 +179,5 @@ public class EventHandler01 extends EventHandler {
         //LEVEL COMPLETED
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
+
 }

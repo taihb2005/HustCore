@@ -303,6 +303,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
+        super.render(g2);
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
