@@ -290,10 +290,24 @@ public class KeyHandler implements KeyListener{
                     }
                 }
 
-                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4)
+                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
                     GamePanel.gameState = GameState.PLAY_STATE;
+                    Timer timer = new Timer();
+
+                    TimerTask play = new TimerTask() {
+                        @Override
+                        public void run() {
+                            stopMusic();
+                            stopMusic();
+                            playMusic(10);
+                        }
+                    };
+                    timer.schedule(play , 200);
+                }
 
                 if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
+                    stopMusic();
+                    playSE(12);
                     if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
                         GamePanel.ui.selectedOption = 4;
                     } else {

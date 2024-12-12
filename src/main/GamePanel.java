@@ -167,7 +167,7 @@ public class GamePanel extends JPanel implements Runnable {
         {
             pauseMusic();;
         }
-        if(environmentManager != null && environmentManager.lighting != null) environmentManager.lighting.update();
+        if(environmentManager != null)environmentManager.lighting.update();
     }
 
     @Override

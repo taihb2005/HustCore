@@ -47,9 +47,12 @@ public class UI {
 
     public int commandNum = 0;
 
+    public static int bossHP = 0;
+    public static int boss_maxHP = 1400;
+
     public Entity target;
 
-    private BufferedImage hpFrame, manaFrame;
+    private BufferedImage hpFrame, manaFrame, boss_hpFrame;
 
     private BufferedImage titleBackground;
 
@@ -79,6 +82,7 @@ public class UI {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
             quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
+            boss_hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/boss_hpFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -216,6 +220,25 @@ public class UI {
     {
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
         return windowWidth / 2 - length / 2;
+    }
+
+    public void drawHPBarForBoss() {
+        int fullHPWidth = 205;  // Chiều dài tối đa của thanh HP
+        int hpBarHeight = 12;   // Chiều cao của thanh HP
+        int x = windowWidth - 250;
+        int y = windowHeight - 92;
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) bossHP / boss_maxHP * fullHPWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
+        // Vẽ nền (màu xám) cho thanh HP
+        g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
+
+        // Vẽ thanh HP hiện tại (màu đỏ)
+        g2.setColor(new Color(255,0,255));
+        g2.fillRect(x+209-currentHPWidth, y+12 , currentHPWidth, hpBarHeight);
     }
 
     public void drawHPBar() {
@@ -453,6 +476,7 @@ public class UI {
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
+                if (bossHP > 0) drawHPBarForBoss();
             }else if (gameState == GameState.MENU_STATE) {
                 drawTitleScreen();
             } else if (gameState == GameState.DIALOGUE_STATE) {
@@ -460,7 +484,9 @@ public class UI {
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
-            } else if(gameState == GameState.PASSWORD_STATE){
+                if (bossHP > 0) drawHPBarForBoss();
+            }
+             else if(gameState == GameState.PASSWORD_STATE){
                 drawPasswordInputBox();
                 drawHPBar();
                 drawManaBar();
@@ -474,6 +500,7 @@ public class UI {
                 drawPausedScreen();
                 drawOptionsScreen();
                 drawInventory();
+                if (bossHP > 0) drawHPBarForBoss();
             }
             if (gameState == GameState.LOSE_STATE) {
                 currentMap.dispose();

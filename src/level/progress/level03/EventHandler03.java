@@ -14,6 +14,9 @@ import main.GameState;
 import java.util.Arrays;
 import java.util.TimerTask;
 
+import static main.GamePanel.playMusic;
+import static main.GamePanel.stopMusic;
+
 public class EventHandler03 extends EventHandler {
     private EventRectangle beginRoom2;
     private EventRectangle endRoom2;
@@ -185,6 +188,8 @@ public class EventHandler03 extends EventHandler {
                 eventMaster.dialogues[4] = null;
                 System.gc();
                 GamePanel.gameState = GameState.QUIZ_STATE;
+                stopMusic();
+                playMusic(7);
             }
 
             else if (GamePanel.ui.selectedOption == 5) lvl.map.player.currentHP = 0;

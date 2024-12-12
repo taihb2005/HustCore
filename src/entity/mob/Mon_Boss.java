@@ -11,6 +11,7 @@ import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
 import level.AssetSetter;
+import main.UI;
 import map.GameMap;
 
 import javax.imageio.ImageIO;
@@ -99,7 +100,7 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 40;
+        maxHP = 1400;
         currentHP = maxHP;
         strength = 50;
         level = 1;
@@ -163,6 +164,7 @@ public class Mon_Boss extends Monster implements Actable {
         changeAnimationDirection();
         move();
         mon_animator_boss.update();
+        UI.bossHP = currentHP;
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
         if (currentHP <= 0 && fullyDie) {
             this.startDialogue(this, 1);
@@ -183,24 +185,6 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
-        int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
-        int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int x = windowWidth - 200;
-        int y = windowHeight - 90;
-        int currentHPWidth;
-        try {
-            currentHPWidth = (int) ((double) currentHP / maxHP * fullHPWidth);
-        } catch(NullPointerException e){
-            currentHPWidth = 0;
-        }
-        // Vẽ nền (màu xám) cho thanh HP
-        g2.drawImage(hpFrame, worldX - camera.getX() - 50 , worldY - camera.getY() + 10, 121, 18, null);
-
-        // Vẽ thanh HP hiện tại (màu đỏ)
-//        g2.setColor(Color.RED);
-//        g2.fillRect(x, y , currentHPWidth, hpBarHeight);
-
-
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }

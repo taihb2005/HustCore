@@ -73,6 +73,7 @@ public class Proj_ExplosivePlasma extends Projectile{
         thickness += 0.02F;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         g2.drawOval(drawX, drawY, diameter, diameter);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 
     public void actionPerformed() {
