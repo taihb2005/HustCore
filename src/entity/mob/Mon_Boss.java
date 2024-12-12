@@ -89,9 +89,9 @@ public class Mon_Boss extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 1000;
+        maxHP = 40;
         currentHP = maxHP;
-        strength = 70;
+        strength = 50;
         level = 1;
         defense = 10;
         projectile1 = new Proj_TrackingPlasma(mp);
@@ -290,7 +290,7 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     public void shoot1() {
-        isShooting1 = true;
+        isShooting1 = !isDying;
         if(!projectile1.active && shootAvailableCounter == SHOOT_INTERVAL) {
             projectile1.set(worldX+25, worldY+12, direction, true, this);
             projectile1.setHitbox();
@@ -349,7 +349,7 @@ public class Mon_Boss extends Monster implements Actable {
                 direction = "up";
             shoot2();
         }
-        isRunning = !isShooting2;
+        isRunning = !isShooting2 && !isDying;
     }
 
     public void actionWhileShoot3() {

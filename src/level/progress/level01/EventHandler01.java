@@ -32,9 +32,6 @@ public class EventHandler01 extends EventHandler {
         setEventRect();
         setEventEntity();
 
-        room3Completed = true;
-        lvl.levelFinished = true;
-
         countEnemyRoom1 = 2;
         countEnemyRoom2 = 1;
         countEnemyRoom3 = 2;

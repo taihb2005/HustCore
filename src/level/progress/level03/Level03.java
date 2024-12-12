@@ -8,6 +8,8 @@ import map.MapManager;
 import map.MapParser;
 
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static main.GamePanel.playMusic;
 import static main.GamePanel.stopMusic;
@@ -25,10 +27,19 @@ public class Level03 extends Level {
         setter.setFilePathObject("/level/level03/object_level03.json");
         setter.setFilePathEnemy("/level/level03/enemy_level03.json");
         setter.loadAll();
-        stopMusic();
-        playMusic(6);
         levelFinished = false;
         changeMapEventRect1 = new EventRectangle(1536, 1888, 128, 32);
+        Timer timer = new Timer();
+
+        TimerTask play = new TimerTask() {
+            @Override
+            public void run() {
+                stopMusic();
+                stopMusic();
+                playMusic(6);
+            }
+        };
+        timer.schedule(play , 200);
     }
     public void updateProgress() {
         eventHandler03.update();

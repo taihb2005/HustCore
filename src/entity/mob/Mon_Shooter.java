@@ -267,7 +267,7 @@ public class Mon_Shooter extends Monster implements Actable {
                     mon_animator_shooter.playOnce();
                 }
                 if(isDying){
-                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 15);
+                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 10);
                     mon_animator_shooter.playOnce();
                 }
                 if(isIdle){mon_animator_shooter.setAnimationState(mon_shooter[ACTIVE][CURRENT_DIRECTION] , 20);}

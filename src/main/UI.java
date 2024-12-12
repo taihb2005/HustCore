@@ -22,6 +22,7 @@ public class UI {
     public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
+    public static Font bitcrusher;
     StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -63,8 +64,10 @@ public class UI {
             if(currentMap != null )this.player = currentMap.player;
             InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
+            InputStream is3 = getClass().getResourceAsStream("/font/bitcrusher.otf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(is1));
             maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
+            bitcrusher = Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is3));
         } catch (FontFormatException | IOException | NullPointerException e) {
             this.player = null;
             e.printStackTrace();
@@ -457,7 +460,12 @@ public class UI {
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
-            }
+            } else if(gameState == GameState.PASSWORD_STATE){
+                drawPasswordInputBox();
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+            } else
             if (gameState == GameState.LEVELUP_STATE) {
                 drawDialogueScreen();
             } else if (gameState == GameState.PAUSE_STATE) {
