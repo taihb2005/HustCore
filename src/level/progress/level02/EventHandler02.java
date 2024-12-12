@@ -23,7 +23,7 @@ public class EventHandler02 extends EventHandler {
     private boolean allEnemyDefeated;
     private boolean hasPopUpHint;
     private boolean isInRegion;
-    private final EventRectangle showPasswordInput;
+    private EventRectangle showPasswordInput;
     ArrayList<String> hint = new ArrayList<>();
 
 
@@ -109,4 +109,11 @@ public class EventHandler02 extends EventHandler {
         }
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        showPasswordInput = null;
+        hint.clear();
+        hint = null;
+    }
 }

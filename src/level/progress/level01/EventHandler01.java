@@ -177,4 +177,11 @@ public class EventHandler01 extends EventHandler {
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        beginRoom1 = null;
+        beginRoom2 = null;
+        beginRoom3 = null;
+    }
 }

@@ -13,10 +13,12 @@ import graphics.Sprite;
 import level.AssetSetter;
 import map.GameMap;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import static main.GamePanel.*;
@@ -51,7 +53,7 @@ public class Mon_Boss extends Monster implements Actable {
     private boolean shoot3;
     // Tổng số cột flame
     private boolean shooting = false;      // Trạng thái đang bắn flame
-
+    private BufferedImage hpFrame;
     public Mon_Boss(GameMap mp){
         super(mp);
         name = "Boss";
@@ -69,6 +71,12 @@ public class Mon_Boss extends Monster implements Actable {
         width = 128;
         height = 128;
         speed = 1;
+
+        try {
+            hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/boss_hpFrame.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         getImage();
         setDefault();
@@ -175,6 +183,24 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
+        int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
+        int hpBarHeight = 12;   // Chiều cao của thanh HP
+        int x = windowWidth - 200;
+        int y = windowHeight - 90;
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) currentHP / maxHP * fullHPWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
+        // Vẽ nền (màu xám) cho thanh HP
+        g2.drawImage(hpFrame, worldX - camera.getX() - 50 , worldY - camera.getY() + 10, 121, 18, null);
+
+        // Vẽ thanh HP hiện tại (màu đỏ)
+//        g2.setColor(Color.RED);
+//        g2.fillRect(x, y , currentHPWidth, hpBarHeight);
+
+
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }

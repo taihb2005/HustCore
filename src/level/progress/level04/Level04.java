@@ -1,12 +1,9 @@
 package level.progress.level04;
 
-import ai.PathFinder;
 import ai.PathFinder2;
-import entity.Entity;
 import entity.mob.Mon_Boss;
 import level.EventRectangle;
 import level.Level;
-import level.progress.level03.EventHandler03;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -36,5 +33,12 @@ public class Level04 extends Level {
     }
     public void updateProgress() {
         eventHandler04.update();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        eventHandler04.dispose();
+        changeMapEventRect1 = null;
     }
 }

@@ -19,7 +19,6 @@ public class Level03 extends Level {
         this.gp = gp;
         MapParser.loadMap("map3", "/map/map3.tmx");
         map = MapManager.getGameMap("map3");
-        if (map == null) System.out.println("null3");
         map.gp = gp;
         eventHandler03 = new EventHandler03(this);
         init();
@@ -35,4 +34,9 @@ public class Level03 extends Level {
         eventHandler03.update();
     }
     public void render(Graphics2D g2){eventHandler03.render(g2);}
+
+    public void dispose() {
+        super.dispose();
+        eventHandler03.dispose();
+    }
 }

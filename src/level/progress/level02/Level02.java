@@ -51,4 +51,12 @@ public class Level02 extends Level {
        eventHandler02.update();
     }
     public void render(Graphics2D g2){eventHandler02.render(g2);}
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        eventHandler02.dispose();
+        changeMapEventRect1 = null;
+        changeMapEventRect2 = null;
+    }
 }

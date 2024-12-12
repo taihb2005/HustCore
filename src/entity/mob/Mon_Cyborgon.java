@@ -283,7 +283,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2){
-
+        super.render(g2);
         //DRAW RADIATION CIRCLE
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.setColor(Color.GREEN);

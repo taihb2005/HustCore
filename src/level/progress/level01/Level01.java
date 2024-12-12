@@ -33,4 +33,12 @@ public class Level01 extends Level {
     public void updateProgress(){
         eventHandler01.update();
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        eventHandler01.dispose();
+        changeMapEventRect1 = null;
+        changeMapEventRect2 = null;
+    }
 }
