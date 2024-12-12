@@ -250,7 +250,7 @@ public class Mon_Spectron extends Monster implements Actable {
     }
 
 
-    public void move() {
+    public void move(){
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;
@@ -272,7 +272,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         setAction();
         move();
         changeAnimationDirection();

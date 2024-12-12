@@ -122,7 +122,7 @@ public class Obj_Door extends Entity{
 
 
     @Override
-    public void update() {
+    public void update() throws  NullPointerException{
         changeState();
         if(isInteracting) open();
         handleAnimationState();
@@ -131,7 +131,7 @@ public class Obj_Door extends Entity{
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
         g2.drawImage(obj_door[STATE][CURRENT_ACTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         if(isInteracting && !isOpening){g2.drawImage(obj_door_effect , worldX - camera.getX() , worldY - camera.getY() , width , height , null);}
     }

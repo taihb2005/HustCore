@@ -72,13 +72,13 @@ public class Obj_Tank extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         obj_animator_filledTank.update();
         currentFrames = obj_animator_filledTank.getCurrentFrames();
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
         g2.drawImage(obj_filledTank[currentFrames] , worldX - camera.getX(), worldY - camera.getY()
                 , width , height , null);
     }

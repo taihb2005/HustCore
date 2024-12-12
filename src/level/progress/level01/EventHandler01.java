@@ -31,7 +31,7 @@ public class EventHandler01 extends EventHandler {
         timer = new Timer();
         setEventRect();
         setEventEntity();
-
+        
         countEnemyRoom1 = 2;
         countEnemyRoom2 = 1;
         countEnemyRoom3 = 2;

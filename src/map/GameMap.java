@@ -151,7 +151,7 @@ public class GameMap {
         }
     }
 
-    public void dispose(){
+    public void dispose() throws ConcurrentModificationException{
         for(Entity e : activeObj) if(e != null) e.dispose();
         for(Entity e : enemy) if(e != null) e.dispose();
         for(Entity e : projectiles) if(e != null) e.dispose();

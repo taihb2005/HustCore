@@ -10,6 +10,7 @@ import map.GameMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 
 import static main.GamePanel.camera;
 
@@ -108,7 +109,7 @@ public class Obj_Heart extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         // Chỉ cập nhật khi chưa thu thập
         handleAnimationState();
         obj_animator_heart.update();
@@ -116,7 +117,7 @@ public class Obj_Heart extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) {// Chỉ vẽ khi chưa thu thập
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException {// Chỉ vẽ khi chưa thu thập
             g2.drawImage(obj_heart[CURRENT_ACTION][currentFrames],
                     worldX - camera.getX() ,
                     worldY - camera.getY() ,

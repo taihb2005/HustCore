@@ -123,14 +123,14 @@ public class Obj_Chest extends Entity implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         handleAnimationState();
         obj_animator_Chest.update();
         CURRENT_FRAME = obj_animator_Chest.getCurrentFrames();
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
         g2.drawImage(obj_Chest[currentStates][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY()
                  , null);
     }

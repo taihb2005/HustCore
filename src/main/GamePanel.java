@@ -18,6 +18,8 @@ import util.Camera;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Optional;
 import java.util.Timer;
 
 // swing library
@@ -52,8 +54,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 1;
-    public static int levelProgress = 1;
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
@@ -153,39 +155,46 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-        updateDarkness();
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
-            if(!music.clip.isRunning() && !gameCompleted) {
-                resumeMusic();
+        try {
+            updateDarkness();
+            if (gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
+                if (!music.clip.isRunning() && !gameCompleted) {
+                    resumeMusic();
+                }
+                currentMap.update();
+                currentLevel.updateProgress();
+                ui.update();
+                if (currentLevel.canChangeMap) lvlManager.update();
+            } else if (gameState == GameState.PAUSE_STATE) {
+                pauseMusic();
+                ;
             }
-            currentMap.update();
-            currentLevel.updateProgress();
-            ui.update();
-            if(currentLevel.canChangeMap) lvlManager.update();
-        } else
-        if(gameState == GameState.PAUSE_STATE )
-        {
-            pauseMusic();;
+            if (environmentManager != null) environmentManager.lighting.update();
+        } catch(NullPointerException | ArrayIndexOutOfBoundsException | ConcurrentModificationException e){
+            System.out.println("Loading!");
         }
-        if(environmentManager != null)environmentManager.lighting.update();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
-            currentMap.render(g2);
-            environmentManager.draw(g2);
+        try {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            if (gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
+                currentMap.render(g2);
+                environmentManager.draw(g2);
+            }
+            if (currentLevel != null) currentLevel.render(g2);
+            ui.render(g2);
+            drawDarkness(g2);
+            if (gameCompleted) {
+                disableKey();
+                credit.render(g2);
+            }
+            g2.dispose();
+        } catch(NullPointerException | ArrayIndexOutOfBoundsException | ConcurrentModificationException e){
+            System.out.println("Loading");
         }
-        if(currentLevel !=  null)currentLevel.render(g2);
-        ui.render(g2);
-        drawDarkness(g2);
-        if(gameCompleted) {
-            disableKey();
-            credit.render(g2);
-        }
-        g2.dispose();
     }
 
     public void drawDarkness(Graphics2D g2) {

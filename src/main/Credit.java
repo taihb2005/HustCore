@@ -51,12 +51,20 @@ public class Credit {
                 +   "Nguyễn Văn Sáng\n"
                 +   "Nguyễn Ngọc Lê Minh\n"
                 +   "\n\n\n\n"
-                +   "Âm thanh:"
-                +   "Nguyễn Ngọc Lê Minh"
+                +   "Âm thanh:\n"
+                +   "Nguyễn Ngọc Lê Minh\n"
+                +   "Ý tưởng:\n"
+                +   "Khương Anh Tài"
+                +   "\n\n\n\n"
+                +   "Giám sát:\n"
+                +   "Khương Anh Tài"
                 +   "\n\n\n\n\n\n\n\n"
-                +   "Special thank TrevorPumpkin for his amazing assets\n"
-                +   "\n\n\n\n\n\n\n\n"
-                +   "Big Shoutout cho những ai xem được đến đây\n"
+                +   "Special thanks to TrevorPumpkin for his amazing assets\n"
+                +   "Special thanks to Minh for his dedication to sound making\n"
+                +   "Special thanks to Nam for his effort in creating effects\n"
+                +   "Special thanks to Nguyen Thi Huyen for suggesting ideas\n"
+                +   "\n\n\n\n\n\n\n"
+                +   "Và big shoutout cho những ai xem được đến đây\n"
                 +   "\n\n\n\n\n\n\n\n"
                 +   "\n\n\n\n"
                 +   "Cảm ơn mọi người rất nhiều!";
@@ -143,7 +151,7 @@ public class Credit {
 
             y = windowHeight / 2 - 43;
             g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
-            drawString(alpha, 40f,  y, endCredit, 40);
+            drawString(alpha, 40f,  y, endCredit, 45);
 
             if(counterReached(240) && alpha == 1f)
             {
@@ -157,8 +165,8 @@ public class Credit {
             g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
 
             y -= 2;
-            drawString(1f, 40f,  y, endCredit, 40);
-            if(counterReached(2000))
+            drawString(1f, 40f,  y, endCredit, 45);
+            if(counterReached(2200))
             {
                 stopMusic();
                 gameCompleted = false;
@@ -166,7 +174,6 @@ public class Credit {
                 previousLevelProgress = 0;
                 sManager.reset();
                 GamePanel.gameState = GameState.MENU_STATE;
-
             }
         }
     }

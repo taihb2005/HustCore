@@ -270,7 +270,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws  NullPointerException{
         setAction();
         handleStatus();
         changeAnimationDirection();

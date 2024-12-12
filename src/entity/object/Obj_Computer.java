@@ -33,7 +33,7 @@ public class Obj_Computer extends Entity {
         setDefaultSolidArea();
     }
     @Override
-    public void update() {
+    public void update() throws NullPointerException , ArrayIndexOutOfBoundsException{
         if(state.equals("on")) {
             obj_animator_computer.update();
             currentFrame = obj_animator_computer.getCurrentFrames();
@@ -41,7 +41,7 @@ public class Obj_Computer extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
         g2.drawImage(obj_computer[currentFrame] , worldX -camera.getX() , worldY - camera.getY() , width , height , null);
     }
 }

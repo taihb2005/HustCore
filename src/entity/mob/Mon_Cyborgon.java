@@ -269,7 +269,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     @Override
-    public void update(){
+    public void update() throws NullPointerException{
         setAction();
         handleStatus();
         updateDiameter(mp);

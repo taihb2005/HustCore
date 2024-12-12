@@ -156,7 +156,7 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         setAction();
         handleAnimationState();
         handleStatus();

@@ -26,13 +26,13 @@ public class Obj_PasswordAuth extends Entity {
         solidArea1 = new Rectangle(0 , 0 , 0 , 0);
     }
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         obj_animator_pwAuth.update();
         currentFrame = obj_animator_pwAuth.getCurrentFrames();
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
         g2.drawImage(obj_pwAuth[currentFrame] , worldX - camera.getX() , worldY - camera.getY() , width ,height , null);
     }
 }

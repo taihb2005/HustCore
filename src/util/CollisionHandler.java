@@ -14,7 +14,7 @@ public class CollisionHandler{
         this.mp = mp;
     }
 
-    public int checkInteractWithActiveObject(Entity entity , boolean isPlayer)
+    public int checkInteractWithActiveObject(Entity entity , boolean isPlayer) throws NullPointerException , ArrayIndexOutOfBoundsException
     {
         int index = -1;
         for (int i = 0; i < mp.activeObj.length; i++) {
@@ -38,7 +38,7 @@ public class CollisionHandler{
         return index;
     }
 
-    public int checkInteractEntity(Entity entity , boolean isPlayer , Entity [] list){
+    public int checkInteractEntity(Entity entity , boolean isPlayer , Entity [] list) throws NullPointerException , ArrayIndexOutOfBoundsException{
         int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null && list[i].interactionDetectionArea != null) {
@@ -60,7 +60,7 @@ public class CollisionHandler{
         return index;
     }
 
-    public int checkEntityForDamage(Entity entity , Monster[] list){
+    public int checkEntityForDamage(Entity entity , Monster[] list) throws NullPointerException , ArrayIndexOutOfBoundsException{
         int index = -1;
         for (int i = 0; i < list.length; i++) {
             if (list[i] != null) {
@@ -81,7 +81,7 @@ public class CollisionHandler{
     }
 
 
-    public int checkCollisionWithEntity(Entity entity , Entity [] list)
+    public int checkCollisionWithEntity(Entity entity , Entity [] list) throws NullPointerException , ArrayIndexOutOfBoundsException
     {
         int index = -1;
         for (int i = 0; i < list.length; i++) {
@@ -114,7 +114,7 @@ public class CollisionHandler{
         return index;
     }
 
-    public boolean checkPlayer(Entity entity){
+    public boolean checkPlayer(Entity entity) throws NullPointerException , ArrayIndexOutOfBoundsException{
         int newHitBoxX = entity.hitbox.x + entity.worldX;
         int newHitBoxY = entity.hitbox.y + entity.worldY;
         Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);
@@ -122,7 +122,7 @@ public class CollisionHandler{
         return tmp2.intersects(tmp1);
     }
 
-    public boolean checkPlayerForDamage(Entity entity){
+    public boolean checkPlayerForDamage(Entity entity) throws NullPointerException ,ArrayIndexOutOfBoundsException{
         int newHitBoxX = entity.hitbox.x + entity.worldX;
         int newHitBoxY = entity.hitbox.y + entity.worldY;
         Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.hitbox.width , entity.hitbox.height);
@@ -130,7 +130,7 @@ public class CollisionHandler{
         return tmp2.intersects(tmp1);
     }
 
-    public boolean checkInteractPlayer(Entity entity){
+    public boolean checkInteractPlayer(Entity entity) throws NullPointerException , ArrayIndexOutOfBoundsException{
         int newHitBoxX = entity.interactionDetectionArea.x + entity.worldX;
         int newHitBoxY = entity.interactionDetectionArea.y + entity.worldY;
         Rectangle tmp1 = new Rectangle(newHitBoxX , newHitBoxY , entity.interactionDetectionArea.width , entity.interactionDetectionArea.height);
@@ -138,7 +138,7 @@ public class CollisionHandler{
         return tmp2.intersects(tmp1);
     }
 
-    public void checkCollisionPlayer(Entity entity){
+    public void checkCollisionPlayer(Entity entity) throws NullPointerException , ArrayIndexOutOfBoundsException{
         int newSolidAreaX = entity.solidArea1.x + entity.newWorldX;
         int newSolidAreaY = entity.solidArea1.y + entity.newWorldY;
         Rectangle tmp1 = new Rectangle(newSolidAreaX , newSolidAreaY, entity.solidArea1.width , entity.solidArea1.height);

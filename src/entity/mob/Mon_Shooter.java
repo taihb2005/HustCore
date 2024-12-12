@@ -267,7 +267,7 @@ public class Mon_Shooter extends Monster implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         if(!isAlwaysUp)checkForPlayer();
         updateAttackCycle();
         updateInvincibility();

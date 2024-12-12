@@ -55,13 +55,13 @@ public class Obj_Television extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         obj_animator_television.update();
         currentFrames = obj_animator_television.getCurrentFrames();
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
         g2.drawImage(obj_television[currentFrames] , worldX - camera.getX() , worldY - camera.getY() , width ,height , null);
     }
 

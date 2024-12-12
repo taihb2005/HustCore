@@ -222,7 +222,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException {
         changeEffect();
         handleRNG();
         changeDirection();
