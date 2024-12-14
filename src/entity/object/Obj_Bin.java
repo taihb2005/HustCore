@@ -30,7 +30,7 @@ public class Obj_Bin extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException {
         g2.drawImage(obj_bin , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
     }
 }

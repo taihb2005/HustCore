@@ -82,12 +82,12 @@ public class Obj_Chest extends Entity implements Actable {
         }
         int dialogueIndex = 0;
         for(var item : map.entrySet()){
-            dialogues[0][dialogueIndex] = "Bạn nhận được " + item.getKey().getName() + " x" + item.getValue() +
-                            "\n" + item.getKey().getDescription();
+            dialogues[0][dialogueIndex] = new StringBuilder("Bạn nhận được " + item.getKey().getName() + " x" + item.getValue() +
+                    "\n" + item.getKey().getDescription());
             dialogueIndex++;
         }
 
-        dialogues[1][0] = "Nó đã được mở rồi!";
+        dialogues[1][0] = new StringBuilder("Nó đã được mở rồi!");
     }
 
     public void talk(){
@@ -123,14 +123,14 @@ public class Obj_Chest extends Entity implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         handleAnimationState();
         obj_animator_Chest.update();
         CURRENT_FRAME = obj_animator_Chest.getCurrentFrames();
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
         g2.drawImage(obj_Chest[currentStates][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY()
                  , null);
     }

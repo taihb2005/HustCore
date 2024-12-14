@@ -29,9 +29,9 @@ public class Proj_GuardianProjectile extends Projectile{
 
     public void setHitbox(){
         if(direction.equals("up") || direction.equals("down")){
-            hitbox = new Rectangle(30 , 24 , 2 , 16);
+            hitbox = new Rectangle(25 , 17 , 12 , 24);
         } else{
-            hitbox = new Rectangle(24 , 32 , 16 , 2);
+            hitbox = new Rectangle(21 , 26 , 24 , 12);
         }
     }
 }

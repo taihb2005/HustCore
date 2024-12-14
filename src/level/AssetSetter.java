@@ -109,7 +109,6 @@ public class AssetSetter {
                                     chest.setLoot(new Item_Potion(), item.getQuantity());
                                     break;
                             }
-                            chest.setDialogue();
                         }
                         chest.setDialogue();
                         mp.addObject(chest, mp.activeObj);

@@ -61,7 +61,7 @@ public class Player extends Entity {
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
-    public HashMap<String , Integer> effectManager = new HashMap<>();
+    public HashMap<StringBuilder , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[5];
     public ItemHandler iHandler = new ItemHandler();
@@ -123,7 +123,7 @@ public class Player extends Entity {
         worldX = sManager.getWorldX();
         worldY = sManager.getWorldY();
         newWorldX = worldX; newWorldY = worldY;
-        inventory = sManager.getSavedInventory();
+        sManager.getSavedInventory(inventory);
         set();
     }
 
@@ -325,11 +325,12 @@ public class Player extends Entity {
     public void damageEnemy(int index){
         if(index != -1){
             switch (mp.enemy[index].name){
+                case "Spectron": mp.playerAttack.damageEnemy(index); projectile.active = false ; break;
                 case "Shooter": mp.playerAttack.damageShooter(index); projectile.active = false; break;
                 case "Hust Guardian": mp.playerAttack.damageGuardian(index); projectile.active = false; break;
                 case "Cyborgon"   : mp.playerAttack.damageCyborgon(index); projectile.active = false; break;
                 case "Effect Dealer": mp.playerAttack.damageEffectDealer(index); break;
-                default       : mp.playerAttack.damageEnemy(index);   break;
+                case "Boss": mp.playerAttack.damageEnemy(index); projectile.active = false; break;
             }
             if(mp.enemy[index].currentHP <= 0){
                 exp += mp.enemy[index].expDrop;
@@ -394,7 +395,7 @@ public class Player extends Entity {
         if(!hasResource() && isShooting){
             isShooting = false;
             GamePanel.gameState = GameState.DIALOGUE_STATE;
-            dialogues[0][0] = "Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn";
+            dialogues[0][0] = new StringBuilder("Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn");
             startDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
@@ -421,14 +422,14 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 5;
+        strength = 10;
         damage = projectile.base_damage + strength * level ;
     }
     private void setDefense(){
         defense = level * 10;
     }
     private void setMaxHP(){
-        maxHP = 200 + (level - 1) * 20;
+        maxHP = 150 + (level - 1) * 40;
         currentHP = maxHP;
     }
     private void setMaxMana(){
@@ -447,8 +448,8 @@ public class Player extends Entity {
             if(level == 4) nextLevelUp = 700; else
             if(level == 5) nextLevelUp = 999999999;
             //GamePanel.gameState = GameState.DIALOGUE_STATE;
-            mp.gp.playSE(3);
-            dialogues[0][0] = "Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!";
+            playSE(3);
+            dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
             startDialogue(this , 0);
         }
     }

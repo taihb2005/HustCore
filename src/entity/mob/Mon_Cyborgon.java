@@ -2,6 +2,7 @@ package entity.mob;
 
 import entity.Actable;
 import entity.effect.type.EffectNone;
+import entity.effect.type.Slow;
 import entity.projectile.Proj_GreenBullet;
 import level.progress.level02.EventHandler02;
 import level.progress.level02.Level02;
@@ -90,14 +91,14 @@ public class Mon_Cyborgon extends Monster implements Actable {
         setDefaultSolidArea();
 
         invincibleDuration = 40;
-        maxHP = 140;
+        maxHP = 200;
         currentHP = maxHP;
         strength = 30;
         level = 1;
         defense = 0;
         projectile = new Proj_GreenBullet(mp);
         effectDealOnTouch = new EffectNone(mp.player);
-        effectDealByProjectile = new EffectNone(mp.player);
+        effectDealByProjectile = new Slow(mp.player , 30);
         speed = 2;
         last_speed = speed;
 
@@ -268,7 +269,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     @Override
-    public void update(){
+    public void update() throws NullPointerException{
         setAction();
         handleStatus();
         updateDiameter(mp);
@@ -282,7 +283,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2){
-
+        super.renderHPBar(g2 , 18 , 0);
         //DRAW RADIATION CIRCLE
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.setColor(Color.GREEN);

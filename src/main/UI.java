@@ -22,7 +22,8 @@ public class UI {
     public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
-    String currentDialogue = "";  // Dòng hội thoại hiện tại đầy đủ
+    public static Font bitcrusher;
+    StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
     double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
@@ -46,26 +47,28 @@ public class UI {
 
     public int commandNum = 0;
 
+    public static int bossHP = 0;
+    public static int boss_maxHP = 1700;
+
     public Entity target;
 
-    private BufferedImage hpFrame, manaFrame;
-
+    private BufferedImage hpFrame, manaFrame, boss_hpFrame;
     private BufferedImage titleBackground;
-
-    private BufferedImage titleImage;
-
-    private BufferedImage Key1Image, quizImage;
+    private BufferedImage quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
-        this.player = currentMap.player;
         try {
+            if(currentMap != null )this.player = currentMap.player;
             InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
+            InputStream is3 = getClass().getResourceAsStream("/font/bitcrusher.otf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(is1));
             maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
-        } catch (FontFormatException | IOException e) {
+            bitcrusher = Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is3));
+        } catch (FontFormatException | IOException | NullPointerException e) {
+            this.player = null;
             e.printStackTrace();
         }
 
@@ -75,12 +78,13 @@ public class UI {
             titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/Background.png")));
             gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/robotInvasion.png")));
             quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/quiz.png")));
+            boss_hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/boss_hpFrame.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public void startDialogue(String dialogue) {
-        currentDialogue = dialogue;
+        currentDialogue = new StringBuilder(dialogue);
         displayedText = "";
         textIndex = 0;
         frameCounter = 0;
@@ -168,26 +172,29 @@ public class UI {
         //Menu
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
-        text = "BẮT ĐẦU";
+        text = "Bắt đầu";
         x = getXforCenteredText(text);
-        y = windowHeight*3/5;
-        g2.drawString(text, x, y);
+        y = windowHeight*3/5 - tileSize;
+        g2.drawString(text, x, y - 5);
+        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
         if(commandNum == 0){
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "TÙY CHỈNH";
-        x = getXforCenteredText(text);
-        y = windowHeight*7/10;
-        g2.drawString(text, x, y);
+        text = "Cài đặt";
+        y = windowHeight*7/10 + 20 - tileSize;
+        g2.drawString(text, x, y - 8);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 1){
             g2.drawString(">",x- tileSize, y);
         }
 
-        text = "THOÁT";
-        x = getXforCenteredText(text);
-        y = windowHeight*4/5;
-        g2.drawString(text, x, y);
+        text = "Thoát";
+        //x = getXforCenteredText(text);
+        y = windowHeight*4/5 + 40 - tileSize;
+        g2.drawString(text, x + 20, y - 8);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
         if(commandNum == 2){
             g2.drawString(">",x- tileSize, y);
         }
@@ -211,12 +218,38 @@ public class UI {
         return windowWidth / 2 - length / 2;
     }
 
+    public void drawHPBarForBoss() {
+        int fullHPWidth = 205;  // Chiều dài tối đa của thanh HP
+        int hpBarHeight = 12;   // Chiều cao của thanh HP
+        int x = windowWidth - 250;
+        int y = windowHeight - 92;
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) bossHP / boss_maxHP * fullHPWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
+        // Vẽ nền (màu xám) cho thanh HP
+        g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
+        g2.setFont(joystix.deriveFont(Font.PLAIN , 19f));
+        g2.drawString("AI đầu não" , x , y - 8);
+
+        // Vẽ thanh HP hiện tại (màu đỏ)
+        g2.setColor(new Color(255,0,255));
+        g2.fillRect(x+209-currentHPWidth, y+12 , currentHPWidth, hpBarHeight);
+    }
+
     public void drawHPBar() {
         int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
         int hpBarHeight = 12;   // Chiều cao của thanh HP
         int x = 40;
         int y = windowHeight - 80;
-        int currentHPWidth = (int)((double)player.currentHP / player.maxHP * fullHPWidth);
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) player.currentHP / player.maxHP * fullHPWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
         // Vẽ nền (màu xám) cho thanh HP
         g2.drawImage(hpFrame, x-31, y-10, 213, 32, null);
 
@@ -230,7 +263,12 @@ public class UI {
         int ManaBarHeight = 12;   // Chiều cao của thanh HP
         int x = 40;
         int y = windowHeight - 40;
-        int currentHPWidth = (int)((double)player.currentMana / player.maxMana * fullManaWidth);
+        int currentHPWidth;
+        try {
+            currentHPWidth = (int) ((double) player.currentMana / player.maxMana * fullManaWidth);
+        } catch(NullPointerException e){
+            currentHPWidth = 0;
+        }
         // Vẽ nền (màu xám) cho thanh Mana
         g2.drawImage(manaFrame, x-31, y-10, 101, 32, null);
 
@@ -252,40 +290,56 @@ public class UI {
         //BACKGROUND
         g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
         //MENU
-        g2.setFont(joystix.deriveFont(Font.BOLD, 35f));
-        g2.setColor(Color.white);
+        g2.setFont(joystix.deriveFont(Font.BOLD, 30f));
 
-        String text = "RETRY";
-        int x = getXforCenteredText(text);
-        int y = windowHeight / 2;
+        String text = "MÀN HÌNH CHÍNH";
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
+        int x = getXforCenteredText(text);
 
-        g2.drawString(text, x, y);
+        g2.setColor(Color.WHITE);
+        text = "THUA";
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 50f));
+
+        g2.setColor(Color.BLACK);
+        g2.drawString(text , getXforCenteredText(text) - 2 ,windowHeight / 4 + 5);
+        g2.setColor(Color.WHITE);
+        g2.drawString(text , getXforCenteredText(text) - 7 ,windowHeight / 4);
+
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 30f));
+        text = "THỬ LẠI";
+        int y = windowHeight / 2;
+        g2.drawString(text, x + tileSize * 2, y-5);
         //BOUND
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 - 10, tileSize + 10, 40, 40);
+        g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
+
         if(commandNum == 0) {
+            g2.setColor(Color.white);
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        text = "MENU";
-        x = getXforCenteredText(text);
+        g2.setColor(Color.WHITE);
+
+        text = "MÀN HÌNH CHÍNH";
         y += tileSize + 20;
         g2.drawString(text, x, y);
         //BOUND
-        length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3, tileSize + 10, 40, 40);
+            g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
         if(commandNum == 1) {
+            g2.setColor(Color.WHITE);
             g2.drawString(">", x - tileSize - 10, y);
         }
 
-        text = "QUIT";
-        x = getXforCenteredText(text);
+        g2.setColor(Color.WHITE);
+        text = "THOÁT";
         y += tileSize + 20;
-        g2.drawString(text, x, y);
+        g2.drawString(text, x + tileSize * 3 - 20, y);
         //BOUND
-        length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + length / 3 , tileSize + 10, 40, 40);
+            g2.setColor(Color.darkGray);
+        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
         if(commandNum == 2) {
+            g2.setColor(Color.white);
             g2.drawString(">", x - tileSize - 10, y);
         }
     }
@@ -312,7 +366,7 @@ public class UI {
         // Thử với Consolas
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
-        String text = "Options";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
@@ -320,7 +374,7 @@ public class UI {
         // MUSIC
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Music", textX, textY);
+        g2.drawString("NHẠC", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -332,7 +386,7 @@ public class UI {
         // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("SE", textX, textY);
+        g2.drawString("SFX", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -344,7 +398,7 @@ public class UI {
         // RETRY
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Restart", textX, textY);
+        g2.drawString("THỬ LẠI", textX, textY);
         if (commandNum == 2) {
             g2.drawString(">", textX-25, textY);
         }
@@ -352,12 +406,12 @@ public class UI {
         // EXIT
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Exit", textX, textY);
+        g2.drawString("THOÁT", textX, textY);
         if (commandNum == 3) {
             g2.drawString(">", textX-25, textY);
         }
     }
-    public void drawInventory() {
+    public void drawInventory() throws NullPointerException {
         if(KeyHandler.keyEpressed){
             KeyHandler.keyEpressed = false;
             isInventoryOpen = !isInventoryOpen;
@@ -430,48 +484,55 @@ public class UI {
     }
     public void render(Graphics2D g2) {
         this.g2 = g2;
-        if(gameState == GameState.PLAY_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }else if(gameState == GameState.PASSWORD_STATE){
-            drawPasswordInputBox();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        else if(gameState == GameState.MENU_STATE)
-        {
-            drawTitleScreen();
-        }
-        else if(gameState == GameState.DIALOGUE_STATE)
-        {
-            drawDialogueScreen();
-            drawHPBar();
-            drawManaBar();
-            drawInventory();
-        }
-        if(gameState == GameState.LEVELUP_STATE){
-            drawDialogueScreen();
-        } else
-        if(gameState == GameState.PAUSE_STATE)
-        {
-            drawHPBar();
-            drawManaBar();
-            drawPausedScreen();
-            drawOptionsScreen();
-            drawInventory();
-        }
-        if(gameState == GameState.LOSE_STATE){
-            currentMap.dispose();
-            drawGameOverScreen();
-        }
-        if(gameState == GameState.SETTING_STATE){
-            drawSettingScreen();
-        }
-        if(gameState == GameState.QUIZ_STATE){
-            drawQuiz();
+        try {
+            if(gameState == GameState.PLAY_STATE)
+            {
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+                if (bossHP > 0) drawHPBarForBoss();
+            }else if (gameState == GameState.MENU_STATE) {
+                drawTitleScreen();
+            } else if (gameState == GameState.DIALOGUE_STATE) {
+                drawDialogueScreen();
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+                if (bossHP > 0) drawHPBarForBoss();
+            }
+             else if(gameState == GameState.PASSWORD_STATE){
+                drawPasswordInputBox();
+                drawHPBar();
+                drawManaBar();
+                drawInventory();
+            } else
+            if (gameState == GameState.LEVELUP_STATE) {
+                drawDialogueScreen();
+            } else if (gameState == GameState.PAUSE_STATE) {
+                drawHPBar();
+                drawManaBar();
+                drawPausedScreen();
+                drawOptionsScreen();
+                drawInventory();
+                if (bossHP > 0) drawHPBarForBoss();
+            }
+            if (gameState == GameState.LOSE_STATE) {
+                currentMap.dispose();
+                drawGameOverScreen();
+            }
+            if (gameState == GameState.SETTING_STATE) {
+                drawSettingScreen();
+            }
+            if (gameState == GameState.QUIZ_STATE) {
+                drawQuiz();
+            }
+        }catch(NullPointerException e){
+            if (gameState == GameState.MENU_STATE) {
+                drawTitleScreen();
+            } else
+            if (gameState == GameState.SETTING_STATE) {
+                drawSettingScreen();
+            }
         }
     }
 
@@ -533,14 +594,14 @@ public class UI {
         // Thử với Consolas
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
-        String text = "Options";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
         // MUSIC
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("Music", textX, textY);
+        g2.drawString("NHẠC", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(music.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -552,7 +613,7 @@ public class UI {
         // SE
         textX = frameX + tileSize;
         textY += tileSize*2;
-        g2.drawString("SE", textX, textY);
+        g2.drawString("HIỆU ỨNG", textX, textY);
         drawSubWindow(textX+185, textY-25 ,tileSize*3/2, tileSize);
         g2.drawString(String.valueOf(se.volumePercentage), textX + 202, textY + 5);
         g2.drawString("-",textX +150, textY);
@@ -581,7 +642,7 @@ public class UI {
         int textX, textY;
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         //TITLE
-        String text = "CONTROL";
+        String text = "TÙY CHỌN";
         textX = getXforCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
@@ -590,19 +651,19 @@ public class UI {
         textX = frameX + tileSize/2;
         textY += tileSize;
 
-        g2.drawString("MOVE", textX, textY);
+        g2.drawString("DI CHUYỂN", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("ATTACK", textX, textY);
+        g2.drawString("BẮN", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("BUY/USE ITEMS", textX, textY);
+        g2.drawString("DÙNG VẬT PHẨM", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("PAUSE/ESCAPE", textX, textY);
+        g2.drawString("DỪNG/QUAY LẠI", textX, textY);
         textY+=tileSize;
 
-        g2.drawString("COMMUNICATE", textX, textY);
+        g2.drawString("QUA HỘI THOẠI", textX, textY);
 
         //THONG TIN
         textX = frameX + tileSize*11/2;

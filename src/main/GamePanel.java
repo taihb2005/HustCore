@@ -18,6 +18,9 @@ import util.Camera;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Optional;
+import java.util.Timer;
 
 // swing library
 import javax.swing.JPanel;
@@ -42,7 +45,6 @@ public class GamePanel extends JPanel implements Runnable {
     public static Sound se = new Sound();
     public static PathFinder pFinder;
     public static PathFinder2 pFinder2;
-    public TileManager tileManager;
     public static Credit credit;
     public static EnvironmentManager environmentManager;
     final public KeyHandler keyHandler = new KeyHandler(this);
@@ -51,9 +53,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static StatusManager sManager = new StatusManager();
     public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 1;
-    public static int levelProgress = 1;
-    public static ArrayList<Level> completedLevel = new ArrayList<>();
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
@@ -73,15 +74,18 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
-        loadMap();
         stopMusic();
         setup();
         credit = new Credit(this);
-        currentMap.player.storeValue();
+        ui = new UI(this);
     }
 
     public void loadMap()
     {
+        if(currentLevel != null) {
+            currentLevel.dispose();
+            System.gc();
+        }
         switch(levelProgress){
             case 0 : currentLevel = new Level00(this); break;
             case 1 : currentLevel = new Level01(this); break;
@@ -89,12 +93,9 @@ public class GamePanel extends JPanel implements Runnable {
             case 3 : currentLevel = new Level03(this); break;
             case 4 : currentLevel = new Level04(this); break;
         }
-        completedLevel.add(currentLevel);
-        tileManager = new TileManager(this);
+        assert currentLevel != null;
         currentMap = currentLevel.map;
-        ui = new UI(this);
-        for(Level level : completedLevel) if(level.levelFinished) level.map.dispose();
-        completedLevel.removeIf(level -> level.levelFinished);
+        ui.player = currentMap.player;
         previousLevelProgress = levelProgress;
     }
 
@@ -153,39 +154,46 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-        updateDarkness();
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
-            if(!music.clip.isRunning() && !gameCompleted) {
-                resumeMusic();
+        try {
+            updateDarkness();
+            if (gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
+                if (!music.clip.isRunning() && !gameCompleted) {
+                    resumeMusic();
+                }
+                currentMap.update();
+                currentLevel.updateProgress();
+                ui.update();
+                if (currentLevel.canChangeMap) lvlManager.update();
+            } else if (gameState == GameState.PAUSE_STATE) {
+                pauseMusic();
+                ;
             }
-            currentMap.update();
-            currentLevel.updateProgress();
-            ui.update();
-            if(currentLevel.canChangeMap) lvlManager.update();
-        } else
-        if(gameState == GameState.PAUSE_STATE )
-        {
-            pauseMusic();;
+            if (environmentManager != null) environmentManager.lighting.update();
+        } catch(NullPointerException | ArrayIndexOutOfBoundsException | ConcurrentModificationException e){
+            System.out.println("Loading!");
         }
-        environmentManager.lighting.update();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        if(gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
-            currentMap.render(g2);
-            environmentManager.draw(g2);
+        try {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            if (gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
+                currentMap.render(g2);
+                environmentManager.draw(g2);
+            }
+            if (currentLevel != null) currentLevel.render(g2);
+            ui.render(g2);
+            drawDarkness(g2);
+            if (gameCompleted) {
+                disableKey();
+                credit.render(g2);
+            }
+            g2.dispose();
+        } catch(NullPointerException | ArrayIndexOutOfBoundsException | ConcurrentModificationException e){
+            System.out.println("Loading");
         }
-        currentLevel.render(g2);
-        ui.render(g2);
-        drawDarkness(g2);
-        if(gameCompleted) {
-            disableKey();
-            credit.render(g2);
-        }
-        g2.dispose();
     }
 
     public void drawDarkness(Graphics2D g2) {

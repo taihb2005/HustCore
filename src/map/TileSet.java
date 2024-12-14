@@ -68,6 +68,12 @@ public class TileSet {
         }
     }
 
+    public void dispose(){
+        objects.clear();
+        tileSetSprite.flush();
+        tileSetSprite = null;
+    }
+
 
 
     public int getFirstID(){return firstID;};

@@ -28,7 +28,7 @@ public class Obj_Wall extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException{
         g2.drawImage(objectImage , worldX - camera.getX(), worldY - camera.getY(), 64 , 64  , null );
     }
 

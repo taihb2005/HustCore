@@ -11,12 +11,15 @@ import entity.projectile.Projectile;
 import graphics.Animation;
 import graphics.Sprite;
 import level.AssetSetter;
+import main.UI;
 import map.GameMap;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import static main.GamePanel.*;
@@ -44,8 +47,6 @@ public class Mon_Boss extends Monster implements Actable {
     private boolean nearlyDie = false;
     private boolean fullyDie = false;
 
-    private int rangeRadius;
-
     private Projectile projectile1, projectile2, projectile3;
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
@@ -53,7 +54,7 @@ public class Mon_Boss extends Monster implements Actable {
     private boolean shoot3;
     // Tổng số cột flame
     private boolean shooting = false;      // Trạng thái đang bắn flame
-
+    private BufferedImage hpFrame;
     public Mon_Boss(GameMap mp){
         super(mp);
         name = "Boss";
@@ -71,6 +72,12 @@ public class Mon_Boss extends Monster implements Actable {
         width = 128;
         height = 128;
         speed = 1;
+
+        try {
+            hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/ui/boss_hpFrame.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         getImage();
         setDefault();
@@ -90,16 +97,14 @@ public class Mon_Boss extends Monster implements Actable {
         hitbox = new Rectangle(20 , 40 , 80 , 80);
         solidArea1 = new Rectangle(20 , 110 , 90 , 18);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-        interactionDetectionArea = new Rectangle(-50 , -50 , width + 100 , height + 100);
         setDefaultSolidArea();
 
         invincibleDuration = 30;
-        maxHP = 2000;
+        maxHP = 1700;
         currentHP = maxHP;
         strength = 50;
         level = 1;
         defense = 10;
-        rangeRadius = 200;
         projectile1 = new Proj_TrackingPlasma(mp);
         projectile2 = new Proj_ExplosivePlasma(mp);
         projectile3 = new Proj_Flame(mp);
@@ -151,7 +156,7 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         setAction();
         handleAnimationState();
         handleStatus();
@@ -159,6 +164,7 @@ public class Mon_Boss extends Monster implements Actable {
         changeAnimationDirection();
         move();
         mon_animator_boss.update();
+        UI.bossHP = currentHP;
         CURRENT_FRAME = mon_animator_boss.getCurrentFrames();
         if (currentHP <= 0 && fullyDie) {
             this.startDialogue(this, 1);
@@ -280,10 +286,10 @@ public class Mon_Boss extends Monster implements Actable {
 
     @Override
     public void setDialogue() {
-        this.dialogues[0][0] = "Ngươi cũng mạnh phết đấy.";
-        this.dialogues[0][1] = "Xem ra ta phải nhờ đến sự trợ giúp của thuộc hạ rồi.";
-        this.dialogues[1][0] = "Á hự... Không thể tin ngươi đã đánh bại được ta...";
-        this.dialogues[1][1] = "Huhuhu...";
+        this.dialogues[0][0] = new StringBuilder("Ngươi cũng mạnh phết đấy.");
+        this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ\ngiúp của thuộc hạ rồi.");
+        this.dialogues[1][0] = new StringBuilder("Á hự... Không thể tin ngươi đã đánh bại được ta...");
+        this.dialogues[1][1] = new StringBuilder("Huhuhu...");
     }
 
     @Override
@@ -295,13 +301,8 @@ public class Mon_Boss extends Monster implements Actable {
 
     }
 
-    public void shoot3() {
-        shooting = true; // Đặt trạng thái bắn
-        currentColumn = 1; // Bắt đầu từ cột đầu tiên
-    }
-
     public void shoot1() {
-        isShooting1 = true;
+        isShooting1 = !isDying;
         if(!projectile1.active && shootAvailableCounter == SHOOT_INTERVAL) {
             projectile1.set(worldX+25, worldY+12, direction, true, this);
             projectile1.setHitbox();
@@ -360,7 +361,7 @@ public class Mon_Boss extends Monster implements Actable {
                 direction = "up";
             shoot2();
         }
-        isRunning = !isShooting2;
+        isRunning = !isShooting2 && !isDying;
     }
 
     public void actionWhileShoot3() {

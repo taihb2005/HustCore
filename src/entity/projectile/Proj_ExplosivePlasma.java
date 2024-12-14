@@ -11,6 +11,8 @@ public class Proj_ExplosivePlasma extends Projectile{
     private int diameter = 0;
     private int timeCount = 0;
     private float hue = 0f;
+    private int cFrame = 0;
+    private float thickness = 1;
     public Proj_ExplosivePlasma(GameMap mp) {
         super(mp);
         name = "Explosive Plasma";
@@ -52,8 +54,11 @@ public class Proj_ExplosivePlasma extends Projectile{
 
     @Override
     public void render(Graphics2D g2) {
-        super.render(g2);
-
+        if (active) {
+            g2.drawImage(projectile_sprite[CURRENT_DIRECTION][cFrame/5] , worldX - camera.getX() , worldY - camera.getY() ,
+                    width , height , null);
+        }
+        cFrame = (cFrame+1)%20;
         Color dynamicColor = Color.getHSBColor(hue, 1.0f, 1.0f);
         // Set màu sắc cho nét vẽ
         g2.setColor(dynamicColor);
@@ -63,8 +68,12 @@ public class Proj_ExplosivePlasma extends Projectile{
         int drawX = centerX - diameter / 2 - camera.getX();
         int drawY = centerY - diameter / 2 - camera.getY();
 
-        // Vẽ đường tròn với tâm chính xác
+        // Vẽ đường tròn với tâm chính xác8
+        g2.setStroke(new BasicStroke(thickness));
+        thickness += 0.02F;
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         g2.drawOval(drawX, drawY, diameter, diameter);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 
     public void actionPerformed() {

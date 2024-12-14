@@ -43,8 +43,12 @@ public class Mon_EffectDealer extends Monster{
         super.setDefaultSolidArea();
     }
 
-    public void update(){
+    public void update() throws NullPointerException{
         damagePlayer();
+    }
+
+    public void render(Graphics2D g2){
+
     }
 
     public void dispose(){

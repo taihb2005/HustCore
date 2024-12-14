@@ -66,28 +66,6 @@ public class Mon_Shooter extends Monster implements Actable {
         setInterval(shotInterval);
         shootSpeed = Math.max(shotInterval / 5 , 1);
     }
-    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, int x , int y){
-        super(mp , x , y);
-        this.mp = mp;
-        name = "Shooter";
-        this.type = type;
-        this.isAlwaysUp = isAlwaysUp;
-        if(isAlwaysUp) this.type = ACTIVE;
-        width = 64;
-        height = 64;
-        speed = 0;
-        strength = 10;
-        level = 1;
-
-        getImage();
-        setDefault();
-        this.direction = direction;
-        changeAnimationDirection();
-        setInterval(shotInterval);
-        shootSpeed = Math.max(shotInterval / 5 , 1);
-        interactionDetectionArea = detectionArea;
-    }
-
     public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, String idName ,int x , int y){
         super(mp , x , y);
         this.mp = mp;
@@ -267,7 +245,7 @@ public class Mon_Shooter extends Monster implements Actable {
                     mon_animator_shooter.playOnce();
                 }
                 if(isDying){
-                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 15);
+                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 10);
                     mon_animator_shooter.playOnce();
                 }
                 if(isIdle){mon_animator_shooter.setAnimationState(mon_shooter[ACTIVE][CURRENT_DIRECTION] , 20);}
@@ -289,7 +267,7 @@ public class Mon_Shooter extends Monster implements Actable {
     }
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         if(!isAlwaysUp)checkForPlayer();
         updateAttackCycle();
         updateInvincibility();
@@ -301,6 +279,7 @@ public class Mon_Shooter extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
+        super.renderHPBar(g2 , 18 , 9);
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }

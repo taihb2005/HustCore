@@ -14,7 +14,7 @@ public class AttackEnemy {
         if(!mp.enemy[index].isInvincible) {
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
+            mp.enemy[index].resetCounter();
         }
     }
 
@@ -24,7 +24,7 @@ public class AttackEnemy {
             if(!mp.enemy[index].isInvincible) {
                 mp.enemy[index].currentHP -= player.damage;
                 mp.enemy[index].isInvincible = true;
-                System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
+                mp.enemy[index].resetCounter();
             }
         }
     }
@@ -38,7 +38,7 @@ public class AttackEnemy {
             }
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
+            mp.enemy[index].resetCounter();
         }
     }
 
@@ -49,7 +49,7 @@ public class AttackEnemy {
             mp.enemy[index].onPath = true;
             mp.enemy[index].currentHP -= player.damage;
             mp.enemy[index].isInvincible = true;
-            System.out.println("Hit! Deal " + player.damage + " damage to the enemy!");
+            mp.enemy[index].resetCounter();
         }
     }
 

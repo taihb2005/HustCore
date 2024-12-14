@@ -30,25 +30,8 @@ public class Mon_HustGuardian extends Monster implements Actable {
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
-    private int spawnPointX;
-    private int spawnPointY;
-    private int posX;
-    private int posY;
-    private int rangeRadius;
-
     private int detectionCounter = 0;
     private final int detectionToSetAggro = 180;
-
-    public Mon_HustGuardian(GameMap mp){
-        super(mp);
-        name = "Hust Guardian";
-        width = 64;
-        height = 64;
-        speed = 1;
-
-        getImage();
-        setDefault();
-    }
 
     public Mon_HustGuardian(GameMap mp , int x , int y , String idName){
         super(mp , x , y);
@@ -60,9 +43,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
         getImage();
         setDefault();
-
-        spawnPointX = (x + solidArea1.x) + solidArea1.width / 2;
-        spawnPointY = (y + solidArea1.y) + solidArea1.height /2;
         this.idName = idName;
     }
 
@@ -87,12 +67,11 @@ public class Mon_HustGuardian extends Monster implements Actable {
         strength = 80;
         level = 1;
         defense = 10;
-        rangeRadius = 200;
         projectile = new Proj_GuardianProjectile(mp);
         effectDealOnTouch = new EffectNone(mp.player);
         effectDealByProjectile = new EffectNone(mp.player);
 
-        SHOOT_INTERVAL = projectile.maxHP + 5;
+        SHOOT_INTERVAL = projectile.maxHP + 20;
         expDrop = 30;
 
         direction = "right";
@@ -145,6 +124,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         if(!mon_animator_hust_guardian.isPlaying() && isDying){
             isDying = false;
             canbeDestroyed = true;
+            loot();
         }
 
     }
@@ -166,16 +146,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
         }
         isRunning = (up | down | right | left) & (!isShooting);
         damagePlayer();
-    }
-
-    private void checkIfInRange(){
-        posX = (worldX + solidArea1.x) + solidArea1.width / 2;
-        posY = (worldY + solidArea1.y) + solidArea1.height / 2;
-        double distance = UtilityTool.distance(posX , posY , spawnPointX , spawnPointY);
-        if(distance > rangeRadius){
-            direction = getOppositeDirection(direction);
-            decideToMove();
-        }
     }
 
     private void actionWhenNeutral(){
@@ -296,11 +266,11 @@ public class Mon_HustGuardian extends Monster implements Actable {
     }
 
     public void loot() {
-
+        spawnHeart();
     }
 
     @Override
-    public void update() {
+    public void update() throws  NullPointerException{
         setAction();
         handleStatus();
         changeAnimationDirection();
@@ -312,6 +282,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
+        super.renderHPBar(g2 , 18 , 0);
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }

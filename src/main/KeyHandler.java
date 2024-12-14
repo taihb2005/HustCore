@@ -7,8 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static java.lang.System.exit;
-import static main.GamePanel.environmentManager;
-import static main.GamePanel.gameCompleted;
+import static main.GamePanel.*;
 
 public class KeyHandler implements KeyListener{
 
@@ -52,6 +51,7 @@ public class KeyHandler implements KeyListener{
         int keyCode = e.getKeyCode();
         if(!gameCompleted) {
             if (GamePanel.gameState == GameState.MENU_STATE) {
+                playSE(11);
                 if (keyCode == KeyEvent.VK_W) {
                     GamePanel.ui.commandNum--;
                     if (GamePanel.ui.commandNum < 0) {
@@ -207,6 +207,7 @@ public class KeyHandler implements KeyListener{
                     }
                 }
             } else if (GamePanel.gameState == GameState.SETTING_STATE) {
+                playSE(11);
                 if (keyCode == KeyEvent.VK_ESCAPE) {
                     if (GamePanel.ui.subState == 0) {
                         GamePanel.gameState = GameState.MENU_STATE;
@@ -289,10 +290,24 @@ public class KeyHandler implements KeyListener{
                     }
                 }
 
-                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4)
+                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
                     GamePanel.gameState = GameState.PLAY_STATE;
+                    Timer timer = new Timer();
+
+                    TimerTask play = new TimerTask() {
+                        @Override
+                        public void run() {
+                            stopMusic();
+                            stopMusic();
+                            playMusic(10);
+                        }
+                    };
+                    timer.schedule(play , 200);
+                }
 
                 if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
+                    stopMusic();
+                    playSE(12);
                     if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
                         GamePanel.ui.selectedOption = 4;
                     } else {

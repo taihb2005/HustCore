@@ -6,8 +6,6 @@ import entity.projectile.Proj_BasicGreenProjectile;
 import graphics.Animation;
 import graphics.Sprite;
 import map.GameMap;
-import entity.object.Obj_Heart;
-import entity.object.Obj_Coin;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -38,7 +36,7 @@ public class Mon_Spectron extends Monster implements Actable {
     private int actionLockCounter = 0;
     private int attackLockCounter = 0;
     private int changeDirCounter = 120;
-    private int shootInterval = 120;
+    private int shootInterval = 90;
 
     private int lastHP;
 
@@ -252,7 +250,7 @@ public class Mon_Spectron extends Monster implements Actable {
     }
 
 
-    public void move() {
+    public void move(){
         collisionOn = false;
         if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;
@@ -272,22 +270,9 @@ public class Mon_Spectron extends Monster implements Actable {
         newWorldY = worldY;
     }
 
-    private void spawnHeart() {
-        //DEMO
-        Obj_Heart heart = new Obj_Heart(mp);
-        heart.worldX = worldX + 16; heart.worldY = worldY + 16;
-        mp.addObject(heart, mp.activeObj);
-    }
-
-    private void spawnCoin() {
-        Obj_Coin coin = new Obj_Coin(mp);
-        coin.worldX = worldX; coin.worldY = worldY + 30;
-        mp.addObject(coin, mp.activeObj);
-    }
-
 
     @Override
-    public void update() {
+    public void update() throws NullPointerException{
         setAction();
         move();
         changeAnimationDirection();
@@ -298,6 +283,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
+        super.renderHPBar(g2 , 18 , 0);
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }

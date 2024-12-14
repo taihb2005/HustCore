@@ -22,7 +22,6 @@ public class Level{
 
     public boolean levelFinished;
     public boolean finishedBeginingDialogue = false;
-    public boolean finishedTutorialDialogue = false;
 
     public String enteredPassword = "";
     public String correctPassword ;
@@ -39,9 +38,12 @@ public class Level{
         canChangeMap = false;
         levelFinished = false;
 
-        stopMusic();
-        playMusic(6);
     };
     public void updateProgress(){}
     public void render(Graphics2D g2){};
+
+    public void dispose(){
+        map.dispose();
+    }
 }
+

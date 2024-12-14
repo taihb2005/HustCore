@@ -6,6 +6,9 @@ import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
 
+import static main.GamePanel.playMusic;
+import static main.GamePanel.stopMusic;
+
 public class Level00 extends Level {
     final EventHandler00 eventHandler00 = new EventHandler00(this);
 
@@ -20,6 +23,8 @@ public class Level00 extends Level {
         setter.setFilePathNpc("/level/level00/npc_level00.json");
         setter.setFilePathEnemy(null);
         setter.loadAll();
+        stopMusic();
+        playMusic(6);
 
         levelFinished = false;
         changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
@@ -27,5 +32,12 @@ public class Level00 extends Level {
 
     public void updateProgress(){
         eventHandler00.update();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        eventHandler00.dispose();
+        changeMapEventRect1 = null;
     }
 }

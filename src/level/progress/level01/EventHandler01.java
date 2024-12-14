@@ -31,7 +31,7 @@ public class EventHandler01 extends EventHandler {
         timer = new Timer();
         setEventRect();
         setEventEntity();
-
+        
         countEnemyRoom1 = 2;
         countEnemyRoom2 = 1;
         countEnemyRoom3 = 2;
@@ -66,7 +66,7 @@ public class EventHandler01 extends EventHandler {
     }
 
     private void anounceTaskRoom1(){
-        eventMaster.dialogues[0][0] = "Nhiệm vụ:\n\nTiêu diệt 2 con Spectron!";
+        eventMaster.dialogues[0][0] = new StringBuilder("Nhiệm vụ:\n\nTiêu diệt 2 con Spectron!");
         eventMaster.startDialogue(eventMaster , 0);
     }
 
@@ -103,14 +103,14 @@ public class EventHandler01 extends EventHandler {
     }
 
     private void anounceTaskRoom2(){
-        eventMaster.dialogues[0][0] = "Nhiệm vụ:\n\nTiêu diệt con Cyborgon bên dưới!";
+        eventMaster.dialogues[0][0] = new StringBuilder("Nhiệm vụ:\n\nTiêu diệt con Cyborgon bên dưới!");
         eventMaster.startDialogue(eventMaster , 0);
     }
 
     //ROOM3
 
     private void anounceTaskRoom3(){
-        eventMaster.dialogues[0][0] = "Nhiệm vụ:\n\nMở rương ở giữa phòng!\nTiêu diệt toàn bộ trụ súng.!";
+        eventMaster.dialogues[0][0] = new StringBuilder("Nhiệm vụ:\n\nMở rương ở giữa phòng!\nTiêu diệt toàn bộ trụ súng.!");
         eventMaster.startDialogue(eventMaster , 0);
     }
 
@@ -171,7 +171,10 @@ public class EventHandler01 extends EventHandler {
             anounceTaskRoom3();
         }
         if(!room3Completed && room1Completed && room2Completed) checkForCompletingRoom3();
-        if(room3Completed) checkForCompletingLevel();
+        if(room3Completed) {
+            checkForCompletingLevel();
+            lvl.map.player.storeValue();
+        }
 
         //LEVEL COMPLETED
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);

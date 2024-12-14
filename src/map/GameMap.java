@@ -151,7 +151,7 @@ public class GameMap {
         }
     }
 
-    public void dispose(){
+    public void dispose() throws ConcurrentModificationException{
         for(Entity e : activeObj) if(e != null) e.dispose();
         for(Entity e : enemy) if(e != null) e.dispose();
         for(Entity e : projectiles) if(e != null) e.dispose();
@@ -161,6 +161,10 @@ public class GameMap {
         Arrays.fill(enemy, null);
         Arrays.fill(projectiles, null);
         objList.clear();
+
+        for(TileLayer layer : mapLayer){
+            layer.dispose();
+        }
     }
 
     public void addObject(Entity entity , Entity[] list){

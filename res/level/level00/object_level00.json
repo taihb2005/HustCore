@@ -787,7 +787,7 @@
       "object": "Obj_Door",
       "name": "Begin DoorMap 03",
       "size": "small",
-      "state": "inactive",
+      "state": "active",
       "position": { "x": 1088, "y": 2240 }
     },
     {

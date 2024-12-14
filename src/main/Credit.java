@@ -3,18 +3,17 @@ package main;
 import java.awt.*;
 
 import static main.GamePanel.*;
+import static main.UI.bitcrusher;
 import static main.UI.joystix;
 
 public class Credit {
     GamePanel gp;
-    String credit;
     Graphics2D g2;
-    public int sceneNum;
     public int scenePhase;
     int counter = 0;
     float alpha = 0f;
     int y;
-    String endCredit;
+    StringBuilder endCredit;
 
     //Scene Number
     public final int NA = 0;
@@ -26,31 +25,49 @@ public class Credit {
     }
 
     private void set(){
-        endCredit = "Ôi cuối cùng nó đã kết thúc :)))" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "Ôi cuối cùng nó đã kết thúc :)))\n" +
-                "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+
-                "Hết rồiiiiiiiiiii";
+        endCredit = new StringBuilder("Nhóm 7 OOP:\n"
+                + "Khương Anh Tài (Nhóm trưởng)\n"
+                + "Hoàng Ngọc Nam\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Coder:\n"
+                + "Khương Anh Tài\n"
+                + "Hoàng Ngọc Nam\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Designer cho hình ảnh game:\n"
+                + "Khương Anh Tài\n"
+                + "Hoàng Ngọc Nam\n"
+                + "\n\n\n\n"
+                + "Designer cho ui:\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Nguyễn Đức Quý\n"
+                + "\n\n\n\n"
+                + "Level designer:\n"
+                + "Nguyễn Văn Sáng\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "\n\n\n\n"
+                + "Âm thanh:\n"
+                + "Nguyễn Ngọc Lê Minh\n"
+                + "Ý tưởng:\n"
+                + "Khương Anh Tài"
+                + "\n\n\n\n"
+                + "Giám sát:\n"
+                + "Khương Anh Tài"
+                + "\n\n\n\n\n\n\n\n"
+                + "Special thanks to TrevorPumpkin for his amazing assets\n"
+                + "Special thanks to Minh for his dedication to sound making\n"
+                + "Special thanks to Nam for his effort in creating effects\n"
+                + "Special thanks to Nguyen Thi Huyen for suggesting ideas\n"
+                + "\n\n\n\n\n\n\n"
+                + "Và big shoutout cho những ai xem được đến đây\n"
+                + "\n\n\n\n\n\n\n\n"
+                + "\n\n\n\n"
+                + "Cảm ơn mọi người rất nhiều!");
 
     }
 
@@ -62,7 +79,6 @@ public class Credit {
 
     public void scene_ending()
     {
-        System.out.println(scenePhase);
         if(scenePhase == 0)
         {
             //Play the fanfare
@@ -96,14 +112,14 @@ public class Credit {
 
             alpha = graduallyAlpha(alpha, 0.005f);
 
-            g2.setFont(joystix.deriveFont(Font.PLAIN, 10f));
+            g2.setFont(bitcrusher.deriveFont(Font.PLAIN, 18f));
             String text = "Sau khi con AI trung tâm đã chết\n" +
-                          "Sinh viên đại học dần trở lại hình dáng ban đầu\n" +
-                         "Nhân vật chính trở về cuộc sống thường ngày\n" +
-                         "Biết đâu một ngày nào đó cái ác sẽ xuất hiện\n" +
-                         "...và cậu sẽ thành người hùng một lần nữa";
+                    "Sinh viên đại học dần trở lại hình dáng ban đầu\n" +
+                    "Nhân vật chính trở về cuộc sống thường ngày\n" +
+                    "Biết đâu một ngày nào đó cái ác sẽ xuất hiện\n" +
+                    "...và cậu sẽ thành người hùng một lần nữa";
 
-            drawString(alpha, 19f, 180, text, 70);
+            drawString(alpha, 38f, 180, text, 70);
 
             if(counterReached(600) && alpha == 1f)
             {
@@ -120,7 +136,7 @@ public class Credit {
 
             drawString(alpha,40f, GamePanel.windowHeight /2, "HUST CORE", 40);
 
-            if(counterReached(480) && alpha == 1f)
+            if(counterReached(200) && alpha == 1f)
             {
                 scenePhase++;
                 alpha = 0;
@@ -133,9 +149,9 @@ public class Credit {
 
             alpha = graduallyAlpha(alpha, 0.01f);
 
-            y = 1;
-
-            drawString(alpha, 20f,  y, endCredit, 40);
+            y = windowHeight / 2 - 43;
+            g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
+            drawString(alpha, 40f,  y, String.valueOf(endCredit), 45);
 
             if(counterReached(240) && alpha == 1f)
             {
@@ -146,10 +162,11 @@ public class Credit {
         if(scenePhase == 6)
         {
             drawBlackBackground(1f);
+            g2.setFont(bitcrusher.deriveFont(Font.PLAIN , 17f));
 
-            if(counter < 1350) y--;
-            drawString(1f, 20f,  y, endCredit, 40);
-            if(counterReached(2460))
+            y -= 2;
+            drawString(1f, 40f,  y, String.valueOf(endCredit), 45);
+            if(counterReached(2200))
             {
                 stopMusic();
                 gameCompleted = false;
@@ -157,7 +174,6 @@ public class Credit {
                 previousLevelProgress = 0;
                 sManager.reset();
                 GamePanel.gameState = GameState.MENU_STATE;
-
             }
         }
     }

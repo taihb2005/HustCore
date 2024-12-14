@@ -12,7 +12,7 @@ public class Slow extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 1;
-        name = "Slow";
+        name = new StringBuilder("Slow");
         icon = new Sprite("/effect/slow.png" , 32 , 32).getSpriteSheet();
     }
 
