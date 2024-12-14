@@ -19,8 +19,7 @@ Mở lên bằng bất kì code editor nào. Đảm bảo rằng folder res đã
 
 ## Bước 3:
 Chạy code ở file main và trải nghiệm nó nhé.
-## Các bước để clone repo này về
-## Nếu không muốn clone các bạn có thể xem demo
+## Nếu không muốn clone các bạn có thể trải nghiệm trực tiếp
 ```bash
 https://drive.google.com/drive/folders/1n9AkRrcMkZl5qmueWQD57bFvKpzR1Wze?usp=drive_link
 ```
