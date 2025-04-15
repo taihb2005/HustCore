@@ -5,8 +5,11 @@ import entity.object.Obj_Door;
 import level.EventHandler;
 import level.EventRectangle;
 import level.Level;
+import thread.LoadMapThread;
 
 import java.util.Timer;
+
+import static main.GamePanel.levelProgress;
 
 public class EventHandler01 extends EventHandler {
     private EventRectangle closeDoorBeginLevel;
@@ -60,7 +63,7 @@ public class EventHandler01 extends EventHandler {
             room1Completed = true;
             for(Entity e : lvl.map.activeObj)
                 if(e != null && e.idName.equals("Room2 Door")){
-                    e.canChangeState = true;
+                    ((Obj_Door)e).close();
                 }
         }
     }
@@ -87,15 +90,15 @@ public class EventHandler01 extends EventHandler {
             for(Entity e : lvl.map.activeObj) {
                 if (e != null && e.idName.equals("Room1 Door")) {
                     Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    tmp.canChangeStatus = true;
                 }
                 if(e != null && e.idName.equals("Room2 Door")){
                     Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    tmp.canChangeStatus = true;
                 }
                 if(e != null && e.idName.equals("Room3 Door")){
                     Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    tmp.canChangeStatus = true;
                 }
             }
             killAllRoom1Shooter();
@@ -128,11 +131,11 @@ public class EventHandler01 extends EventHandler {
             for(Entity e : lvl.map.activeObj) {
                 if (e != null && e.idName.equals("Room3 Door")) {
                     Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    tmp.canChangeStatus = true;
                 }
                 if (e != null && e.idName.equals("Room4 Door")) {
                     Obj_Door tmp = (Obj_Door) e;
-                    tmp.canChangeState = true;
+                    tmp.canChangeStatus = true;
                 }
             }
             room3Completed = true;
@@ -144,7 +147,7 @@ public class EventHandler01 extends EventHandler {
         for(Entity e : lvl.map.activeObj) {
             if (e != null && e.idName.equals("EndDoor")) {
                 Obj_Door tmp = (Obj_Door) e;
-                tmp.canChangeState = true;
+                tmp.canChangeStatus = true;
                 lvl.levelFinished = true;
             }
         }
@@ -178,6 +181,12 @@ public class EventHandler01 extends EventHandler {
 
         //LEVEL COMPLETED
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
+
+        if(lvl.canChangeMap){
+            lvl.levelFinished = true;
+            levelProgress++;
+            new LoadMapThread().start();
+        }
     }
 
 }

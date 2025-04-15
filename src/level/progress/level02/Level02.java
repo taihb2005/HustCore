@@ -17,19 +17,14 @@ import static main.GamePanel.stopMusic;
 public class Level02 extends Level {
     private EventHandler02 eventHandler02;
 
-    public Level02(GamePanel gp) {
-        this.gp = gp;
-        MapParser.loadMap("map2", "/map/map2.tmx");
-        map = MapManager.getGameMap("map2");
-        map.gp = gp;
+    public Level02() {
+        map = MapParser.loadMap("/map/map2.tmx");
         init();
         setter.setFilePathObject("/level/level02/object_level02.json");
         setter.setFilePathNpc("/level/level02/npc_level02.json");
         setter.setFilePathEnemy("/level/level02/enemy_level02.json");
         setter.loadAll();
         eventHandler02 = new EventHandler02(this);
-        stopMusic();
-        playMusic(6);
 
         changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
         changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);
@@ -43,7 +38,7 @@ public class Level02 extends Level {
             public void run() {
                 stopMusic();
                 stopMusic();
-                playMusic(10);
+                playMusic(6);
             }
         };
         timer.schedule(play , 200);

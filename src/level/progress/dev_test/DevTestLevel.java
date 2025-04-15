@@ -1,7 +1,8 @@
-package level.progress.level00;
+package level.progress.dev_test;
 
 import level.EventRectangle;
 import level.Level;
+import level.progress.level00.EventHandler00;
 import main.GamePanel;
 import map.MapManager;
 import map.MapParser;
@@ -9,17 +10,18 @@ import map.MapParser;
 import static main.GamePanel.playMusic;
 import static main.GamePanel.stopMusic;
 
-public class Level00 extends Level {
+public class DevTestLevel extends Level {
     final EventHandler00 eventHandler00 = new EventHandler00(this);
 
-    public Level00(){;
+    public DevTestLevel(){;
         map = MapParser.loadMap("/map/map0.tmx");
         //map.gp = gp;
 
         init();
-        setter.setFilePathObject("/level/level00/object_level00.json");
-        setter.setFilePathNpc("/level/level00/npc_level00.json");
-        setter.setFilePathEnemy(null);
+        setter.setFilePathObject("/level/dev_test/enemy_dev.json");
+        setter.setFilePathObject("/level/dev_test/object_dev.json");
+        setter.setFilePathEnemy("/level/dev_test/enemy_dev.json");
+        setter.setFilePathNpc(null);
         setter.loadAll();
         stopMusic();
         playMusic(6);
@@ -29,7 +31,7 @@ public class Level00 extends Level {
     }
 
     public void updateProgress(){
-        eventHandler00.update();
+        //eventHandler00.update();
     }
 
     @Override

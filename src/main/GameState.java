@@ -1,7 +1,7 @@
 package main;
 
 public enum GameState {
-
+     LOADING_STATE,
      MENU_STATE,
      PLAY_STATE,
      PASSWORD_STATE,

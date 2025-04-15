@@ -1,6 +1,7 @@
 package entity.object;
 
 import entity.Entity;
+import graphics.AssetPool;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -17,9 +18,9 @@ public class Obj_Bin extends Entity {
         width = 64;
         height = 64;
 
-        if(type > 2 || type <= 0) throw new Exception("Xem lại type của nó mau, type <= 2");
+        if(type > 2 || type <= 0) throw new Exception("Xem lại id của nó mau, id <= 2");
 
-        obj_bin = new Sprite("/entity/object/bin_id" + type + ".png" , width , height).getSpriteSheet();
+        obj_bin = AssetPool.getImage("bin_id" + type + ".png");
         solidArea1 = new Rectangle(22 , 45 , 18 , 14);
         solidArea2 = new Rectangle(24 , 58 , 14 , 6);
         setDefaultSolidArea();

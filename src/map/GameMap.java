@@ -20,8 +20,6 @@ import static main.GamePanel.*;
 
 
 public class GameMap {
-
-    public GamePanel gp;
     public Player player = new Player(this);
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
@@ -45,7 +43,6 @@ public class GameMap {
     //MAP STAT
     private int bestLightingRadius = 2000;
 
-    private long startTime = System.nanoTime();
     public GameMap(int mapWidth , int mapHeight)
     {
         mapLayer    = new ArrayList<>();
@@ -89,6 +86,59 @@ public class GameMap {
             if(projectile != null) projectile.render(g2);
         }
         objList.clear();
+
+        //DEBUG MENU
+        if (KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HIỂN THỊ TỌA ĐỘ CỦA NHÂN VẬT
+        {
+            g2.setColor(Color.white);
+            int x = 10;
+            int y = 20;
+            int lineHeight = 20;
+            g2.setFont(new Font("Arial", Font.PLAIN, 14));
+            g2.drawString("WorldX: " + player.worldX, x, y);
+            g2.drawString("WorldY: " + player.worldY, x, y + lineHeight);
+            g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
+            g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
+        }
+
+        //DEBUG HITBOX
+        if (KeyHandler.showHitbox)  // NHẤN F4 ĐỂ HIỂN THỊ HITBOX CỦA TẤT CẢ CÁC OBJECT
+        {
+            g2.setColor(Color.YELLOW);
+            g2.setStroke(new BasicStroke(1));
+            EventRectangle x = new EventRectangle(896 , 1408 , 128, 64 , true);
+            g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
+            for (Entity e : objList) {
+                if (e != null) {
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                    if (e.solidArea2 != null) {
+                        g2.drawRect(e.solidAreaDefaultX2 + e.worldX - camera.getX(), e.solidAreaDefaultY2 + e.worldY - camera.getY(), e.solidArea2.width, e.solidArea2.height);
+                    }
+                }
+            }
+            for(Entity e : projectiles){
+                if(e != null){
+                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                }
+            }
+            g2.setColor(Color.RED);
+            for(Entity e : objList){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
+            for(Entity e : projectiles){
+                if(e != null){
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                }
+            }
+            g2.setColor(Color.GREEN);
+            for(Entity e : enemy){
+                if(e != null && e.interactionDetectionArea != null){
+                    g2.drawRect(e.interactionDetectionArea.x + e.worldX - camera.getX() , e.interactionDetectionArea.y + e.worldY - camera.getY() , e.interactionDetectionArea.width , e.interactionDetectionArea.height);
+                }
+            }
+        }
     }
 
     public void update()

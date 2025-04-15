@@ -1,6 +1,7 @@
 package entity.object;
 
 import entity.Entity;
+import graphics.AssetPool;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -20,7 +21,7 @@ public class Obj_Vault extends Entity {
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         setDefaultSolidArea();
 
-        obj_vault = new Sprite("/entity/object/vault_" + state + "_id" + type +".png", width , height).getSpriteSheet();
+        obj_vault = AssetPool.getImage("vault_" + state + "_id" + type +".png");
     }
     @Override
     public void update() {

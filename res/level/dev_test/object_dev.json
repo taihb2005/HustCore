@@ -1,0 +1,38 @@
+{
+  "player": [
+    {"position": {"x": 1088 , "y": 2174}}
+  ],
+  "inactive": [
+
+  ],
+  "active": [
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 01",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 832, "y": 1792 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 02",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 960, "y": 1600 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 03",
+      "size": "small",
+      "state": "active",
+      "position": { "x": 1088, "y": 2240 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "door_no1",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 64, "y": 0 }
+    }
+  ]
+}

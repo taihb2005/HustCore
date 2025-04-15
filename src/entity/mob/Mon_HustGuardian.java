@@ -4,29 +4,79 @@ import entity.Actable;
 import entity.effect.type.EffectNone;
 import entity.projectile.Proj_GuardianProjectile;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
-import util.UtilityTool;
+import util.KeyPair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Random;
 
 import static main.GamePanel.*;
 import static map.GameMap.childNodeSize;
 
 public class Mon_HustGuardian extends Monster implements Actable {
-    public final static int IDLE = 0;
-    public final static int RUN = 1;
-    public final static int SHOOT = 2;
-    public final static int DIE = 3;
+    private static final HashMap<KeyPair<GuardianState, Direction>, Sprite> guardianSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<GuardianState, Direction>, Animation> guardianAnimations = new HashMap<>();
 
-    public final static int RIGHT = 0;
-    public final static int LEFT = 1;
+    public static void load(){
+        for(GuardianState state: GuardianState.values()){
+            int speed = switch (state){
+                case IDLE, RUN, DIE -> 10;
+                case SHOOT -> 6;
+            };
 
-    private final BufferedImage[][][] mon_hust_guardian = new BufferedImage[4][][];
-    private BufferedImage exclaimation;
-    private Animation mon_animator_hust_guardian = new Animation();
+            boolean loop = switch (state){
+                case IDLE, RUN -> true;
+                case SHOOT, DIE -> false;
+            };
+            for(Direction direction: Direction.values()) {
+                int row = switch (direction){
+                    case RIGHT -> 0;
+                    case LEFT -> 1;
+                };
+
+                KeyPair<GuardianState, Direction> key = new KeyPair<>(state, direction);
+
+                guardianSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("hust_guardian_" + state.name().toLowerCase() + ".png"))
+                );
+                guardianAnimations.put(key,
+                        new Animation(guardianSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+            }
+        }
+
+        exclamation = AssetPool.getImage("exclamation_mark.png");
+    }
+
+    private GuardianState currentState;
+    private GuardianState lastState;
+    private Direction currentDirection;
+    private Direction lastDirection;
+    private Animation currentAnimation;
+
+    private void setState(){
+        boolean change1 = false;
+        boolean change2 = false;
+        if(lastState != currentState){
+            lastState = currentState;
+            change1 = true;
+        }
+
+        if(lastDirection != currentDirection){
+            lastDirection = currentDirection;
+            change2 = true;
+        }
+
+        if(change1 || change2) {
+            currentAnimation.reset();
+            currentAnimation = guardianAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+        }
+    }
+
+    private static BufferedImage exclamation;
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
@@ -41,17 +91,8 @@ public class Mon_HustGuardian extends Monster implements Actable {
         speed = 1;
         last_speed = 1;
 
-        getImage();
         setDefault();
         this.idName = idName;
-    }
-
-    private void getImage(){
-        mon_hust_guardian[IDLE]  = new Sprite("/entity/mob/hust_guardian/hust_guardian_idle.png"  , width , height).getSpriteArray();
-        mon_hust_guardian[RUN]   = new Sprite("/entity/mob/hust_guardian/hust_guardian_run.png"   , width , height).getSpriteArray();
-        mon_hust_guardian[SHOOT] = new Sprite("/entity/mob/hust_guardian/hust_guardian_shoot.png" , width , height).getSpriteArray();
-        mon_hust_guardian[DIE]   = new Sprite("/entity/mob/hust_guardian/hust_guardian_die.png"   , width , height).getSpriteArray();
-        exclaimation = new Sprite("/effect/exclaimation_mark.png" , 16 , 16).getSpriteSheet();
     }
 
     private void setDefault(){
@@ -75,74 +116,54 @@ public class Mon_HustGuardian extends Monster implements Actable {
         expDrop = 30;
 
         direction = "right";
-        CURRENT_DIRECTION = RIGHT;
+        currentDirection = Direction.RIGHT;
 
-        CURRENT_ACTION = IDLE;
-        PREVIOUS_ACTION = IDLE;
-        mon_animator_hust_guardian.setAnimationState(mon_hust_guardian[IDLE][CURRENT_DIRECTION] , 10);
+        currentState = GuardianState.IDLE;
+        lastState = GuardianState.IDLE;
+        currentAnimation = guardianAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
     }
 
-    private void handleAnimationState(){
-        if(isRunning && !isDying) {
-            isIdle = false;
-            CURRENT_ACTION = RUN;
-        }
-        else
-        if(isShooting && !isDying){
-            isIdle = false;
-            CURRENT_ACTION = SHOOT;
-        } else
-        if(isDying) {
-            isIdle = false;
-            CURRENT_ACTION = DIE;
-        } else
-        {
-            isIdle = true;
-            CURRENT_ACTION = IDLE;
+    private void handleAnimation() {
+        if (isDying) {
+            currentState = GuardianState.DIE;
+        } else if (isShooting) {
+            currentState = GuardianState.SHOOT;
+        } else if (isRunning) {
+            currentState = GuardianState.RUN;
+        } else {
+            currentState = GuardianState.IDLE;
         }
 
-        if(PREVIOUS_ACTION != CURRENT_ACTION)
-        {
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning) mon_animator_hust_guardian.setAnimationState(mon_hust_guardian[RUN][CURRENT_DIRECTION] , 10);
-            if(isDying){
-                mon_animator_hust_guardian.setAnimationState(mon_hust_guardian[DIE][CURRENT_DIRECTION] , 10);
-                mon_animator_hust_guardian.playOnce();
-            }
-            if(isShooting){
-                mon_animator_hust_guardian.setAnimationState(mon_hust_guardian[SHOOT][CURRENT_DIRECTION] , 6);
-                mon_animator_hust_guardian.playOnce();
-            }
-            if(isIdle){
-                mon_animator_hust_guardian.setAnimationState(mon_hust_guardian[IDLE][CURRENT_DIRECTION] , 10);
-            }
-        }
+        changeDirection();
 
-        if(!mon_animator_hust_guardian.isPlaying() && isShooting){
-            isShooting = false;
-        }
-        if(!mon_animator_hust_guardian.isPlaying() && isDying){
-            isDying = false;
-            canbeDestroyed = true;
-            loot();
-        }
+        setState();
 
+        if (currentAnimation.isFinished()) {
+            if (currentState == GuardianState.SHOOT) {
+                isShooting = false;
+            }
+            if (currentState == GuardianState.DIE) {
+                isDying = false;
+                canbeDestroyed = true;
+                loot();
+            }
+        }
     }
 
-    private void changeAnimationDirection(){
+
+    private void changeDirection(){
         switch(direction)
         {
-            case "left" : CURRENT_DIRECTION = LEFT; break;
-            case "right": CURRENT_DIRECTION = RIGHT; break;
+            case "left" : currentDirection = Direction.LEFT; break;
+            case "right": currentDirection = Direction.RIGHT; break;
         }
     }
 
     private void setAction(){
         if(!getAggro){
-            //checkIfInRange();//Không đuôi theo người chơi
             actionWhenNeutral();
         } else {
-            actionWhenGetAggro();//Đuổi theo người chơi
+            actionWhenGetAggro();
         }
         isRunning = (up | down | right | left) & (!isShooting);
         damagePlayer();
@@ -273,11 +294,9 @@ public class Mon_HustGuardian extends Monster implements Actable {
     public void update() throws  NullPointerException{
         setAction();
         handleStatus();
-        changeAnimationDirection();
         move();
-        handleAnimationState();
-        mon_animator_hust_guardian.update();
-        CURRENT_FRAME = mon_animator_hust_guardian.getCurrentFrames();
+        handleAnimation();
+        currentAnimation.update();
     }
 
     @Override
@@ -286,9 +305,9 @@ public class Mon_HustGuardian extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-        g2.drawImage(mon_hust_guardian[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
+        currentAnimation.render(g2, worldX- camera.getX(), worldY - camera.getY());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-        if(isDetectPlayer) g2.drawImage(exclaimation , worldX - camera.getX() + 54 , worldY - camera.getY() , null);
+        if(isDetectPlayer) g2.drawImage(exclamation , worldX - camera.getX() + 54 , worldY - camera.getY() , null);
     }
 
     public void dispose(){
@@ -296,20 +315,16 @@ public class Mon_HustGuardian extends Monster implements Actable {
         solidArea2 = null;
         hitbox = null;
         interactionDetectionArea = null;
-        mon_animator_hust_guardian = null;
-        for(int i = 0 ; i < mon_hust_guardian.length ; i++){
-            for(int j = 0 ; j < mon_hust_guardian[i].length ; j++){
-                for(int k = 0 ; k < mon_hust_guardian[i][j].length ; k++){
-                    mon_hust_guardian[i][j][k].flush();
-                    mon_hust_guardian[i][j][k] = null;
-                }
-            }
-        }
-        exclaimation.flush(); exclaimation = null;
+        exclamation.flush();
+        exclamation = null;
         projectile = null;
         projectile_name = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+    }
+
+    private enum GuardianState{
+        IDLE, RUN, SHOOT, DIE
     }
 
 }

@@ -2,6 +2,7 @@ package main;
 
 import entity.Entity;
 import entity.player.Player;
+import map.GameMap;
 import util.UtilityTool;
 
 import javax.imageio.ImageIO;
@@ -17,8 +18,7 @@ import static main.GamePanel.*;
 import static main.KeyHandler.*;
 
 public class UI {
-    private final GamePanel gp;
-    public Player player;
+    private GamePanel gp;
     public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
@@ -60,7 +60,6 @@ public class UI {
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
-            if(currentMap != null )this.player = currentMap.player;
             InputStream is1 = getClass().getResourceAsStream("/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/font/MaruMonica.ttf");
             InputStream is3 = getClass().getResourceAsStream("/font/bitcrusher.otf");
@@ -68,7 +67,6 @@ public class UI {
             maru= Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is2));
             bitcrusher = Font.createFont(Font.TRUETYPE_FONT , Objects.requireNonNull(is3));
         } catch (FontFormatException | IOException | NullPointerException e) {
-            this.player = null;
             e.printStackTrace();
         }
 
@@ -200,6 +198,40 @@ public class UI {
         }
     }
 
+    private int dotCount = 0;
+    private int tick = 0;
+
+    public void drawLoadingScreen(){
+        g2.drawImage(titleBackground, 0, 0, windowWidth, windowHeight, null);
+
+        tick++;
+        if (tick % 30 == 0) {
+            dotCount = (dotCount + 1) % 4;
+        }
+
+        String dots = ".".repeat(dotCount);
+        String text = "Đang tải" + dots;
+
+        g2.setFont(joystix.deriveFont(Font.BOLD, 32f));
+
+        FontMetrics fm = g2.getFontMetrics();
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getHeight();
+
+        int x = (windowWidth - textWidth) / 2;
+        int y = (windowHeight - textHeight) / 2 + fm.getAscent();
+
+        // Vẽ bóng (shadow)
+        g2.setColor(new Color(0, 0, 0, 150)); // màu đen mờ
+        g2.drawString(text, x + 4, y + 4);
+
+        // Vẽ chữ chính
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x, y);
+    }
+
+
+
     private void drawPausedScreen()
     {
         g2.setColor(new Color(0 , 0 , 0 , 100));
@@ -240,41 +272,45 @@ public class UI {
     }
 
     public void drawHPBar() {
-        int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
-        int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 40;
-        int y = windowHeight - 80;
-        int currentHPWidth;
-        try {
-            currentHPWidth = (int) ((double) player.currentHP / player.maxHP * fullHPWidth);
-        } catch(NullPointerException e){
-            currentHPWidth = 0;
-        }
-        // Vẽ nền (màu xám) cho thanh HP
-        g2.drawImage(hpFrame, x-31, y-10, 213, 32, null);
+        if(currentMap != null) {
+            int fullHPWidth = 178;  // Chiều dài tối đa của thanh HP
+            int hpBarHeight = 12;   // Chiều cao của thanh HP
+            int x = 40;
+            int y = windowHeight - 80;
+            int currentHPWidth;
+            try {
+                currentHPWidth = (int) ((double) currentMap.player.currentHP / currentMap.player.maxHP * fullHPWidth);
+            } catch (NullPointerException e) {
+                currentHPWidth = 0;
+            }
+            // Vẽ nền (màu xám) cho thanh HP
+            g2.drawImage(hpFrame, x - 31, y - 10, 213, 32, null);
 
-        // Vẽ thanh HP hiện tại (màu đỏ)
-        g2.setColor(Color.RED);
-        g2.fillRect(x, y , currentHPWidth, hpBarHeight);
+            // Vẽ thanh HP hiện tại (màu đỏ)
+            g2.setColor(Color.RED);
+            g2.fillRect(x, y, currentHPWidth, hpBarHeight);
+        }
     }
 
     public void drawManaBar() {
-        int fullManaWidth = 66;  // Chiều dài tối đa của thanh HP
-        int ManaBarHeight = 12;   // Chiều cao của thanh HP
-        int x = 40;
-        int y = windowHeight - 40;
-        int currentHPWidth;
-        try {
-            currentHPWidth = (int) ((double) player.currentMana / player.maxMana * fullManaWidth);
-        } catch(NullPointerException e){
-            currentHPWidth = 0;
-        }
-        // Vẽ nền (màu xám) cho thanh Mana
-        g2.drawImage(manaFrame, x-31, y-10, 101, 32, null);
+        if(currentMap != null) {
+            int fullManaWidth = 66;  // Chiều dài tối đa của thanh HP
+            int ManaBarHeight = 12;   // Chiều cao của thanh HP
+            int x = 40;
+            int y = windowHeight - 40;
+            int currentHPWidth;
+            try {
+                currentHPWidth = (int) ((double) currentMap.player.currentMana / currentMap.player.maxMana * fullManaWidth);
+            } catch (NullPointerException e) {
+                currentHPWidth = 0;
+            }
+            // Vẽ nền (màu xám) cho thanh Mana
+            g2.drawImage(manaFrame, x - 31, y - 10, 101, 32, null);
 
-        // Vẽ thanh HP hiện tại (màu xanh)
-        g2.setColor(Color.BLUE);
-        g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+            // Vẽ thanh HP hiện tại (màu xanh)
+            g2.setColor(Color.BLUE);
+            g2.fillRect(x, y, currentHPWidth, ManaBarHeight);
+        }
     }
 
     public void drawLevelUpWindow(){
@@ -462,13 +498,13 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 15));
 
         for (int i = 0; i < 5; i++) {
-            int currentslotY = slotY + i * (slotSize + 50);
+            int currentSlotY = slotY + i * (slotSize + 50);
             g2.setColor(new Color(0, 0, 0, 100));
-            g2.fillRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
+            g2.fillRoundRect(slotX, currentSlotY, slotWidth, slotHeight, 10, 10);
 
             g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(2));
-            g2.drawRoundRect(slotX, currentslotY, slotWidth, slotHeight, 10, 10);
+            g2.drawRoundRect(slotX, currentSlotY, slotWidth, slotHeight, 10, 10);
         }
         if (currentMap.player.inventory != null) for (int i = 0; i < currentMap.player.inventory.length; i++) {
             int currentSlotY = slotY + i * (slotSize + 50);
@@ -485,12 +521,14 @@ public class UI {
     public void render(Graphics2D g2) {
         this.g2 = g2;
         try {
-            if(gameState == GameState.PLAY_STATE)
+            if(gameState == GameState.LOADING_STATE){
+                drawLoadingScreen();
+            } else if(gameState == GameState.PLAY_STATE)
             {
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
-                if (bossHP > 0) drawHPBarForBoss();
+                if (levelProgress == 4 && bossHP > 0) drawHPBarForBoss();
             }else if (gameState == GameState.MENU_STATE) {
                 drawTitleScreen();
             } else if (gameState == GameState.DIALOGUE_STATE) {

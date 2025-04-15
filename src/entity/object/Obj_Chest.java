@@ -3,46 +3,46 @@ package entity.object;
 import entity.Actable;
 import entity.Entity;
 import entity.items.Item;
-import entity.items.Item_Battery;
-import entity.items.Item_Kit;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import main.KeyHandler;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 import static main.GamePanel.camera;
-import static main.GamePanel.gameState;
 
 public class Obj_Chest extends Entity implements Actable {
     GameMap mp;
+
+    private static final HashMap<ChestState, Sprite> chestSpritePool = new HashMap<>();
+    private static final HashMap<ChestState, Animation> chestAnimation = new HashMap<>();
+    public static void load(){
+        for(ChestState state: ChestState.values()){
+            chestSpritePool.put(state,
+                    new Sprite(AssetPool.getImage("chest_" + state.name().toLowerCase() + ".png")));
+            chestAnimation.put(state,
+                    new Animation(chestSpritePool.get(state).getSpriteArrayRow(0), 8, true));
+        }
+    }
     public final static int CLOSED = 0;
     public final static int OPENED = 1;
 
-    private final BufferedImage[][] obj_Chest;
-    private final Animation obj_animator_Chest = new Animation();
-    private int CURRENT_FRAME = 0;
-    private int currentStates = CLOSED;
-    public ArrayList<Item> reward = new ArrayList<>();
-    private Item_Battery battery;
-    private Item_Kit kit;
+    private Animation currentAnimation;
+    private void setState(){
+        if(currentState != lastState){
+            lastState = currentState;
+        }
 
-    public Obj_Chest(GameMap mp)
-    {
-        super();
-        name = "Chest";
-        this.mp = mp;
-        super.width = 64;
-        super.height = 64;
-
-        obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArray();
-        obj_animator_Chest.setAnimationState(obj_Chest[currentStates] , 8);
-
-        setDefault();
+        currentAnimation.reset();
+        currentAnimation = chestAnimation.get(currentState).clone();
+        currentAnimation.reset();
     }
+    private ChestState currentState;
+    private ChestState lastState;
+    public ArrayList<Item> reward = new ArrayList<>();
 
     public Obj_Chest(GameMap mp , int x , int y , String idName)
     {
@@ -53,8 +53,8 @@ public class Obj_Chest extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
 
-        obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArray();
-        obj_animator_Chest.setAnimationState(obj_Chest[currentStates] , 8);
+        currentState = ChestState.CLOSED;
+        currentAnimation = chestAnimation.get(currentState).clone();
 
         setDefault();
     }
@@ -108,31 +108,30 @@ public class Obj_Chest extends Entity implements Actable {
         for(int i = 0 ; i < quantity ; i++) reward.add(item);
     }
 
-    public void handleAnimationState() {
+    public void handleAnimation() {
         if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
             if (KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 talk();
-                if(currentStates == CLOSED) {
-                    currentStates = OPENED;
+                if(currentState == ChestState.CLOSED) {
+                    currentState = ChestState.OPENED;
                     loot();  // Gọi hàm thu thập để hiển thị phần thưởng
                 }
             }
         }
+        setState();
         isInteracting = false;
     }
 
     @Override
     public void update() throws NullPointerException{
-        handleAnimationState();
-        obj_animator_Chest.update();
-        CURRENT_FRAME = obj_animator_Chest.getCurrentFrames();
+        handleAnimation();
+        currentAnimation.update();
     }
 
     @Override
     public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        g2.drawImage(obj_Chest[currentStates][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY()
-                 , null);
+        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
     }
 
     @Override
@@ -143,5 +142,9 @@ public class Obj_Chest extends Entity implements Actable {
     @Override
     public void move() {
 
+    }
+
+    private enum ChestState{
+        OPENED, CLOSED
     }
 }

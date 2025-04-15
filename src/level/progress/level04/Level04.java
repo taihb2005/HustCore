@@ -13,11 +13,8 @@ import static main.GamePanel.*;
 public class Level04 extends Level {
     public EventHandler04 eventHandler04;
 
-    public Level04(GamePanel gp) {
-        this.gp = gp;
-        MapParser.loadMap("map4", "/map/map4.tmx");
-        map = MapManager.getGameMap("map4");
-        map.gp = gp;
+    public Level04() {
+        map = MapParser.loadMap( "/map/map4.tmx");
         eventHandler04 = new EventHandler04(this);
         init();
         setter.setFilePathObject("/level/level04/object_level04.json");

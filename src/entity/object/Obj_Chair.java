@@ -1,6 +1,7 @@
 package entity.object;
 
 import entity.Entity;
+import graphics.AssetPool;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -12,18 +13,6 @@ public class Obj_Chair extends Entity {
     private final BufferedImage obj_chair;
     public int type;
 
-    public Obj_Chair(int type)
-    {
-        super();
-        name = "Chair";
-        super.width = 64;
-        super.height = 64;
-
-        obj_chair = new Sprite("/entity/object/chair_id" + type + ".png" , width , height).getSprite(0 , 0);
-
-        setDefault();
-    }
-
     public Obj_Chair(String direction , int type , int x , int y)
     {
         super(x , y);
@@ -31,7 +20,7 @@ public class Obj_Chair extends Entity {
         super.width = 64;
         super.height = 64;
 
-        obj_chair = new Sprite("/entity/object/chair_" + direction + "_id" + type + ".png" , width , height).getSprite(0 , 0);
+        obj_chair = AssetPool.getImage("chair_" + direction + "id_" + type + ".png");
 
         setDefault();
     }

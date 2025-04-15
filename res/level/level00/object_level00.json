@@ -15,7 +15,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {"x": 576 , "y": 0}
     },
@@ -23,7 +23,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {"x": 640 , "y": 0}
     },
@@ -39,7 +39,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 3,
       "position": {"x": 1408 , "y": 0}
     },
@@ -47,7 +47,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 1,
       "position": {"x": 1472 , "y": 0}
     },
@@ -63,7 +63,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 3,
       "position": {"x": 2112 , "y": 0}
     },
@@ -71,7 +71,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {"x": 2176 , "y": 0}
     },
@@ -103,7 +103,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "off",
-      "type": 4,
+      "type": 3,
       "frame": 0,
       "position": {"x": 1728 , "y": 128}
     },
@@ -119,7 +119,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 2,
       "position": {"x": 640 , "y": 384}
     },
@@ -135,7 +135,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 3,
       "position": {"x": 1088 , "y": 1792}
     },

@@ -1,6 +1,8 @@
 package main;
 
-import java.awt.*;
+import thread.LoadMapThread;
+import thread.LoadResourceThread;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
@@ -67,16 +69,18 @@ public class KeyHandler implements KeyListener{
                 if (keyCode == KeyEvent.VK_ENTER) {
                     if (GamePanel.ui.commandNum == 0) {
                         disableKey();
-                        gp.darker = true;
-                        TimerTask startToPlayAnimation = new TimerTask() {
-                            @Override
-                            public void run() {
-                                gp.restart();
-                                GamePanel.gameState = GameState.PLAY_STATE;
-                                gp.lighter = true;
-                            }
-                        };
-                        timer.schedule(startToPlayAnimation, 1500);
+                        new LoadResourceThread().start();
+                        new LoadMapThread().start();
+//                        gp.darker = true;
+//                        TimerTask startToPlayAnimation = new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                gp.restart();
+//                                GamePanel.gameState = GameState.PLAY_STATE;
+//                                gp.lighter = true;
+//                            }
+//                        };
+//                        timer.schedule(startToPlayAnimation, 1500);
                     }
                     if (GamePanel.ui.commandNum == 1) {
                         GamePanel.gameState = GameState.SETTING_STATE;
@@ -101,6 +105,7 @@ public class KeyHandler implements KeyListener{
                 if (keyCode == KeyEvent.VK_3) key3pressed = true;
                 if (keyCode == KeyEvent.VK_4) key4pressed = true;
                 if (keyCode == KeyEvent.VK_5) key5pressed = true;
+                if (keyCode == KeyEvent.VK_F3) showDebugMenu = true;
             } else if (GamePanel.gameState == GameState.PASSWORD_STATE) {
                 if (keyCode == KeyEvent.VK_0) key0pressed = true;
                 if (keyCode == KeyEvent.VK_1) key1pressed = true;

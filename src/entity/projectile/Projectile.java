@@ -121,6 +121,10 @@ public class Projectile extends Entity {
         }
     }
 
+    public void setProjectileSpeed(int speed){
+        this.speed = speed;
+    }
+
     public void dispose(){
         for(int i = 0 ; i < projectile_sprite.length ; i++){
             for(int j = 0 ; j < projectile_sprite[i].length ; j++) {

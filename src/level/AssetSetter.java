@@ -162,12 +162,24 @@ public class AssetSetter {
                         break;
                     case "Mon_Shooter":
                         if(enemy.getDetection() == null) {
-                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getName() ,enemy.getX(), enemy.getY()
+                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(),
+                                    enemy.getType(),
+                                    enemy.isAlwaysUp(),
+                                    enemy.getAttackCycle(),
+                                    enemy.getName() ,
+                                    enemy.getX(), enemy.getY()
                             ), mp.enemy);
                         } else
                         {
                             Rectangle detect = new Rectangle(enemy.getDetection().getX() , enemy.getDetection().getY() , enemy.getDetection().getWidth() , enemy.getDetection().getHeight());
-                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), detect , enemy.getName() ,enemy.getX(), enemy.getY()
+                            mp.addObject(new Mon_Shooter(mp,
+                                    enemy.getDirection(),
+                                    enemy.getType(),
+                                    enemy.isAlwaysUp(),
+                                    enemy.getAttackCycle(),
+                                    detect,
+                                    enemy.getName(),
+                                    enemy.getX(), enemy.getY()
                             ), mp.enemy);
                         };
                         break;

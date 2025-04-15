@@ -4,11 +4,14 @@ import entity.Actable;
 import entity.effect.type.Slow;
 import entity.projectile.Proj_BasicGreenProjectile;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
+import util.KeyPair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Random;
 
 import static main.GamePanel.camera;
@@ -21,17 +24,58 @@ Mô tả:
 */
 
 public class Mon_Spectron extends Monster implements Actable {
-    final private static int IDLE = 0;
-    final private static int RUN = 1;
-    final private static int SHOOT = 2;
-    final private static int DIE = 3;
+    private static final HashMap<KeyPair<SpectronState, Direction>, Sprite> spectronSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<SpectronState, Direction>, Animation> spectronAnimations = new HashMap<>();
 
-    final private static int RIGHT = 0;
-    final private static int LEFT = 1;
+    public static void load(){
+        for(SpectronState state: SpectronState.values()){
+            int speed = switch (state){
+                case RUN,IDLE, DIE -> 10;
+                case SHOOT -> 20;
+            };
 
+            boolean loop = switch (state){
+                case RUN, IDLE -> true;
+                case SHOOT, DIE -> false;
+            };
+            for(Direction direction: Direction.values()) {
+                int row = switch (direction){
+                    case RIGHT -> 0;
+                    case LEFT -> 1;
+                };
 
-    final private BufferedImage [][][] mon_spectron = new BufferedImage[4][][];
-    private Animation mon_animator_spectron = new Animation();
+                KeyPair<SpectronState, Direction> key = new KeyPair<>(state, direction);
+                spectronSpritePool.put(key,
+                             new Sprite(AssetPool.getImage("spectron_" + state.name().toLowerCase() + ".png")));
+                spectronAnimations.put(key,
+                        new Animation(spectronSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+            }
+        }
+    }
+
+    private SpectronState currentState;
+    private SpectronState lastState;
+    private Direction currentDirection;
+    private Direction lastDirection;
+    private Animation currentAnimation;
+
+    private void setState(){
+        boolean check1 = false;
+        boolean check2 = false;
+        if(lastState != currentState){
+            lastState = currentState;
+            check1 = true;
+        }
+
+        if(lastDirection != currentDirection){
+            lastDirection = currentDirection;
+            check2 = true;
+        }
+
+        if(check1 || check2)
+            currentAnimation = spectronAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+    }
+
 
     private int actionLockCounter = 0;
     private int attackLockCounter = 0;
@@ -39,32 +83,6 @@ public class Mon_Spectron extends Monster implements Actable {
     private int shootInterval = 90;
 
     private int lastHP;
-
-    public Mon_Spectron(GameMap mp)
-    {
-        super(mp);
-        name = "Spectron";
-        this.mp = mp;
-        super.width = 64;
-        super.height = 64;
-        this.canbeDestroyed = false;
-        onPath = false;
-
-        set();
-    }
-
-    public Mon_Spectron(GameMap mp , int x , int y)
-    {
-        super(mp , x , y);
-        name = "Spectron";
-        this.mp = mp;
-        super.width = 64;
-        super.height = 64;
-        this.canbeDestroyed = false;
-        onPath = false;
-
-        set();
-    }
 
     public Mon_Spectron(GameMap mp , int x , int y , String idName)
     {
@@ -80,18 +98,10 @@ public class Mon_Spectron extends Monster implements Actable {
         set();
     }
 
-    private void getImage()
-    {
-        mon_spectron[IDLE]  = new Sprite("/entity/mob/spectron/spectron_idle.png" , width  , height).getSpriteArray();
-        mon_spectron[RUN]   = new Sprite("/entity/mob/spectron/spectron_run.png"  , width  , height).getSpriteArray();
-        mon_spectron[SHOOT] = new Sprite("/entity/mob/spectron/spectron_shoot.png" , width  , height).getSpriteArray();
-        mon_spectron[DIE]   = new Sprite("/entity/mob/spectron/spectron_die.png" , width  , height).getSpriteArray();
-    }
-
     private void setDefault()
     {
         projectile = new Proj_BasicGreenProjectile(mp);
-        invincibleDuration = 40; // 1s
+        invincibleDuration = 40;
         maxHP = 40;
         currentHP = maxHP;
         lastHP = currentHP;
@@ -111,15 +121,17 @@ public class Mon_Spectron extends Monster implements Actable {
         up = down = left = right = false;
         isRunning = false;
         direction = "right";
-        CURRENT_DIRECTION = RIGHT;
-        PREVIOUS_ACTION = IDLE;
-        CURRENT_ACTION = IDLE;
-        CURRENT_FRAME = 0;
-        mon_animator_spectron.setAnimationState(mon_spectron[IDLE][RIGHT] , 10);
+
+        currentDirection = Direction.RIGHT;
+        lastDirection = Direction.RIGHT;
+        currentState = SpectronState.IDLE;
+        lastState = SpectronState.IDLE;
+
+        currentAnimation = spectronAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
     }
 
     public void set() {
-        getImage();
+        //getImage();
         setDefault();
     }
 
@@ -131,57 +143,37 @@ public class Mon_Spectron extends Monster implements Actable {
         spawnHeart();
     }
 
-    private void changeAnimationDirection()
+    private void changeDirection()
     {
         switch(direction)
         {
-            case "left" : CURRENT_DIRECTION = LEFT; break;
-            case "right": CURRENT_DIRECTION = RIGHT; break;
+            case "left" : currentDirection = Direction.LEFT; break;
+            case "right": currentDirection = Direction.RIGHT; break;
         }
     }
 
-    private void handleAnimationState()
+    private void handleAnimation()
     {
         if(isRunning && !isDying) {
-            isIdle = false;
-            CURRENT_ACTION = RUN;
-        }
-        else
+            currentState = SpectronState.RUN;
+        } else
         if(isShooting && !isDying){
-            isIdle = false;
-            CURRENT_ACTION = SHOOT;
+            currentState = SpectronState.SHOOT;
         } else
         if(isDying) {
-            isIdle = false;
-            CURRENT_ACTION = DIE;
+            currentState = SpectronState.DIE;
         } else
         {
-            isIdle = true;
-            CURRENT_ACTION = IDLE;
+            currentState = SpectronState.IDLE;
         }
 
-        if(PREVIOUS_ACTION != CURRENT_ACTION)
-        {
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning) mon_animator_spectron.setAnimationState(mon_spectron[RUN][CURRENT_DIRECTION] , 10);
-            if(isDying){
-                mon_animator_spectron.setAnimationState(mon_spectron[DIE][CURRENT_DIRECTION] , 10);
-                mon_animator_spectron.playOnce();
-            }
-            if(isShooting){
-                mon_animator_spectron.setAnimationState(mon_spectron[SHOOT][CURRENT_DIRECTION] , 20);
-                mon_animator_spectron.playOnce();
-            }
-            if(isIdle){
-                mon_animator_spectron.setAnimationState(mon_spectron[IDLE][CURRENT_DIRECTION] , 10);
-            }
-        }
+        setState();
 
-        if(!mon_animator_spectron.isPlaying() && isShooting){
+        if(currentAnimation.isFinished() && isShooting){
             attack();
             isShooting = false;
         }
-        if(!mon_animator_spectron.isPlaying() && isDying){
+        if(currentAnimation.isFinished() && isDying){
             isDying = false;
             canbeDestroyed = true;
             loot();
@@ -275,10 +267,9 @@ public class Mon_Spectron extends Monster implements Actable {
     public void update() throws NullPointerException{
         setAction();
         move();
-        changeAnimationDirection();
-        handleAnimationState();
-        mon_animator_spectron.update();
-        CURRENT_FRAME = mon_animator_spectron.getCurrentFrames();
+        changeDirection();
+        handleAnimation();
+        currentAnimation.update();
     }
 
     @Override
@@ -287,27 +278,19 @@ public class Mon_Spectron extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-        g2.drawImage(mon_spectron[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
+        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        //g2.drawImage(mon_spectron[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
     }
 
     public void dispose(){
-        solidArea1 = null;
-        solidArea2 = null;
-        hitbox = null;
-        interactionDetectionArea = null;
-        mon_animator_spectron = null;
-        for(int i = 0 ; i < mon_spectron.length ; i++){
-            for(int j = 0 ; j < mon_spectron[i].length ; j++){
-                for(int k = 0 ; k < mon_spectron[i][j].length ; k++){
-                    mon_spectron[i][j][k].flush();
-                    mon_spectron[i][j][k] = null;
-                }
-            }
-        }
         projectile = null;
         projectile_name = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+    }
+
+    private enum SpectronState{
+        IDLE, RUN, SHOOT, DIE
     }
 }

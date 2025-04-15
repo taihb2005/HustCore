@@ -15,7 +15,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "off",
-      "type": 4,
+      "type": 2,
       "frame": 0,
       "position": {"x": 576 , "y": 0}
     },
@@ -55,7 +55,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 2,
       "position": {"x": 320 , "y": 1344}
     },
@@ -87,7 +87,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {"x": 320 , "y": 0}
     },

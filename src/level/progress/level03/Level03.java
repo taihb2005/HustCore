@@ -17,11 +17,8 @@ import static main.GamePanel.stopMusic;
 public class Level03 extends Level {
     public EventHandler03 eventHandler03;
 
-    public Level03(GamePanel gp) {
-        this.gp = gp;
-        MapParser.loadMap("map3", "/map/map3.tmx");
-        map = MapManager.getGameMap("map3");
-        map.gp = gp;
+    public Level03() {
+        map = MapParser.loadMap("/map/map3.tmx");
         eventHandler03 = new EventHandler03(this);
         init();
         setter.setFilePathObject("/level/level03/object_level03.json");

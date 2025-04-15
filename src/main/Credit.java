@@ -25,7 +25,7 @@ public class Credit {
     }
 
     private void set(){
-        endCredit = new StringBuilder("Nhóm 7 OOP:\n"
+        endCredit = new StringBuilder("Thành viên:\n"
                 + "Khương Anh Tài (Nhóm trưởng)\n"
                 + "Hoàng Ngọc Nam\n"
                 + "Nguyễn Văn Sáng\n"

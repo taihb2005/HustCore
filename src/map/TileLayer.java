@@ -1,13 +1,8 @@
 package map;
 
-import graphics.Sprite;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static main.GamePanel.camera;
 

@@ -4,101 +4,125 @@ import entity.Actable;
 import entity.effect.type.EffectNone;
 import entity.effect.type.Slow;
 import entity.projectile.Proj_GreenBullet;
-import level.progress.level02.EventHandler02;
-import level.progress.level02.Level02;
+import entity.projectile.Proj_TrackingPlasma;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
+import util.KeyPair;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Random;
 
 import static main.GamePanel.camera;
-import static main.GamePanel.currentMap;
 import static map.GameMap.childNodeSize;
 
 public class Mon_Cyborgon extends Monster implements Actable {
-    public final static int INACTIVE = 0;
-    public final static int IDLE1 = 1;
-    public final static int IDLE2 = 2;
-    public final static int ACTIVE = 3;
-    public final static int RUN = 4;
-    public final static int SHOOT = 5;
-    public final static int DIE = 6;
+    private static final HashMap<KeyPair<CyborgonState, Direction>, Sprite> cyborgonSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<CyborgonState, Direction>, Animation> cyborgonAnimations = new HashMap<>();
 
-    public final static int RIGHT = 0;
-    public final static int LEFT = 1;
+    public static void load(){
+        for(CyborgonState state: CyborgonState.values()){
+            int speed = switch (state){
+                case IDLE, RUN, DIE -> 10;
+                case ACTIVATING -> 20;
+                case INACTIVE -> 120;
+                case BLINK -> 17;
+                case SHOOT -> 11;
+            };
 
-    public int state;
+            boolean loop = switch (state){
+                case IDLE, INACTIVE, RUN -> true;
+                case ACTIVATING, BLINK, SHOOT, DIE -> false;
+            };
+            for(Direction direction: Direction.values()){
+                int row = switch (direction){
+                    case RIGHT -> 0;
+                    case LEFT -> 1;
+                };
+                KeyPair<CyborgonState, Direction> key = new KeyPair<>(state, direction);
 
-    private final BufferedImage [][][] mon_cyborgon = new BufferedImage[7][][];
-    private Animation mon_animator_cyborgon = new Animation();
+                cyborgonSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("cyborgon_" + state.name().toLowerCase() + ".png")));
+                cyborgonAnimations.put(key,
+                        new Animation(cyborgonSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+            }
+        }
+    }
+
+    private CyborgonState currentState;
+    private CyborgonState lastState;
+    private Direction currentDirection;
+    private Direction lastDirection;
+    private Animation currentAnimation;
+
+    private BufferedImage radiationImage;
+    private int lastRenderedDiameter = -1;
+    private float lastRenderedAlpha = -1f;
+
+    private void setState(){
+        boolean change1 = false;
+        boolean change2 = false;
+        if(lastState != currentState){
+            lastState = currentState;
+            change1 = true;
+        }
+
+        if(lastDirection != currentDirection){
+            lastDirection = currentDirection;
+            change2 = true;
+        }
+
+        if(change1 || change2){
+            currentAnimation.reset();
+            currentAnimation = cyborgonAnimations.get(new KeyPair<>(currentState, currentDirection));
+        }
+    }
+
+    private boolean isActive;
+    private boolean isBlinking;
+    private boolean isActivating;
 
     private int diameter = 100;
+    private int MAX_DIAMETER = 500;
     private int newDiameter = diameter;
     private float alpha = 0.1f;
     private boolean increasing = true;
     private int exposureTime = 0;
 
-    public Mon_Cyborgon(GameMap mp){
-        super(mp);
-        name = "Cyborgon";
-        width = 64;
-        height = 64;
-        state = INACTIVE;
-
-        getImage();
-        setDefault();
-    }
-
-    public Mon_Cyborgon(GameMap mp , int x , int y){
-        super(mp , x , y);
-        name = "Cyborgon";
-        width = 64;
-        height = 64;
-        state = INACTIVE;
-
-        getImage();
-        setDefault();
-    }
+    private int actionLockCounter = 0;
+    private final int changeDirCounter = 240;
 
     public Mon_Cyborgon(GameMap mp , int x , int y , String idName){
         super(mp , x , y);
         name = "Cyborgon";
         width = 64;
         height = 64;
-        state = INACTIVE;
 
-        getImage();
         setDefault();
         this.idName = idName;
     }
 
-    private void getImage(){
-        mon_cyborgon[INACTIVE] = new Sprite("/entity/mob/cyborgon/cyborgon_inactive.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[IDLE1] = new Sprite("/entity/mob/cyborgon/cyborgon_idle1.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[IDLE2] = new Sprite("/entity/mob/cyborgon/cyborgon_idle2.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[ACTIVE] = new Sprite("/entity/mob/cyborgon/cyborgon_whenactive.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[RUN] = new Sprite("/entity/mob/cyborgon/cyborgon_run.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[SHOOT] = new Sprite("/entity/mob/cyborgon/cyborgon_shoot.png" , 64 , 64).getSpriteArray();
-        mon_cyborgon[DIE] = new Sprite("/entity/mob/cyborgon/cyborgon_die.png" , 64 , 64).getSpriteArray();
-    }
     private void setDefault(){
         hitbox = new Rectangle(22 , 24 , 22 , 36);
         solidArea1 = new Rectangle(18 , 40 , 28 , 22);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         setDefaultSolidArea();
 
+        isActive = false;
         invincibleDuration = 40;
         maxHP = 200;
         currentHP = maxHP;
-        strength = 30;
+        strength = 10;
         level = 1;
         defense = 0;
-        projectile = new Proj_GreenBullet(mp);
+        projectile = new Proj_TrackingPlasma(mp);
+        projectile.setProjectileSpeed(4);
         effectDealOnTouch = new EffectNone(mp.player);
-        effectDealByProjectile = new Slow(mp.player , 30);
+        effectDealByProjectile = new Slow(mp.player , 60);
         speed = 2;
         last_speed = speed;
 
@@ -109,107 +133,95 @@ public class Mon_Cyborgon extends Monster implements Actable {
         int dir = new Random().nextInt(2);
         if(dir == 0) {
             direction = "right";
-            CURRENT_DIRECTION = RIGHT;
+            currentDirection = Direction.RIGHT;
         } else {
             direction = "left";
-            CURRENT_DIRECTION = LEFT;
+            currentDirection = Direction.LEFT;
         }
 
-        CURRENT_ACTION = INACTIVE;
-        PREVIOUS_ACTION = INACTIVE;
-        mon_animator_cyborgon.setAnimationState(mon_cyborgon[INACTIVE][CURRENT_DIRECTION] , 120);
+        currentState = CyborgonState.INACTIVE;
+        lastState = CyborgonState.INACTIVE;
+
+        currentAnimation = cyborgonAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
     }
 
-    private void handleAnimationState(){
-        if(state == INACTIVE)handleAnimationWhenInactive();
+    private void handleAnimation() {
+        if (!isActive)
+            handleAnimationWhenInactive();
         else handleAnimationWhenActive();
     }
 
-    private void changeAnimationDirection(){
-        switch(direction)
-        {
-            case "left" : CURRENT_DIRECTION = LEFT; break;
-            case "right": CURRENT_DIRECTION = RIGHT; break;
+    private void handleAnimationWhenActive() {
+        if (isDying) {
+            currentState = CyborgonState.DIE;
+        } else if (isShooting) {
+            currentState = CyborgonState.SHOOT;
+        } else if (isBlinking){
+            currentState = CyborgonState.BLINK;
+        } else if (isRunning) {
+            currentState = CyborgonState.RUN;
+        } else {
+            if(isActive) {
+                currentState = CyborgonState.IDLE;
+            } else {
+                currentState = CyborgonState.INACTIVE;
+            }
+        }
+
+        setState();
+
+        if (currentAnimation.isFinished()) {
+            if (isShooting) {
+                isShooting = false;
+            }
+            if (isDying) {
+                isDying = false;
+                canbeDestroyed = true;
+            }
+            if(isActivating){
+                isActive = true;
+                isActivating = false;
+                currentState = CyborgonState.IDLE;
+            }
+            if(isBlinking){
+                isBlinking = false;
+                currentState = CyborgonState.IDLE;
+            }
         }
     }
 
-    private void handleAnimationWhenActive(){
-        if(isRunning && !isDying) {
-            isIdle = false;
-            CURRENT_ACTION = RUN;
-        }
-        else
-        if(isShooting && !isDying){
-            isIdle = false;
-            CURRENT_ACTION = SHOOT;
-        } else
-        if(isDying) {
-            isIdle = false;
-            CURRENT_ACTION = DIE;
-        } else
-        {
-            isIdle = true;
-            CURRENT_ACTION = IDLE1;
+    private void handleAnimationWhenInactive() {
+        if(currentHP < maxHP){
+            currentState = CyborgonState.ACTIVATING;
         }
 
-        if(PREVIOUS_ACTION != CURRENT_ACTION)
-        {
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isRunning) mon_animator_cyborgon.setAnimationState(mon_cyborgon[RUN][CURRENT_DIRECTION] , 11);
-            if(isDying){
-                mon_animator_cyborgon.setAnimationState(mon_cyborgon[DIE][CURRENT_DIRECTION] , 10);
-                mon_animator_cyborgon.playOnce();
-            }
-            if(isShooting){
-                mon_animator_cyborgon.setAnimationState(mon_cyborgon[SHOOT][CURRENT_DIRECTION] , 6);
-                mon_animator_cyborgon.playOnce();
-            }
-            if(isIdle){
-                mon_animator_cyborgon.setAnimationState(mon_cyborgon[IDLE1][CURRENT_DIRECTION] , 10);
-            }
-        }
+        setState();
 
-        if(!mon_animator_cyborgon.isPlaying() && isShooting){
-            isShooting = false;
-        }
-        if(!mon_animator_cyborgon.isPlaying() && isDying){
-            isDying = false;
-            canbeDestroyed = true;
+        if(currentAnimation.isFinished()){
+            if(currentState == CyborgonState.ACTIVATING){
+                isActive = true;
+                currentState = CyborgonState.IDLE;
+            }
         }
     }
 
-    private void handleAnimationWhenInactive(){
-        if(isIdle) CURRENT_ACTION = INACTIVE; else
-        if(canChangeState) CURRENT_ACTION = ACTIVE;
-
-        if(PREVIOUS_ACTION != CURRENT_ACTION){
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if(isIdle) mon_animator_cyborgon.setAnimationState(mon_cyborgon[INACTIVE][CURRENT_DIRECTION] , 120);
-            if(canChangeState){
-                mon_animator_cyborgon.setAnimationState(mon_cyborgon[ACTIVE][CURRENT_DIRECTION] , 17);
-                isInvincible = true;
-                mon_animator_cyborgon.playOnce();
-            }
-        }
-
-        if(!mon_animator_cyborgon.isPlaying() && canChangeState){
-            canChangeState = false;
-            isInvincible = false;
-            state = ACTIVE;
+    private void changeDirection() {
+        switch (direction) {
+            case "left" -> currentDirection = Direction.LEFT;
+            case "right" -> currentDirection = Direction.RIGHT;
         }
     }
 
     private void setAction(){
-        if(state == ACTIVE){
+        if(isActive){
             if(!getAggro){
-                //checkIfInRange();//Không đuôi theo người chơi
                 actionWhenNeutral();
             } else {
-                actionWhenGetAggro();//Đuổi theo người chơi
+                actionWhenGetAggro();
             }
             isRunning = (up | down | right | left) && (!isShooting);
-            damagePlayer();
         }
+        damagePlayer();
     }
 
     private void actionWhenGetAggro() {
@@ -223,12 +235,40 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void actionWhenNeutral() {
-        if (currentHP < 0.8 * maxHP) getAggro = true;
+        actionLockCounter++;
+        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
+            up = down = left = right = false;
+            Random random = new Random();
+            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+            if(i <= 60){
+                up = down = left = right = false;
+            }
+            if ( i > 60 && i <= 70) {
+                direction = "up";
+                up = true;
+            }
+            if (i > 70 && i <= 80) {
+                direction = "down";
+                down = true;
+            }
+            if (i > 80 && i <= 90) {
+                direction = "left";
+                left = true;
+            }
+            if (i > 90 && i < 100) {
+                direction = "right";
+                right = true;
+            }
+            actionLockCounter = 0;
+            isRunning = !isShooting && (right | left | up | down);
+        }
+        if (currentHP <  maxHP) getAggro = true;
     }
+
 
     public void move() {
         collisionOn = false;
-        if(up && isRunning && !isDying) newWorldY = worldY - speed; //Gì đây hả cđl
+        if(up && isRunning && !isDying) newWorldY = worldY - speed;
         if(down && isRunning && !isDying) newWorldY = worldY + speed;
         if(left && isRunning && !isDying) newWorldX = worldX - speed;
         if(right && isRunning && !isDying) newWorldX = worldX + speed;
@@ -238,12 +278,19 @@ public class Mon_Cyborgon extends Monster implements Actable {
         mp.cChecker.checkCollisionWithEntity(this , mp.npc);
         mp.cChecker.checkCollisionWithEntity(this , mp.enemy);
         mp.cChecker.checkCollisionPlayer(this);
-        //if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
 
         if(!collisionOn)
         {
             worldX = newWorldX;
             worldY = newWorldY;
+        } else {
+            if(!onPath){
+                if(checkForValidDirection()){
+                    direction = getValidDirection();
+                    decideToMove();
+                    actionLockCounter = 0;
+                }
+            }
         }
 
         newWorldX = worldX;
@@ -269,56 +316,74 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     @Override
-    public void update() throws NullPointerException{
+    public void update(){
         setAction();
         handleStatus();
-        updateDiameter(mp);
-        changeAnimationDirection();
+        updateDiameter();
+        changeDirection();
         move();
-        handleAnimationState();
+        handleAnimation();
         updateInvincibility();
-        mon_animator_cyborgon.update();
-        CURRENT_FRAME = mon_animator_cyborgon.getCurrentFrames();
+        currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2){
-        super.renderHPBar(g2 , 18 , 0);
-        //DRAW RADIATION CIRCLE
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        g2.setColor(Color.GREEN);
-        g2.fillOval((worldX + width / 2 - diameter / 2) - camera.getX(), (worldY + height / 2 - diameter / 2) - camera.getY(), diameter, diameter);
-        g2.setColor(Color.GREEN);
-        g2.fillOval((worldX + width / 2 - diameter / 2) - camera.getX()-6, (worldY + height / 2 - diameter / 2) - camera.getY()-6, diameter+12, diameter+12);
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        updateOpacity();
+    public void render(Graphics2D g2) {
+        super.renderHPBar(g2, 18, 0);
 
-        if(isInvincible && !isDying){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
+        if (getAggro && radiationImage != null) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            int x = (worldX + width / 2 - diameter / 2) - camera.getX() - 6;
+            int y = (worldY + height / 2 - diameter / 2) - camera.getY() - 6;
+            g2.drawImage(radiationImage, x, y, null);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            updateOpacity();
         }
-        g2.drawImage(mon_cyborgon[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
+
+        if (isInvincible && !isDying) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
+
+        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
+
 
     private void updateOpacity() {
-        if (increasing) {
-            alpha += 0.001f;
-            if (alpha >= 0.08f) {
-                alpha = 0.08f;
-                increasing = false;
+        if (isActive) {
+            if (increasing) {
+                alpha += 0.001f;
+                if (alpha >= 0.08f) {
+                    alpha = 0.08f;
+                    increasing = false;
+                }
+            } else {
+                alpha -= 0.001f;
+                if (alpha <= 0f) {
+                    alpha = 0f;
+                    increasing = true;
+                }
             }
         } else {
-            alpha -= 0.001f;
-            if (alpha <= 0f) {
-                alpha = 0f;
-                increasing = true;
+            if (alpha > 0f) {
+                alpha -= 0.001f;
+                if (alpha < 0f) alpha = 0f;
             }
         }
     }
 
-    private void updateDiameter(GameMap mp) {
+
+    private void updateDiameter() {
         newDiameter = 100 + (maxHP - currentHP) * 5;
-        if (diameter != newDiameter) diameter++;
+        if (newDiameter > MAX_DIAMETER) newDiameter = MAX_DIAMETER;
+
+        if (diameter != newDiameter) {
+            diameter++;
+            if (diameter != lastRenderedDiameter) {
+                updateRadiationImageAsync();
+            }
+        }
+
         if (Math.pow(worldX - mp.player.worldX, 2) + Math.pow(worldY - mp.player.worldY, 2) < diameter * diameter) {
             exposureTime++;
             if (exposureTime == 300) {
@@ -328,21 +393,38 @@ public class Mon_Cyborgon extends Monster implements Actable {
         }
     }
 
+    private void updateRadiationImageAsync() {
+        int currentRenderDiameter = diameter;
+
+        new Thread(() -> {
+            BufferedImage tempImage = new BufferedImage(currentRenderDiameter + 12, currentRenderDiameter + 12, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = tempImage.createGraphics();
+
+            //g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            g.setColor(Color.GREEN);
+            g.fillOval(6, 6, currentRenderDiameter, currentRenderDiameter);
+            g.setColor(Color.GREEN);
+            g.fillOval(0, 0, currentRenderDiameter + 12, currentRenderDiameter + 12);
+            g.dispose();
+
+            SwingUtilities.invokeLater(() -> {
+                radiationImage = tempImage;
+                lastRenderedDiameter = currentRenderDiameter;
+            });
+        }).start();
+    }
+
+
     public void dispose(){
         solidArea1 = null;
         solidArea2 = null;
         hitbox = null;
         interactionDetectionArea = null;
-        mon_animator_cyborgon = null;
-        for(int i = 0 ; i < mon_cyborgon.length ; i++){
-            for(int j = 0 ; j < mon_cyborgon[i].length ; j++){
-                for(int k = 0 ; k < mon_cyborgon[i][j].length ; k++){
-                    mon_cyborgon[i][j][k].flush();
-                    mon_cyborgon[i][j][k] = null;
-                }
-            }
-        }
         projectile = null;
         projectile_name = null;
+    }
+
+    private enum CyborgonState{
+        IDLE, ACTIVATING, INACTIVE, BLINK, RUN, SHOOT, DIE
     }
 }

@@ -31,7 +31,7 @@ public class Entity {
     public boolean isInvincible = false;
     public boolean isDying = false;
     public boolean isCollected = false;
-    public boolean canChangeState = false;
+    public boolean canChangeStatus = false;
     public boolean canbeDestroyed = false;
     public boolean onPath = false;
     //SPRITE SIZE

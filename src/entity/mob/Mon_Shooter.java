@@ -4,13 +4,17 @@ import entity.Actable;
 import entity.effect.type.Blind;
 import entity.projectile.Proj_Plasma;
 import entity.projectile.Projectile;
+import entity.Direction;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
+import util.KeyPair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 /*
@@ -30,8 +34,41 @@ public class Mon_Shooter extends Monster implements Actable {
     private final static int DOWN = 2;
     private final static int UP = 3;
 
+    private static final HashMap<KeyPair<ShooterState, Direction>, Sprite> shooterSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<ShooterState, Direction>, Animation> shooterAnimations = new HashMap<>();
+
+    public static void load(){
+        for(ShooterState state: ShooterState.values()){
+            int speed = switch (state){
+                case IDLE -> 100;
+                case SHOOT -> 0;
+                case ACTIVE -> 20;
+                case DIE -> 10;
+
+            };
+
+            boolean loop = switch (state){
+                case ACTIVE, IDLE -> true;
+                case SHOOT, DIE -> false;
+            };
+            for(Direction direction: Direction.values()){
+                int row = switch (direction){
+                    case RIGHT -> 0;
+                    case LEFT -> 1;
+                    case DOWN -> 2;
+                    case UP -> 3;
+                };
+
+                KeyPair<ShooterState, Direction> key = new KeyPair<>(state, direction);
+                shooterSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("shooter_" + state.name().toLowerCase() + ".png")));
+                shooterAnimations.put(key,
+                        new Animation(shooterSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+            }
+        }
+    }
+
     private final boolean isAlwaysUp;
-    private boolean canChangeState;
 
     private final int maxActiveTime = 1800;
     private int activeTimeCounter = 0;
@@ -39,13 +76,39 @@ public class Mon_Shooter extends Monster implements Actable {
     private int shootCounter = 0;
     private int shootSpeed = 10;
 
-    private final BufferedImage[][][] mon_shooter = new BufferedImage[4][][];
-    private Animation mon_animator_shooter = new Animation();
+    private ShooterState currentState;
+    private ShooterState lastState;
+    private Direction currentDirection;
+    private Animation currentAnimation;
+
+    private void setState(){
+        boolean change = false;
+
+        if(lastState != currentState){
+            lastState = currentState;
+            change = true;
+        }
+
+        if(change){
+            currentAnimation = shooterAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+            if(currentState == ShooterState.SHOOT){
+                currentAnimation.setAnimationSpeed(shootSpeed);
+            }
+        }
+
+    }
+
     public int type;
 
     private ArrayList<Projectile> proj;
 
-    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , String idName ,int x , int y){
+    public Mon_Shooter(GameMap mp,
+                       String direction,
+                       int type,
+                       boolean isAlwaysUp,
+                       int shotInterval,
+                       String idName,
+                       int x , int y){
         super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
@@ -59,14 +122,21 @@ public class Mon_Shooter extends Monster implements Actable {
         strength = 10;
         level = 1;
 
-        getImage();
+        //getImage();
         setDefault();
         this.direction = direction;
-        changeAnimationDirection();
-        setInterval(shotInterval);
+        changeDirection();
+        this.shotInterval = shotInterval;
         shootSpeed = Math.max(shotInterval / 5 , 1);
     }
-    public Mon_Shooter(GameMap mp , String direction ,int type , boolean isAlwaysUp , int shotInterval , Rectangle detectionArea, String idName ,int x , int y){
+    public Mon_Shooter(GameMap mp,
+                       String direction,
+                       int type,
+                       boolean isAlwaysUp,
+                       int shotInterval,
+                       Rectangle detectionArea,
+                       String idName,
+                       int x , int y){
         super(mp , x , y);
         this.mp = mp;
         name = "Shooter";
@@ -74,17 +144,18 @@ public class Mon_Shooter extends Monster implements Actable {
         this.idName = idName;
         this.isAlwaysUp = isAlwaysUp;
         if(isAlwaysUp) this.type = ACTIVE;
+
         width = 64;
         height = 64;
         speed = 0;
         strength = 10;
         level = 1;
 
-        getImage();
+        //getImage();
         setDefault();
         this.direction = direction;
-        changeAnimationDirection();
-        setInterval(shotInterval);
+        changeDirection();
+        this.shotInterval = shotInterval;
         shootSpeed = Math.max(shotInterval / 5 , 1);
         interactionDetectionArea = detectionArea;
     }
@@ -109,26 +180,20 @@ public class Mon_Shooter extends Monster implements Actable {
         setDefaultSolidArea();
 
         direction = "right";
-        CURRENT_DIRECTION = RIGHT;
+        currentDirection = Direction.RIGHT;
         if(type == IDLE){
-            isIdle = true;
-            PREVIOUS_ACTION = IDLE;
-            CURRENT_ACTION = IDLE;
-            mon_animator_shooter.setAnimationState(mon_shooter[IDLE][CURRENT_DIRECTION] , 100 );
+            currentState = ShooterState.IDLE;
+            lastState = ShooterState.IDLE;
+            currentAnimation = shooterAnimations.get(new KeyPair<>(currentState, currentDirection))
+                            .clone();
+            currentAnimation.setAnimationSpeed(10);
         } else{
-            PREVIOUS_ACTION = ACTIVE;
-            CURRENT_ACTION = ACTIVE;
-            mon_animator_shooter.setAnimationState(mon_shooter[ACTIVE][CURRENT_DIRECTION] , 20);
+            currentState = ShooterState.ACTIVE;
+            lastState = ShooterState.ACTIVE;
+            currentAnimation = shooterAnimations.get(new KeyPair<>(currentState, currentDirection))
+                    .clone();
+            currentAnimation.setAnimationSpeed(100);
         }
-
-        CURRENT_FRAME = 0;
-    }
-
-    private void getImage(){
-        mon_shooter[IDLE]   = new Sprite("/entity/mob/shooter/shooter_idle.png" , width , height).getSpriteArray();
-        mon_shooter[ACTIVE] = new Sprite("/entity/mob/shooter/shooter_active.png" , width , height).getSpriteArray();
-        mon_shooter[SHOOT]  = new Sprite("/entity/mob/shooter/shooter_shoot.png" , width , height).getSpriteArray();
-        mon_shooter[DIE]    = new Sprite("/entity/mob/shooter/shooter_die.png" , width , height).getSpriteArray();
     }
 
     public void move() {
@@ -142,16 +207,11 @@ public class Mon_Shooter extends Monster implements Actable {
     public void loot() {
 
     }
-
-    public void pathFinding() {
-
-    }
-
     /*
     Phương thức tấn công: Tấn công theo chu kì
      */
     public void updateAttackCycle() {
-        if(type == ACTIVE && !isDying){
+        if(currentState == ShooterState.ACTIVE && !isDying){
             proj.removeIf(pr -> !pr.active);
             shootCounter++;
             if(shootCounter >= shotInterval){
@@ -171,110 +231,67 @@ public class Mon_Shooter extends Monster implements Actable {
         }
     }
 
-    private void changeAnimationDirection(){
+    private void changeDirection(){
         switch (direction){
-            case "right" : CURRENT_DIRECTION = RIGHT; break;
-            case "left"  : CURRENT_DIRECTION = LEFT; break;
-            case "up"    : CURRENT_DIRECTION = UP; break;
-            case "down"  : CURRENT_DIRECTION = DOWN ; break;
-        }
-    }
-
-
-    private void changeState(){
-        if(canChangeState && type == IDLE){
-            type = ACTIVE;
-            canChangeState = false;
-        } else
-        if(canChangeState && type == ACTIVE && !isAlwaysUp){
-            type = IDLE;
-            isIdle = true;
-            canChangeState = false;
+            case "right" : currentDirection = Direction.RIGHT; break;
+            case "left"  : currentDirection = Direction.LEFT; break;
+            case "up"    : currentDirection = Direction.UP; break;
+            case "down"  : currentDirection = Direction.DOWN ; break;
         }
     }
 
     private void checkForPlayer(){
         if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
         damagePlayer();
-        if(type == IDLE) canChangeState = isInteracting;
-        if(!isInteracting && type == ACTIVE){
+        if(currentState == ShooterState.IDLE) currentState = ShooterState.ACTIVE;
+        if(!isInteracting && currentState == ShooterState.ACTIVE){
             activeTimeCounter++;
             if(activeTimeCounter >= maxActiveTime){
                 activeTimeCounter = 0;
-                canChangeState = true;
+                currentState = ShooterState.IDLE;
             }
         } else if(isInteracting) activeTimeCounter = 0;
-        changeState();
         isInteracting = false;
     }
 
-    private void handleAnimationState(){
-        if(type == IDLE){
-            if(isDying) {
-                isIdle = false;
-                CURRENT_ACTION = DIE;
-            } else {
-                isIdle = true;
-                CURRENT_ACTION = IDLE;
+    private void handleAnimation(){
+        if(currentState == ShooterState.IDLE){
+            if(isDying){
+                currentState = ShooterState.DIE;
             }
-            if(PREVIOUS_ACTION != CURRENT_ACTION){
-                PREVIOUS_ACTION = CURRENT_ACTION;
-                if(isDying){
-                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 10);
-                    mon_animator_shooter.playOnce();
-                }
-                if(isIdle)mon_animator_shooter.setAnimationState(mon_shooter[IDLE][CURRENT_DIRECTION] , 100);
+        } else if(currentState == ShooterState.ACTIVE){
+            if(isShooting){
+                currentState = ShooterState.SHOOT;
             }
-            if(!mon_animator_shooter.isPlaying() && isDying) {
-                isDying = false;
-                canbeDestroyed = true;
-            }
-        } else
-        if(type == ACTIVE){
-                 if(isShooting && !isDying) {CURRENT_ACTION = SHOOT ; isIdle = false;}
-            else if(isDying)    {CURRENT_ACTION = DIE; isIdle = false;}
-            else {
-                isIdle = true;
-                CURRENT_ACTION = ACTIVE;
-            }
+        }
 
-            if(PREVIOUS_ACTION != CURRENT_ACTION){
-                PREVIOUS_ACTION = CURRENT_ACTION;
-                if(isShooting){
-                    mon_animator_shooter.setAnimationState(mon_shooter[SHOOT][CURRENT_DIRECTION] , shootSpeed);
-                    mon_animator_shooter.playOnce();
-                }
-                if(isDying){
-                    mon_animator_shooter.setAnimationState(mon_shooter[DIE][CURRENT_DIRECTION] , 10);
-                    mon_animator_shooter.playOnce();
-                }
-                if(isIdle){mon_animator_shooter.setAnimationState(mon_shooter[ACTIVE][CURRENT_DIRECTION] , 20);}
-            }
+        setState();
 
-            if(!mon_animator_shooter.isPlaying() && isShooting) {
-                isShooting = false;
-                attack();
-            }
-            if(!mon_animator_shooter.isPlaying() && isDying) {
-                isDying = false;
-                canbeDestroyed = true;
-            }
+        if(currentAnimation.isFinished() && isDying){
+            isDying = false;
+            canbeDestroyed = true;
+        }
+
+        if(currentAnimation.isFinished() && isShooting){
+            isShooting = false;
+            attack();
+            currentState = ShooterState.ACTIVE;
         }
     }
 
+
     private void updateHP(){
-        if(currentHP == 0) isDying = true;
+        if(currentHP <= 0) isDying = true;
     }
 
     @Override
     public void update() throws NullPointerException{
-        if(!isAlwaysUp)checkForPlayer();
+        if(!isAlwaysUp) checkForPlayer();
         updateAttackCycle();
         updateInvincibility();
-        handleAnimationState();
+        handleAnimation();
         updateHP();
-        mon_animator_shooter.update();
-        CURRENT_FRAME = mon_animator_shooter.getCurrentFrames();
+        currentAnimation.update();
     }
 
     @Override
@@ -283,7 +300,8 @@ public class Mon_Shooter extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-        g2.drawImage(mon_shooter[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
+        //g2.drawImage(mon_shooter[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
+        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
     }
 
@@ -291,7 +309,7 @@ public class Mon_Shooter extends Monster implements Actable {
     public void setInterval(int dt){this.shotInterval = dt;}
     public void setDirection(String dir){
         direction = dir;
-        changeAnimationDirection();
+        changeDirection();
     }
 
     public void dispose(){
@@ -299,20 +317,15 @@ public class Mon_Shooter extends Monster implements Actable {
         solidArea2 = null;
         hitbox = null;
         interactionDetectionArea = null;
-        mon_animator_shooter = null;
-        for(int i = 0 ; i < mon_shooter.length ; i++){
-            for(int j = 0 ; j < mon_shooter[i].length ; j++){
-                for(int k = 0 ; k < mon_shooter[i][j].length ; k++){
-                    mon_shooter[i][j][k].flush();
-                    mon_shooter[i][j][k] = null;
-                }
-            }
-        }
         projectile = null;
         proj.clear();
         proj = null;
         projectile_name = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+    }
+
+    private enum ShooterState{
+        IDLE, SHOOT, ACTIVE, DIE
     }
 }

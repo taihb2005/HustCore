@@ -10,12 +10,12 @@ import level.EventRectangle;
 import level.Level;
 import main.GamePanel;
 import main.GameState;
+import thread.LoadMapThread;
 
 import java.util.Arrays;
 import java.util.TimerTask;
 
-import static main.GamePanel.playMusic;
-import static main.GamePanel.stopMusic;
+import static main.GamePanel.*;
 
 public class EventHandler03 extends EventHandler {
     private EventRectangle beginRoom2;
@@ -198,5 +198,11 @@ public class EventHandler03 extends EventHandler {
                 lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
                 }
             }
+            if(lvl.canChangeMap){
+                lvl.levelFinished = true;
+                levelProgress++;
+                new LoadMapThread().start();
+            }
         }
+
 }

@@ -9,12 +9,9 @@ import main.GamePanel;
 import main.GameState;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 
-import static main.KeyHandler.*;
 import static main.UI.joystix;
 
 public class EventHandler02 extends EventHandler {
@@ -58,7 +55,7 @@ public class EventHandler02 extends EventHandler {
                 if(e != null && e.idName != null){
                     if(e.idName.equals("Password Door")) {
                         Obj_Door door_tmp = (Obj_Door) e;
-                        door_tmp.canChangeState = true;
+                        door_tmp.canChangeStatus = true;
                     }
                 }
             }
@@ -69,7 +66,7 @@ public class EventHandler02 extends EventHandler {
         for(Entity e : lvl.map.activeObj) {
             if (e != null && e.idName.equals("EndDoor")) {
                 Obj_Door tmp = (Obj_Door) e;
-                tmp.canChangeState = true;
+                tmp.canChangeStatus = true;
             }
         }
         if(triggerEvent(lvl.changeMapEventRect1) || triggerEvent(lvl.changeMapEventRect2)) lvl.canChangeMap = true;
