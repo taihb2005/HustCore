@@ -1,0 +1,10 @@
+{
+  "root": [
+    {
+      "enemy": "Mon_Cyborgon",
+      "name": "Room3Enemy",
+      "position": {"x": 1097, "y": 1905}
+    }
+  ]
+}
+

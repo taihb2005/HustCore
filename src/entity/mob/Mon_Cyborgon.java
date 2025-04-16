@@ -28,7 +28,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         for(CyborgonState state: CyborgonState.values()){
             int speed = switch (state){
                 case IDLE, RUN, DIE -> 10;
-                case ACTIVATING -> 20;
+                case ACTIVATING -> 14;
                 case INACTIVE -> 120;
                 case BLINK -> 17;
                 case SHOOT -> 11;
@@ -61,7 +61,6 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
     private BufferedImage radiationImage;
     private int lastRenderedDiameter = -1;
-    private float lastRenderedAlpha = -1f;
 
     private void setState(){
         boolean change1 = false;
@@ -122,7 +121,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         projectile = new Proj_TrackingPlasma(mp);
         projectile.setProjectileSpeed(4);
         effectDealOnTouch = new EffectNone(mp.player);
-        effectDealByProjectile = new Slow(mp.player , 60);
+        effectDealByProjectile = new Slow(mp.player , 90);
         speed = 2;
         last_speed = speed;
 

@@ -2,17 +2,12 @@ package level.progress.level03;
 
 import entity.Entity;
 import entity.effect.type.Stun;
-import entity.mob.Monster;
-import entity.npc.Npc_CorruptedHustStudent;
-import entity.object.Obj_Door;
 import level.EventHandler;
 import level.EventRectangle;
 import level.Level;
 import main.GamePanel;
 import main.GameState;
-import thread.LoadMapThread;
 
-import java.util.Arrays;
 import java.util.TimerTask;
 
 import static main.GamePanel.*;
@@ -201,7 +196,6 @@ public class EventHandler03 extends EventHandler {
             if(lvl.canChangeMap){
                 lvl.levelFinished = true;
                 levelProgress++;
-                new LoadMapThread().start();
             }
         }
 

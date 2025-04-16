@@ -51,7 +51,7 @@ public class TileLayer {
                     int worldX = j * tileWidth;
                     int worldY = i * tileHeight;
 
-                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY(), 65, 65, null);
+                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY(), tileWidth, tileHeight, null);
                 }
 
             }

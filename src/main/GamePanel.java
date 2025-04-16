@@ -22,7 +22,6 @@ import java.util.ConcurrentModificationException;
 import javax.swing.JPanel;
 
 import static main.KeyHandler.disableKey;
-import static thread.LoadMapThread.loadMap;
 
 public class GamePanel extends JPanel implements Runnable {
     final private int FPS = 60;
@@ -77,10 +76,6 @@ public class GamePanel extends JPanel implements Runnable {
         ui = new UI(this);
     }
 
-    public void restart(){
-        loadMap();
-        currentLevel.map.player.resetValue();
-    }
 
     public void setup()
     {

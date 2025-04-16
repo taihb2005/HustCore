@@ -4,7 +4,6 @@ import java.awt.*;
 
 import static main.GamePanel.*;
 import static main.UI.bitcrusher;
-import static main.UI.joystix;
 
 public class Credit {
     GamePanel gp;
@@ -204,7 +203,7 @@ public class Credit {
 
         for(String line: text.split("\n"))
         {
-            int x = GamePanel.ui.getXforCenteredText(line);
+            int x = GamePanel.ui.getXForCenteredText(line);
             g2.drawString(line, x, y);
             y += lineHeight;
         }

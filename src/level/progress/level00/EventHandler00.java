@@ -7,11 +7,10 @@ import level.EventHandler;
 import level.Level;
 import main.GamePanel;
 import main.GameState;
-import thread.LoadMapThread;
+import thread.LoadingService;
 
 import java.util.TimerTask;
 
-import static main.GamePanel.currentLevel;
 import static main.GamePanel.levelProgress;
 
 public class EventHandler00 extends EventHandler {
@@ -66,7 +65,7 @@ public class EventHandler00 extends EventHandler {
             lvl.levelFinished = true;
             GamePanel.gameState = GameState.LOADING_STATE;
             levelProgress++;
-            new LoadMapThread().start();
+            LoadingService.loadMap();
         }
     }
 

@@ -1,0 +1,801 @@
+{
+  "player": [
+    {"position": {"x": 1088 , "y": 2174}}
+  ],
+  "inactive": [
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 256 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 576 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 640 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 960 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 3,
+      "position": {"x": 1408 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 1,
+      "position": {"x": 1472 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 1792 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 3,
+      "position": {"x": 2112 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 2176 , "y": 0}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 960 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 1280 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 1664 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "off",
+      "type": 3,
+      "frame": 0,
+      "position": {"x": 1728 , "y": 128}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "on",
+      "type": 1,
+      "frame": 1,
+      "position": {"x": 896 , "y": 256}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 2,
+      "position": {"x": 640 , "y": 384}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 896 , "y": 384}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "small",
+      "state": "on",
+      "type": 1,
+      "frame": 3,
+      "position": {"x": 1088 , "y": 1792}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 800 , "y": 1600}
+    },
+    {
+      "object": "Obj_Television",
+      "size": "big",
+      "state": "off",
+      "type": 1,
+      "frame": 0,
+      "position": {"x": 384 , "y": 704}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 64 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1536 , "y": 768}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1088 , "y": 1836}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1078 , "y": 1850}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 1216 , "y": 1792}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1230 , "y": 1810}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 1344 , "y": 1792}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 1345 , "y": 1810}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "inactive",
+      "position": {"x": 256 , "y": 256}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 320 , "y": 256}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "inactive",
+      "position": {"x": 386 , "y": 256}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "inactive",
+      "position": {"x": 960 , "y": 1792}
+    },
+    {
+      "object": "Obj_PasswordAuth",
+      "state": "active",
+      "position": {"x": 1024 , "y": 1792}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1088 , "y": 2048}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1152 , "y": 1984}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1024 , "y": 1984}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1216 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1280 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1344 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 832 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 896 , "y": 1920}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 960 , "y": 1920}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 1088 , "y": 1641}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 1088 , "y": 1677}
+    },
+    {
+      "object": "Obj_Bin",
+      "type": 2,
+      "position": {"x": 1152 , "y": 1753}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 64 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 128 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 600 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 1664 , "y": 320}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 1728 , "y": 128}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 192 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 110 , "y": 774}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 256 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 192 , "y": 772}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 128 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 1,
+      "position": {"x": 327 , "y": 743}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 576 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 576 , "y": 774}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 640 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 640 , "y": 774}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 704 , "y": 758}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "back",
+      "type": 1,
+      "position": {"x": 704 , "y": 774}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 128 , "y": 1034}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 134 , "y": 856}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 192 , "y": 1034}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 192 , "y": 856}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 256 , "y": 1034}
+    },
+    {
+      "object": "Obj_Chair",
+      "direction": "front",
+      "type": 2,
+      "position": {"x": 256 , "y": 856}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 576 , "y": 1034}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "off",
+      "position": {"x": 640 , "y": 1034}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "front",
+      "state": "on",
+      "position": {"x": 704 , "y": 1034}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 128 , "y": 896}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "off",
+      "position": {"x": 194 , "y": 896}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 258 , "y": 896}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 576 , "y": 896}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 640 , "y": 896}
+    },
+    {
+      "object": "Obj_Computer",
+      "direction": "back",
+      "state": "on",
+      "position": {"x": 704 , "y": 896}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 2048 , "y": 64}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 2048 , "y": 576}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1024 , "y": 768}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1088 , "y": 768}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1152 , "y": 768}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1728 , "y": 960}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1920 , "y": 960}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 2048 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 2176 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1536 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 2,
+      "position": {"x": 1664 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1664 , "y": 832}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1984 , "y": 832}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1526 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1644 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 1792 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 2048 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "filled",
+      "type": 1,
+      "position": {"x": 2176 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 128 , "y": 1600}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 576 , "y": 1600}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 630 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 644 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1920 , "y": 1344}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1792 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1920 , "y": 1472}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1664 , "y": 1664}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 2048 , "y": 1664}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1856 , "y": 1856}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 1664 , "y": 2048}
+    },
+    {
+      "object": "Obj_Tank",
+      "state": "empty",
+      "type": 1,
+      "position": {"x": 2048 , "y": 2048}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 1,
+      "position": {"x": 64, "y": 1984}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 128, "y": 1984}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 192, "y": 1984}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 2,
+      "position": {"x": 256, "y": 1984}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 1,
+      "position": {"x": 64, "y": 2048}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 128, "y": 2048}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 192, "y": 2048}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 2,
+      "position": {"x": 256, "y": 2048}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 1,
+      "position": {"x": 64, "y": 2112}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 128, "y": 2112}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 192, "y": 2112}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 2,
+      "position": {"x": 256, "y": 2112}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 1,
+      "position": {"x": 64, "y": 2176}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "open",
+      "type": 2,
+      "position": {"x": 128, "y": 2176}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 1,
+      "position": {"x": 192, "y": 2176}
+    },
+    {
+      "object": "Obj_Vault",
+      "state": "close",
+      "type": 2,
+      "position": {"x": 256, "y": 2176}
+    }
+  ],
+  "active": [
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 01",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 832, "y": 1792 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 02",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 960, "y": 1600 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "Begin DoorMap 03",
+      "size": "small",
+      "state": "active",
+      "position": { "x": 1088, "y": 2240 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "door_no1",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 64, "y": 0 }
+    }
+  ]
+}

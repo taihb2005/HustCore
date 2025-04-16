@@ -1,7 +1,6 @@
 package main;
 
-import thread.LoadMapThread;
-import thread.LoadResourceThread;
+import thread.LoadingService;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -69,8 +68,8 @@ public class KeyHandler implements KeyListener{
                 if (keyCode == KeyEvent.VK_ENTER) {
                     if (GamePanel.ui.commandNum == 0) {
                         disableKey();
-                        new LoadResourceThread().start();
-                        new LoadMapThread().start();
+                        LoadingService.loadResource();
+                        LoadingService.loadMap();
 //                        gp.darker = true;
 //                        TimerTask startToPlayAnimation = new TimerTask() {
 //                            @Override
@@ -169,8 +168,7 @@ public class KeyHandler implements KeyListener{
                 if (keyCode == KeyEvent.VK_ENTER) {
                     if (GamePanel.ui.subState == 0) {
                         if (GamePanel.ui.commandNum == 2) {
-                            gp.restart();
-                            GamePanel.gameState = GameState.PLAY_STATE;
+                            LoadingService.restart();
                         }
                         if (GamePanel.ui.commandNum == 3) {
                             GamePanel.gameState = GameState.MENU_STATE;
@@ -203,7 +201,7 @@ public class KeyHandler implements KeyListener{
                 }
                 if (keyCode == KeyEvent.VK_ENTER) {
                     if (GamePanel.ui.commandNum == 0) {
-                        gp.restart();
+                        LoadingService.restart();
                         GamePanel.gameState = GameState.PLAY_STATE;
                     } else if (GamePanel.ui.commandNum == 1) {
                         GamePanel.gameState = GameState.MENU_STATE;

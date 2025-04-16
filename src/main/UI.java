@@ -1,9 +1,7 @@
 package main;
 
 import entity.Entity;
-import entity.player.Player;
-import map.GameMap;
-import util.UtilityTool;
+import ui.manager.TitleScreen;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,7 +11,6 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
-import static level.progress.level03.EventHandler03.time;
 import static main.GamePanel.*;
 import static main.KeyHandler.*;
 
@@ -23,6 +20,9 @@ public class UI {
     public static Font joystix;
     public static Font maru;
     public static Font bitcrusher;
+
+    public static TitleScreen titleScreen;
+
     StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -52,9 +52,9 @@ public class UI {
 
     public Entity target;
 
-    private BufferedImage hpFrame, manaFrame, boss_hpFrame;
-    private BufferedImage titleBackground;
-    private BufferedImage quizImage;
+    private static BufferedImage hpFrame, manaFrame, boss_hpFrame;
+    public static BufferedImage titleBackground;
+    private static BufferedImage quizImage;
 
     public Entity npc;
     public UI(GamePanel gp) {
@@ -80,6 +80,8 @@ public class UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        titleScreen = new TitleScreen();
     }
     public void startDialogue(String dialogue) {
         currentDialogue = new StringBuilder(dialogue);
@@ -154,7 +156,7 @@ public class UI {
         //Title name
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
         String text = "HUST Core";
-        int x = getXforCenteredText(text);
+        int x = getXForCenteredText(text);
         int y = windowHeight / 4;
 
         //Shadow
@@ -171,7 +173,7 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
 
         text = "Bắt đầu";
-        x = getXforCenteredText(text);
+        x = getXForCenteredText(text);
         y = windowHeight*3/5 - tileSize;
         g2.drawString(text, x, y - 5);
         int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
@@ -189,7 +191,7 @@ public class UI {
         }
 
         text = "Thoát";
-        //x = getXforCenteredText(text);
+        //x = getXForCenteredText(text);
         y = windowHeight*4/5 + 40 - tileSize;
         g2.drawString(text, x + 20, y - 8);
         g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
@@ -239,12 +241,12 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
         g2.setColor(Color.WHITE);
         String text = "";
-        int x = getXforCenteredText(text);
+        int x = getXForCenteredText(text);
         int y = windowHeight / 2;
         g2.drawString(text , x , y );
     }
 
-    public int getXforCenteredText(String text)
+    public int getXForCenteredText(String text)
     {
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
         return windowWidth / 2 - length / 2;
@@ -330,16 +332,16 @@ public class UI {
 
         String text = "MÀN HÌNH CHÍNH";
         int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        int x = getXforCenteredText(text);
+        int x = getXForCenteredText(text);
 
         g2.setColor(Color.WHITE);
         text = "THUA";
         g2.setFont(g2.getFont().deriveFont(Font.BOLD , 50f));
 
         g2.setColor(Color.BLACK);
-        g2.drawString(text , getXforCenteredText(text) - 2 ,windowHeight / 4 + 5);
+        g2.drawString(text , getXForCenteredText(text) - 2 ,windowHeight / 4 + 5);
         g2.setColor(Color.WHITE);
-        g2.drawString(text , getXforCenteredText(text) - 7 ,windowHeight / 4);
+        g2.drawString(text , getXForCenteredText(text) - 7 ,windowHeight / 4);
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD , 30f));
         text = "THỬ LẠI";
@@ -403,7 +405,7 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
         String text = "TÙY CHỌN";
-        textX = getXforCenteredText(text);
+        textX = getXForCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
 
@@ -520,7 +522,6 @@ public class UI {
     }
     public void render(Graphics2D g2) {
         this.g2 = g2;
-        try {
             if(gameState == GameState.LOADING_STATE){
                 drawLoadingScreen();
             } else if(gameState == GameState.PLAY_STATE)
@@ -531,6 +532,7 @@ public class UI {
                 if (levelProgress == 4 && bossHP > 0) drawHPBarForBoss();
             }else if (gameState == GameState.MENU_STATE) {
                 drawTitleScreen();
+                //titleScreen.render(g2);
             } else if (gameState == GameState.DIALOGUE_STATE) {
                 drawDialogueScreen();
                 drawHPBar();
@@ -564,14 +566,7 @@ public class UI {
             if (gameState == GameState.QUIZ_STATE) {
                 drawQuiz();
             }
-        }catch(NullPointerException e){
-            if (gameState == GameState.MENU_STATE) {
-                drawTitleScreen();
-            } else
-            if (gameState == GameState.SETTING_STATE) {
-                drawSettingScreen();
-            }
-        }
+
     }
 
     private void drawQuiz() {
@@ -633,7 +628,7 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         // TITLE
         String text = "TÙY CHỌN";
-        textX = getXforCenteredText(text);
+        textX = getXForCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
         // MUSIC
@@ -681,7 +676,7 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 19));
         //TITLE
         String text = "TÙY CHỌN";
-        textX = getXforCenteredText(text);
+        textX = getXForCenteredText(text);
         textY = frameY + tileSize;
         g2.drawString(text, textX, textY);
 

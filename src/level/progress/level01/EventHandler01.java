@@ -5,7 +5,6 @@ import entity.object.Obj_Door;
 import level.EventHandler;
 import level.EventRectangle;
 import level.Level;
-import thread.LoadMapThread;
 
 import java.util.Timer;
 
@@ -185,7 +184,6 @@ public class EventHandler01 extends EventHandler {
         if(lvl.canChangeMap){
             lvl.levelFinished = true;
             levelProgress++;
-            new LoadMapThread().start();
         }
     }
 

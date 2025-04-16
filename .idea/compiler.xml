@@ -9,8 +9,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jsonreader" />
+        <module name="HustCore" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jsonreader" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
