@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import entity.mob.Mon_Cyborgon;
-import entity.mob.Mon_HustGuardian;
-import entity.mob.Mon_Shooter;
-import entity.mob.Mon_Spectron;
+import entity.mob.*;
 import entity.object.*;
 import entity.player.Player;
 import graphics.AssetPool;
@@ -42,6 +39,7 @@ public class LoadingService {
                 Mon_Shooter.load();
                 Mon_HustGuardian.load();
                 Mon_Cyborgon.load();
+                Mon_Boss.load();
 
                 System.out.println("Resources loaded.");
             } catch (IOException e) {
@@ -64,7 +62,7 @@ public class LoadingService {
                     currentLevel.dispose();
                     System.gc();
                 }
-                currentLevel = new DevTestLevel();
+                //currentLevel = new DevTestLevel();
 //                switch(levelProgress){
 //                    case 0 : currentLevel = new Level00(); break;
 //                    case 1 : currentLevel = new Level01(); break;

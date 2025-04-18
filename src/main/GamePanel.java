@@ -1,22 +1,15 @@
 package main;
 
 // awt library
-import ai.PathFinder;
 import ai.PathFinder2;
 import graphics.environment.EnvironmentManager;
 import level.Level;
-import level.progress.level00.Level00;
-import level.progress.level01.Level01;
-import level.progress.level02.Level02;
-import level.progress.level03.Level03;
-import level.progress.level04.Level04;
 import map.*;
 import status.StatusManager;
 import util.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ConcurrentModificationException;
 
 // swing library
 import javax.swing.JPanel;
@@ -39,18 +32,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static PathFinder pFinder;
-    public static PathFinder2 pFinder2;
     public static Credit credit;
     public static EnvironmentManager environmentManager;
-    final public KeyHandler keyHandler = new KeyHandler(this);
+    public final KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
     public static GameState gameState;
 
     public static StatusManager sManager = new StatusManager();
     //public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
+    public static int previousLevelProgress = 4;
+    public static int levelProgress = 4;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;

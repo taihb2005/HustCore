@@ -5,7 +5,6 @@ import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
 import main.KeyHandler;
-import org.jetbrains.annotations.NotNull;
 import util.KeyTriple;
 
 import java.awt.*;
@@ -56,7 +55,7 @@ public class Obj_Door extends Entity{
 
                     KeyTriple<DoorSize, DoorState, DoorStatus> key = new KeyTriple<>(size, state, status);
 
-                    boolean loop = (state == DoorState.CLOSED) ? true : false;
+                    boolean loop = state == DoorState.CLOSED;
 
                     if (doorSpritePool.containsKey(key)) {
                         doorAnimations.put(new KeyTriple<>(size, state, status),
@@ -85,7 +84,7 @@ public class Obj_Door extends Entity{
         }
     }
 
-    private static @NotNull String getString(DoorSize size, DoorState state, DoorStatus status) {
+    private static String getString(DoorSize size, DoorState state, DoorStatus status) {
         String namePrefix = "door_" + size.name().toLowerCase() + "_";
         String namePostfix = ".png";
 

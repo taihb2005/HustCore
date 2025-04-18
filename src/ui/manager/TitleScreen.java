@@ -7,11 +7,13 @@ import static main.GamePanel.*;
 import static main.UI.joystix;
 import static main.UI.titleBackground;
 
-public class TitleScreen {
+public class TitleScreen extends BaseUI{
+    private Graphics2D g2;
     private final ButtonManager titleScreen = new ButtonManager();
 
     public TitleScreen(){
-        Button startButton = new Button("Bắt đầu", 500, windowHeight*3/5 - tileSize, 100, 100);
+
+        Button startButton = new Button("Bắt đầu", 250, windowHeight*3/5 - tileSize, 0, 0);
         startButton.setTextColor(Color.WHITE);
         startButton.setFont(joystix);
         startButton.setTextAlign(Button.Align.CENTER);
@@ -25,6 +27,7 @@ public class TitleScreen {
     }
 
     public void render(Graphics2D g2){
+        this.g2 = g2;
         g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
 
         titleScreen.render(g2);

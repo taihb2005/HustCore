@@ -64,7 +64,6 @@ public class PathFinder2 {
     public void setNodes(int startCol, int startRow, int goalCol, int goalRow) {
         resetNodes();
 
-        // Đặt nút bắt đầu và nút mục tiêu
         startNode = node[startCol][startRow];
         currentNode = startNode;
         goalNode = node[goalCol][goalRow];
@@ -73,7 +72,6 @@ public class PathFinder2 {
         int col = 0;
         int row = 0;
 
-        // Xử lý trạng thái solid từ các đối tượng trong bản đồ
         checkForSolidTile(mp.inactiveObj);
         checkForSolidTile(mp.activeObj);
         checkForSolidTile(mp.npc);

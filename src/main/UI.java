@@ -21,7 +21,6 @@ public class UI {
     public static Font maru;
     public static Font bitcrusher;
 
-    public static TitleScreen titleScreen;
 
     StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
@@ -47,8 +46,6 @@ public class UI {
 
     public int commandNum = 0;
 
-    public static int bossHP = 0;
-    public static int boss_maxHP = 1700;
 
     public Entity target;
 
@@ -81,7 +78,6 @@ public class UI {
             e.printStackTrace();
         }
 
-        titleScreen = new TitleScreen();
     }
     public void startDialogue(String dialogue) {
         currentDialogue = new StringBuilder(dialogue);
@@ -253,24 +249,26 @@ public class UI {
     }
 
     public void drawHPBarForBoss() {
-        int fullHPWidth = 205;  // Chiều dài tối đa của thanh HP
-        int hpBarHeight = 12;   // Chiều cao của thanh HP
-        int x = windowWidth - 250;
-        int y = windowHeight - 92;
-        int currentHPWidth;
-        try {
-            currentHPWidth = (int) ((double) bossHP / boss_maxHP * fullHPWidth);
-        } catch(NullPointerException e){
-            currentHPWidth = 0;
-        }
-        // Vẽ nền (màu xám) cho thanh HP
-        g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
-        g2.setFont(joystix.deriveFont(Font.PLAIN , 19f));
-        g2.drawString("AI đầu não" , x , y - 8);
+        if(currentMap != null && currentMap.boss != null) {
+            int fullHPWidth = 205;  // Chiều dài tối đa của thanh HP
+            int hpBarHeight = 12;   // Chiều cao của thanh HP
+            int x = windowWidth - 250;
+            int y = windowHeight - 92;
+            int currentHPWidth;
+            try {
+                currentHPWidth = (int) ((double) currentMap.boss.currentHP / currentMap.boss.maxHP * fullHPWidth);
+            } catch (NullPointerException e) {
+                currentHPWidth = 0;
+            }
+            // Vẽ nền (màu xám) cho thanh HP
+            g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
+            g2.setFont(joystix.deriveFont(Font.PLAIN, 19f));
+            g2.drawString("AI đầu não", x, y - 8);
 
-        // Vẽ thanh HP hiện tại (màu đỏ)
-        g2.setColor(new Color(255,0,255));
-        g2.fillRect(x+209-currentHPWidth, y+12 , currentHPWidth, hpBarHeight);
+            // Vẽ thanh HP hiện tại (màu đỏ)
+            g2.setColor(new Color(255, 0, 255));
+            g2.fillRect(x + 209 - currentHPWidth, y + 12, currentHPWidth, hpBarHeight);
+        }
     }
 
     public void drawHPBar() {
@@ -529,16 +527,15 @@ public class UI {
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
-                if (levelProgress == 4 && bossHP > 0) drawHPBarForBoss();
+                drawHPBarForBoss();
             }else if (gameState == GameState.MENU_STATE) {
                 drawTitleScreen();
-                //titleScreen.render(g2);
             } else if (gameState == GameState.DIALOGUE_STATE) {
                 drawDialogueScreen();
                 drawHPBar();
                 drawManaBar();
                 drawInventory();
-                if (bossHP > 0) drawHPBarForBoss();
+                drawHPBarForBoss();
             }
              else if(gameState == GameState.PASSWORD_STATE){
                 drawPasswordInputBox();
@@ -554,7 +551,7 @@ public class UI {
                 drawPausedScreen();
                 drawOptionsScreen();
                 drawInventory();
-                if (bossHP > 0) drawHPBarForBoss();
+                drawHPBarForBoss();
             }
             if (gameState == GameState.LOSE_STATE) {
                 currentMap.dispose();

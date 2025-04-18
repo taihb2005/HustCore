@@ -12,8 +12,8 @@ public class Button {
     private int textSize;
     public int x, y, width, height;
 
-    private Insets padding = new Insets(10, 10, 10, 10); // top, left, bottom, right
-    private Insets margin = new Insets(5, 5, 5, 5);
+    public Insets padding = new Insets(10, 10, 10, 10); // top, left, bottom, right
+    public Insets margin = new Insets(5, 5, 5, 5);
 
     private Runnable onHover;
     private Runnable onSelect;
@@ -24,13 +24,13 @@ public class Button {
 
     private Consumer<Button> onClick;
 
-    private Font font = new Font("Arial", Font.BOLD, 20);
+    public Font font = new Font("Arial", Font.BOLD, 20);
     private Color bgColor = Color.DARK_GRAY;
     private Color hoverColor = Color.GRAY;
-    private Color textColor = Color.WHITE;
+    public Color textColor = Color.WHITE;
 
     public enum Align { LEFT, CENTER, RIGHT }
-    private Align textAlign = Align.CENTER;
+    public Align textAlign = Align.CENTER;
 
     public Button(String text, int x, int y, int width, int height, Consumer<Button> onClick) {
         this.text = text;
@@ -78,35 +78,36 @@ public class Button {
     }
 
     public void draw(Graphics2D g2) {
-        g2.setFont(font.deriveFont(Font.PLAIN, textSize));
+        g2.setFont(font.deriveFont(Font.PLAIN, 32));
         g2.setColor(textColor);
+
+        FontMetrics fm = g2.getFontMetrics();
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getAscent();
+
+        int contentWidth = textWidth + padding.left + padding.right;
+        int contentHeight = textHeight + padding.top + padding.bottom;
 
         int drawX = x + margin.left;
         int drawY = y + margin.top;
 
-        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
+        // Vẽ khung nền
+        g2.setColor(Color.WHITE); // Ví dụ: màu nền có độ mờ
+        g2.drawRoundRect(drawX, drawY, contentWidth, contentHeight, 20, 20);
 
-        g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics();
-        int textWidth = (int)fm.getStringBounds(text, g2).getWidth();
-        int textHeight = 26;
-
+        // Tính toạ độ text theo căn lề
         int textX = switch (textAlign) {
             case LEFT -> drawX + padding.left;
-            case RIGHT -> drawX + width - padding.right - textWidth;
-            default -> drawX + (width - textWidth) / 2;
+            case RIGHT -> drawX + contentWidth - padding.right - textWidth;
+            default -> drawX + (contentWidth - textWidth) / 2;
         };
-        int textY = drawY + (height + textHeight) / 2 - padding.bottom;
+        int textY = drawY + padding.top + textHeight; // baseline text
 
-        System.out.println(textX);
-
+        // Vẽ text
         g2.setColor(textColor);
         g2.drawString(text, textX, textY);
-
-        g2.setColor(textColor);
-        g2.drawString(text , textX + 5 , textY + 5 );
     }
+
 
     public void setOnSelectListener(Runnable onSelect){
 

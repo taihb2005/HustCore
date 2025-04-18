@@ -1,5 +1,6 @@
 package level;
 
+import ai.PathFinder2;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.effect.Effect;
@@ -193,6 +194,14 @@ public class AssetSetter {
                             case "Blind": effect = new Blind(mp.player , duration);
                         }
                         mp.addObject(new Mon_EffectDealer(mp , effect ,enemy.getX() , enemy.getY()) , mp.enemy);
+                        break;
+                    case "Mon_Boss":
+                        PathFinder2 finder = new PathFinder2(mp);
+                        Mon_Boss boss = new Mon_Boss(mp, X, Y);
+                        boss.setPathFinder(finder);
+                        mp.addObject(boss, mp.enemy);
+                        mp.boss = boss;
+                        break;
                 }
             }
 

@@ -1,5 +1,6 @@
 package entity.projectile;
 
+import ai.PathFinder;
 import entity.Entity;
 import graphics.Animation;
 import map.GameMap;
@@ -34,6 +35,8 @@ public class Projectile extends Entity {
     {
         this.mp = mp;
         this.direction = "right";
+
+        this.pFinder = new PathFinder(mp);
     }
 
     public void set(int worldX, int worldY, String direction, boolean active, Entity user)

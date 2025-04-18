@@ -5,7 +5,6 @@ import map.GameMap;
 
 import java.awt.*;
 
-import static main.GamePanel.pFinder;
 import static map.GameMap.childNodeSize;
 
 public class Proj_TrackingPlasma extends Projectile {

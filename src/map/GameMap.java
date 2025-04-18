@@ -1,6 +1,7 @@
 package map;
 
 import entity.Entity;
+import entity.mob.Mon_Boss;
 import entity.mob.Monster;
 import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
@@ -21,6 +22,8 @@ import static main.GamePanel.*;
 
 public class GameMap {
     public Player player = new Player(this);
+    public Mon_Boss boss = null;
+
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack = new AttackEnemy(this);
 
@@ -58,6 +61,9 @@ public class GameMap {
         this.mapHeight = mapHeight;
         this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
         this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
+
+        System.out.println("World Col" + maxWorldCol);
+        System.out.println("World Row" + maxWorldRow);
     }
 
     public void render(Graphics2D g2)

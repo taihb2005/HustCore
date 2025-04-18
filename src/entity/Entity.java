@@ -1,5 +1,6 @@
 package entity;
 
+import ai.PathFinder;
 import entity.projectile.Projectile;
 import main.GameState;
 import main.KeyHandler;
@@ -7,10 +8,15 @@ import map.GameMap;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static main.GamePanel.*;
 
 public class Entity {
+    public PathFinder pFinder;
+    public static final ExecutorService executor = Executors.newFixedThreadPool(4);
+
     protected int CURRENT_ACTION;
     protected int PREVIOUS_ACTION;
     protected int CURRENT_DIRECTION;

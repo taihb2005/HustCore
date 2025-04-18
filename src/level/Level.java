@@ -30,7 +30,6 @@ public class Level{
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
-        pFinder = new PathFinder(map);
         setter = new AssetSetter(map);
         environmentManager = new EnvironmentManager(map);
         environmentManager.setup();

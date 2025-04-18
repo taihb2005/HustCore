@@ -1,6 +1,10 @@
 {
   "root": [
     {
+      "enemy": "Mon_Boss",
+      "position": { "x": 500, "y":  900}
+    },
+    {
       "enemy": "Mon_Shooter",
       "position": { "x": 256, "y": 1088 },
       "direction": "up",
