@@ -16,6 +16,7 @@ public class RoomTask {
     RoomState currentState = RoomState.PENDING;
 
     int remainingEnemies;
+    int lastRemainingEnemies;
 
     private Entity eventMaster;
     private EventRectangle triggerZone;
@@ -41,9 +42,9 @@ public class RoomTask {
             for(String idName: doorDeactivate){
                 lvl.entityManager.get(idName, Obj_Door.class).close();
             }
-            remainingEnemies = enemy.size();
 
-            eventMaster.startDialogue(eventMaster, 0);
+            if(eventMaster.dialogues != null)
+                eventMaster.submitDialogue(eventMaster, 0);
         };
 
         onComplete= () -> {
@@ -102,6 +103,15 @@ public class RoomTask {
 
     public void createTaskBoard(StringBuilder task){
         eventMaster.dialogues[0][0] = task;
+    }
+
+    public boolean checkEnemyDifferent(int difference){
+        remainingEnemies = targetedEnemy.size();
+        if((lastRemainingEnemies - remainingEnemies) == difference){
+            lastRemainingEnemies = remainingEnemies;
+            return true;
+        }
+        return false;
     }
 
     public void start(){

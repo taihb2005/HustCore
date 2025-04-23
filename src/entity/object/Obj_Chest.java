@@ -6,7 +6,6 @@ import entity.items.Item;
 import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
-import level.Level;
 import level.LevelState;
 import main.KeyHandler;
 import map.GameMap;
@@ -98,7 +97,7 @@ public class Obj_Chest extends Entity implements Actable {
         if(dialogues[dialogueSet][0] == null){
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
     public void loot() {

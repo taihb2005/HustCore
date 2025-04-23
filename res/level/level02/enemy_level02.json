@@ -176,6 +176,20 @@
         "isAlwaysUp": true,
         "attackCycle": 120
       }
+    ],
+    [
+      {
+        "enemy": "Mon_EffectDealer",
+        "name": "EffectDealer021",
+        "effect": {
+          "type": "SpeedBoost",
+          "duration": 1
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        }
+      }
     ]
   ]
 }

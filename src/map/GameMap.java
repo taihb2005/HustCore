@@ -7,7 +7,9 @@ import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
-import environment.EnvironmentManager;
+
+import graphics.environment.EnvironmentManager;
+
 import level.event.EventRectangle;
 import main.KeyHandler;
 import util.CollisionHandler;
@@ -22,7 +24,7 @@ public class GameMap {
     public Player player;
     public Mon_Boss boss = null;
 
-    private EnvironmentManager environmentManager;
+    private final EnvironmentManager environmentManager;
     public CollisionHandler cChecker = new CollisionHandler(this);
     public AttackEnemy playerAttack;
 
@@ -37,10 +39,10 @@ public class GameMap {
 
     public Entity [] inactiveObj; //Danh sách objects không tương tác được ở trên map
     public Entity [] activeObj;   //Danh sách objects tương tác đươc ở trên map
-    public Entity [] npc;//Danh sách target ở trên map
+    public Entity [] npc;//Danh sách currentSpeaker ở trên map
     public Monster [] enemy;
     public Projectile[] projectiles;
-    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồm player , target,...
+    public ArrayList<Entity> objList;     //Danh sách tất cả các object trên map bao gồm player , currentSpeaker,...
 
     //MAP STAT
     private int bestLightingRadius = 2000;
@@ -242,6 +244,10 @@ public class GameMap {
 
     public int getMapHeight() {
         return mapHeight;
+    }
+
+    public EnvironmentManager getEnvironmentManager(){
+        return environmentManager;
     }
 
     private <T extends Entity> void disposeEntityArray(T[] array) {

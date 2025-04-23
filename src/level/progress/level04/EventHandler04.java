@@ -52,7 +52,7 @@ public class EventHandler04 extends EventHandler {
     }
 
     void startingEndingDialogue(){
-        eventMaster.startDialogue(eventMaster , 1);
+        eventMaster.submitDialogue(eventMaster , 1);
     }
 
     void startingDialogue(){
@@ -60,7 +60,7 @@ public class EventHandler04 extends EventHandler {
             //Con điên, sao k để chạy thoại của eventMastr luôn tách ra làm đ gì
             public void run() {
                 setFirstDialogue();
-                eventMaster.startDialogue(eventMaster , 0);
+                eventMaster.submitDialogue(eventMaster , 0);
                 lvl.finishedBeginningDialogue = true;
             }
         };

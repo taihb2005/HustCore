@@ -34,11 +34,10 @@ public class Effect implements Affectable {
 
         int currentDuration = player.effectManager.getOrDefault(name, -1);
 
-        if (currentDuration < effectDuration) {
+        if (currentDuration <= effectDuration) {
             player.effectManager.put(name, effectDuration);
 
             if (currentDuration == -1) {
-                setEffectAnimation();
                 player.effect.add(this);
             }
         } else if (currentDuration != -1) {
@@ -60,4 +59,9 @@ public class Effect implements Affectable {
         effectDuration = duration;
         effectCounter.setPeriod(duration);
     }
+
+
+    public Effect clone(){
+        return null;
+    };
 }

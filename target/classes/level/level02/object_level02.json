@@ -2,8 +2,8 @@
   "player": [
     {
       "position": {
-        "x": 840,
-        "y": 32
+        "x": 828,
+        "y": -64
       }
     }
   ],
@@ -196,7 +196,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 1,
       "position": {
         "x": 448,
@@ -208,7 +208,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 1,
       "position": {
         "x": 512,
@@ -220,7 +220,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 1,
       "position": {
         "x": 1088,
@@ -232,7 +232,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 1,
       "position": {
         "x": 1152,
@@ -485,16 +485,6 @@
       "state": "inactive",
       "position": {
         "x": 192,
-        "y": 0
-      }
-    },
-    {
-      "object": "Obj_Door",
-      "name": "DoorA002",
-      "size": "small",
-      "state": "inactive",
-      "position": {
-        "x": 832,
         "y": 0
       }
     },

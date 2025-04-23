@@ -41,9 +41,6 @@ public class Level{
     public boolean levelFinished;
     public boolean finishedBeginningDialogue = false;
 
-    public String enteredPassword = "";
-    public String correctPassword ;
-
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
         setter = new AssetSetter(map, this);
@@ -112,6 +109,9 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
     }
 
     protected void configureRoom(String roomName,
@@ -128,6 +128,9 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
     }
 
     protected void configureRoom(String roomName,
@@ -146,6 +149,9 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
     }
 
     protected void configureRoom(String roomName,
@@ -163,6 +169,10 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
+
         room.createTaskBoard(mission);
     }
 
@@ -183,6 +193,10 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
+
         room.createTaskBoard(mission);
     }
 
@@ -214,6 +228,10 @@ public class Level{
         for (String id : enemyIds) {
             room.addTargetedEnemy(entityManager.get(id, Monster.class));
         }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
+
         room.createTaskBoard(mission);
     }
 
@@ -222,7 +240,7 @@ public class Level{
     }
 
     protected boolean isLevelFinished(){
-        return roomTaskQueue.isEmpty();
+        return roomTaskQueue.isEmpty() && currentRoomTask == null;
     }
 
     public void dispose() {
@@ -264,8 +282,6 @@ public class Level{
 
         levelFinished = false;
         finishedBeginningDialogue = false;
-        enteredPassword = "";
-        correctPassword = null;
 
         currentState = null;
     }

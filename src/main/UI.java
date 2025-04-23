@@ -1,13 +1,19 @@
 package main;
 
 import entity.Entity;
+import level.Level;
 import level.LevelState;
+import level.progress.level02.Level02;
+import level.progress.level03.Level03;
+import util.KeyPair;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Objects;
 
 
@@ -21,6 +27,8 @@ public class UI {
     public static Font maru;
     public static Font bitcrusher;
 
+    public Queue<KeyPair<Entity, Integer>> dialogueQueue = new LinkedList<>();
+    private KeyPair<Entity, Integer> currentPairEntity;
     StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
     int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
@@ -46,7 +54,7 @@ public class UI {
     public int commandNum = 0;
 
 
-    public Entity target;
+    public Entity currentSpeaker;
 
     private static BufferedImage hpFrame, manaFrame, boss_hpFrame;
     public static BufferedImage titleBackground;
@@ -92,44 +100,66 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        if(target.dialogues[target.dialogueSet][target.dialogueIndex] != null) {
-            currentDialogue = target.dialogues[target.dialogueSet][target.dialogueIndex];
-            drawSubWindow(x, y, width, height);
+        // Nếu chưa có speaker hiện tại, lấy từ hàng đợi
+        if (currentSpeaker == null && !dialogueQueue.isEmpty()) {
+            currentPairEntity = dialogueQueue.poll();
+            currentSpeaker = currentPairEntity.key1();
+            currentSpeaker.dialogueSet = currentPairEntity.key2();
+            textIndex = 0;
+            displayedText = "";
+        }
 
-            frameCounter++;
-            if (frameCounter > textSpeed) {
-                frameCounter = 0;
-                if (textIndex < currentDialogue.length()) {
-                    playSE(1);
-                    displayedText += currentDialogue.charAt(textIndex);
-                    textIndex++;
+        if (currentSpeaker != null) {
+            StringBuilder currentDialogue = currentSpeaker.dialogues[currentSpeaker.dialogueSet][currentSpeaker.dialogueIndex];
+            if (currentDialogue != null) {
+                drawSubWindow(x, y, width, height);
+
+                frameCounter++;
+                if (frameCounter > textSpeed) {
+                    frameCounter = 0;
+                    if (textIndex < currentDialogue.length()) {
+                        playSE(1);
+                        displayedText += currentDialogue.charAt(textIndex);
+                        textIndex++;
+                    }
                 }
-            }
-            if(KeyHandler.enterPressed)
-            {
-                KeyHandler.enterPressed = false;
-                textIndex = 0;
-                displayedText = "";
-                target.dialogueIndex++;
 
-//                if(gameState == GameState.DIALOGUE)
-//                {
-//                    target.dialogueIndex++;
-//                }
+                if (KeyHandler.enterPressed) {
+                    KeyHandler.enterPressed = false;
+                    if (textIndex < currentDialogue.length()) {
+                        // Skip đến hết câu nếu chưa hiển thị xong
+                        textIndex = currentDialogue.length();
+                        displayedText = currentDialogue.toString();
+                    } else {
+                        // Chuyển sang dialogue tiếp theo của nhân vật
+                        currentSpeaker.dialogueIndex++;
+                        textIndex = 0;
+                        displayedText = "";
+
+                        if (currentSpeaker.dialogues[currentSpeaker.dialogueSet][currentSpeaker.dialogueIndex] == null) {
+                            currentSpeaker.dialogueIndex = 0;
+                            currentSpeaker = null;
+                        }
+                    }
+                }
+
+                // Vẽ dòng thoại
+                x += tileSize - 10;
+                y += tileSize;
+                for (String line : displayedText.split("\n")) {
+                    g2.drawString(line, x, y);
+                    y += 40;
+                }
+
+            } else {
+                currentSpeaker = null;
             }
-        }else
-        {
-            target.dialogueIndex = 0;
+        } else {
+            // Hết hàng đợi
             currentLevel.setLevelState(LevelState.RUNNING);
         }
-
-        x += tileSize - 10;
-        y += tileSize;
-        for (String line : displayedText.split("\n")) { // splits dialogue until "\n" as a line
-            g2.drawString(line, x, y);
-            y += 40;
-        }
     }
+
 
     public void drawSubWindow(int x, int y, int width, int height) {
         Color c = new Color(0,0,0, 178); //BLACK
@@ -475,12 +505,12 @@ public class UI {
 
         int slotSize = tileSize / 4;
 
-        if (KeyHandler.key1pressed) {
+        if (key1pressed) {
             selectedSlot = 0;
-            KeyHandler.key1pressed = false;
-        } else if (KeyHandler.key2pressed) {
+            key1pressed = false;
+        } else if (key2pressed) {
             selectedSlot = 1;
-            KeyHandler.key2pressed = false;
+            key2pressed = false;
         } else if (KeyHandler.key3pressed) {
             selectedSlot = 2;
             KeyHandler.key3pressed = false;
@@ -580,10 +610,14 @@ public class UI {
         g2.drawString(message , 30, 550);
     }
     public void update(){
-        if(gameState == GameState.PASSWORD){
+        if(currentLevel.checkState(LevelState.PASSWORD)){
             handlePasswordPressed();
-            maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+            maskedPassword = "*".repeat(((Level02)currentLevel).enteredPassword.length());
         }
+//        if(gameState == GameState.PASSWORD){
+//            handlePasswordPressed();
+//            maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+//        }
     }
 
     public void drawSettingScreen(){
@@ -700,6 +734,7 @@ public class UI {
         g2.drawString("ENTER", textX, textY);
     }
     private void drawPasswordInputBox() {
+        Level02 currentLevel02 = (Level02) currentLevel;
         int x = 100;
         int y = 100;
         int width = gp.getWidth() - tileSize * 4;
@@ -712,9 +747,9 @@ public class UI {
         g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
         drawSubWindow(x+300,y+55,200,30);
 
-        if(currentLevel.enteredPassword.isEmpty()) checkPassword = Color.white;
+        if(currentLevel02.enteredPassword.isEmpty()) checkPassword = Color.white;
         g2.setColor(checkPassword);
-        maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
+        maskedPassword = "*".repeat(currentLevel02.enteredPassword.length());
         g2.drawString(maskedPassword, x + 310, y + 75);
 
         g2.setColor(Color.WHITE);
@@ -723,14 +758,15 @@ public class UI {
     }
     public void handlePasswordPressed(){
         String charPressed = "";
+        Level02 currentLevel02 = (Level02) currentLevel;
         if(enterPressed){
             enterPressed = false;
-            if (currentLevel.enteredPassword.equals(currentLevel.correctPassword)) {
+            if (currentLevel02.enteredPassword.equals(currentLevel02.correctPassword)) {
                 currentLevel.levelFinished = true;
                 checkPassword = Color.GREEN;
             } else {
                 checkPassword = Color.RED;
-                currentLevel.enteredPassword = "";
+                currentLevel02.enteredPassword = "";
             }
         }
         if(key0pressed) {charPressed = "0"; key0pressed = false;} else
@@ -744,14 +780,14 @@ public class UI {
         if(key8pressed) {charPressed = "8"; key8pressed = false;} else
         if(key9pressed) {charPressed = "9"; key9pressed = false;}
 
-        if(currentLevel.enteredPassword.length() < 12) currentLevel.enteredPassword += charPressed;
+        if(currentLevel02.enteredPassword.length() < 12) currentLevel02.enteredPassword += charPressed;
 
         if (keyBackspacepressed) {
             keyBackspacepressed = false;
-            if (!currentLevel.enteredPassword.isEmpty()) {
-                currentLevel.enteredPassword = currentLevel.enteredPassword.substring(0, currentLevel.enteredPassword.length() - 1);
+            if (!currentLevel02.enteredPassword.isEmpty()) {
+                currentLevel02.enteredPassword = currentLevel02.enteredPassword.substring(0, currentLevel02.enteredPassword.length() - 1);
             }
         }
-        if(keyEscpressed) GamePanel.gameState = GameState.PLAY;
+        if(keyEscpressed) currentLevel.setLevelState(LevelState.RUNNING);
     }
 }

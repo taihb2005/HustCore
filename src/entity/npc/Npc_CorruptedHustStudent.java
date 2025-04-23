@@ -11,7 +11,6 @@ import util.GameTimer;
 import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 import static main.GamePanel.camera;
@@ -207,7 +206,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
             dialogueIndex = 0;
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
     @Override

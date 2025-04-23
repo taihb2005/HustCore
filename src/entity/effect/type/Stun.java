@@ -20,4 +20,8 @@ public class Stun extends Effect {
     public void remove(){
         player.speed = player.lastSpeed;
     }
+
+    public Stun clone(){
+        return new Stun(player);
+    }
 }

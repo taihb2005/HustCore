@@ -1,6 +1,5 @@
 package level.progress.level01;
 
-import entity.mob.Mon_EffectDealer;
 import entity.object.Obj_Door;
 import level.RoomTask;
 import level.event.Event;
@@ -8,7 +7,10 @@ import level.event.EventManager;
 import level.event.EventRectangle;
 import level.Level;
 import level.LevelState;
+import main.GamePanel;
+import main.GameState;
 import map.MapParser;
+import thread.LoadingService;
 
 import java.util.List;
 
@@ -45,14 +47,14 @@ public class Level01 extends Level {
                     768, 0
             ), map.activeObj);
 
-            eventMaster.startDialogue(eventMaster, 0);
+            eventMaster.submitDialogue(eventMaster, 0);
         };
 
         onFinishLevel = () -> {
           eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
           eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
           eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
-          eventMaster.startDialogue(eventMaster, 0);
+          eventMaster.submitDialogue(eventMaster, 0);
         };
 
         onCreateLevel.run();
@@ -61,9 +63,11 @@ public class Level01 extends Level {
     public void update(){
         eventManager.update();
         if(!isLevelFinished()) {
-            if (currentRoomTask.isRunning()) currentRoomTask.update();
-        } else {
-            currentRoomTask = getNextRoomTask();
+            if (currentRoomTask.isRunning()) {
+                currentRoomTask.update();
+            } else if(currentRoomTask.isFinished()){
+                currentRoomTask = getNextRoomTask();
+            }
         }
     }
 
@@ -78,6 +82,7 @@ public class Level01 extends Level {
         canChangeMap = false;
 
         changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , false);
+
         eventManager = new EventManager();
 
         configureRoom(
@@ -142,5 +147,13 @@ public class Level01 extends Level {
                 () -> onFinishLevel.run()
         )));
 
+        eventManager.register(new Event(
+                () -> changeMapEventRect1.isTriggered(map.player),
+                () -> {
+                    GamePanel.gameState = GameState.LOADING;
+                    levelProgress++;
+                    LoadingService.loadMap();
+                }
+        ));
     }
 }

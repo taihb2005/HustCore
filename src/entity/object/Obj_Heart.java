@@ -8,7 +8,6 @@ import main.KeyHandler;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import static main.GamePanel.camera;
@@ -91,7 +90,7 @@ public class Obj_Heart extends Entity {
             dialogueIndex = 0;
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
     @Override

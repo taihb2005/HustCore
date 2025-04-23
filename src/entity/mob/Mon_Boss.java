@@ -231,11 +231,11 @@ public class Mon_Boss extends Monster implements Actable {
 
     private void updateHP(){
         if (currentHP <= 0 && fullyDie) {
-            this.startDialogue(this, 1);
+            this.submitDialogue(this, 1);
             fullyDie = true;
         }
         else if (2*currentHP < maxHP && !nearlyDie) {
-            this.startDialogue(this, 0);
+            this.submitDialogue(this, 0);
             isStage2 = true;
         }
     }

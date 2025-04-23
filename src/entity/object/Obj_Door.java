@@ -210,7 +210,7 @@ public class Obj_Door extends Entity{
             dialogueIndex = 0;
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
 

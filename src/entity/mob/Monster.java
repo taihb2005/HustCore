@@ -46,7 +46,7 @@ public class Monster extends Entity {
     }
 
     public void projectileCauseEffect(){
-        effectDealByProjectile.add();
+        effectDealByProjectile.clone().add();
     }
     
     public void reactForDamage(){
@@ -77,7 +77,7 @@ public class Monster extends Entity {
         if(contactPlayer && !mp.player.isInvincible){
             mp.player.isInvincible = true;
             mp.player.receiveDamage(this);
-            effectDealOnTouch.add();
+            effectDealOnTouch.clone().add();
         }
     }
 

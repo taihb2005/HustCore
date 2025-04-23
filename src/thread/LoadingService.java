@@ -115,14 +115,18 @@ public class LoadingService {
                 gameState = GameState.LOADING;
 
                 if (currentMap != null) {
+                    System.out.println("Map disposed!");
                     currentMap.dispose();
                     currentMap = null;
                 }
 
-                if (currentLevel != null) {
+                if(currentLevel != null){
+                    System.out.println("Level disposed!");
                     currentLevel.dispose();
-                    System.gc();
+                    currentLevel = null;
                 }
+
+                System.gc();
                 //currentLevel = new DevTestLevel();
                 switch(levelProgress){
                     case 0 : currentLevel = new Level00(); break;
@@ -134,7 +138,7 @@ public class LoadingService {
                 //currentLevel = new DevTestLevel();
                 currentMap = currentLevel.map;
                 previousLevelProgress = levelProgress;
-                currentLevel.map.player.resetValue();
+                currentLevel.map.player.resetValue();;
                 Thread.sleep(1000);
 
                 gameState = GameState.PLAY;

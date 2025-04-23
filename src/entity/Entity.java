@@ -3,9 +3,9 @@ package entity;
 import ai.PathFinder;
 import entity.projectile.Projectile;
 import level.LevelState;
-import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
+import util.KeyPair;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -98,12 +98,11 @@ public class Entity {
         }
     }
 
-    public void startDialogue(Entity entity, int dialogueSet) {
+    public void submitDialogue(Entity entity, int dialogueSet) {
         if(currentLevel.checkState(LevelState.RUNNING)) {
             KeyHandler.enterPressed = false;
             currentLevel.setLevelState(LevelState.DIALOGUE);
-            ui.target = entity;
-            ui.target.dialogueSet = dialogueSet;
+            ui.dialogueQueue.add(new KeyPair<>(entity, dialogueSet));
         }
     }
 

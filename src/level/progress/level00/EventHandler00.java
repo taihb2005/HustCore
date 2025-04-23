@@ -31,7 +31,7 @@ public class EventHandler00 extends EventHandler {
         TimerTask beginGameDialogue = new TimerTask() {
             @Override
             public void run() {
-                eventMaster.startDialogue(eventMaster , 0);
+                eventMaster.submitDialogue(eventMaster , 0);
                 finishedBeginningDialogue = true;
             }
         };

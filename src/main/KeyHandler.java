@@ -1,5 +1,6 @@
 package main;
 
+import level.Level;
 import level.LevelState;
 import thread.LoadingService;
 
@@ -112,21 +113,58 @@ public class KeyHandler implements KeyListener{
                     if (keyCode == KeyEvent.VK_F2) godModeOn = true;
                 } else if (levelState == LevelState.DIALOGUE){
                     if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
+                } else if (levelState == LevelState.PASSWORD){
+                    if (keyCode == KeyEvent.VK_0) key0pressed = true;
+                    if (keyCode == KeyEvent.VK_1) key1pressed = true;
+                    if (keyCode == KeyEvent.VK_2) key2pressed = true;
+                    if (keyCode == KeyEvent.VK_3) key3pressed = true;
+                    if (keyCode == KeyEvent.VK_4) key4pressed = true;
+                    if (keyCode == KeyEvent.VK_5) key5pressed = true;
+                    if (keyCode == KeyEvent.VK_6) key6pressed = true;
+                    if (keyCode == KeyEvent.VK_7) key7pressed = true;
+                    if (keyCode == KeyEvent.VK_8) key8pressed = true;
+                    if (keyCode == KeyEvent.VK_9) key9pressed = true;
+                    if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
+                    if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
+                    if (keyCode == KeyEvent.VK_BACK_SPACE) keyBackspacepressed = true;
+                } else if (levelState == LevelState.QUIZ){
+                    if (GamePanel.ui.selectedOption < 4) {
+                        if (keyCode == KeyEvent.VK_A) {
+                            GamePanel.ui.selectedOption = 0; // Đáp án A
+                        } else if (keyCode == KeyEvent.VK_B) {
+                            GamePanel.ui.selectedOption = 1; // Đáp án B
+                        } else if (keyCode == KeyEvent.VK_C) {
+                            GamePanel.ui.selectedOption = 2; // Đáp án C
+                        } else if (keyCode == KeyEvent.VK_D) {
+                            GamePanel.ui.selectedOption = 3; // Đáp án D
+                        }
+                    }
+
+                    if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
+                        GamePanel.gameState = GameState.PLAY;
+                        Timer timer = new Timer();
+
+                        TimerTask play = new TimerTask() {
+                            @Override
+                            public void run() {
+                                stopMusic();
+                                stopMusic();
+                                playMusic(10);
+                            }
+                        };
+                        timer.schedule(play , 200);
+                    }
+
+                    if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
+                        stopMusic();
+                        playSE(12);
+                        if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
+                            GamePanel.ui.selectedOption = 4;
+                        } else {
+                            GamePanel.ui.selectedOption = 5;
+                        }
+                    }
                 }
-            } else if (GamePanel.gameState == GameState.PASSWORD) {
-                if (keyCode == KeyEvent.VK_0) key0pressed = true;
-                if (keyCode == KeyEvent.VK_1) key1pressed = true;
-                if (keyCode == KeyEvent.VK_2) key2pressed = true;
-                if (keyCode == KeyEvent.VK_3) key3pressed = true;
-                if (keyCode == KeyEvent.VK_4) key4pressed = true;
-                if (keyCode == KeyEvent.VK_5) key5pressed = true;
-                if (keyCode == KeyEvent.VK_6) key6pressed = true;
-                if (keyCode == KeyEvent.VK_7) key7pressed = true;
-                if (keyCode == KeyEvent.VK_8) key8pressed = true;
-                if (keyCode == KeyEvent.VK_9) key9pressed = true;
-                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
-                if (keyCode == KeyEvent.VK_BACK_SPACE) keyBackspacepressed = true;
             } else if (GamePanel.gameState == GameState.PAUSE) {
                 if (keyCode == KeyEvent.VK_ESCAPE)
                     GamePanel.gameState = GameState.PLAY;

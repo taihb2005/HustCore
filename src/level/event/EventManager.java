@@ -12,7 +12,7 @@ public class EventManager {
 
     public void update() {
         for (Event event : events) {
-            if(!event.isTriggered()) event.update();
+            event.update();
         }
     }
 

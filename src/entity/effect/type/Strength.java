@@ -14,11 +14,15 @@ public class Strength extends Effect {
     }
 
     public void affect(){
-        player.strength = player.lastStrength * 2;
+        player.strength = player.lastStrength * 3;
     }
 
     public void remove(){
         player.strength = player.lastStrength;
+    }
+
+    public Strength clone(){
+        return new Strength(player, effectDuration);
     }
 
 }

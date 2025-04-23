@@ -19,10 +19,16 @@ public class Blind extends Effect {
     }
 
     public void remove(){
-
+        player.getEnvironmentManager().lighting.transit = true;
+        player.getEnvironmentManager().lighting.fadeOut = true;
      }
 
    public void affect(){
+        player.getEnvironmentManager().lighting.transit = true;
+        player.getEnvironmentManager().lighting.fadeIn = true;
+   }
 
+   public Blind clone(){
+        return new Blind(player, effectDuration);
    }
 }

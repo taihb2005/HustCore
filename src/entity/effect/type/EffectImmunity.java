@@ -18,4 +18,8 @@ public class EffectImmunity extends Effect {
     public void remove(){
 
     }
+
+    public EffectImmunity clone(){
+        return new EffectImmunity(player, effectDuration);
+    }
 }

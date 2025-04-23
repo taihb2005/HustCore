@@ -10,6 +10,7 @@ import entity.projectile.Proj_BasicProjectile;
 import entity.projectile.Projectile;
 import graphics.AssetPool;
 import graphics.Sprite;
+import graphics.environment.EnvironmentManager;
 import level.LevelState;
 import main.GameState;
 import main.KeyHandler;
@@ -127,8 +128,6 @@ public class Player extends Entity {
         super();
         name = "Player";
         this.mp = mp;
-        speed = 3;
-        lastSpeed = speed;
 
         pFinder = new PathFinder(mp);
         hitbox = new Rectangle(25 , 40 , 15 , 20);
@@ -143,6 +142,9 @@ public class Player extends Entity {
 
     public void setDefaultValue()
     {
+        speed = 3;
+        lastSpeed = speed;
+
         projectileName = "Basic Projectile";
         projectile = new Proj_BasicProjectile(mp);
         SHOOT_INTERVAL = projectile.maxHP + 5;
@@ -437,15 +439,15 @@ public class Player extends Entity {
                     effectManager.remove(e.name);
                 }
             }
-            effect.removeIf(e-> e.effectFinished);
         }
+        effect.removeIf(e -> e.effectFinished);
     }
 
     private void checkForMana(){
         if(!hasResource() && isShooting){
             isShooting = false;
             dialogues[0][0] = new StringBuilder("Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn");
-            startDialogue(this , 0);
+            submitDialogue(this , 0);
             KeyHandler.enterPressed = false;
         }
     }
@@ -499,7 +501,7 @@ public class Player extends Entity {
             if(level == 5) nextLevelUp = 999999999;
             playSE(3);
             dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
-            startDialogue(this , 0);
+            submitDialogue(this , 0);
         }
     }
 
@@ -551,6 +553,10 @@ public class Player extends Entity {
         isRunning = true;
         this.goalCol = (goalX + solidArea1.x) / childNodeSize;
         this.goalRow = (goalY + solidArea1.y) / childNodeSize;
+    }
+
+    public EnvironmentManager getEnvironmentManager(){
+        return mp.getEnvironmentManager();
     }
 
 }

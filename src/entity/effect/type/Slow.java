@@ -21,4 +21,8 @@ public class Slow extends Effect {
     public void remove(){
         player.speed = player.lastSpeed;
     }
+
+    public Slow clone(){
+        return new Slow(player, effectDuration);
+    }
 }
