@@ -2,9 +2,9 @@ package level.progress.level02;
 
 import entity.Entity;
 import entity.object.Obj_Door;
-import level.EventRectangle;
+import level.event.EventRectangle;
 import level.Level;
-import level.EventHandler;
+import level.event.EventHandler;
 import main.GamePanel;
 import main.GameState;
 
@@ -75,7 +75,7 @@ public class EventHandler02 extends EventHandler {
     private void checkForShowPasswordInput(){
         if(triggerEvent(showPasswordInput) && !showPasswordInput.eventFinished && !isInRegion){
             isInRegion = true;
-            GamePanel.gameState = GameState.PASSWORD_STATE;
+            GamePanel.gameState = GameState.PASSWORD;
             lvl.enteredPassword = "";
             lvl.map.player.attackCanceled = true;
         }

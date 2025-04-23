@@ -2,92 +2,143 @@
   "root": [
     {
       "enemy": "Mon_Boss",
-      "position": { "x": 500, "y":  900}
+      "name": "Boss001",
+      "position": {
+        "x": 500,
+        "y": 800
+      }
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 256, "y": 1088 },
+      "name": "Shooter002",
+      "position": {
+        "x": 256,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 384, "y": 1088 },
+      "name": "Shooter003",
+      "position": {
+        "x": 384,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 512, "y": 1088 },
+      "name": "Shooter004",
+      "position": {
+        "x": 512,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 640, "y": 1088 },
+      "name": "Shooter005",
+      "position": {
+        "x": 640,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 768, "y": 1088 },
+      "name": "Shooter006",
+      "position": {
+        "x": 768,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 896, "y": 1088 },
+      "name": "Shooter007",
+      "position": {
+        "x": 896,
+        "y": 1088
+      },
       "direction": "up",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 320, "y": 128 },
+      "name": "Shooter008",
+      "position": {
+        "x": 320,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 448, "y": 128 },
+      "name": "Shooter009",
+      "position": {
+        "x": 448,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 576, "y": 128 },
+      "name": "Shooter010",
+      "position": {
+        "x": 576,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 704, "y": 128 },
+      "name": "Shooter011",
+      "position": {
+        "x": 704,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 832, "y": 128 },
+      "name": "Shooter012",
+      "position": {
+        "x": 832,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 960, "y": 128 },
+      "name": "Shooter013",
+      "position": {
+        "x": 960,
+        "y": 128
+      },
       "direction": "down",
       "isAlwaysUp": true,
       "attackCycle": 120
     }
   ]
 }
-

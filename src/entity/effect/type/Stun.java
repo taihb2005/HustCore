@@ -2,17 +2,15 @@ package entity.effect.type;
 
 import entity.effect.Effect;
 import entity.player.Player;
-import graphics.Sprite;
-
-import java.awt.*;
+import graphics.AssetPool;
 
 public class Stun extends Effect {
     public Stun(Player player) {
         super(player);
         setEffectDuration(100);
         id = 3;
-        name = new StringBuilder("Stun");
-        icon = new Sprite("/effect/stun.png" , 32 , 32).getSpriteSheet();
+        name = "Stun";
+        icon = AssetPool.getImage("stun.png");
     }
 
     public void affect(){
@@ -20,6 +18,6 @@ public class Stun extends Effect {
     }
 
     public void remove(){
-        player.speed = player.last_speed;
+        player.speed = player.lastSpeed;
     }
 }

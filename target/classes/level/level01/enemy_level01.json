@@ -1,166 +1,270 @@
 {
-  "root": [
-    {
+  "room": [
+    [
+      {
       "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 896 },
-      "detection":{"x": -640 , "y": 0 , "width": 704 , "height": 64},
+      "name": "Shooter001",
+      "position": {
+        "x": 640,
+        "y": 896
+      },
+      "detection": {
+        "x": -640,
+        "y": 0,
+        "width": 704,
+        "height": 64
+      },
       "direction": "left",
       "isAlwaysUp": false,
       "attackCycle": 180
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 880 },
-      "detection":{"x": -640 , "y": 16 , "width": 704 , "height": 64},
-      "direction": "left",
-      "isAlwaysUp": false,
-      "attackCycle": 150
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name":"room1",
-      "position": { "x": 640, "y": 864 },
-      "detection":{"x": -640 , "y": 32 , "width": 704 , "height": 64},
-      "direction": "left",
-      "isAlwaysUp": false,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 0, "y": 1088 },
-      "direction": "up",
-      "isAlwaysUp": true,
-      "attackCycle": 100
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 16, "y": 1088 },
-      "direction": "up",
-      "isAlwaysUp": true,
-      "attackCycle": 100
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 1024 },
-      "direction": "left",
-      "isAlwaysUp": true,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 1024 },
-      "direction": "left",
-      "isAlwaysUp": true,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 1088 },
-      "direction": "left",
-      "isAlwaysUp": true,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 992 },
-      "detection":{"x": -640 , "y": 32 , "width": 704 , "height": 128},
-      "direction": "left",
-      "isAlwaysUp": false,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "room1",
-      "position": { "x": 640, "y": 1056 },
-      "detection":{"x": -640 , "y": 32 , "width": 704 , "height": 128},
-      "direction": "left",
-      "isAlwaysUp": false,
-      "attackCycle": 120
-    },
-    {
-      "enemy": "Mon_Spectron",
-      "name": "Room1Spectron",
-      "position": {"x" : 512 , "y": 1024}
-    },
-    {
-      "enemy": "Mon_Spectron",
-      "name": "Room1Spectron",
-      "position": {"x" : 512 , "y": 1088}
-    },
-    {
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter002",
+        "position": {
+          "x": 640,
+          "y": 880
+        },
+        "detection": {
+          "x": -640,
+          "y": 16,
+          "width": 704,
+          "height": 64
+        },
+        "direction": "left",
+        "isAlwaysUp": false,
+        "attackCycle": 150
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter003",
+        "position": {
+          "x": 640,
+          "y": 864
+        },
+        "detection": {
+          "x": -640,
+          "y": 32,
+          "width": 704,
+          "height": 64
+        },
+        "direction": "left",
+        "isAlwaysUp": false,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter004",
+        "position": {
+          "x": 0,
+          "y": 1088
+        },
+        "direction": "up",
+        "isAlwaysUp": true,
+        "attackCycle": 100
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter005",
+        "position": {
+          "x": 16,
+          "y": 1088
+        },
+        "direction": "up",
+        "isAlwaysUp": true,
+        "attackCycle": 100
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter006",
+        "position": {
+          "x": 640,
+          "y": 1024
+        },
+        "direction": "left",
+        "isAlwaysUp": true,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter007",
+        "position": {
+          "x": 640,
+          "y": 1024
+        },
+        "direction": "left",
+        "isAlwaysUp": true,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter008",
+        "position": {
+          "x": 640,
+          "y": 1088
+        },
+        "direction": "left",
+        "isAlwaysUp": true,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter009",
+        "position": {
+          "x": 640,
+          "y": 992
+        },
+        "detection": {
+          "x": -640,
+          "y": 32,
+          "width": 704,
+          "height": 128
+        },
+        "direction": "left",
+        "isAlwaysUp": false,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter010",
+        "position": {
+          "x": 640,
+          "y": 1056
+        },
+        "detection": {
+          "x": -640,
+          "y": 32,
+          "width": 704,
+          "height": 128
+        },
+        "direction": "left",
+        "isAlwaysUp": false,
+        "attackCycle": 120
+      },
+      {
+        "enemy": "Mon_Spectron",
+        "name": "Spectron011",
+        "position": {
+          "x": 512,
+          "y": 1024
+        }
+      },
+      {
+        "enemy": "Mon_Spectron",
+        "name": "Spectron012",
+        "position": {
+          "x": 512,
+          "y": 1088
+        }
+      }
+    ],
+
+    [
+      {
       "enemy": "Mon_Cyborgon",
-      "name": "Room2Enemy",
-      "position": {"x": 320, "y": 1728}
-    },
-    {
+      "name": "Cyborgon013",
+      "position": {
+        "x": 320,
+        "y": 1728
+      }
+      }
+    ],
+
+    [
+      {
       "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1408, "y": 448}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1152, "y": 256}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1664, "y": 256}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1152, "y": 768}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1664, "y": 768}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1024, "y": 64}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1792, "y": 64}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1024, "y": 960}
-    },
-    {
-      "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1792, "y": 768}
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "Room3Shooter",
-      "position": { "x": 1216, "y": 448 },
-      "direction": "right",
-      "isAlwaysUp": true,
-      "attackCycle": 30
-    },
-    {
-      "enemy": "Mon_Shooter",
-      "name": "Room3Shooter",
-      "position": { "x": 1600, "y": 448 },
-      "direction": "left",
-      "isAlwaysUp": true,
-      "attackCycle": 30
-    }
+      "name": "HustGuardian014",
+      "position": {
+        "x": 1408,
+        "y": 448
+      }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian015",
+        "position": {
+          "x": 1152,
+          "y": 256
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian016",
+        "position": {
+          "x": 1664,
+          "y": 256
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian017",
+        "position": {
+          "x": 1152,
+          "y": 768
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian018",
+        "position": {
+          "x": 1664,
+          "y": 768
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian019",
+        "position": {
+          "x": 1024,
+          "y": 64
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian020",
+        "position": {
+          "x": 1792,
+          "y": 64
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian021",
+        "position": {
+          "x": 1024,
+          "y": 960
+        }
+      },
+      {
+        "enemy": "Mon_HustGuardian",
+        "name": "HustGuardian022",
+        "position": {
+          "x": 1792,
+          "y": 768
+        }
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter023",
+        "position": {
+          "x": 1216,
+          "y": 448
+        },
+        "direction": "right",
+        "isAlwaysUp": true,
+        "attackCycle": 30
+      },
+      {
+        "enemy": "Mon_Shooter",
+        "name": "Shooter024",
+        "position": {
+          "x": 1600,
+          "y": 448
+        },
+        "direction": "left",
+        "isAlwaysUp": true,
+        "attackCycle": 30
+      }
+    ]
   ]
 }
-

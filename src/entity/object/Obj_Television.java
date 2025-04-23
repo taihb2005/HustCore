@@ -72,6 +72,18 @@ public class Obj_Television extends Entity {
         setDefault();
     }
 
+    public Obj_Television(String state , String size , int initialFrame , int id, String idName, int x , int y) throws Exception{
+        super(x , y);
+        name = "Television";
+        this.idName = idName;
+
+        this.size = (size.equals("big"))? TelevisionSize.BIG: TelevisionSize.SMALL;
+        this.currentState = (state.equals("on"))? TelevisionState.ON: TelevisionState.OFF;
+        this.currentAnimation = televisionAnimation.get(new KeyTriple<>(this.size, currentState, id)).clone(initialFrame);
+
+        setDefault();
+    }
+
     private void setDefault()
     {
         solidArea1 = new Rectangle(0  , 0 , 0 , 0);

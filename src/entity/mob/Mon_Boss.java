@@ -11,12 +11,12 @@ import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
+import util.GameTimer;
 import util.KeyPair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import static main.GamePanel.*;
 import static map.GameMap.childNodeSize;
@@ -29,10 +29,9 @@ public class Mon_Boss extends Monster implements Actable {
     public static void load(){
         for(BossState state: BossState.values()){
             int speed = switch (state){
-                case IDLE, DIE -> 10;
+                case IDLE, DIE, TALK -> 10;
                 case RUN -> 7;
                 case SHOOT1, SHOOT2, SHOOT3 -> 6;
-                case TALK -> 10;
             };
 
             boolean loop = switch (state){
@@ -55,7 +54,8 @@ public class Mon_Boss extends Monster implements Actable {
         }
     }
 
-    private int CURRENT_SKILL = 1;
+    private BossSkill currentSkill;
+    private BossSkill lastSkill;
     private Stage currentStage;
     public boolean isStage2;
     private PathFinder2 bossFinder;
@@ -64,6 +64,10 @@ public class Mon_Boss extends Monster implements Actable {
     private Direction currentDirection;
     private Direction lastDirection;
     private Animation currentAnimation;
+
+    private GameTimer findPlayerTimer;
+    private GameTimer skillCooldownTimer;
+    private GameTimer createFlameTimer;
 
     private void setState(){
         boolean change1 = false;
@@ -80,11 +84,54 @@ public class Mon_Boss extends Monster implements Actable {
         }
 
         if(change1 || change2){
+            currentAnimation.reset();
             currentAnimation = bossAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+            System.out.println("Animation changed");
         }
     }
 
-    private int actionLockCounter = 550;
+    private void setSkill() {
+        if (currentSkill == BossSkill.NONE && skillCooldownTimer == null) {
+            skillCooldownTimer = new GameTimer(() -> {
+                shootAvailableCounter++;
+                int rand = new Random().nextInt(4);
+                currentSkill = switch (rand) {
+                    case 0 -> BossSkill.HOMING_BULLET;
+                    case 1 -> BossSkill.DEADLY_RING;
+                    case 2 -> BossSkill.FLAME_THROWER;
+                    default -> BossSkill.NONE;
+                };
+                skillCooldownTimer = null;
+            }, 120, 90);
+        } else if (skillCooldownTimer != null) {
+            skillCooldownTimer.update();
+        }
+        if (lastSkill != currentSkill) {
+            lastSkill = currentSkill;
+        }
+
+        switch (currentSkill) {
+            case NONE -> {
+                skillNone();
+            }
+            case HOMING_BULLET -> {
+                isRunning = false;
+                isShooting1 = true;
+                actionWhileShootingHomingBullet();
+            }
+            case DEADLY_RING -> {
+                isRunning = true;
+                isShooting2 = true;
+                actionWhileShootingDeadlyRing();
+            }
+            case FLAME_THROWER -> {
+                isRunning = false;
+                isShooting3 = true;
+                actionWhileFlameThrowing();
+            }
+        }
+    }
+
 
     private int shootTimer = 0;
 
@@ -105,14 +152,24 @@ public class Mon_Boss extends Monster implements Actable {
         name = "Boss";
         width = 128;
         height = 128;
-        speed = 1;
 
         hpFrame = AssetPool.getImage("boss_hpFrame.png");
 
         //getImage();
         setDefault();
     }
+    public Mon_Boss(GameMap mp , String idName, int x , int y){
+        super(mp , x , y);
+        name = "Boss";
+        this.idName = idName;
+        width = 128;
+        height = 128;
 
+        hpFrame = AssetPool.getImage("boss_hpFrame.png");
+
+        //getImage();
+        setDefault();
+    }
     private void setDefault(){
         hitbox = new Rectangle(20 , 40 , 80 , 80);
         solidArea1 = new Rectangle(20 , 110 , 90 , 18);
@@ -123,6 +180,7 @@ public class Mon_Boss extends Monster implements Actable {
         maxHP = 1700;
         currentHP = maxHP;
         strength = 50;
+        speed = 1;
         level = 1;
         defense = 10;
         projectile1 = new Proj_TrackingPlasma(mp);
@@ -135,13 +193,17 @@ public class Mon_Boss extends Monster implements Actable {
         SHOOT_INTERVAL = 45;
         expDrop = 0;
 
+        setDialogue();
+
         direction = "right";
         currentDirection = Direction.RIGHT;
         lastDirection = Direction.RIGHT;
-        setDialogue();
 
         currentState = BossState.IDLE;
         lastState = BossState.IDLE;
+
+        currentSkill = BossSkill.NONE;
+        lastSkill = BossSkill.NONE;
 
         currentStage = Stage.STAGE1;
 
@@ -157,26 +219,8 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     private void setAction() {
-        switch (CURRENT_SKILL) {
-            case 1: actionWhileShoot1();
-            actionLockCounter--;
-            if (actionLockCounter == 0) {
-                CURRENT_SKILL = 2;
-                actionLockCounter = 100;
-            }
-            break;
-            case 2: actionWhileShoot2();
-            actionLockCounter--;
-            if (actionLockCounter == 0) CURRENT_SKILL = 3;
-            break;
-            case 3: actionWhileShoot3();
-            if (currentColumn >= 10) {
-                CURRENT_SKILL = 1;
-                actionLockCounter = 100;
-                currentColumn = 1;
-            }
-            break;
-        }
+
+        setSkill();
 
         if(isStage2){
             currentStage = Stage.STAGE2;
@@ -203,7 +247,7 @@ public class Mon_Boss extends Monster implements Actable {
             currentState = BossState.SHOOT1;
         } else if (isShooting2) {
             currentState = BossState.SHOOT2;
-        } else if (shoot3) {
+        } else if (isShooting3) {
             currentState = BossState.SHOOT3;
         } else if (isRunning) {
             currentState = BossState.RUN;
@@ -211,19 +255,16 @@ public class Mon_Boss extends Monster implements Actable {
             currentState = BossState.IDLE;
         }
 
-        changeDirection();
         setState();
 
         if (currentAnimation.isFinished()) {
             if (isShooting1) {
                 isShooting1 = false;
-                currentState = BossState.IDLE;
             }
             if (isShooting2) {
                 isShooting2 = false;
             }
-            if (shoot3) {
-                shoot3 = false;
+            if (isShooting3) {
                 isShooting3 = false;
             }
             if (isDying) {
@@ -358,6 +399,8 @@ public class Mon_Boss extends Monster implements Actable {
                             }
                             newWorldY -= speed;
                         }
+
+                        System.out.println(direction);
                     }
                 } else {
                     getAggro = false;
@@ -369,91 +412,77 @@ public class Mon_Boss extends Monster implements Actable {
         });
     }
 
-    public void shoot1() {
+    private void skillNone(){
+        if(findPlayerTimer == null){
+            findPlayerTimer = new GameTimer( () -> {
+                int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
+                int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+                searchPathForBoss(playerCol, playerRow);
+                decideToMove();
+                isRunning = true;
+            }, 180, 5);
+        } else findPlayerTimer.update();
+    }
+
+    public void homingBullet() {
         isShooting1 = !isDying;
-        if(!projectile1.active && shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile1.set(worldX+25, worldY+12, direction, true, this);
-            projectile1.setHitbox();
-            projectile1.setSolidArea();
-            mp.addObject(projectile1, mp.projectiles);
-            shootAvailableCounter = 0;
-        }
+        isRunning = false;
+        Projectile tracking_plasma = new Proj_TrackingPlasma(mp);
+        tracking_plasma.set(worldX+25, worldY+12, direction, true, this);
+        tracking_plasma.setHitbox();
+        tracking_plasma.setSolidArea();
+        mp.addObject(tracking_plasma, mp.projectiles);
     }
-    public void shoot2() {
-        if(!projectile2.active && shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile2.set(worldX+78, worldY+60, direction, true, this);
-            projectile2.setHitbox();
-            projectile2.setSolidArea();
-            mp.addObject(projectile2, mp.projectiles);
-            shootAvailableCounter = 0;
-        }
+    public void deadlyRing() {
+        Proj_ExplosivePlasma deadlyRing = new Proj_ExplosivePlasma(mp);
+        deadlyRing.set(worldX+78, worldY+60, direction, true, this);
+        deadlyRing.setHitbox();
+        deadlyRing.setSolidArea();
+        mp.addObject(deadlyRing, mp.projectiles);
     }
-    public void createFlameColumn(int isLeft) {
-            shootAvailableCounter++;
-            if (shootAvailableCounter >= 10) {
-                for (int j = 1; j <= 5; j++) {
-                    Projectile newFlame = new Proj_Flame(mp);
-                    newFlame.set(worldX + 50 * isLeft* currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
-                    newFlame.setHitbox();
-                    newFlame.setSolidArea();
-                    proj.add(newFlame);
-                }
-                currentColumn++;
-                for(Projectile flame : proj) mp.addObject(flame , mp.projectiles);
-                shootAvailableCounter = 0;
-            }
+    public void flameThrower(int isLeft) {
+        isRunning = false;
+        for (int j = 1; j <= 5; j++) {
+            Projectile newFlame = new Proj_Flame(mp);
+            newFlame.set(worldX + 50 * isLeft* currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
+            newFlame.setHitbox();
+            newFlame.setSolidArea();
+            mp.addObject(newFlame, mp.projectiles);
+        }
+        currentColumn++;
     }
 
-    public void actionWhileShoot1() {
-        shoot1();
+    public void actionWhileShootingHomingBullet() {
+        homingBullet();
+        currentSkill = BossSkill.NONE;
     }
 
-    public void actionWhileShoot2() {
-        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
-        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
-        int posCol = (worldX + solidArea1.x) / childNodeSize;
-        int posRow = (worldY + solidArea1.y) / childNodeSize;
-        int isLeft = (worldX < mp.player.worldX)?-1:1;
-        searchPathForBoss(playerCol, playerRow);
-        decideToMove();
-        boolean check3TilesAway = (Math.abs(playerCol - posCol) <= 12) || (Math.abs(playerRow - posRow) <= 12);
-        boolean checkShootInterval = (shootAvailableCounter == SHOOT_INTERVAL);
-        boolean checkIfConcurrent = (Math.abs(playerCol - posCol) == 0) || (Math.abs(playerRow - posRow) == 0);
-        if (check3TilesAway && checkShootInterval && checkIfConcurrent) {
-            isShooting2 = true;
-            if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {
-                if(worldX < mp.player.worldX)  direction = "right";
-                else if(worldX > mp.player.worldX) direction = "left";
-            }
-             else if(worldY < mp.player.worldY) direction = "down"; else
-                direction = "up";
-            shoot2();
+    public void actionWhileShootingDeadlyRing() {
+
+        isShooting2 = true;
+        if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {
+            if(worldX < mp.player.worldX)  direction = "right";
+            else if(worldX > mp.player.worldX) direction = "left";
         }
+         else if(worldY < mp.player.worldY) direction = "down"; else
+            direction = "up";
+        deadlyRing();
+        currentSkill = BossSkill.NONE;
         isRunning = !isShooting2 && !isDying;
     }
 
-    public void actionWhileShoot3() {
-        if (!isShooting3) {
-            shoot3 = true;
-            isShooting3 = true;
-            isRunning = false;
-            shootTimer = 0;
-            currentColumn = 1;
-        }
-
-        if (isShooting3) {
-            shootTimer++;
-            if (shootTimer >= 10) {
+    public void actionWhileFlameThrowing() {
+        if(createFlameTimer == null){
+            createFlameTimer = new GameTimer( () -> {
                 int isLeft = direction.equals("left") ? -1 : 1;
-                createFlameColumn(isLeft);
-                shootTimer = 0;
-            }
+                flameThrower(isLeft);
+            }, 10);
+        } else createFlameTimer.update();
 
-            if (currentColumn > 10) {
-                currentColumn = 1;
-                isShooting3 = false;
-                shoot3 = false;
-            }
+        if (currentColumn > 10) {
+            currentColumn = 1;
+            isShooting3 = false;
+            currentSkill = BossSkill.NONE;
         }
     }
 
@@ -463,9 +492,9 @@ public class Mon_Boss extends Monster implements Actable {
         if(!proj.isEmpty())proj.removeIf(pr -> !pr.active);
         move();
         handleAnimation();
+        changeDirection();
         currentAnimation.update();
 
-        System.out.println(currentState);
     }
 
     @Override
@@ -489,5 +518,12 @@ public class Mon_Boss extends Monster implements Actable {
 
     private enum BossState{
         IDLE, RUN, SHOOT1, SHOOT2, SHOOT3, TALK, DIE
+    }
+
+    private enum BossSkill{
+        HOMING_BULLET,
+        DEADLY_RING,
+        FLAME_THROWER,
+        NONE
     }
 }

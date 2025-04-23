@@ -83,13 +83,13 @@ public class Mon_HustGuardian extends Monster implements Actable {
     private int detectionCounter = 0;
     private final int detectionToSetAggro = 180;
 
-    public Mon_HustGuardian(GameMap mp , int x , int y , String idName){
+    public Mon_HustGuardian(GameMap mp, String idName, int x , int y){
         super(mp , x , y);
         name = "Hust Guardian";
         width = 64;
         height = 64;
         speed = 1;
-        last_speed = 1;
+        lastSpeed = 1;
 
         setDefault();
         this.idName = idName;
@@ -167,6 +167,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         }
         isRunning = (up | down | right | left) & (!isShooting);
         damagePlayer();
+        updateHP();
     }
 
     private void actionWhenNeutral(){
@@ -276,6 +277,10 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     }
 
+    private void updateHP(){
+        if(currentHP <= 0) isDying = true;
+    }
+
     public void attack() {
         if(!projectile.active &&shootAvailableCounter == SHOOT_INTERVAL) {
             projectile.set(worldX, worldY, direction, true, this);
@@ -318,7 +323,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         exclamation.flush();
         exclamation = null;
         projectile = null;
-        projectile_name = null;
+        projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
     }

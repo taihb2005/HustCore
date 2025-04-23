@@ -172,7 +172,7 @@ public class Credit {
                 levelProgress = 0;
                 previousLevelProgress = 0;
                 sManager.reset();
-                GamePanel.gameState = GameState.MENU_STATE;
+                GamePanel.gameState = GameState.MENU;
             }
         }
     }

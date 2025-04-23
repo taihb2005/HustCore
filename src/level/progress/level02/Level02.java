@@ -1,9 +1,7 @@
 package level.progress.level02;
 
-import level.EventRectangle;
+import level.event.EventRectangle;
 import level.Level;
-import main.GamePanel;
-import map.MapManager;
 import map.MapParser;
 
 import java.awt.*;
@@ -15,7 +13,7 @@ import static main.GamePanel.playMusic;
 import static main.GamePanel.stopMusic;
 
 public class Level02 extends Level {
-    private EventHandler02 eventHandler02;
+    final private EventHandler02 eventHandler02;
 
     public Level02() {
         map = MapParser.loadMap("/map/map2.tmx");
@@ -56,7 +54,7 @@ public class Level02 extends Level {
 
     }
 
-    public void updateProgress(){
+    public void update(){
        eventHandler02.update();
     }
     public void render(Graphics2D g2){eventHandler02.render(g2);}

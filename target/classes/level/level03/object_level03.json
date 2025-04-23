@@ -1,12 +1,21 @@
 {
   "player": [
-    {"position": {"x": 880 , "y": 1690}}
+    {
+      "position": {
+        "x": 880,
+        "y": 1690
+      }
+    }
   ],
   "inactive": [
     {
       "object": "Obj_PasswordAuth",
       "state": "active",
-      "position": {"x": 256 , "y": 0}
+      "position": {
+        "x": 256,
+        "y": 0
+      },
+      "name": "PasswordAuthI001"
     },
     {
       "object": "Obj_Television",
@@ -14,7 +23,11 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 320 , "y": 0}
+      "position": {
+        "x": 320,
+        "y": 0
+      },
+      "name": "TelevisionI002"
     },
     {
       "object": "Obj_Television",
@@ -22,36 +35,60 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 512 , "y": 0}
+      "position": {
+        "x": 512,
+        "y": 0
+      },
+      "name": "TelevisionI003"
     },
     {
       "object": "Obj_PasswordAuth",
       "state": "active",
-      "position": {"x": 576 , "y": 0}
+      "position": {
+        "x": 576,
+        "y": 0
+      },
+      "name": "PasswordAuthI004"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 256 , "y": 64}
+      "position": {
+        "x": 256,
+        "y": 64
+      },
+      "name": "ComputerI005"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 512 , "y": 64}
+      "position": {
+        "x": 512,
+        "y": 64
+      },
+      "name": "ComputerI006"
     },
     {
       "object": "Obj_Computer",
       "direction": "back",
       "state": "off",
-      "position": {"x": 256 , "y": 256}
+      "position": {
+        "x": 256,
+        "y": 256
+      },
+      "name": "ComputerI007"
     },
     {
       "object": "Obj_Computer",
       "direction": "back",
       "state": "off",
-      "position": {"x": 512 , "y": 256}
+      "position": {
+        "x": 512,
+        "y": 256
+      },
+      "name": "ComputerI008"
     },
     {
       "object": "Obj_Television",
@@ -59,7 +96,11 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 320 , "y": 320}
+      "position": {
+        "x": 320,
+        "y": 320
+      },
+      "name": "TelevisionI009"
     },
     {
       "object": "Obj_Television",
@@ -67,7 +108,11 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 512 , "y": 320}
+      "position": {
+        "x": 512,
+        "y": 320
+      },
+      "name": "TelevisionI010"
     },
     {
       "object": "Obj_Television",
@@ -75,7 +120,11 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 1472 , "y": 512}
+      "position": {
+        "x": 1472,
+        "y": 512
+      },
+      "name": "TelevisionI011"
     },
     {
       "object": "Obj_Television",
@@ -83,7 +132,11 @@
       "state": "on",
       "type": 2,
       "frame": 0,
-      "position": {"x": 1664 , "y": 512}
+      "position": {
+        "x": 1664,
+        "y": 512
+      },
+      "name": "TelevisionI012"
     },
     {
       "object": "Obj_Television",
@@ -91,7 +144,11 @@
       "state": "off",
       "type": 2,
       "frame": 0,
-      "position": {"x": 1472 , "y": 832}
+      "position": {
+        "x": 1472,
+        "y": 832
+      },
+      "name": "TelevisionI013"
     },
     {
       "object": "Obj_Television",
@@ -99,7 +156,11 @@
       "state": "off",
       "type": 2,
       "frame": 0,
-      "position": {"x": 1664 , "y": 832}
+      "position": {
+        "x": 1664,
+        "y": 832
+      },
+      "name": "TelevisionI014"
     },
     {
       "object": "Obj_Television",
@@ -107,7 +168,11 @@
       "state": "off",
       "type": 1,
       "frame": 0,
-      "position": {"x": 768 , "y": 960}
+      "position": {
+        "x": 768,
+        "y": 960
+      },
+      "name": "TelevisionI015"
     },
     {
       "object": "Obj_Television",
@@ -115,7 +180,11 @@
       "state": "off",
       "type": 3,
       "frame": 0,
-      "position": {"x": 768 , "y": 1088}
+      "position": {
+        "x": 768,
+        "y": 1088
+      },
+      "name": "TelevisionI016"
     },
     {
       "object": "Obj_Television",
@@ -123,24 +192,40 @@
       "state": "off",
       "type": 3,
       "frame": 0,
-      "position": {"x": 1088 , "y": 1088}
+      "position": {
+        "x": 1088,
+        "y": 1088
+      },
+      "name": "TelevisionI017"
     },
     {
       "object": "Obj_PasswordAuth",
       "state": "active",
-      "position": {"x": 1024 , "y": 960}
+      "position": {
+        "x": 1024,
+        "y": 960
+      },
+      "name": "PasswordAuthI018"
     },
     {
       "object": "Obj_Tank",
       "state": "filled",
       "type": 2,
-      "position": {"x": 768 , "y": 1280}
+      "position": {
+        "x": 768,
+        "y": 1280
+      },
+      "name": "TankI019"
     },
     {
       "object": "Obj_Tank",
       "state": "filled",
       "type": 2,
-      "position": {"x": 1088 , "y": 1280}
+      "position": {
+        "x": 1088,
+        "y": 1280
+      },
+      "name": "TankI020"
     },
     {
       "object": "Obj_Television",
@@ -148,7 +233,11 @@
       "state": "on",
       "type": 1,
       "frame": 0,
-      "position": {"x": 1408 , "y": 1536}
+      "position": {
+        "x": 1408,
+        "y": 1536
+      },
+      "name": "TelevisionI021"
     },
     {
       "object": "Obj_Television",
@@ -156,82 +245,123 @@
       "state": "on",
       "type": 1,
       "frame": 0,
-      "position": {"x": 1664 , "y": 1536}
+      "position": {
+        "x": 1664,
+        "y": 1536
+      },
+      "name": "TelevisionI022"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 1472 , "y": 1600}
+      "position": {
+        "x": 1472,
+        "y": 1600
+      },
+      "name": "ComputerI023"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 1664 , "y": 1600}
+      "position": {
+        "x": 1664,
+        "y": 1600
+      },
+      "name": "ComputerI024"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 1472 , "y": 1792}
+      "position": {
+        "x": 1472,
+        "y": 1792
+      },
+      "name": "ComputerI025"
     },
     {
       "object": "Obj_Computer",
       "direction": "front",
       "state": "on",
-      "position": {"x": 1664 , "y": 1792}
+      "position": {
+        "x": 1664,
+        "y": 1792
+      },
+      "name": "ComputerI026"
     }
   ],
   "active": [
     {
       "object": "Obj_Door",
-      "name": "Door 1",
+      "name": "DoorA001",
       "size": "big",
       "state": "active",
-      "position": { "x": 896, "y": 1408 }
+      "position": {
+        "x": 896,
+        "y": 1408
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 2",
+      "name": "DoorA002",
       "size": "big",
       "state": "active",
-      "position": { "x": 896, "y": 960 }
+      "position": {
+        "x": 896,
+        "y": 960
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 3",
+      "name": "DoorA003",
       "size": "big",
       "state": "active",
-      "position": { "x": 1536, "y": 512 }
+      "position": {
+        "x": 1536,
+        "y": 512
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 4",
+      "name": "DoorA004",
       "size": "big",
       "state": "active",
-      "position": { "x": 1536, "y": 832 }
+      "position": {
+        "x": 1536,
+        "y": 832
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 5",
+      "name": "DoorA005",
       "size": "big",
       "state": "active",
-      "position": { "x": 1536, "y": 1536 }
+      "position": {
+        "x": 1536,
+        "y": 1536
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 6",
+      "name": "DoorA006",
       "size": "big",
       "state": "active",
-      "position": { "x": 1536, "y": 1856 }
+      "position": {
+        "x": 1536,
+        "y": 1856
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA007",
       "size": "big",
       "state": "active",
-      "position": { "x": 384, "y": 320 }
+      "position": {
+        "x": 384,
+        "y": 320
+      }
     }
   ]
 }

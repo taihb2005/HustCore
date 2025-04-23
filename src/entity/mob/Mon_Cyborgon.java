@@ -3,7 +3,6 @@ package entity.mob;
 import entity.Actable;
 import entity.effect.type.EffectNone;
 import entity.effect.type.Slow;
-import entity.projectile.Proj_GreenBullet;
 import entity.projectile.Proj_TrackingPlasma;
 import graphics.Animation;
 import graphics.AssetPool;
@@ -95,7 +94,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
     private int actionLockCounter = 0;
     private final int changeDirCounter = 240;
 
-    public Mon_Cyborgon(GameMap mp , int x , int y , String idName){
+    public Mon_Cyborgon(GameMap mp,  String idName, int x , int y){
         super(mp , x , y);
         name = "Cyborgon";
         width = 64;
@@ -123,7 +122,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         effectDealOnTouch = new EffectNone(mp.player);
         effectDealByProjectile = new Slow(mp.player , 90);
         speed = 2;
-        last_speed = speed;
+        lastSpeed = speed;
 
         expDrop = 20;
 
@@ -420,7 +419,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         hitbox = null;
         interactionDetectionArea = null;
         projectile = null;
-        projectile_name = null;
+        projectileName = null;
     }
 
     private enum CyborgonState{

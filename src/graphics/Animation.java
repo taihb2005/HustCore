@@ -10,6 +10,7 @@ public class Animation{
     public BufferedImage[] frame;
 
     private int frameCounts;
+    private int frameDelay;
     private int currentFrames;
 
     private int aniSpeed;
@@ -32,6 +33,7 @@ public class Animation{
         this.finished = false;
         this.aniSpeed = aniSpeed;
         this.frameCounts = frame.length;
+        this.frameDelay = 1;
         this.currentFrames = 0;
     }
 
@@ -43,8 +45,10 @@ public class Animation{
         this.loop = loop;
         this.aniSpeed = aniSpeed;
         this.frameCounts = frame.length;
+        this.frameDelay = 1;
         this.currentFrames = 0;
     }
+
 
     public Animation(BufferedImage[] frame, int initialFrame, int aniSpeed, boolean loop){
         this.frame = frame;
@@ -56,8 +60,7 @@ public class Animation{
         this.loop = loop;
         this.aniSpeed = aniSpeed;
         this.frameCounts = frame.length;
-
-
+        this.frameDelay = 1;
     }
 
     public void setAnimationState(BufferedImage[] frame ,int ani_Speed)
@@ -112,7 +115,7 @@ public class Animation{
 
 
     public void render(Graphics2D g2, int x, int y){
-        g2.drawImage(frame[currentFrames], x, y , null);
+        g2.drawImage(frame[currentFrames/frameDelay], x, y , null);
     }
 
     public boolean isPlaying() {
@@ -137,17 +140,24 @@ public class Animation{
         finished = false;
     }
 
+    public void setFrameDelay(int delay){
+        this.frameDelay = delay;
+    }
     public void setAnimationSpeed(int speed){this.aniSpeed = speed;}
     public int getCurrentFrames(){return currentFrames;}
     public int getFrameCounts(){return frameCounts;}
     public ArrayList<BufferedImage> getAni_sprite(){return ani_sprite;}
 
     public Animation clone(){
-        return new Animation(frame, aniSpeed, loop);
+        Animation animation = new Animation(frame, aniSpeed, loop);
+        animation.setFrameDelay(frameDelay);
+        return animation;
     }
 
     public Animation clone(int initialFrame){
-        return new Animation(frame, initialFrame, aniSpeed, loop);
+        Animation animation = new Animation(frame, initialFrame, aniSpeed, loop);
+        animation.setFrameDelay(frameDelay);
+        return animation;
     }
 
     public void dispose(){

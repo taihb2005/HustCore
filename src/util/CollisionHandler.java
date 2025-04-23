@@ -2,7 +2,7 @@ package util;
 
 import entity.Entity;
 import entity.mob.Monster;
-import level.EventRectangle;
+import level.event.EventRectangle;
 import map.GameMap;
 
 import java.awt.*;

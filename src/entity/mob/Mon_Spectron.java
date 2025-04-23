@@ -7,10 +7,10 @@ import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
+import util.GameTimer;
 import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -59,6 +59,9 @@ public class Mon_Spectron extends Monster implements Actable {
     private Direction lastDirection;
     private Animation currentAnimation;
 
+    private GameTimer moveTimer;
+    private GameTimer shootTimer;
+
     private void setState(){
         boolean check1 = false;
         boolean check2 = false;
@@ -84,7 +87,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
     private int lastHP;
 
-    public Mon_Spectron(GameMap mp , int x , int y , String idName)
+    public Mon_Spectron(GameMap mp, String idName, int x , int y)
     {
         super(mp , x , y);
         name = "Spectron";
@@ -107,7 +110,7 @@ public class Mon_Spectron extends Monster implements Actable {
         lastHP = currentHP;
         strength = 10;
         speed = 1;
-        last_speed = speed;
+        lastSpeed = speed;
         effectDealOnTouch = new Slow(mp.player , 60);
         effectDealByProjectile = new Slow(mp.player , 180);
 
@@ -185,30 +188,32 @@ public class Mon_Spectron extends Monster implements Actable {
     {
         //SPEED
         //MOVE
-        actionLockCounter++;
-        if (actionLockCounter >= changeDirCounter && !isDying && !isShooting) {
-            up = down = left = right = false;
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
-            if (i <= 28) {
-                direction = "up";
-                up = true;
-            }
-            if (i > 28 && i <= 50) {
-                direction = "down";
-                down = true;
-            }
-            if (i > 50 && i <= 75) {
-                direction = "left";
-                left = true;
-            }
-            if (i > 75 && i < 100) {
-                direction = "right";
-                right = true;
-            }
-            actionLockCounter = 0; // reset
-            isRunning = !isShooting && (right | left | up | down);
-        }
+        if(moveTimer == null){
+            moveTimer = new GameTimer( () -> {
+                if(!isDying && !isShooting){
+                    up = down = left = right = false;
+                    Random random = new Random();
+                    int i = random.nextInt(100) + 1;  // pick up  a number from 1 to 100
+                    if (i <= 28) {
+                        direction = "up";
+                        up = true;
+                    }
+                    if (i > 28 && i <= 50) {
+                        direction = "down";
+                        down = true;
+                    }
+                    if (i > 50 && i <= 75) {
+                        direction = "left";
+                        left = true;
+                    }
+                    if (i > 75 && i < 100) {
+                        direction = "right";
+                        right = true;
+                    }
+                    isRunning = !isShooting && (right | left | up | down);
+                }
+            }, changeDirCounter);
+        } else moveTimer.update();
 
         //ATTACK
         damagePlayer();
@@ -220,16 +225,18 @@ public class Mon_Spectron extends Monster implements Actable {
             if(isDying) isShooting = false;
         } else {
             if(isShooting && isDying) isShooting = false;
-            attackLockCounter++;
-            if (attackLockCounter >= shootInterval && !isDying) {
-                Random gen = new Random();
-                int i = gen.nextInt(100) + 1;
-                if (i >= 75 && i < 100) {
-                    isShooting = true;
-                    isRunning = false;
-                }
-                attackLockCounter = 0;
-            }
+            if(shootTimer == null){
+                shootTimer = new GameTimer( () -> {
+                    if(!isDying){
+                        Random gen = new Random();
+                        int i = gen.nextInt(100) + 1;
+                        if (i >= 75 && i < 100) {
+                            isShooting = true;
+                            isRunning = false;
+                        }
+                    }
+                }, shootInterval);
+            } else shootTimer.update();
         }
 
         //INVINCIBLE
@@ -285,7 +292,7 @@ public class Mon_Spectron extends Monster implements Actable {
 
     public void dispose(){
         projectile = null;
-        projectile_name = null;
+        projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
     }

@@ -1,135 +1,193 @@
 {
   "player": [
-    {"position": {"x": 852 , "y": 900}}
+    {
+      "position": {
+        "x": 852,
+        "y": 900
+      }
+    }
   ],
-  "inactive": [
-  ],
+  "inactive": [],
   "active": [
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA001",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 64, "y": 192 }
+      "position": {
+        "x": 64,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA002",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 192, "y": 192 }
+      "position": {
+        "x": 192,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA003",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 320, "y": 192 }
+      "position": {
+        "x": 320,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA004",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 448, "y": 192 }
+      "position": {
+        "x": 448,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA005",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 576, "y": 192 }
+      "position": {
+        "x": 576,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA006",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 704, "y": 192 }
+      "position": {
+        "x": 704,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA007",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 832, "y": 192 }
+      "position": {
+        "x": 832,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA008",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 960, "y": 192 }
+      "position": {
+        "x": 960,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA009",
       "size": "big",
       "state": "active",
-      "position": { "x": 1088, "y": 192 }
+      "position": {
+        "x": 1088,
+        "y": 192
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA010",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 64, "y": 1024 }
+      "position": {
+        "x": 64,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA011",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 192, "y": 1024 }
+      "position": {
+        "x": 192,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA012",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 320, "y": 1024 }
+      "position": {
+        "x": 320,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA013",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 448, "y": 1024 }
+      "position": {
+        "x": 448,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA014",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 576, "y": 1024 }
+      "position": {
+        "x": 576,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA015",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 704, "y": 1024 }
+      "position": {
+        "x": 704,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA016",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 832, "y": 1024 }
+      "position": {
+        "x": 832,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA017",
       "size": "big",
       "state": "inactive",
-      "position": { "x": 960, "y": 1024 }
+      "position": {
+        "x": 960,
+        "y": 1024
+      }
     },
     {
       "object": "Obj_Door",
-      "name": "Door 7",
+      "name": "DoorA018",
       "size": "big",
       "state": "active",
-      "position": { "x": 1088, "y": 1024 }
+      "position": {
+        "x": 1088,
+        "y": 1024
+      }
     }
   ]
 }

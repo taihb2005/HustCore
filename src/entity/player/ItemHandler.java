@@ -1,6 +1,5 @@
 package entity.player;
 
-import main.GamePanel;
 import main.GameState;
 import main.KeyHandler;
 
@@ -10,7 +9,7 @@ public class ItemHandler {
     public ItemHandler(){}
 
     public void useItem(Player player) {
-        if (gameState == GameState.PLAY_STATE) {
+        if (gameState == GameState.PLAY) {
             if (KeyHandler.key1pressed) {
                 if (player.inventory[0] != null) {
                     KeyHandler.key1pressed = false;

@@ -1,9 +1,9 @@
 package main;
 
 // awt library
-import ai.PathFinder2;
 import graphics.environment.EnvironmentManager;
 import level.Level;
+import level.LevelState;
 import map.*;
 import status.StatusManager;
 import util.Camera;
@@ -33,15 +33,14 @@ public class GamePanel extends JPanel implements Runnable {
     public static Sound music = new Sound();
     public static Sound se = new Sound();
     public static Credit credit;
-    public static EnvironmentManager environmentManager;
     public final KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
+
     public static GameState gameState;
 
     public static StatusManager sManager = new StatusManager();
-    //public LevelManager lvlManager = new LevelManager(this);
-    public static int previousLevelProgress = 4;
-    public static int levelProgress = 4;
+    public static int previousLevelProgress = 0;
+    public static int levelProgress = 0;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
@@ -76,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGameThread() {
         //new LoadResourceThread().start();
-        gameState = GameState.MENU_STATE;
+        gameState = GameState.MENU;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -120,28 +119,28 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         updateDarkness();
-        if (gameState == GameState.PLAY_STATE || gameState == GameState.PASSWORD_STATE || gameState == GameState.WIN_STATE) {
-            if (!music.clip.isRunning() && !gameCompleted) {
-                resumeMusic();
-            }
-            currentMap.update();
-            currentLevel.updateProgress();
-            ui.update();
-        } else if (gameState == GameState.PAUSE_STATE) {
-            pauseMusic();
-            ;
-        }
-        if (environmentManager != null) environmentManager.lighting.update();
 
+        switch (gameState) {
+            case PLAY, WIN -> {
+                if (!music.clip.isRunning() && !gameCompleted) {
+                    resumeMusic();
+                }
+                currentMap.update();
+                currentLevel.update();
+                ui.update();
+            }
+
+            case PAUSE -> pauseMusic();
+        }
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
-            if (gameState == GameState.PLAY_STATE || gameState == GameState.DIALOGUE_STATE || gameState == GameState.PAUSE_STATE || gameState == GameState.PASSWORD_STATE) {
+            if (gameState == GameState.PLAY || gameState == GameState.DIALOGUE || gameState == GameState.PAUSE || gameState == GameState.PASSWORD) {
                 currentMap.render(g2);
-                environmentManager.draw(g2);
             }
             if (currentLevel != null) currentLevel.render(g2);
             ui.render(g2);
@@ -152,6 +151,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
             g2.dispose();
     }
+
 
     public void drawDarkness(Graphics2D g2) {
         BufferedImage darknessFilter = new BufferedImage(GamePanel.windowWidth, GamePanel.windowHeight, BufferedImage.TYPE_INT_ARGB);
@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void updateDarkness(){
         if(darker) increaseDarkness(); else
-            if(lighter) decraseDarkness();
+            if(lighter) decreaseDarkness();
     }
 
     public void increaseDarkness() {
@@ -176,7 +176,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void decraseDarkness(){
+    public void decreaseDarkness(){
         darknessOpacity -= 0.025f;
         if (darknessOpacity < 0.0f) {
             lighter = false;
@@ -210,6 +210,5 @@ public class GamePanel extends JPanel implements Runnable {
     private void dispose()
     {
         MapManager.dispose();
-
     }
 }

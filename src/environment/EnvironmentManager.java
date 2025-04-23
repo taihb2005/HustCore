@@ -17,8 +17,15 @@ public class EnvironmentManager {
     {
         lighting = new Lighting(mp);
     }
-    public void draw(Graphics2D g2)
+    public void update(){
+        lighting.update();
+    }
+    public void render(Graphics2D g2)
     {
         lighting.draw(g2);
+    }
+
+    public void setRadius(int radius){
+        lighting.setLightSource(radius);
     }
 }

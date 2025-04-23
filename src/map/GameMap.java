@@ -7,10 +7,8 @@ import entity.object.Obj_Wall;
 import entity.player.AttackEnemy;
 import entity.player.Player;
 import entity.projectile.Projectile;
-import level.EventRectangle;
-import level.Level;
-import main.GamePanel;
-import main.GameState;
+import environment.EnvironmentManager;
+import level.event.EventRectangle;
 import main.KeyHandler;
 import util.CollisionHandler;
 
@@ -21,11 +19,12 @@ import static main.GamePanel.*;
 
 
 public class GameMap {
-    public Player player = new Player(this);
+    public Player player;
     public Mon_Boss boss = null;
 
+    private EnvironmentManager environmentManager;
     public CollisionHandler cChecker = new CollisionHandler(this);
-    public AttackEnemy playerAttack = new AttackEnemy(this);
+    public AttackEnemy playerAttack;
 
     public static int childNodeSize = 32;
 
@@ -62,8 +61,12 @@ public class GameMap {
         this.maxWorldCol = (mapWidth / childNodeSize) + 1 ;
         this.maxWorldRow = (mapHeight/ childNodeSize) + 1;
 
-        System.out.println("World Col" + maxWorldCol);
-        System.out.println("World Row" + maxWorldRow);
+        player = new Player(this);
+        playerAttack = new AttackEnemy(this);
+
+        environmentManager = new EnvironmentManager(this);
+        environmentManager.setup();
+        environmentManager.setRadius(getBestLightingRadius());
     }
 
     public void render(Graphics2D g2)
@@ -85,13 +88,15 @@ public class GameMap {
         mapLayer.get(1).render(g2);
         for (Entity mapObject : objList)
         {
-            if(mapObject != null && !mapObject.isCollected) mapObject.render(g2);
+            if(mapObject != null && !mapObject.isCollected && isInView(mapObject)) mapObject.render(g2);
         }
         for(Entity projectile : projectiles)
         {
-            if(projectile != null) projectile.render(g2);
+            if(projectile != null && isInView(projectile)) projectile.render(g2);
         }
         objList.clear();
+
+        environmentManager.render(g2);
 
         //DEBUG MENU
         if (KeyHandler.showDebugMenu) //NHẤN F3 ĐỂ HIỂN THỊ TỌA ĐỘ CỦA NHÂN VẬT
@@ -149,38 +154,50 @@ public class GameMap {
 
     public void update()
     {
-        if(GamePanel.gameState == GameState.PLAY_STATE || GamePanel.gameState == GameState.DIALOGUE_STATE || GamePanel.gameState == GameState.PASSWORD_STATE) {
-
-            //UPDATE ENTITY
-            for(int i = 0 ; i < activeObj.length ; i++){
-                if(activeObj[i] != null){
-                    if(activeObj[i].canbeDestroyed){
-                        activeObj[i] = null;
-                    }
+        //UPDATE ENTITY
+        for(int i = 0 ; i < activeObj.length ; i++){
+            if(activeObj[i] != null){
+                if(activeObj[i].canbeDestroyed){
+                    activeObj[i] = null;
                 }
             }
-            for(int i = 0 ; i < enemy.length ; i++){
-                if(enemy[i] != null){
-                    if(enemy[i].canbeDestroyed) {
-                        enemy[i] = null;
-                    }
-                }
-            }
-            for(int i = 0 ; i < projectiles.length ; i++){
-                if(projectiles[i] != null){
-                    if(!projectiles[i].active){
-                        projectiles[i] = null;
-                    }
-                }
-            }
-            //UPDATE ITEM
-            for(Entity entity : inactiveObj) if(entity != null) entity.update();
-            for(Entity entity : activeObj) if(entity != null) entity.update();
-            for(Entity entity : npc) if(entity != null) entity.update();
-            for(Entity entity : enemy) if(entity != null) entity.update();
-            for(Entity entity : projectiles) if(entity != null) entity.update();
-            player.update();
         }
+        for(int i = 0 ; i < enemy.length ; i++){
+            if(enemy[i] != null){
+                if(enemy[i].canbeDestroyed) {
+                    enemy[i] = null;
+                }
+            }
+        }
+        for(int i = 0 ; i < projectiles.length ; i++){
+            if(projectiles[i] != null){
+                if(!projectiles[i].active){
+                    projectiles[i] = null;
+                }
+            }
+        }
+        //UPDATE ITEM
+        for(Entity entity : inactiveObj) if(entity != null) entity.update();
+        for(Entity entity : activeObj) if(entity != null) entity.update();
+        for(Entity entity : npc) if(entity != null) entity.update();
+        for(Entity entity : enemy) if(entity != null) entity.update();
+        for(Entity entity : projectiles) if(entity != null) entity.update();
+        player.update();
+
+        environmentManager.update();
+    }
+
+    public boolean isInView(Entity entity) {
+        int tileSize = 64;
+        int left = camera.getX() - tileSize;
+        int right = camera.getX() + windowWidth + tileSize;
+        int top = camera.getY() - tileSize;
+        int bottom = camera.getY() + windowHeight + tileSize;
+
+        return (entity.worldX + entity.width > left &&
+                entity.worldX < right &&
+                entity.worldY + entity.height > top &&
+                entity.worldY < bottom);
     }
 
     public void parseWallObject(TileLayer layer){
@@ -207,22 +224,6 @@ public class GameMap {
         }
     }
 
-    public void dispose() throws ConcurrentModificationException{
-        for(Entity e : activeObj) if(e != null) e.dispose();
-        for(Entity e : enemy) if(e != null) e.dispose();
-        for(Entity e : projectiles) if(e != null) e.dispose();
-        Arrays.fill(inactiveObj, null);
-        Arrays.fill(activeObj, null);
-        Arrays.fill(npc, null);
-        Arrays.fill(enemy, null);
-        Arrays.fill(projectiles, null);
-        objList.clear();
-
-        for(TileLayer layer : mapLayer){
-            layer.dispose();
-        }
-    }
-
     public void addObject(Entity entity , Entity[] list){
         for(int i = 0 ; i < list.length ; i++){
             if(list[i] == null){
@@ -242,5 +243,35 @@ public class GameMap {
     public int getMapHeight() {
         return mapHeight;
     }
+
+    private <T extends Entity> void disposeEntityArray(T[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != null) {
+                array[i].dispose();
+                array[i] = null;
+            }
+        }
+    }
+
+    public void dispose() {
+        disposeEntityArray(activeObj);
+        disposeEntityArray(enemy);
+        disposeEntityArray(projectiles);
+
+        Arrays.fill(inactiveObj, null);
+        Arrays.fill(activeObj, null);
+        Arrays.fill(npc, null);
+        Arrays.fill(enemy, null);
+        Arrays.fill(projectiles, null);
+
+        objList.clear();
+
+        for (TileLayer layer : mapLayer) {
+            if (layer != null) {
+                layer.dispose();
+            }
+        }
+    }
+
 
 }

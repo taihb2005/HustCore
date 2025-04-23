@@ -2,6 +2,7 @@ package entity.effect.type;
 
 import entity.effect.Effect;
 import entity.player.Player;
+import graphics.AssetPool;
 import graphics.Sprite;
 import main.GamePanel;
 
@@ -13,20 +14,15 @@ public class Blind extends Effect {
         super(player);
         setEffectDuration(duration);
         id = 2;
-        name = new StringBuilder("Blind");
-        icon = new Sprite("/effect/blind.png").getSpriteSheet();
+        name = "Blind";
+        icon = AssetPool.getImage("blind.png");
     }
+
+    public void remove(){
+
+     }
 
    public void affect(){
 
-   }
-   public void remove(){
-       GamePanel.environmentManager.lighting.transit = true;
-       GamePanel.environmentManager.lighting.fadeOut = true;
-   }
-
-   public void setEffectAnimation(){
-       GamePanel.environmentManager.lighting.transit = true;
-       GamePanel.environmentManager.lighting.fadeIn = true;
    }
 }

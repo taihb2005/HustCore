@@ -6,6 +6,8 @@ import entity.items.Item;
 import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
+import level.Level;
+import level.LevelState;
 import main.KeyHandler;
 import map.GameMap;
 
@@ -13,6 +15,7 @@ import java.awt.*;
 import java.util.*;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.currentLevel;
 
 public class Obj_Chest extends Entity implements Actable {
     GameMap mp;
@@ -27,8 +30,6 @@ public class Obj_Chest extends Entity implements Actable {
                     new Animation(chestSpritePool.get(state).getSpriteArrayRow(0), 8, true));
         }
     }
-    public final static int CLOSED = 0;
-    public final static int OPENED = 1;
 
     private Animation currentAnimation;
     private void setState(){
@@ -44,7 +45,7 @@ public class Obj_Chest extends Entity implements Actable {
     private ChestState lastState;
     public ArrayList<Item> reward = new ArrayList<>();
 
-    public Obj_Chest(GameMap mp , int x , int y , String idName)
+    public Obj_Chest(GameMap mp, String idName, int x , int y)
     {
         super(x , y);
         name = "Chest";
@@ -59,6 +60,8 @@ public class Obj_Chest extends Entity implements Actable {
         setDefault();
     }
 
+
+
     private void setDefault()
     {
         solidArea1 = new Rectangle(16 , 43 , 32 , 17);
@@ -72,12 +75,12 @@ public class Obj_Chest extends Entity implements Actable {
 
     public void setDialogue() {
         HashMap<Item , Integer> map = new HashMap<>();
-        for (int i = 0; i < reward.size(); i++) {
-            if(!map.containsKey(reward.get(i))){
-                map.put(reward.get(i) , 1);
-            } else{
-                int tmp = map.get(reward.get(i));
-                map.put(reward.get(i) , ++tmp);
+        for (Item value : reward) {
+            if (!map.containsKey(value)) {
+                map.put(value, 1);
+            } else {
+                int tmp = map.get(value);
+                map.put(value, ++tmp);
             }
         }
         int dialogueIndex = 0;
@@ -109,13 +112,13 @@ public class Obj_Chest extends Entity implements Actable {
     }
 
     public void handleAnimation() {
-        if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
-            if (KeyHandler.enterPressed) {
+        if (isInteracting) {
+            if (currentLevel.checkState(LevelState.RUNNING) && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 talk();
                 if(currentState == ChestState.CLOSED) {
                     currentState = ChestState.OPENED;
-                    loot();  // Gọi hàm thu thập để hiển thị phần thưởng
+                    loot();
                 }
             }
         }
@@ -124,13 +127,13 @@ public class Obj_Chest extends Entity implements Actable {
     }
 
     @Override
-    public void update() throws NullPointerException{
+    public void update(){
         handleAnimation();
         currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
+    public void render(Graphics2D g2){
         currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
     }
 
@@ -142,6 +145,10 @@ public class Obj_Chest extends Entity implements Actable {
     @Override
     public void move() {
 
+    }
+
+    public boolean isOpened(){
+        return currentState == ChestState.OPENED;
     }
 
     private enum ChestState{

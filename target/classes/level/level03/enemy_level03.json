@@ -2,164 +2,303 @@
   "root": [
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 713, "y": 576 },
+      "name": "Shooter001",
+      "position": {
+        "x": 713,
+        "y": 576
+      },
       "direction": "right",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 384, "y": 576 },
+      "name": "Shooter002",
+      "position": {
+        "x": 384,
+        "y": 576
+      },
       "direction": "right",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 1024, "y": 512 },
+      "name": "Shooter003",
+      "position": {
+        "x": 1024,
+        "y": 512
+      },
       "direction": "left",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Shooter",
-      "position": { "x": 640, "y": 512 },
+      "name": "Shooter004",
+      "position": {
+        "x": 640,
+        "y": 512
+      },
       "direction": "left",
       "isAlwaysUp": true,
       "attackCycle": 120
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 200, "y": 111 }
+      "name": "Spectron005",
+      "position": {
+        "x": 200,
+        "y": 111
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 254, "y": 166 }
+      "name": "Spectron006",
+      "position": {
+        "x": 254,
+        "y": 166
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 325, "y": 107 }
+      "name": "Spectron007",
+      "position": {
+        "x": 325,
+        "y": 107
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 378, "y": 175 }
+      "name": "Spectron008",
+      "position": {
+        "x": 378,
+        "y": 175
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 446, "y": 110 }
+      "name": "Spectron009",
+      "position": {
+        "x": 446,
+        "y": 110
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 508, "y": 176 }
+      "name": "Spectron010",
+      "position": {
+        "x": 508,
+        "y": 176
+      }
     },
     {
       "enemy": "Mon_Spectron",
-      "position": { "x": 574, "y": 99 }
+      "name": "Spectron011",
+      "position": {
+        "x": 574,
+        "y": 99
+      }
     },
     {
       "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1401, "y": 550}
+      "name": "HustGuardian012",
+      "position": {
+        "x": 1401,
+        "y": 550
+      }
     },
     {
       "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1401, "y": 786}
+      "name": "HustGuardian013",
+      "position": {
+        "x": 1401,
+        "y": 786
+      }
     },
     {
       "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1730, "y": 550}
+      "name": "HustGuardian014",
+      "position": {
+        "x": 1730,
+        "y": 550
+      }
     },
     {
       "enemy": "Mon_HustGuardian",
-      "name": "Room3Enemy",
-      "position": {"x": 1730, "y": 786}
+      "name": "HustGuardian015",
+      "position": {
+        "x": 1730,
+        "y": 786
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 704 , "y" : 128}
+      "name": "EffectDealer016",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 704,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 704 , "y" : 192}
+      "name": "EffectDealer017",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 704,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 832 , "y" : 128}
+      "name": "EffectDealer018",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 832,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 832 , "y" : 192}
+      "name": "EffectDealer019",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 832,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 896 , "y" : 192}
+      "name": "EffectDealer020",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 896,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 896 , "y" : 128}
+      "name": "EffectDealer021",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 896,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 1024 , "y" : 192}
+      "name": "EffectDealer022",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 1024,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 1024 , "y" : 128}
+      "name": "EffectDealer023",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 1024,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 1152 , "y" : 192}
+      "name": "EffectDealer024",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 1152,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 1152 , "y" : 128}
+      "name": "EffectDealer025",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 1152,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 1216 , "y" : 128}
+      "name": "EffectDealer026",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 1216,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 1216 , "y" : 192}
+      "name": "EffectDealer027",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 1216,
+        "y": 192
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "Slow" , "duration": 1},
-      "position" : {"x": 1344 , "y" : 128}
+      "name": "EffectDealer028",
+      "effect": {
+        "type": "Slow",
+        "duration": 1
+      },
+      "position": {
+        "x": 1344,
+        "y": 128
+      }
     },
     {
       "enemy": "Mon_EffectDealer",
-      "name": "chemchep",
-      "effect": {"type": "SpeedBoost" , "duration": 1},
-      "position" : {"x": 1344 , "y" : 192}
+      "name": "EffectDealer029",
+      "effect": {
+        "type": "SpeedBoost",
+        "duration": 1
+      },
+      "position": {
+        "x": 1344,
+        "y": 192
+      }
     }
   ]
 }
-

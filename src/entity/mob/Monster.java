@@ -1,11 +1,9 @@
 package entity.mob;
 
-import ai.Node;
 import ai.PathFinder;
 import entity.Entity;
 import entity.effect.Effect;
 import entity.object.Obj_Heart;
-import entity.projectile.Projectile;
 import map.GameMap;
 
 import java.awt.*;
@@ -49,24 +47,6 @@ public class Monster extends Entity {
 
     public void projectileCauseEffect(){
         effectDealByProjectile.add();
-    }
-
-    public void decideToMove() {
-        up = down = left = right = false;
-        switch (direction) {
-            case "right":
-                right = true;
-                break;
-            case "left":
-                left = true;
-                break;
-            case "down":
-                down = true;
-                break;
-            case "up":
-                up = true;
-                break;
-        }
     }
     
     public void reactForDamage(){
@@ -225,7 +205,7 @@ public class Monster extends Entity {
                     onPath = false;
                     up = down = right = left = false;
                     isRunning = false;
-                    speed = last_speed;
+                    speed = lastSpeed;
                 }
             }
         });
@@ -253,6 +233,10 @@ public class Monster extends Entity {
     public void resetCounter(){
         drawHPBar = true;
         counter = 0;
+    }
+
+    public void kill(){
+        currentHP = 0;
     }
 
     public void renderHPBar(Graphics2D g2 , int offsetX , int offsetY){

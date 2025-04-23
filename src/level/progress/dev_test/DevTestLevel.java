@@ -1,10 +1,8 @@
 package level.progress.dev_test;
 
-import level.EventRectangle;
+import level.event.EventRectangle;
 import level.Level;
 import level.progress.level00.EventHandler00;
-import main.GamePanel;
-import map.MapManager;
 import map.MapParser;
 
 import static main.GamePanel.playMusic;
@@ -30,7 +28,7 @@ public class DevTestLevel extends Level {
         changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
     }
 
-    public void updateProgress(){
+    public void update(){
         //eventHandler00.update();
     }
 

@@ -2,8 +2,8 @@ package level.progress.level03;
 
 import entity.Entity;
 import entity.effect.type.Stun;
-import level.EventHandler;
-import level.EventRectangle;
+import level.event.EventHandler;
+import level.event.EventRectangle;
 import level.Level;
 import main.GamePanel;
 import main.GameState;
@@ -54,7 +54,7 @@ public class EventHandler03 extends EventHandler {
             //Con điên, sao k để chạy thoại của eventMastr luôn tách ra làm đ gì
             public void run() {
                 eventMaster.startDialogue(eventMaster , 0);
-                lvl.finishedBeginingDialogue = true;
+                lvl.finishedBeginningDialogue = true;
             }
         };
         timer.schedule(beginGameDialogue , 800);
@@ -84,7 +84,7 @@ public class EventHandler03 extends EventHandler {
         eventMaster.dialogues[1][2] = new StringBuilder("Boss: hãy chuẩn bị bỏ mạng đi…\n");
         eventMaster.startDialogue(eventMaster,1);
         lvl.map.player.speed=1;
-        lvl.map.player.last_speed=1;
+        lvl.map.player.lastSpeed =1;
         lvl.map.player.projectile.speed = 1;
         lvl.map.player.projectile.maxHP = 150;
     }
@@ -103,7 +103,7 @@ public class EventHandler03 extends EventHandler {
                 "màn hình rồi còn bắt đọc hết đống\nthoại này...\n");
         eventMaster.startDialogue(eventMaster,2);
         lvl.map.player.speed=3;
-        lvl.map.player.last_speed=3;
+        lvl.map.player.lastSpeed =3;
         lvl.map.player.projectile.speed = 10;
         lvl.map.player.projectile.maxHP = 30;
     }
@@ -132,15 +132,15 @@ public class EventHandler03 extends EventHandler {
     }
 
     public void update() {
-        if(!lvl.finishedBeginingDialogue) startingDialogue();
+        if(!lvl.finishedBeginningDialogue) startingDialogue();
         else {
             if (time > 0) {
                 time--;
                 int currentRadius = (int) (time*0.4);
-                if(lvl.map.player.effect.isEmpty())GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
+                //if(lvl.map.player.effect.isEmpty())GamePanel.environmentManager.lighting.setLightRadius(currentRadius);
             }
             else {
-                GamePanel.environmentManager.lighting.setLightRadius(200);
+                //GamePanel.environmentManager.lighting.setLightRadius(200);
                 lvl.map.player.currentHP = 0;
             }
             if(!beginRoom2.eventFinished && triggerEvent(beginRoom2)) {
@@ -182,7 +182,7 @@ public class EventHandler03 extends EventHandler {
             if(!quizArea.eventFinished && triggerEvent(quizArea) && GamePanel.ui.selectedOption == -1) {
                 eventMaster.dialogues[4] = null;
                 System.gc();
-                GamePanel.gameState = GameState.QUIZ_STATE;
+                GamePanel.gameState = GameState.QUIZ;
                 stopMusic();
                 playMusic(7);
             }

@@ -149,16 +149,31 @@ public class Obj_Door extends Entity{
     public void open(){
         if (KeyHandler.enterPressed) {
             KeyHandler.enterPressed = false;
-            if(isInteracting && currentStatus == DoorStatus.ACTIVE && currentState != DoorState.OPENED){
+            if(isInteracting && currentStatus == DoorStatus.ACTIVE && currentState == DoorState.CLOSED){
                 currentState = DoorState.OPENING;
             } else if(currentStatus == DoorStatus.INACTIVE)
                 talk();
         }
     }
 
+    public void activate(){
+        if(currentStatus == DoorStatus.INACTIVE){
+            currentStatus = DoorStatus.ACTIVE;
+        }
+    }
+
     public void close(){
         if(currentState == DoorState.OPENED){
             currentState = DoorState.CLOSING;
+            if(currentSize == DoorSize.BIG) {
+                solidArea1 = new Rectangle(0 , 17 , 128 , 47);
+                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+                interactionDetectionArea = new Rectangle(0, 11, 128, 64);
+            } else {
+                solidArea1 = new Rectangle(0 , 17 , 64 , 47);
+                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+                interactionDetectionArea = new Rectangle(0, 11, 64, 57);
+            }
         }
     }
 
@@ -179,17 +194,8 @@ public class Obj_Door extends Entity{
         }
 
         if(currentAnimation.isFinished() && currentState == DoorState.CLOSING){
-            currentState = DoorState.OPENED;
-            if(currentSize == DoorSize.SMALL) {
-                solidArea1 = new Rectangle(0 , 17 , 128 , 47);
-                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-                interactionDetectionArea = new Rectangle(0, 11, 128, 64);
-            } else {
-                solidArea1 = new Rectangle(0 , 17 , 64 , 47);
-                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-                interactionDetectionArea = new Rectangle(0, 11, 64, 57);
-            }
-            setDefaultSolidArea();
+            currentState = DoorState.CLOSED;
+            currentStatus = DoorStatus.INACTIVE;
         }
         if(isInteracting) isInteracting = false;
     }

@@ -1,55 +1,55 @@
 package entity.effect;
 
 import entity.player.Player;
+import util.GameTimer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static main.GamePanel.camera;
 
-public class Effect {
+public class Effect implements Affectable {
     protected Player player;
     protected int id;
-    public StringBuilder name;
+    public String name;
     protected int effectDuration;
-    protected int effectDurationCounter = 0;
+    protected GameTimer effectCounter;
     public boolean effectFinished ;
 
     public BufferedImage icon;
 
     public Effect(Player player){
         this.player = player;
+        effectCounter = new GameTimer(null, false);
     }
 
     public void render(Graphics2D g2){
 
     };
-    public void add(){
+    public void add() {
         setEffectDuration(effectDuration);
         affect();
-        if(!player.effectManager.containsKey(name)){ //Nếu như chưa tồn tại effect thì thêm vào
-            player.effectManager.put(name , effectDuration);
-            setEffectAnimation();
-            player.effect.add(this);
-        } else{         //Nếu như tồn tại rồi thì check một vài thứ sau
-            for(Effect eff : player.effect){
-                if(eff.name.compareTo(name) == 0) {   //Tìm đến cái effect đã tồn tại
-                    int effectRemainingTime = player.effectManager.get(name) - effectDurationCounter;
-                    if(effectRemainingTime < effectDuration) { //Nếu như thời gian effect còn lại nhỏ hơn thì mới set cái mới
-                        eff.setEffectDuration(effectDuration);
-                        player.effectManager.put(name , effectDuration); //Đặt thời lượng của effect vào map để dùng sau
-                    }
-                    break;
-                }
+
+        if (player.effectManager.containsKey("Effect Immunity")) return;
+
+        int currentDuration = player.effectManager.getOrDefault(name, -1);
+
+        if (currentDuration < effectDuration) {
+            player.effectManager.put(name, effectDuration);
+
+            if (currentDuration == -1) {
+                setEffectAnimation();
+                player.effect.add(this);
             }
+        } else if (currentDuration != -1) {
+            effectCounter.reset();
         }
     }
+
+
     public void update(){
-        effectDurationCounter++;
-        if(effectDurationCounter >= effectDuration){
-            effectFinished = true;
-            effectDurationCounter = 0;
-        }
+        effectCounter.update();
+        effectFinished = effectCounter.isFinished();
     };
 
     public void affect(){}
@@ -58,6 +58,6 @@ public class Effect {
     public void setEffectDuration(int duration){
         effectFinished = false;
         effectDuration = duration;
-        effectDurationCounter = 0;
+        effectCounter.setPeriod(duration);
     }
 }

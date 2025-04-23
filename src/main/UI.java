@@ -1,7 +1,7 @@
 package main;
 
 import entity.Entity;
-import ui.manager.TitleScreen;
+import level.LevelState;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class UI {
     public static Font joystix;
     public static Font maru;
     public static Font bitcrusher;
-
 
     StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
     String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
@@ -101,8 +100,7 @@ public class UI {
             if (frameCounter > textSpeed) {
                 frameCounter = 0;
                 if (textIndex < currentDialogue.length()) {
-                    // Cập nhật displayedText theo từng ký tự
-                    gp.playSE(1);
+                    playSE(1);
                     displayedText += currentDialogue.charAt(textIndex);
                     textIndex++;
                 }
@@ -112,18 +110,17 @@ public class UI {
                 KeyHandler.enterPressed = false;
                 textIndex = 0;
                 displayedText = "";
-                if(gameState == GameState.DIALOGUE_STATE )
-                {
-                    target.dialogueIndex++;
-                }
+                target.dialogueIndex++;
+
+//                if(gameState == GameState.DIALOGUE)
+//                {
+//                    target.dialogueIndex++;
+//                }
             }
         }else
         {
             target.dialogueIndex = 0;
-            if(gameState == GameState.DIALOGUE_STATE)
-            {
-                gameState = GameState.PLAY_STATE;
-            }
+            currentLevel.setLevelState(LevelState.RUNNING);
         }
 
         x += tileSize - 10;
@@ -520,50 +517,39 @@ public class UI {
     }
     public void render(Graphics2D g2) {
         this.g2 = g2;
-            if(gameState == GameState.LOADING_STATE){
-                drawLoadingScreen();
-            } else if(gameState == GameState.PLAY_STATE)
-            {
-                drawHPBar();
-                drawManaBar();
-                drawInventory();
-                drawHPBarForBoss();
-            }else if (gameState == GameState.MENU_STATE) {
-                drawTitleScreen();
-            } else if (gameState == GameState.DIALOGUE_STATE) {
-                drawDialogueScreen();
-                drawHPBar();
-                drawManaBar();
-                drawInventory();
-                drawHPBarForBoss();
+        if(gameState == GameState.LOADING){
+            drawLoadingScreen();
+        } else if(gameState == GameState.PLAY)
+        {
+            LevelState levelState = currentLevel.getLevelState();
+            drawHPBar();
+            drawManaBar();
+            drawInventory();
+            drawHPBarForBoss();
+            if(levelState != null) {
+                switch (levelState) {
+                    case DIALOGUE -> drawDialogueScreen();
+                    case PASSWORD -> drawPasswordInputBox();
+                    case QUIZ -> drawQuiz();
+                }
             }
-             else if(gameState == GameState.PASSWORD_STATE){
-                drawPasswordInputBox();
-                drawHPBar();
-                drawManaBar();
-                drawInventory();
-            } else
-            if (gameState == GameState.LEVELUP_STATE) {
-                drawDialogueScreen();
-            } else if (gameState == GameState.PAUSE_STATE) {
-                drawHPBar();
-                drawManaBar();
-                drawPausedScreen();
-                drawOptionsScreen();
-                drawInventory();
-                drawHPBarForBoss();
-            }
-            if (gameState == GameState.LOSE_STATE) {
-                currentMap.dispose();
-                drawGameOverScreen();
-            }
-            if (gameState == GameState.SETTING_STATE) {
-                drawSettingScreen();
-            }
-            if (gameState == GameState.QUIZ_STATE) {
-                drawQuiz();
-            }
-
+        }else if (gameState == GameState.MENU) {
+            drawTitleScreen();
+        } else if (gameState == GameState.PAUSE) {
+            drawHPBar();
+            drawManaBar();
+            drawPausedScreen();
+            drawOptionsScreen();
+            drawInventory();
+            drawHPBarForBoss();
+        }
+        if (gameState == GameState.LOSE) {
+            currentMap.dispose();
+            drawGameOverScreen();
+        }
+        if (gameState == GameState.SETTING) {
+            drawSettingScreen();
+        }
     }
 
     private void drawQuiz() {
@@ -594,7 +580,7 @@ public class UI {
         g2.drawString(message , 30, 550);
     }
     public void update(){
-        if(gameState == GameState.PASSWORD_STATE){
+        if(gameState == GameState.PASSWORD){
             handlePasswordPressed();
             maskedPassword = "*".repeat(currentLevel.enteredPassword.length());
         }
@@ -766,6 +752,6 @@ public class UI {
                 currentLevel.enteredPassword = currentLevel.enteredPassword.substring(0, currentLevel.enteredPassword.length() - 1);
             }
         }
-        if(keyEscpressed) GamePanel.gameState = GameState.PLAY_STATE;
+        if(keyEscpressed) GamePanel.gameState = GameState.PLAY;
     }
 }

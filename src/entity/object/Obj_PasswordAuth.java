@@ -36,6 +36,18 @@ public class Obj_PasswordAuth extends Entity {
         currentAnimation = passwordAuthAnimations.get(currentState).clone();
         solidArea1 = new Rectangle(0 , 0 , 0 , 0);
     }
+
+    public Obj_PasswordAuth(String state, String idName, int x , int y){
+        super(x , y);
+        name = "Password Authentication";
+        this.idName = idName;
+        width = 64;
+        height = 64;
+
+        currentState = (state.equals("inactive")) ? PasswordAuthState.INACTIVE : PasswordAuthState.ACTIVE;
+        currentAnimation = passwordAuthAnimations.get(currentState).clone();
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
+    }
     @Override
     public void update() throws NullPointerException{
         currentAnimation.update();

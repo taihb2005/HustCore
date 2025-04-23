@@ -23,6 +23,20 @@ public class Obj_Vault extends Entity {
 
         obj_vault = AssetPool.getImage("vault_" + state + "_id" + type +".png");
     }
+
+    public Obj_Vault(String state , int type, String idName, int x , int y){
+        super(x , y);
+        name = "Vault";
+        this.idName = idName;
+        width = 64;
+        height = 64;
+        solidArea1 = new Rectangle(6 , 37 , 50 , 23);
+        solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+        setDefaultSolidArea();
+
+        obj_vault = AssetPool.getImage("vault_" + state + "_id" + type +".png");
+    }
+
     @Override
     public void update() {
 

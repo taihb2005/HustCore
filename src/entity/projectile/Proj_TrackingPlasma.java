@@ -1,13 +1,42 @@
 package entity.projectile;
 
+import entity.Direction;
+import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
 
 import java.awt.*;
+import java.util.HashMap;
 
 import static map.GameMap.childNodeSize;
 
 public class Proj_TrackingPlasma extends Projectile {
+    private static final Sprite sprite = new Sprite(AssetPool.getImage("tracking_bullet.png"));
+    private static final HashMap<Direction, Animation> animations = new HashMap<>();
+
+    public static void load(){
+        for(Direction direction: Direction.values()){
+            int row = switch (direction){
+                case RIGHT -> 0;
+                case LEFT -> 1;
+                case UP -> 2;
+                case DOWN -> 3;
+            };
+            animations.put(direction,
+                    new Animation(sprite.getSpriteArrayRow(row), 10, true));
+
+        }
+        System.out.println("hehe");
+    }
+
+    private void setState(){
+        if(currentDirection != lastDirection){
+            lastDirection = currentDirection;
+            currentAnimation = animations.get(currentDirection).clone();
+        }
+    }
+
     private boolean onPath = false; // Kiểm tra xem viên đạn có đang di chuyển theo đường tìm được không
     private int timeCount = 0;
     public Proj_TrackingPlasma(GameMap mp) {
@@ -17,37 +46,33 @@ public class Proj_TrackingPlasma extends Projectile {
         height = 64;
         maxHP = 200;
         speed = 1;
-        base_damage = 10;
+        baseDamage = 10;
         active = false;
         slowDuration = 180;
         manaCost = 20;
         direction = "right";
+        currentDirection = setDirection(direction);
+        lastDirection = setDirection(direction);
         hitbox = new Rectangle(28 , 30 , 12 , 12);
         solidArea1 = hitbox;
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         super.setDefaultSolidArea();
-        getImage();
-        projectile_animator.setAnimationState(projectile_sprite[CURRENT_DIRECTION] , 20);
-    }
-
-    private void getImage(){
-        projectile_sprite = new Sprite("/entity/projectile/tracking_bullet.png" , width , height).getSpriteArray();
+        //getImage();
+        currentAnimation = animations.get(currentDirection).clone();
     }
 
     @Override
     public void update() {
         if (active) {
-            // Lấy vị trí của người chơi (mục tiêu)
             int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
             int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
 
-            // Tìm đường và di chuyển đến người chơi
             searchPath(playerCol, playerRow);
             move();
         }
 
-        // Các logic kiểm tra khác (nếu cần, như va chạm hoặc hủy viên đạn)
         super.update();
+        setState();
     }
 
     private void move() {
@@ -69,76 +94,72 @@ public class Proj_TrackingPlasma extends Projectile {
 
     @Override
     public void searchPath(int goalCol, int goalRow) {
-        int startCol = (worldX + solidArea1.x) / childNodeSize;
-        int startRow = (worldY + solidArea1.y) / childNodeSize;
+        executor.execute( () -> {
+            int startCol = (worldX + solidArea1.x) / childNodeSize;
+            int startRow = (worldY + solidArea1.y) / childNodeSize;
 
-        // Thiết lập các node và tìm đường
-        pFinder.setNodes(startCol, startRow, goalCol, goalRow);
-        if (pFinder.search()) {
-            onPath = true;
-            if (!pFinder.pathList.isEmpty()) {
-                // Lấy vị trí tiếp theo trong pathList
-                int nextX = pFinder.pathList.get(0).col * childNodeSize;
-                int nextY = pFinder.pathList.get(0).row * childNodeSize;
+            synchronized (pFinder) {
+                pFinder.setNodes(startCol, startRow, goalCol, goalRow);
+                if (pFinder.search()) {
+                    onPath = true;
+                    if (!pFinder.pathList.isEmpty()) {
+                        int nextX = pFinder.pathList.get(0).col * childNodeSize;
+                        int nextY = pFinder.pathList.get(0).row * childNodeSize;
 
-                // Vị trí hiện tại của viên đạn
-                int enLeftX = worldX + solidArea1.x;
-                int enRightX = worldX + solidArea1.x + solidArea1.width;
-                int enTopY = worldY + solidArea1.y;
-                int enBottomY = worldY + solidArea1.y + solidArea1.height;
+                        int enLeftX = worldX + solidArea1.x;
+                        int enRightX = worldX + solidArea1.x + solidArea1.width;
+                        int enTopY = worldY + solidArea1.y;
+                        int enBottomY = worldY + solidArea1.y + solidArea1.height;
 
-                // Xác định hướng di chuyển dựa trên tọa độ
-                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + childNodeSize) {
-                    direction = "up";
-                } else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + childNodeSize) {
-                    direction = "down";
-                } else if (enTopY >= nextY && enBottomY < nextY + childNodeSize) {
-                    if (enLeftX > nextX) {
-                        direction = "left";
-                    } else if (enLeftX < nextX) {
-                        direction = "right";
+                        if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + childNodeSize) {
+                            direction = "up";
+                        } else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + childNodeSize) {
+                            direction = "down";
+                        } else if (enTopY >= nextY && enBottomY < nextY + childNodeSize) {
+                            if (enLeftX > nextX) {
+                                direction = "left";
+                            } else if (enLeftX < nextX) {
+                                direction = "right";
+                            }
+                        } else if (enTopY > nextY && enLeftX > nextX) {
+                            direction = "up";
+                            worldY -= speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "left";
+                            }
+                            worldY += speed;
+                        } else if (enTopY > nextY && enLeftX < nextX) {
+                            direction = "up";
+                            worldY -= speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "right";
+                            }
+                            worldY += speed;
+                        } else if (enTopY < nextY && enLeftX > nextX) {
+                            direction = "down";
+                            worldY += speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "left";
+                            }
+                            worldY -= speed;
+                        } else if (enTopY < nextY && enLeftX < nextX) {
+                            direction = "down";
+                            worldY += speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "right";
+                            }
+                            worldY -= speed;
+                        }
                     }
-                } else if (enTopY > nextY && enLeftX > nextX) {
-                    // Lên trên hoặc sang trái
-                    direction = "up";
-                    worldY -= speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    worldY += speed;
-                } else if (enTopY > nextY && enLeftX < nextX) {
-                    // Lên trên hoặc sang phải
-                    direction = "up";
-                    worldY -= speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    worldY += speed;
-                } else if (enTopY < nextY && enLeftX > nextX) {
-                    // Xuống dưới hoặc sang trái
-                    direction = "down";
-                    worldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    worldY -= speed;
-                } else if (enTopY < nextY && enLeftX < nextX) {
-                    // Xuống dưới hoặc sang phải
-                    direction = "down";
-                    worldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    worldY -= speed;
+                } else {
+                    onPath = false;
                 }
             }
-        } else {
-            // Không tìm được đường đi
-            onPath = false;
-        }
+        });
+
     }
 }

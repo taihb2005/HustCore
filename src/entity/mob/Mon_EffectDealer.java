@@ -4,11 +4,9 @@ import entity.effect.Effect;
 import entity.effect.type.EffectNone;
 import entity.effect.type.Slow;
 import entity.projectile.Proj_BasicGreenProjectile;
-import graphics.Sprite;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Mon_EffectDealer extends Monster{
     public Mon_EffectDealer(GameMap mp, int x, int y) {
@@ -25,6 +23,16 @@ public class Mon_EffectDealer extends Monster{
         setDefault();
         this.effectDealOnTouch = eff;
     }
+
+    public Mon_EffectDealer(GameMap mp, Effect eff, String idName, int x, int y) {
+        super(mp, x, y);
+        name = "Effect Dealer";
+        this.idName = idName;
+        width = 64; height = 64;
+
+        setDefault();
+        this.effectDealOnTouch = eff;
+    }
     private void setDefault()
     {
         projectile = new Proj_BasicGreenProjectile(mp);
@@ -33,7 +41,7 @@ public class Mon_EffectDealer extends Monster{
         currentHP = maxHP;
         strength = 0;
         speed = 0;
-        last_speed = speed;
+        lastSpeed = speed;
         effectDealOnTouch = new Slow(mp.player , 10);
         effectDealByProjectile = new EffectNone(mp.player);
 

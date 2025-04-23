@@ -2,6 +2,8 @@ package entity.json_stat;
 
 import entity.effect.Effect;
 
+import java.util.List;
+
 public class EnemyStat {
     private String enemy;
     private String name;
@@ -48,7 +50,7 @@ public class EnemyStat {
         public int getY() { return y; }
         public void setY(int y) { this.y = y; }
     }
-    public class DetectionRect{
+    public static class DetectionRect{
         private int x;
         private int y;
         private int width;
@@ -59,7 +61,7 @@ public class EnemyStat {
         public int getWidth(){return width;}
         public int getHeight(){return height;}
     }
-    public class Effect{
+    public static class Effect{
         private String type;
         private int duration;
 

@@ -25,6 +25,19 @@ public class Obj_Chair extends Entity {
         setDefault();
     }
 
+    public Obj_Chair(String direction , int type , String idName, int x , int y)
+    {
+        super(x , y);
+        name = "Chair";
+        this.idName = idName;
+        super.width = 64;
+        super.height = 64;
+
+        obj_chair = AssetPool.getImage("chair_" + direction + "id_" + type + ".png");
+
+        setDefault();
+    }
+
     public void setDefault()
     {
         solidArea1 = new Rectangle(24 , 36 , 16 , 21);

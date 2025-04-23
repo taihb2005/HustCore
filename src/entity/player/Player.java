@@ -1,5 +1,6 @@
 package entity.player;
 
+import ai.PathFinder;
 import entity.Direction;
 import entity.effect.Effect;
 import entity.Entity;
@@ -9,6 +10,7 @@ import entity.projectile.Proj_BasicProjectile;
 import entity.projectile.Projectile;
 import graphics.AssetPool;
 import graphics.Sprite;
+import level.LevelState;
 import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static main.GamePanel.*;
+import static map.GameMap.childNodeSize;
 
 public class Player extends Entity {
 
@@ -46,11 +49,9 @@ public class Player extends Entity {
             if (sprite == null) continue;
             int animationSpeed = switch (state){
                 case IDLE -> 5;
-                case RUN -> 10;
-                case TALK -> 6;
-                case SHOOT -> 6;
+                case RUN, DIE -> 10;
+                case TALK, SHOOT -> 6;
                 case RELOAD -> 0;
-                case DIE -> 10;
             };
 
             boolean loop = switch (state){
@@ -75,6 +76,8 @@ public class Player extends Entity {
             }
         }
     }
+    private boolean isAutoMoving;
+    private int goalCol, goalRow;
     private PlayerState currentState;
     private PlayerState lastState;
     private Direction currentDirection;
@@ -115,7 +118,7 @@ public class Player extends Entity {
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
-    public HashMap<StringBuilder , Integer> effectManager = new HashMap<>();
+    public HashMap<String , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[5];
     public ItemHandler iHandler = new ItemHandler();
@@ -125,8 +128,9 @@ public class Player extends Entity {
         name = "Player";
         this.mp = mp;
         speed = 3;
-        last_speed = speed;
+        lastSpeed = speed;
 
+        pFinder = new PathFinder(mp);
         hitbox = new Rectangle(25 , 40 , 15 , 20);
         solidArea1 = new Rectangle(26 , 52 , 18 , 6);
         setDefaultSolidArea();
@@ -139,7 +143,7 @@ public class Player extends Entity {
 
     public void setDefaultValue()
     {
-        projectile_name = "Basic Projectile";
+        projectileName = "Basic Projectile";
         projectile = new Proj_BasicProjectile(mp);
         SHOOT_INTERVAL = projectile.maxHP + 5;
 
@@ -180,6 +184,19 @@ public class Player extends Entity {
         set();
     }
 
+    private void autoMoving(){
+        searchPath(goalCol, goalRow);
+        decideToMove();
+
+        int currentCol = (worldX + solidArea1.x) / childNodeSize;
+        int currentRow = (worldY + solidArea1.y) / childNodeSize;
+
+        if(currentRow == goalRow && currentCol == goalCol){
+            isAutoMoving = false;
+            currentLevel.setLevelState(LevelState.RUNNING);
+            currentLevel.onBeginLevel.run();
+        }
+    }
 
     private void keyInput()
     {
@@ -198,8 +215,8 @@ public class Player extends Entity {
         //RUN
         isRunning = up | down | left | right;
 
-        if(gameState == GameState.PLAY_STATE) attackCanceled = false; else
-            if(gameState == GameState.DIALOGUE_STATE) attackCanceled = true;
+        if(gameState == GameState.PLAY) attackCanceled = false;
+        if(currentLevel.checkState(LevelState.DIALOGUE)) attackCanceled = true;
         //SHOOT
         if (KeyHandler.enterPressed) {
             if (!attackCanceled && !isRunning && shootAvailableCounter == SHOOT_INTERVAL) {
@@ -238,7 +255,7 @@ public class Player extends Entity {
 
         if (currentAnimation.isFinished() && isDying){
             isDying = false;
-            gameState = GameState.LOSE_STATE;
+            gameState = GameState.LOSE;
             stopMusic();
             playMusic(4);
         }
@@ -253,6 +270,7 @@ public class Player extends Entity {
             case "down" : currentDirection = Direction.DOWN ; break;
         }
     }
+
     private void switchDirection(){
         if(left) direction = "left";
         else if(right) direction = "right";
@@ -261,6 +279,7 @@ public class Player extends Entity {
     }
 
     private void handlePosition() {
+        isRunning = up | down | left | right;
         isInteracting = false;
         interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
@@ -325,21 +344,17 @@ public class Player extends Entity {
             mp.npc[index].isInteracting = true;
             attackCanceled = true;
             isInteracting = true;
-            if(gameState == GameState.PLAY_STATE && KeyHandler.enterPressed) {
+            if(currentLevel.checkState(LevelState.RUNNING) && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 mp.npc[index].talk();
             }
         }
     }
+
     private void interactObject(int index) {
         if(index != -1){
             attackCanceled = true;
             isInteracting = true;
-//            if(KeyHandler.enterPressed)
-//            {
-//                KeyHandler.enterPressed = false;
-//                mp.activeObj[index].isOpening = true;
-//            }
         }
     }
 
@@ -380,8 +395,8 @@ public class Player extends Entity {
     }
 
     public void receiveDamage(Projectile proj , Entity attacker){
-        currentHP = currentHP - (proj.base_damage + attacker.strength) ;
-        System.out.println("Receive " + ((proj.base_damage + attacker.strength)) + " damage");
+        currentHP = currentHP - (proj.baseDamage + attacker.strength) ;
+        System.out.println("Receive " + ((proj.baseDamage + attacker.strength)) + " damage");
     }
 
     public void receiveDamage(Monster attacker){
@@ -429,7 +444,6 @@ public class Player extends Entity {
     private void checkForMana(){
         if(!hasResource() && isShooting){
             isShooting = false;
-            gameState = GameState.DIALOGUE_STATE;
             dialogues[0][0] = new StringBuilder("Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn");
             startDialogue(this , 0);
             KeyHandler.enterPressed = false;
@@ -458,7 +472,8 @@ public class Player extends Entity {
 
     private void setDamage(){
         strength = 10;
-        damage = projectile.base_damage + strength * level ;
+        lastStrength = strength;
+        damage = projectile.baseDamage + strength * level ;
     }
     private void setDefense(){
         defense = level * 10;
@@ -482,7 +497,6 @@ public class Player extends Entity {
             if(level == 3) nextLevelUp = 300; else
             if(level == 4) nextLevelUp = 700; else
             if(level == 5) nextLevelUp = 999999999;
-            //GamePanel.gameState = GameState.DIALOGUE_STATE;
             playSE(3);
             dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
             startDialogue(this , 0);
@@ -492,7 +506,11 @@ public class Player extends Entity {
     @Override
     public void update()
     {
-        keyInput();
+        if(isAutoMoving){
+            autoMoving();
+        } else {
+            keyInput();
+        }
         handlePosition();
         handleStatus();
         changeAnimationDirection();
@@ -508,7 +526,6 @@ public class Player extends Entity {
     @Override
     public void render(Graphics2D g2)
     {
-        //Vẽ nhân vật
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.6f));
         }
@@ -527,6 +544,13 @@ public class Player extends Entity {
         worldX = x;
         worldY = y;
         newWorldX = worldX; newWorldY = worldY;
+    }
+
+    public void setGoal(int goalX, int goalY){
+        isAutoMoving = true;
+        isRunning = true;
+        this.goalCol = (goalX + solidArea1.x) / childNodeSize;
+        this.goalRow = (goalY + solidArea1.y) / childNodeSize;
     }
 
 }

@@ -1,7 +1,7 @@
 package level.progress.level04;
 
 import entity.Entity;
-import level.EventHandler;
+import level.event.EventHandler;
 import level.Level;
 import main.GameState;
 
@@ -61,7 +61,7 @@ public class EventHandler04 extends EventHandler {
             public void run() {
                 setFirstDialogue();
                 eventMaster.startDialogue(eventMaster , 0);
-                lvl.finishedBeginingDialogue = true;
+                lvl.finishedBeginningDialogue = true;
             }
         };
         timer.schedule(beginGameDialogue , 800);
@@ -74,12 +74,11 @@ public class EventHandler04 extends EventHandler {
             }
     }
 
-
     public void update() {
-        if(!lvl.finishedBeginingDialogue) startingDialogue();
+        if(!lvl.finishedBeginningDialogue) startingDialogue();
         if( ((Level04) lvl).boss.isStage2) spawnShooter();
         checkForBossDeath();
-        if(finishedEndingDialogue && gameState == GameState.PLAY_STATE) {
+        if(finishedEndingDialogue && gameState == GameState.PLAY) {
             gameCompleted = true;
         }
         if(gameCompleted) killAllEntity();

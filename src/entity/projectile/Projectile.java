@@ -1,12 +1,15 @@
 package entity.projectile;
 
 import ai.PathFinder;
+import entity.Direction;
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
+import graphics.Sprite;
 import map.GameMap;
 
-import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
@@ -14,21 +17,20 @@ public class Projectile extends Entity {
 
     GameMap mp;
     Entity user;
+
     protected static int RIGHT = 0;
     protected static int LEFT = 1;
     protected static int UP = 2;
     protected static int DOWN = 3;
 
-    protected BufferedImage [][] projectile_sprite;
-    protected Animation projectile_animator = new Animation();
-    protected int CURRENT_DIRECTION;
-    protected int CURRENT_FRAME;
+    protected Direction currentDirection;
+    protected Direction lastDirection;
+    protected Animation currentAnimation;
 
     public int manaCost;
     public boolean active;
 
-
-    public int base_damage;
+    public int baseDamage;
     public int slowDuration;
 
     public Projectile(GameMap mp)
@@ -44,19 +46,20 @@ public class Projectile extends Entity {
         this.worldX = worldX;
         this.worldY = worldY;
         this.direction = direction;
-        CURRENT_DIRECTION = setDirection(direction);
+        currentDirection = setDirection(direction);
+        lastDirection = setDirection(direction);
         this.active = active;
         this.user = user;
         this.currentHP = this.maxHP;
     }
 
-    private int setDirection(String direction){
+    Direction setDirection(String direction){
         return switch (direction) {
-            case "right" -> RIGHT;
-            case "left" -> LEFT;
-            case "up"   -> UP;
-            case "down" -> DOWN;
-            default -> -1;
+            case "right" -> Direction.RIGHT;
+            case "left" -> Direction.LEFT;
+            case "up"   -> Direction.UP;
+            case "down" -> Direction.DOWN;
+            default -> null;
         };
     }
 
@@ -112,15 +115,13 @@ public class Projectile extends Entity {
         currentHP--;
         if(currentHP <= 0) active = false;
 
-        projectile_animator.update();
-        CURRENT_FRAME = projectile_animator.getCurrentFrames();
+        currentAnimation.update();
     }
     public void render(Graphics2D g2) {
         if (active) {
 //            System.out.println((projectile_sprite.length-1)+" "+(projectile_sprite[CURRENT_DIRECTION].length-1));
 //            System.out.println(CURRENT_DIRECTION+" "+CURRENT_FRAME);
-            g2.drawImage(projectile_sprite[CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() ,
-                         width , height , null);
+            currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
         }
     }
 
@@ -129,11 +130,6 @@ public class Projectile extends Entity {
     }
 
     public void dispose(){
-        for(int i = 0 ; i < projectile_sprite.length ; i++){
-            for(int j = 0 ; j < projectile_sprite[i].length ; j++) {
-                if(projectile_sprite[i][j] != null)projectile_sprite[i][j].flush();
-                projectile_sprite[i][j] = null;
-            }
-        }
+
     }
 }

@@ -2,6 +2,7 @@ package entity;
 
 import ai.PathFinder;
 import entity.projectile.Projectile;
+import level.LevelState;
 import main.GameState;
 import main.KeyHandler;
 import map.GameMap;
@@ -17,11 +18,6 @@ public class Entity {
     public PathFinder pFinder;
     public static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-    protected int CURRENT_ACTION;
-    protected int PREVIOUS_ACTION;
-    protected int CURRENT_DIRECTION;
-    protected int CURRENT_FRAME;
-
     public String name;
     public String idName = "";
     //POSITION
@@ -29,7 +25,7 @@ public class Entity {
     public int newWorldX, newWorldY;
     public String direction;
     public int speed;
-    public int last_speed;
+    public int lastSpeed;
     //BOOLEAN
     public boolean collisionOn = false;
     public boolean isInteracting = false;
@@ -61,9 +57,10 @@ public class Entity {
     public int currentMana;
     public int exp;
     public int strength;
+    public int lastStrength;
     public int defense;
     public int damage;
-    public String projectile_name;
+    public String projectileName;
     public Projectile projectile;
     public int shootAvailableCounter = 0;
     public int invincibleCounter = 0;
@@ -102,10 +99,12 @@ public class Entity {
     }
 
     public void startDialogue(Entity entity, int dialogueSet) {
-        KeyHandler.enterPressed = false;
-        gameState = GameState.DIALOGUE_STATE;
-        ui.target = entity;
-        ui.target.dialogueSet = dialogueSet;
+        if(currentLevel.checkState(LevelState.RUNNING)) {
+            KeyHandler.enterPressed = false;
+            currentLevel.setLevelState(LevelState.DIALOGUE);
+            ui.target = entity;
+            ui.target.dialogueSet = dialogueSet;
+        }
     }
 
     public void talk() {
@@ -116,6 +115,16 @@ public class Entity {
 
     public void projectileCauseEffect(){
 
+    }
+
+    public String getOppositeDirection(String direction){
+        return  switch (direction) {
+            case "left" -> "right";
+            case "right" -> "left";
+            case "up" -> "down";
+            case "down" -> "up";
+            default -> "";
+        };
     }
 
     public void die() {
@@ -228,6 +237,24 @@ public class Entity {
         }
     }
 
+    public void decideToMove() {
+        up = down = left = right = false;
+        switch (direction) {
+            case "right":
+                right = true;
+                break;
+            case "left":
+                left = true;
+                break;
+            case "down":
+                down = true;
+                break;
+            case "up":
+                up = true;
+                break;
+        }
+    }
+
     public void update(){};
 
     public void render(Graphics2D g2){};
@@ -240,16 +267,13 @@ public class Entity {
                 }
             }
         }
-    }
 
-    public String getOppositeDirection(String direction){
-        return  switch (direction) {
-            case "left" -> "right";
-            case "right" -> "left";
-            case "up" -> "down";
-            case "down" -> "up";
-            default -> "";
-        };
+        pFinder = null;
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        projectile = null;
+        name = null;
+        idName = null;
     }
-
 }

@@ -12,7 +12,6 @@ import map.GameMap;
 import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,13 +25,6 @@ Sleeps when no player is nearby, goes active when the player in its detection ra
 public class Mon_Shooter extends Monster implements Actable {
     public final static int IDLE = 0;
     public final static int ACTIVE = 1;
-    public final static int SHOOT = 2;
-    public final static int DIE = 3;
-
-    private final static int RIGHT = 0;
-    private final static int LEFT = 1;
-    private final static int DOWN = 2;
-    private final static int UP = 3;
 
     private static final HashMap<KeyPair<ShooterState, Direction>, Sprite> shooterSpritePool = new HashMap<>();
     private static final HashMap<KeyPair<ShooterState, Direction>, Animation> shooterAnimations = new HashMap<>();
@@ -165,7 +157,7 @@ public class Mon_Shooter extends Monster implements Actable {
         maxHP = 200;
         currentHP = maxHP;
         invincibleDuration = 60;
-        projectile_name = "Plasma";
+        projectileName = "Plasma";
         projectile = new Proj_Plasma(mp);
         proj = new ArrayList<>();
         effectDealOnTouch = new Blind(mp.player , 120);
@@ -255,11 +247,10 @@ public class Mon_Shooter extends Monster implements Actable {
     }
 
     private void handleAnimation(){
-        if(currentState == ShooterState.IDLE){
-            if(isDying){
-                currentState = ShooterState.DIE;
-            }
-        } else if(currentState == ShooterState.ACTIVE){
+        if(isDying){
+            currentState = ShooterState.DIE;
+        }
+        if(currentState == ShooterState.ACTIVE){
             if(isShooting){
                 currentState = ShooterState.SHOOT;
             }
@@ -320,7 +311,7 @@ public class Mon_Shooter extends Monster implements Actable {
         projectile = null;
         proj.clear();
         proj = null;
-        projectile_name = null;
+        projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
     }

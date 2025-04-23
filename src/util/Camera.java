@@ -3,11 +3,11 @@ package util;
 import java.util.Random;
 
 public class Camera {
-    private int x, y; // Top-left corner of the camera
+    private int x, y;
     private int viewportWidth;
-    private int viewportHeight; // Size of the viewport (visible area)
+    private int viewportHeight;
     private int mapWidth;
-    private int mapHeight; // Size of the map
+    private int mapHeight;
 
     public Camera(){
         this.x = 0;

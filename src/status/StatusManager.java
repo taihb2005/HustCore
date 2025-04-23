@@ -2,8 +2,6 @@ package status;
 
 import entity.items.*;
 
-import java.util.Arrays;
-
 public class StatusManager {
     private int worldX;
     private int worldY;
@@ -51,7 +49,7 @@ public class StatusManager {
             } else
             if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
                 i_tmp = new Item_Potion();
-            } else i_tmp = new Item_SpeedGem();
+            } else i_tmp = new Item_StrengthGem();
             i_tmp.setQuantity(item[i].getQuantity());
             savedInventory[i] = i_tmp;
         }
@@ -77,7 +75,7 @@ public class StatusManager {
             } else
             if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
                 i_tmp = new Item_Potion();
-            } else i_tmp = new Item_SpeedGem();
+            } else i_tmp = new Item_StrengthGem();
             i_tmp.setQuantity(savedInventory[i].getQuantity());
             item[i] = i_tmp;
         }
