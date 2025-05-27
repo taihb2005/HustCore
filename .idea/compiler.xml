@@ -12,5 +12,8 @@
         <module name="jsonreader" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HustCore" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
