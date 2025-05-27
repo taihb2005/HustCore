@@ -1,12 +1,9 @@
 package graphics;
 
-import main.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
-
-import static main.GamePanel.tileSize;
 
  /*
     This class uses for handle character sprite like running , attacking, dying,...
@@ -22,8 +19,8 @@ public class Sprite {
     public int w;
     public int h;
 
-    private final int spriteCols;
-    private final int spriteRows;
+    public final int spriteCols;
+    public final int spriteRows;
 
     public Sprite(String filepath) //Instantiate a sprite from a certain location
     {
@@ -39,7 +36,7 @@ public class Sprite {
 
     }
 
-    public Sprite(String filepath , int w , int h)
+    public Sprite(String filepath, int w, int h)
     {
         this.w = w;
         this.h = h;
@@ -51,6 +48,31 @@ public class Sprite {
 
         loadSpriteArray();
 
+    }
+
+    public Sprite(BufferedImage asset){
+        this.w = 64;
+        this.h = 64;
+
+        this.SPRITESHEET = asset;
+
+        spriteCols = SPRITESHEET.getWidth() / 64; //get number of cols of the sprite sheet
+        spriteRows = SPRITESHEET.getHeight() / 64; // get the number of rows of the sprite sheet
+
+        loadSpriteArray();
+    }
+
+    public Sprite(BufferedImage asset, int w, int h)
+    {
+        this.w = w;
+        this.h = h;
+
+        this.SPRITESHEET = asset;
+
+        spriteCols = SPRITESHEET.getWidth() / w; //get number of cols of the sprite sheet
+        spriteRows = SPRITESHEET.getHeight() / h; // get the number of rows of the sprite sheet
+
+        loadSpriteArray();
     }
 
 
@@ -82,8 +104,6 @@ public class Sprite {
     {
         return SPRITESHEET.getSubimage(y * w , x * h , w , h );
     }
-
-
 
     //setter and getter method
     public BufferedImage getSpriteSheet(){return SPRITESHEET;};

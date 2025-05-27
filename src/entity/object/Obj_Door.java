@@ -1,110 +1,202 @@
 package entity.object;
 
-import entity.Actable;
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 import main.KeyHandler;
-import map.GameMap;
+import util.KeyTriple;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
 public class Obj_Door extends Entity{
-    private final static int INACTIVE = 0;
-    private final static int ACTIVE = 1;
+    private static final HashMap<KeyTriple<DoorSize, DoorState, DoorStatus>, Sprite> doorSpritePool = new HashMap<>();
+    private static final HashMap<KeyTriple<DoorSize, DoorState, DoorStatus>, Animation> doorAnimations = new HashMap<>();
 
-    private final static int CLOSE = 0;
-    private final static int OPEN = 1;
-    private BufferedImage[][][] obj_door = new BufferedImage[2][2][];
-    private final BufferedImage obj_door_effect;
-    private Animation obj_animator_door;
+    public static void load() {
+        for (DoorSize size : DoorSize.values()) {
+            int height = 64;
+            int width = switch (size) {
+                case BIG -> 128;
+                case SMALL -> 64;
+            };
+            for (DoorState state : DoorState.values()){
+                boolean loop = switch (state){
+                    case OPENING, CLOSING -> false;
+                    case OPENED, CLOSED -> true;
+                };
+                for(DoorStatus status: DoorStatus.values()){
+                    String imageName = getString(size, state, status);
+                    if(AssetPool.getImage(imageName) == null) continue;
 
-    private String size;
-    private String state;
+                    KeyTriple<DoorSize, DoorState, DoorStatus> key = new KeyTriple<>(size, state, status);
 
-    public int STATE;
-    public int PREVIOUS_STATE;
+                    doorSpritePool.put(key,
+                            new Sprite(AssetPool.getImage(imageName), width, height));
+                    doorAnimations.put(key,
+                            new Animation(doorSpritePool.get(key).getSpriteArrayRow(0), 15, loop));
 
-    public Obj_Door(String size , String state , String idName , int x , int y) throws Exception{
+                }
+
+            }
+        }
+
+        for(DoorSize size: DoorSize.values()) {
+            for (DoorState state : DoorState.values())
+                for (DoorStatus status : DoorStatus.values()) {
+                    int speed = switch (status) {
+                        case INACTIVE, ACTIVE -> 20;
+                        default -> 15;
+                    };
+
+                    KeyTriple<DoorSize, DoorState, DoorStatus> key = new KeyTriple<>(size, state, status);
+
+                    boolean loop = state == DoorState.CLOSED;
+
+                    if (doorSpritePool.containsKey(key)) {
+                        doorAnimations.put(new KeyTriple<>(size, state, status),
+                                new Animation(doorSpritePool.get(key).getSpriteArrayRow(0), speed, loop));
+                    }
+                }
+        }
+    }
+
+    private void setState(){
+        boolean change1 = false;
+        boolean change2 = false;
+        if(currentState != lastState){
+            lastState = currentState;
+            change1 = true;
+        }
+        if(currentStatus != lastStatus){
+            lastStatus = currentStatus;
+            change2 = true;
+        }
+
+        if(change1 || change2) {
+            currentAnimation.reset();
+            currentAnimation = doorAnimations.get(new KeyTriple<>(currentSize, currentState, currentStatus)).clone();
+            currentAnimation.reset();
+        }
+    }
+
+    private static String getString(DoorSize size, DoorState state, DoorStatus status) {
+        String namePrefix = "door_" + size.name().toLowerCase() + "_";
+        String namePostfix = ".png";
+
+        String imageName = namePrefix + state.name().toLowerCase();
+
+        if(status != null) {
+            imageName = switch (status) {
+                case INACTIVE -> imageName + "_inactive";
+                case ACTIVE -> imageName + "_active";
+                case NONE -> imageName;
+            };
+        }
+
+        imageName += namePostfix;
+        return imageName;
+    }
+
+    private DoorSize currentSize;
+    private DoorState currentState;
+    private DoorState lastState;
+    private DoorStatus initialStatus;
+    private DoorStatus currentStatus;
+    private DoorStatus lastStatus;
+
+    private final BufferedImage effect;
+
+
+    public Obj_Door(String size , String status, String idName , int x , int y){
         super(x  , y);
         this.name = "Door";
         this.idName = idName;
-        obj_animator_door = new Animation();
-        if((!size.equals("small") && !size.equals("big")) || (!state.equals("inactive") && !state.equals("active"))){
-            throw new Exception("Kiểm tra lại xâu của kích thước với trạng thái của cái cửa trong file JSON mau!");
-        } else {
-            height = 64;
-            width = (size.equals("big")) ? 128 : 64;
-
-            obj_door[INACTIVE][CLOSE] = new Sprite("/entity/object/door_" + size + "_inactive.png" , width , height).getSpriteArrayRow(0);
-            obj_door[ACTIVE][CLOSE] = new Sprite("/entity/object/door_" + size + "_active.png" , width , height).getSpriteArrayRow(0);
-            obj_door[ACTIVE][OPEN] = new Sprite("/entity/object/door_" + size + "_opening.png" , width , height).getSpriteArrayRow(0);
-            obj_door_effect = new Sprite("/entity/object/door_" + size + "_glowingeffect.png" , width , height).getSpriteSheet();
-        }
 
         if(size.equals("big")){
+            currentSize = DoorSize.BIG;
             solidArea1 = new Rectangle(0 , 17 , 128 , 47);
             solidArea2 = new Rectangle(0 , 0 , 0 , 0);
             interactionDetectionArea = new Rectangle(0, 11, 128, 64);
-            setDefaultSolidArea();
+            effect = AssetPool.getImage("door_big_closed_glowing.png");
         } else {
+            currentSize = DoorSize.SMALL;
             solidArea1 = new Rectangle(0 , 17 , 64 , 47);
             solidArea2 = new Rectangle(0 , 0 , 0 , 0);
             interactionDetectionArea = new Rectangle(0, 11, 64, 57);
-            setDefaultSolidArea();
+            effect = AssetPool.getImage("door_small_closed_glowing.png");
         }
+        setDefaultSolidArea();
 
-        STATE = (state.equals("inactive")) ? INACTIVE : ACTIVE;
-        PREVIOUS_STATE = STATE;
-        CURRENT_ACTION = CLOSE;
-        PREVIOUS_ACTION = CLOSE;
-        obj_animator_door.setAnimationState(obj_door[STATE][CURRENT_ACTION] , 20);
+        initialStatus = (status.equals("inactive")) ? DoorStatus.INACTIVE : DoorStatus.ACTIVE;
+        currentStatus = initialStatus;
+        lastStatus = initialStatus;
+
+        currentState = DoorState.CLOSED;
+        lastState = DoorState.CLOSED;
+        currentAnimation = doorAnimations.get(new KeyTriple<>(currentSize, currentState, currentStatus)).clone();
 
         dialogueSet = -1;
         dialogueIndex = 0;
         setDialogue();
     }
 
-    private void open(){
+    public void open(){
         if (KeyHandler.enterPressed) {
             KeyHandler.enterPressed = false;
-            if(STATE == ACTIVE) isOpening = true; else talk();
+            if(isInteracting && currentStatus == DoorStatus.ACTIVE && currentState == DoorState.CLOSED){
+                currentState = DoorState.OPENING;
+            } else if(currentStatus == DoorStatus.INACTIVE)
+                talk();
         }
     }
 
-    private void changeState(){
-        if(PREVIOUS_STATE == INACTIVE){
-            if(canChangeState) STATE = ACTIVE;
-            if(PREVIOUS_STATE != STATE){
-                PREVIOUS_STATE = STATE;
-                obj_animator_door.setAnimationState(obj_door[ACTIVE][CLOSE] , 20);
-                canChangeState = false;
+    public void activate(){
+        if(currentStatus == DoorStatus.INACTIVE){
+            currentStatus = DoorStatus.ACTIVE;
+        }
+    }
+
+    public void close(){
+        if(currentState == DoorState.OPENED){
+            currentState = DoorState.CLOSING;
+            if(currentSize == DoorSize.BIG) {
+                solidArea1 = new Rectangle(0 , 17 , 128 , 47);
+                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+                interactionDetectionArea = new Rectangle(0, 11, 128, 64);
+            } else {
+                solidArea1 = new Rectangle(0 , 17 , 64 , 47);
+                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+                interactionDetectionArea = new Rectangle(0, 11, 64, 57);
             }
         }
     }
 
-    private void handleAnimationState(){
-        isInteracting = false;
-        if(PREVIOUS_STATE == ACTIVE){
-            if(isOpening) CURRENT_ACTION = OPEN;
+    private void handleAnimation(){
+        setState();
 
-            if(PREVIOUS_ACTION != CURRENT_ACTION){
-                PREVIOUS_ACTION = CURRENT_ACTION;
-                if(isOpening){
-                    obj_animator_door.setAnimationState(obj_door[STATE][OPEN] , 17);
-                    obj_animator_door.playOnce();
-                }
+        if(currentAnimation.isFinished() && currentState == DoorState.OPENING){
+            currentState = DoorState.OPENED;
+            if(currentSize == DoorSize.SMALL) {
+                solidArea1 = new Rectangle(0, 17, 14, 47);
+                solidArea2 = new Rectangle(52, 17, 12, 47);
+            } else {
+                solidArea1 = new Rectangle(0, 17, 28, 47);
+                solidArea2 = new Rectangle(102, 17, 26, 47);
             }
-
-            if(!obj_animator_door.isPlaying() && isOpening) {
-                isOpening = false;
-                canbeDestroyed = true;
-            }
+            interactionDetectionArea = new Rectangle(0, 0, 0, 0);
+            setDefaultSolidArea();
         }
+
+        if(currentAnimation.isFinished() && currentState == DoorState.CLOSING){
+            currentState = DoorState.CLOSED;
+            currentStatus = DoorStatus.INACTIVE;
+        }
+        if(isInteracting) isInteracting = false;
     }
 
     private void setDialogue(){
@@ -117,39 +209,34 @@ public class Obj_Door extends Entity{
             dialogueIndex = 0;
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
 
     @Override
     public void update() throws  NullPointerException{
-        changeState();
         if(isInteracting) open();
-        handleAnimationState();
-        obj_animator_door.update();
-        CURRENT_FRAME = obj_animator_door.getCurrentFrames();
+        handleAnimation();
+        currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
-        g2.drawImage(obj_door[STATE][CURRENT_ACTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
-        if(isInteracting && !isOpening){g2.drawImage(obj_door_effect , worldX - camera.getX() , worldY - camera.getY() , width , height , null);}
+    public void render(Graphics2D g2)  {
+        super.render(g2);
+        if(isInteracting && (currentStatus == DoorStatus.INACTIVE || currentStatus == DoorStatus.ACTIVE))
+            g2.drawImage(effect, (int)position.x - camera.getX(), (int)position.y - camera.getY(), null);
     }
-    public void dispose(){
-        obj_animator_door.dispose();
-        obj_animator_door = null;
-        for(int i = 0 ; i < obj_door.length ; i++) {
-            for (int j = 0; j < obj_door[i].length; j++) {
-                if(obj_door[i][j] == null) continue;
-                for(int k = 0 ; k < obj_door[i][j].length ;k++){
-                    obj_door[i][j][k].flush();
-                    obj_door[i][j][k] = null;
-                }
-                obj_door[i][j] = null;
-            }
-            obj_door[i] = null;
-        }
-        obj_door = null;
+
+    private enum DoorSize{
+        BIG, SMALL
+    }
+
+    private enum DoorState {
+        CLOSED, OPENING, CLOSING, OPENED
+    }
+
+    private enum DoorStatus {
+        INACTIVE, ACTIVE, NONE
     }
 
 }

@@ -2,49 +2,83 @@ package entity.object;
 
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
+import util.KeyTriple;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
 public class Obj_Television extends Entity {
-    public static int SMALL = 0;
-    public static int BIG = 1;
-    private final BufferedImage[] obj_television;
-    private Animation obj_animator_television;
-    private int currentFrames = 0;
-    public String state;
-    public int type;
+    private static final HashMap<KeyTriple<TelevisionSize, TelevisionState, Integer>, Sprite> televisionSpritePool = new HashMap<>();
+    private static final HashMap<KeyTriple<TelevisionSize, TelevisionState, Integer>, Animation> televisionAnimation = new HashMap<>();
 
-    public Obj_Television(int type) {
-        super();
+    public static void load(){
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 1),
+                new Sprite(AssetPool.getImage("television_small_off_id1.png"),64 ,64));
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 2),
+                new Sprite(AssetPool.getImage("television_small_off_id2.png"),64 ,64));
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 3),
+                new Sprite(AssetPool.getImage("television_small_off_id3.png"),64 ,64));
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.ON, 1),
+                new Sprite(AssetPool.getImage("television_small_on_id1.png"),64 ,64));
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.OFF, 1),
+                new Sprite(AssetPool.getImage("television_big_off_id1.png"),128 ,64));
+        televisionSpritePool.put(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.ON, 1),
+                new Sprite(AssetPool.getImage("television_big_on_id1.png"),128 ,64));
+
+        // SMALL - OFF
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 1),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 1))
+                        .getSpriteArrayRow(0), 20, true));
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 2),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 2))
+                        .getSpriteArrayRow(0), 20, true));
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 3),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.OFF, 3))
+                        .getSpriteArrayRow(0), 20, true));
+
+// SMALL - ON
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.ON, 1),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.SMALL, TelevisionState.ON, 1))
+                        .getSpriteArrayRow(0), 20, true));
+
+// BIG - OFF
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.OFF, 1),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.OFF, 1))
+                        .getSpriteArrayRow(0), 20, true));
+
+// BIG - ON
+        televisionAnimation.put(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.ON, 1),
+                new Animation(televisionSpritePool.get(new KeyTriple<>(TelevisionSize.BIG, TelevisionState.ON, 1))
+                        .getSpriteArrayRow(0), 20, true));
+
+    }
+
+    private TelevisionState currentState;
+    private TelevisionSize size;
+
+    public Obj_Television(String state , String size , int initialFrame , int id, int x , int y) throws Exception{
+        super(x , y);
         name = "Television";
-        super.width = 128;
-        super.height = 48;
 
-        obj_television = new Sprite("/entity/object/television_on_id" + type + ".png" , 128 , 64).getSpriteArrayRow(0);
-        obj_animator_television = new Animation();
-        obj_animator_television.setAnimationState(obj_television, 20);
+        this.size = (size.equals("big"))? TelevisionSize.BIG: TelevisionSize.SMALL;
+        this.currentState = (state.equals("on"))? TelevisionState.ON: TelevisionState.OFF;
+        this.currentAnimation = televisionAnimation.get(new KeyTriple<>(this.size, currentState, id)).clone(initialFrame);
 
         setDefault();
     }
 
-    public Obj_Television(String state , String size , int frame ,int type , int x , int y) throws Exception{
+    public Obj_Television(String state , String size , int initialFrame , int id, String idName, int x , int y) throws Exception{
         super(x , y);
         name = "Television";
-        if(size.equals("small") && state.equals("on") && type != 2){
-            throw new Exception("Nếu tv nhỏ mà on thì luôn để type = 2 nhé anh bạn");
-        }
-        int multiplier = (size.equals("big")) ? 1 : 0;
-        super.width = 64 + multiplier * 64;
-        super.height = 64;
-        this.state = state;
+        this.idName = idName;
 
-        obj_television = new Sprite("/entity/object/television_" + state + "_id" + type + ".png" , width , height).getSpriteArrayRow(0);
-        obj_animator_television = new Animation();
-        obj_animator_television.setAnimationState(obj_television , frame ,20);
+        this.size = (size.equals("big"))? TelevisionSize.BIG: TelevisionSize.SMALL;
+        this.currentState = (state.equals("on"))? TelevisionState.ON: TelevisionState.OFF;
+        this.currentAnimation = televisionAnimation.get(new KeyTriple<>(this.size, currentState, id)).clone(initialFrame);
 
         setDefault();
     }
@@ -56,21 +90,23 @@ public class Obj_Television extends Entity {
 
     @Override
     public void update() throws NullPointerException{
-        obj_animator_television.update();
-        currentFrames = obj_animator_television.getCurrentFrames();
+        currentAnimation.update();
     }
 
     @Override
     public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        g2.drawImage(obj_television[currentFrames] , worldX - camera.getX() , worldY - camera.getY() , width ,height , null);
+        super.render(g2);
     }
 
     public void dispose(){
-        obj_animator_television.dispose();
-        obj_animator_television = null;
-        for(int i = 0 ; i < obj_television.length ; i++){
-            obj_television[i].flush();
-            obj_television[i] = null;
-        }
+        currentAnimation = null;
+    }
+
+    private enum TelevisionState{
+        ON, OFF
+    }
+
+    private enum TelevisionSize{
+        SMALL, BIG
     }
 }

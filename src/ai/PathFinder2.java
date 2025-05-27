@@ -64,7 +64,6 @@ public class PathFinder2 {
     public void setNodes(int startCol, int startRow, int goalCol, int goalRow) {
         resetNodes();
 
-        // Đặt nút bắt đầu và nút mục tiêu
         startNode = node[startCol][startRow];
         currentNode = startNode;
         goalNode = node[goalCol][goalRow];
@@ -73,7 +72,6 @@ public class PathFinder2 {
         int col = 0;
         int row = 0;
 
-        // Xử lý trạng thái solid từ các đối tượng trong bản đồ
         checkForSolidTile(mp.inactiveObj);
         checkForSolidTile(mp.activeObj);
         checkForSolidTile(mp.npc);
@@ -183,8 +181,8 @@ public class PathFinder2 {
     }
 
     private void markSolidTiles(Entity entity, Rectangle solidArea) {
-        int worldCol = (entity.worldX + solidArea.x) / GameMap.childNodeSize;
-        int worldRow = (entity.worldY + solidArea.y) / GameMap.childNodeSize;
+        int worldCol = ((int)entity.position.x + solidArea.x) / GameMap.childNodeSize;
+        int worldRow = ((int)entity.position.y + solidArea.y) / GameMap.childNodeSize;
         int xOffSet = (solidArea.width + solidArea.x) / GameMap.childNodeSize;
         int yOffSet = (solidArea.height + solidArea.y) / GameMap.childNodeSize;
 

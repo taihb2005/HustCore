@@ -48,18 +48,18 @@ public class Lighting {
     public void setLightRadius(int r){this.radius = r;}
 
     public void setLightSource() {
-            darknessFilter = new BufferedImage(GamePanel.windowWidth, GamePanel.windowHeight, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = (Graphics2D) darknessFilter.getGraphics();
-            g2.setColor(Color.BLACK);
+        darknessFilter = new BufferedImage(GamePanel.windowWidth, GamePanel.windowHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = (Graphics2D) darknessFilter.getGraphics();
+        g2.setColor(Color.BLACK);
 
-            if(radius > 0) {
-                RadialGradientPaint gPaint = new RadialGradientPaint(screenX, screenY, radius, fraction, color);
-                g2.setPaint(gPaint);
-            }
+        if(radius > 0) {
+            RadialGradientPaint gPaint = new RadialGradientPaint(screenX, screenY, radius, fraction, color);
+            g2.setPaint(gPaint);
+        }
 
-            g2.fillRect(0, 0, GamePanel.windowWidth, GamePanel.windowHeight);
+        g2.fillRect(0, 0, GamePanel.windowWidth, GamePanel.windowHeight);
 
-            g2.dispose();
+        g2.dispose();
     }
 
     public void update(){
@@ -67,9 +67,9 @@ public class Lighting {
             if (fadeIn) blindFadein();
             else if (fadeOut) blindFadeOut();
         }else if(spotLightIn) startSpotLight();
-         else if(spotLightOut) endSpotLight();
-        screenX = mp.player.worldX - camera.getX() + 32;
-        screenY = mp.player.worldY - camera.getY() + 32;
+        else if(spotLightOut) endSpotLight();
+        screenX = (int)mp.player.position.x - camera.getX() + 32;
+        screenY = (int)mp.player.position.y - camera.getY() + 32;
     }
 
     public void draw(Graphics2D g2) {

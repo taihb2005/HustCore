@@ -1,0 +1,51 @@
+{
+  "player": [
+    { "position": { "x": 1088, "y": 1900 } }
+  ],
+  "inactive": [],
+  "active": [
+    {
+      "object": "Obj_Chest",
+      "name": "ChestA002",
+      "type": 1,
+      "position": {
+        "x": 832,
+        "y": 2048
+      },
+      "items": [
+        {
+          "name": "Item_Potion",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "object": "Obj_Door",
+      "name": "DoorA001",
+      "size": "small",
+      "state": "inactive",
+      "position": { "x": 832, "y": 1792 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "DoorA002",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 960, "y": 1600 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "DoorA003",
+      "size": "small",
+      "state": "active",
+      "position": { "x": 1088, "y": 2240 }
+    },
+    {
+      "object": "Obj_Door",
+      "name": "DoorA004",
+      "size": "big",
+      "state": "inactive",
+      "position": { "x": 64, "y": 0 }
+    }
+  ]
+}

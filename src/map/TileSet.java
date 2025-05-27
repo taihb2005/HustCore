@@ -1,5 +1,7 @@
 package map;
 
+import graphics.AssetPool;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -55,16 +57,19 @@ public class TileSet {
         loadTileSheet(imgPath);
     };
 
-    private void loadTileSheet(String imgPath)
+    private void loadTileSheet(String imageName)
     {
         tileSetSprite = null;
-        try
-        {
-            tileSetSprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/"+ imgPath)));
-        } catch(Exception e)
-        {
-            System.out.println("Cannot find path: " + imgPath);
-            e.printStackTrace();
+        if(AssetPool.assetPool.containsKey(imageName)){
+            tileSetSprite = AssetPool.getImage(imageName);
+        } else {
+            try {
+                tileSetSprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/" + imageName)));
+                AssetPool.assetPool.put(imageName, tileSetSprite);
+            } catch (Exception e) {
+                System.out.println("Cannot find imageName: " + imageName);
+                e.printStackTrace();
+            }
         }
     }
 

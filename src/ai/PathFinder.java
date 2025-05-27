@@ -1,28 +1,22 @@
 package ai;
 
 import entity.Entity;
-import main.GamePanel;
 import map.GameMap;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PathFinder {
-
     GameMap mp;
     public Node[][] node;
     //ArrayList<Node> openList = new ArrayList<>();
-    public PriorityQueue<Node> openList = new PriorityQueue<>(new Comparator<Node>() {
-        @Override
-        public int compare(Node n1, Node n2) {
-            // So sánh fCost theo thứ tự giảm dần
-            if (n1.fCost != n2.fCost) {
-                return Integer.compare(n1.fCost, n2.fCost); //
-            }
-            // Nếu fCost bằng nhau, so sánh gCost theo thứ tự giảm dần
-            return Integer.compare(n1.gCost, n2.gCost);
+    public PriorityQueue<Node> openList = new PriorityQueue<>((n1, n2) -> {
+        if (n1.fCost != n2.fCost) {
+            return Integer.compare(n1.fCost, n2.fCost); //
         }
+        return Integer.compare(n1.gCost, n2.gCost);
     });
     public ArrayList<Node> pathList = new ArrayList<>();
     Node startNode, goalNode, currentNode;
@@ -54,7 +48,6 @@ public class PathFinder {
         }
     }
 
-    //reset previous pathfinding result
     public void resetNodes()
     {
         int col = 0;
@@ -73,7 +66,7 @@ public class PathFinder {
                 row++;
             }
         }
-        //reset other settings
+
         openList.clear();
         pathList.clear();
         goalReached = false;
@@ -82,7 +75,7 @@ public class PathFinder {
     public void setNodes(int startCol, int startRow, int goalCol, int goalRow)
     {
         resetNodes();
-        //set Start and Goal node
+
         startNode = node[startCol][startRow];
         currentNode = startNode;
         goalNode = node[goalCol][goalRow];
@@ -134,16 +127,14 @@ public class PathFinder {
             currentNode = openList.poll();
 
             if (currentNode == null) {
-                break; // Không còn nút để kiểm tra
+                break;
             }
 
             int col = currentNode.col;
             int row = currentNode.row;
 
-            // Đánh dấu nút hiện tại đã kiểm tra
             currentNode.checked = true;
 
-            // Mở các nút lân cận
             if (row - 1 >= 0) {
                 openNode(node[col][row - 1]);
             }
@@ -182,7 +173,7 @@ public class PathFinder {
 
         while(current != startNode)
         {
-            pathList.add(0,current); //last added node is in the [0]
+            pathList.add(0,current);
             current = current.parent;
         }
     }
@@ -191,27 +182,29 @@ public class PathFinder {
         for(int i = 0 ; i < list.length ; i++){
             if(list[i] != null ){
                 if(list[i].solidArea1 != null) {
-                    int worldCol = (list[i].worldX + list[i].solidArea1.x) / mp.childNodeSize;
-                    int worldRow = (list[i].worldY + list[i].solidArea1.y) / mp.childNodeSize;
+                    int worldCol = ((int)list[i].position.x + list[i].solidArea1.x) / mp.childNodeSize;
+                    int worldRow = ((int)list[i].position.y + list[i].solidArea1.y) / mp.childNodeSize;
                     int totalWidth = (list[i].solidArea1.x + list[i].solidArea1.width);
                     int totalHeight = (list[i].solidArea1.y + list[i].solidArea1.height);
                     int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;
                     int yOffSet = (totalHeight % mp.childNodeSize == 0) ? totalHeight / mp.childNodeSize : totalHeight / mp.childNodeSize + 1;
                     for (int x = worldCol; x < worldCol + xOffSet; x++) {
                         for (int y = worldRow; y < worldRow + yOffSet; y++) {
+                            if(x >= mp.maxWorldCol || y >= mp.maxWorldCol) continue;
                             node[x][y].solid = true;
                         }
                     }
                 }
                 if(list[i].solidArea2 != null){
-                    int worldCol = (list[i].worldX + list[i].solidArea2.x) / mp.childNodeSize;
-                    int worldRow = (list[i].worldY + list[i].solidArea2.y) / mp.childNodeSize;
+                    int worldCol = ((int)list[i].position.x + list[i].solidArea1.x) / mp.childNodeSize;
+                    int worldRow = ((int)list[i].position.y + list[i].solidArea1.y) / mp.childNodeSize;
                     int totalWidth = (list[i].solidArea2.x + list[i].solidArea2.width);
                     int totalHeight = (list[i].solidArea2.y + list[i].solidArea2.height);
                     int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;
                     int yOffSet = (totalHeight % mp.childNodeSize == 0) ? totalHeight / mp.childNodeSize : totalHeight / mp.childNodeSize + 1;
                     for (int x = worldCol; x < worldCol + xOffSet; x++) {
                         for (int y = worldRow; y < worldRow + yOffSet; y++) {
+                            if(x >= mp.maxWorldCol || y >= mp.maxWorldCol) continue;
                             node[x][y].solid = true;
                         }
                     }

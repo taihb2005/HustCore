@@ -17,12 +17,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class MapParser {
 
-    public static void loadMap(String id , String filepath)
-    {
-        parseMap(id , filepath);
-    }
+//    public static void loadMap(String id , String filepath)
+//    {
+//        parseMap(id , filepath);
+//    }
 
-    private static void parseMap(String id , String filepath)
+    public static GameMap loadMap(String filepath)
     {
         try
         {
@@ -60,13 +60,15 @@ public class MapParser {
             }
 
             mp.parseWallObject(mp.mapLayer.get(2));
-            MapManager.appendGameMap(id , mp);
+
+            return mp;
 
         } catch(Exception e)
         {
             System.out.println("Cannot parse map from path: " + filepath);
             e.printStackTrace();
         }
+        return null;
     }
 
 

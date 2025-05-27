@@ -3,48 +3,47 @@ package entity.object;
 import entity.Actable;
 import entity.Entity;
 import entity.items.Item;
-import entity.items.Item_Battery;
-import entity.items.Item_Kit;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
+import level.LevelState;
 import main.KeyHandler;
 import map.GameMap;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 import static main.GamePanel.camera;
-import static main.GamePanel.gameState;
+import static main.GamePanel.currentLevel;
 
 public class Obj_Chest extends Entity implements Actable {
     GameMap mp;
-    public final static int CLOSED = 0;
-    public final static int OPENED = 1;
 
-    private final BufferedImage[][] obj_Chest;
-    private final Animation obj_animator_Chest = new Animation();
-    private int CURRENT_FRAME = 0;
-    private int currentStates = CLOSED;
-    public ArrayList<Item> reward = new ArrayList<>();
-    private Item_Battery battery;
-    private Item_Kit kit;
-
-    public Obj_Chest(GameMap mp)
-    {
-        super();
-        name = "Chest";
-        this.mp = mp;
-        super.width = 64;
-        super.height = 64;
-
-        obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArray();
-        obj_animator_Chest.setAnimationState(obj_Chest[currentStates] , 8);
-
-        setDefault();
+    private static final HashMap<ChestState, Sprite> chestSpritePool = new HashMap<>();
+    private static final HashMap<ChestState, Animation> chestAnimation = new HashMap<>();
+    public static void load(){
+        for(ChestState state: ChestState.values()){
+            chestSpritePool.put(state,
+                    new Sprite(AssetPool.getImage("chest_" + state.name().toLowerCase() + ".png")));
+            chestAnimation.put(state,
+                    new Animation(chestSpritePool.get(state).getSpriteArrayRow(0), 8, true));
+        }
     }
 
-    public Obj_Chest(GameMap mp , int x , int y , String idName)
+    private void setState(){
+        if(currentState != lastState){
+            lastState = currentState;
+        }
+
+        currentAnimation.reset();
+        currentAnimation = chestAnimation.get(currentState).clone();
+        currentAnimation.reset();
+    }
+    private ChestState currentState;
+    private ChestState lastState;
+    public ArrayList<Item> reward = new ArrayList<>();
+
+    public Obj_Chest(GameMap mp, String idName, int x , int y)
     {
         super(x , y);
         name = "Chest";
@@ -53,11 +52,13 @@ public class Obj_Chest extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
 
-        obj_Chest = new Sprite("/entity/object/hpChest.png", width , height).getSpriteArray();
-        obj_animator_Chest.setAnimationState(obj_Chest[currentStates] , 8);
+        currentState = ChestState.CLOSED;
+        currentAnimation = chestAnimation.get(currentState).clone();
 
         setDefault();
     }
+
+
 
     private void setDefault()
     {
@@ -72,12 +73,12 @@ public class Obj_Chest extends Entity implements Actable {
 
     public void setDialogue() {
         HashMap<Item , Integer> map = new HashMap<>();
-        for (int i = 0; i < reward.size(); i++) {
-            if(!map.containsKey(reward.get(i))){
-                map.put(reward.get(i) , 1);
-            } else{
-                int tmp = map.get(reward.get(i));
-                map.put(reward.get(i) , ++tmp);
+        for (Item value : reward) {
+            if (!map.containsKey(value)) {
+                map.put(value, 1);
+            } else {
+                int tmp = map.get(value);
+                map.put(value, ++tmp);
             }
         }
         int dialogueIndex = 0;
@@ -95,7 +96,7 @@ public class Obj_Chest extends Entity implements Actable {
         if(dialogues[dialogueSet][0] == null){
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
     public void loot() {
@@ -108,31 +109,30 @@ public class Obj_Chest extends Entity implements Actable {
         for(int i = 0 ; i < quantity ; i++) reward.add(item);
     }
 
-    public void handleAnimationState() {
-        if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
-            if (KeyHandler.enterPressed) {
+    public void handleAnimation() {
+        if (isInteracting) {
+            if (currentLevel.checkState(LevelState.RUNNING) && KeyHandler.enterPressed) {
                 KeyHandler.enterPressed = false;
                 talk();
-                if(currentStates == CLOSED) {
-                    currentStates = OPENED;
-                    loot();  // Gọi hàm thu thập để hiển thị phần thưởng
+                if(currentState == ChestState.CLOSED) {
+                    currentState = ChestState.OPENED;
+                    loot();
                 }
             }
         }
+        setState();
         isInteracting = false;
     }
 
     @Override
-    public void update() throws NullPointerException{
-        handleAnimationState();
-        obj_animator_Chest.update();
-        CURRENT_FRAME = obj_animator_Chest.getCurrentFrames();
+    public void update(){
+        handleAnimation();
+        currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        g2.drawImage(obj_Chest[currentStates][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY()
-                 , null);
+    public void render(Graphics2D g2){
+        super.render(g2);
     }
 
     @Override
@@ -143,5 +143,13 @@ public class Obj_Chest extends Entity implements Actable {
     @Override
     public void move() {
 
+    }
+
+    public boolean isOpened(){
+        return currentState == ChestState.OPENED;
+    }
+
+    private enum ChestState{
+        OPENED, CLOSED
     }
 }

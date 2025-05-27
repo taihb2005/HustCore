@@ -2,46 +2,79 @@ package entity.object;
 
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
+import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
 public class Obj_Computer extends Entity {
-    private final BufferedImage[] obj_computer;
-    private final Animation obj_animator_computer;
-    private final String state;
-    private int currentFrame = 0;
-    public Obj_Computer(String state , String direction , int x , int y) throws Exception{
+    private static final HashMap<KeyPair<ComputerState, ComputerDirection>, Sprite> computerSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<ComputerState, ComputerDirection>, Animation> computerAnimations = new HashMap<>();
+    public static void load(){
+        for(ComputerState state: ComputerState.values()){
+            for(ComputerDirection direction: ComputerDirection.values()){
+                KeyPair<ComputerState, ComputerDirection> key = new KeyPair<>(state, direction);
+                computerSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("computer_" + direction.name().toLowerCase() + "_" + state.name().toLowerCase() + ".png")));
+                computerAnimations.put(key,
+                        new Animation(computerSpritePool.get(key).getSpriteArrayRow(0),18, true));
+            }
+        }
+    }
+
+    private final ComputerState currentState;
+    private final ComputerDirection currentDirection;
+
+    public Obj_Computer(String state , String direction , int x , int y){
         super(x , y);
         name = "Computer";
         width = 64;
         height = 64;
-        this.state = state;
 
-        if((!state.equals("on") && !state.equals("off")) || ((!direction.equals("front")) && !direction.equals("back"))){
-            throw new Exception("Này anh bạn, xem lại state với direction trong file JSON đi!");
-        }
+        currentState = (state.equals("off")) ? ComputerState.OFF : ComputerState.ON;
+        currentDirection = (direction.equals("front")) ? ComputerDirection.FRONT : ComputerDirection.BACK;
 
-        obj_computer = new Sprite("/entity/object/computer_" + direction + "_" + state + ".png" , width , height).getSpriteArrayRow(0);
-        obj_animator_computer = new Animation();
-        obj_animator_computer.setAnimationState(obj_computer , 18);
+        currentAnimation = computerAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+        solidArea1 = new Rectangle(8 , 32 , 48 , 28);
+        solidArea2 = new Rectangle(0 , 0 , 0 , 0);
+        setDefaultSolidArea();
+    }
+
+    public Obj_Computer(String state , String direction , String idName, int x , int y){
+        super(x , y);
+        name = "Computer";
+        this.idName = idName;
+        width = 64;
+        height = 64;
+
+        currentState = (state.equals("off")) ? ComputerState.OFF : ComputerState.ON;
+        currentDirection = (direction.equals("front")) ? ComputerDirection.FRONT : ComputerDirection.BACK;
+
+        currentAnimation = computerAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
         solidArea1 = new Rectangle(8 , 32 , 48 , 28);
         solidArea2 = new Rectangle(0 , 0 , 0 , 0);
         setDefaultSolidArea();
     }
     @Override
-    public void update() throws NullPointerException , ArrayIndexOutOfBoundsException{
-        if(state.equals("on")) {
-            obj_animator_computer.update();
-            currentFrame = obj_animator_computer.getCurrentFrames();
+    public void update() {
+        if(currentState == ComputerState.ON) {
+            currentAnimation.update();
         }
     }
 
     @Override
     public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
-        g2.drawImage(obj_computer[currentFrame] , worldX -camera.getX() , worldY - camera.getY() , width , height , null);
+        super.render(g2);
+    }
+
+    private enum ComputerDirection{
+        BACK, FRONT
+    }
+    private enum ComputerState{
+        ON, OFF
     }
 }

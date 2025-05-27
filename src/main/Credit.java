@@ -4,7 +4,6 @@ import java.awt.*;
 
 import static main.GamePanel.*;
 import static main.UI.bitcrusher;
-import static main.UI.joystix;
 
 public class Credit {
     GamePanel gp;
@@ -25,7 +24,7 @@ public class Credit {
     }
 
     private void set(){
-        endCredit = new StringBuilder("Nhóm 7 OOP:\n"
+        endCredit = new StringBuilder("Thành viên:\n"
                 + "Khương Anh Tài (Nhóm trưởng)\n"
                 + "Hoàng Ngọc Nam\n"
                 + "Nguyễn Văn Sáng\n"
@@ -173,7 +172,7 @@ public class Credit {
                 levelProgress = 0;
                 previousLevelProgress = 0;
                 sManager.reset();
-                GamePanel.gameState = GameState.MENU_STATE;
+                GamePanel.gameState = GameState.MENU;
             }
         }
     }
@@ -204,7 +203,7 @@ public class Credit {
 
         for(String line: text.split("\n"))
         {
-            int x = GamePanel.ui.getXforCenteredText(line);
+            int x = GamePanel.ui.getXForCenteredText(line);
             g2.drawString(line, x, y);
             y += lineHeight;
         }

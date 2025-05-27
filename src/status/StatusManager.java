@@ -1,12 +1,10 @@
 package status;
 
 import entity.items.*;
-
-import java.util.Arrays;
+import util.Vector2D;
 
 public class StatusManager {
-    private int worldX;
-    private int worldY;
+    private Vector2D position;
     private int savedHP;
     private int savedMana;
     private int savedLevel;
@@ -15,7 +13,7 @@ public class StatusManager {
     private String direction;
 
     public StatusManager(){
-        worldX = 0; worldY = 0;
+        position = new Vector2D();
         savedHP = 150;
         savedMana = 100;
         savedLevel = 1;
@@ -24,7 +22,7 @@ public class StatusManager {
     }
 
     public void reset(){
-        worldX = 0; worldY = 0;
+        position = new Vector2D();
         savedHP = 150;
         savedMana = 100;
         savedLevel = 1;
@@ -32,7 +30,14 @@ public class StatusManager {
         direction = "right";
     }
 
-    public void setPos(int x , int y){worldX = x; worldY = y;};
+    public void setPos(Vector2D pos){
+        this.position = pos.copy();
+    };
+
+    public void setPos(float x, float y){
+        position = new Vector2D(x, y);
+    };
+
     public void setSavedHP(int HP){savedHP = HP;}
     public void setSavedMana(int mana){savedMana = mana;}
     public void setLevel(int level){savedLevel = level;}
@@ -51,15 +56,16 @@ public class StatusManager {
             } else
             if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
                 i_tmp = new Item_Potion();
-            } else i_tmp = new Item_SpeedGem();
+            } else i_tmp = new Item_StrengthGem();
             i_tmp.setQuantity(item[i].getQuantity());
             savedInventory[i] = i_tmp;
         }
     }
     public void setDirection(String dir){direction = dir;}
 
-    public int getWorldX(){return worldX;}
-    public int getWorldY(){return worldY;}
+    public float getWorldX(){return position.x;}
+    public float getWorldY(){return position.y;}
+    public Vector2D getPosition(){return position.copy();}
     public int getSavedHP(){return savedHP;}
     public int getSavedMana(){return savedMana;}
     public int getSavedLevel(){return savedLevel;}
@@ -77,7 +83,7 @@ public class StatusManager {
             } else
             if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
                 i_tmp = new Item_Potion();
-            } else i_tmp = new Item_SpeedGem();
+            } else i_tmp = new Item_StrengthGem();
             i_tmp.setQuantity(savedInventory[i].getQuantity());
             item[i] = i_tmp;
         }

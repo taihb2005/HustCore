@@ -2,17 +2,28 @@ package entity.object;
 
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
 public class Obj_PasswordAuth extends Entity {
-    private final BufferedImage[] obj_pwAuth;
-    private final Animation obj_animator_pwAuth;
-    private int currentFrame = 0;
+    private static final HashMap<PasswordAuthState, Sprite> passwordAuthSpritePool = new HashMap<>();
+    private static final HashMap<PasswordAuthState, Animation> passwordAuthAnimations = new HashMap<>();
+
+    public static void load(){
+        for(PasswordAuthState state: PasswordAuthState.values()){
+            passwordAuthSpritePool.put(state,
+                    new Sprite(AssetPool.getImage("password_authentication_" + state.name().toLowerCase() + ".png")));
+            passwordAuthAnimations.put(state,
+                    new Animation(passwordAuthSpritePool.get(state).getSpriteArrayRow(0), 20, true));
+        }
+    }
+    private PasswordAuthState currentState;
 
     public Obj_PasswordAuth(String state , int x , int y){
         super(x , y);
@@ -20,19 +31,33 @@ public class Obj_PasswordAuth extends Entity {
         width = 64;
         height = 64;
 
-        obj_pwAuth = new Sprite("/entity/object/password_authentication_" + state + ".png" , width , height).getSpriteArrayRow(0);
-        obj_animator_pwAuth = new Animation();
-        obj_animator_pwAuth.setAnimationState(obj_pwAuth , 20);
+        currentState = (state.equals("inactive")) ? PasswordAuthState.INACTIVE : PasswordAuthState.ACTIVE;
+        currentAnimation = passwordAuthAnimations.get(currentState).clone();
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
+    }
+
+    public Obj_PasswordAuth(String state, String idName, int x , int y){
+        super(x , y);
+        name = "Password Authentication";
+        this.idName = idName;
+        width = 64;
+        height = 64;
+
+        currentState = (state.equals("inactive")) ? PasswordAuthState.INACTIVE : PasswordAuthState.ACTIVE;
+        currentAnimation = passwordAuthAnimations.get(currentState).clone();
         solidArea1 = new Rectangle(0 , 0 , 0 , 0);
     }
     @Override
     public void update() throws NullPointerException{
-        obj_animator_pwAuth.update();
-        currentFrame = obj_animator_pwAuth.getCurrentFrames();
+        currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        g2.drawImage(obj_pwAuth[currentFrame] , worldX - camera.getX() , worldY - camera.getY() , width ,height , null);
+    public void render(Graphics2D g2){
+        super.render(g2);
+    }
+
+    private enum PasswordAuthState{
+        INACTIVE, ACTIVE
     }
 }

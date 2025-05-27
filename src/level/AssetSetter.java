@@ -1,15 +1,18 @@
 package level;
 
+import ai.PathFinder2;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import entity.Entity;
 import entity.effect.Effect;
 import entity.effect.type.Blind;
 import entity.effect.type.Slow;
-import entity.effect.type.SpeedBoost;
+import entity.effect.type.Speed;
+import entity.effect.type.Strength;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
 import entity.items.Item_Potion;
-import entity.items.Item_SpeedGem;
+import entity.items.Item_StrengthGem;
 import entity.json_stat.GameObject;
 import entity.json_stat.ItemStat;
 import entity.json_stat.EnemyStat;
@@ -21,17 +24,17 @@ import main.ResourceLoader;
 import map.GameMap;
 
 import java.awt.*;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static main.GamePanel.currentMap;
 import static main.GamePanel.sManager;
 
 public class AssetSetter {
     GameMap mp;
+    Level lvl;
     String filePathObject;
     String filePathEnemy;
     String filePathNpc;
@@ -39,6 +42,12 @@ public class AssetSetter {
     public AssetSetter(GameMap mp)
     {
         this.mp = mp;
+    }
+
+    public AssetSetter(GameMap mp, Level lvl)
+    {
+        this.mp = mp;
+        this.lvl = lvl;
     }
 
     public void setObject() throws IOException
@@ -59,41 +68,63 @@ public class AssetSetter {
             for (GameObject obj : inactiveObjects) {
                 int X = obj.getPosition().getX();
                 int Y = obj.getPosition().getY();
-                switch (obj.getObject()) {
-                    case "Obj_Tank":
-                        mp.addObject(new Obj_Tank(obj.getState(), obj.getType(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_Television":
-                        mp.addObject(new Obj_Television(obj.getState(), obj.getSize(), obj.getFrame(), obj.getType(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_Chair":
-                        mp.addObject(new Obj_Chair(obj.getDirection(), obj.getType(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_PasswordAuth":
-                        mp.addObject(new Obj_PasswordAuth(obj.getState(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_Bin":
-                        mp.addObject(new Obj_Bin(obj.getType(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_Computer":
-                        mp.addObject(new Obj_Computer(obj.getState(), obj.getDirection(), X, Y), mp.inactiveObj);
-                        break;
-                    case "Obj_Vault":
-                        mp.addObject(new Obj_Vault(obj.getState(), obj.getType(), X, Y), mp.inactiveObj);
-                        break;
-                }
+                Entity entity = switch (obj.getObject()) {
+                    case "Obj_Tank" -> new Obj_Tank(obj.getState(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Television" -> new Obj_Television(
+                            obj.getState(),
+                            obj.getSize(),
+                            obj.getFrame(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Chair" -> new Obj_Chair(obj.getDirection(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_PasswordAuth" -> new Obj_PasswordAuth(
+                            obj.getState(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Bin" -> new Obj_Bin(
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Computer" -> new Obj_Computer(
+                            obj.getState(),
+                            obj.getDirection(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Vault" -> new Obj_Vault(
+                            obj.getState(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    default -> null;
+                };
+                mp.addObject(entity, mp.inactiveObj);
+                lvl.entityManager.add(entity.idName, entity);
             }
 //
             for (GameObject obj : activeObjects) {
                 int X = obj.getX();
                 int Y = obj.getY();
+                Entity entity = null;
                 switch (obj.getObject()) {
                     case "Obj_Door":
-                        Obj_Door door = new Obj_Door(obj.getSize(), obj.getState(), obj.getName(), X, Y);
-                        mp.addObject(door, mp.activeObj);
+                        entity = new Obj_Door(
+                                obj.getSize(),
+                                obj.getState(),
+                                obj.getName(),
+                                X, Y);
                         break;
                     case "Obj_Chest":
-                        Obj_Chest chest = new Obj_Chest(mp, X, Y, obj.getName());
+                        Obj_Chest chest = new Obj_Chest(
+                                mp,
+                                obj.getName(),
+                                X, Y);
                         for (ItemStat item : obj.getItems()) {
                             switch (item.getName()) {
                                 case "Item_Kit":
@@ -102,8 +133,8 @@ public class AssetSetter {
                                 case "Item_Battery":
                                     chest.setLoot(new Item_Battery(), item.getQuantity());
                                     break;
-                                case "Item_SpeedGem":
-                                    chest.setLoot(new Item_SpeedGem(), item.getQuantity());
+                                case "Item_StrengthGem":
+                                    chest.setLoot(new Item_StrengthGem(), item.getQuantity());
                                     break;
                                 case "Item_Potion":
                                     chest.setLoot(new Item_Potion(), item.getQuantity());
@@ -111,9 +142,11 @@ public class AssetSetter {
                             }
                         }
                         chest.setDialogue();
-                        mp.addObject(chest, mp.activeObj);
+                        entity = chest;
                         break;
                 }
+                mp.addObject(entity, mp.activeObj);
+                lvl.entityManager.add(entity.idName, entity);
             }
         } catch (Exception e) {
             System.out.println("Nào, sai tên file hay sai gì đó trong file json rồi kìa!");
@@ -131,7 +164,14 @@ public class AssetSetter {
             for(NpcStat npc : Npc){
                 int X = npc.getX();
                 int Y = npc.getY();
-                mp.addObject(new Npc_CorruptedHustStudent(mp , npc.getName() ,npc.getDirection() , npc.getDialogue() , X , Y), mp.npc);
+                Npc_CorruptedHustStudent entity = null;
+                entity = new Npc_CorruptedHustStudent(mp,
+                        npc.getName(),
+                        npc.getDirection(),
+                        npc.getDialogue(),
+                        X , Y);
+                mp.addObject(entity, mp.npc);
+                lvl.entityManager.add(entity.idName, entity);
             }
 
         } catch(Exception e){
@@ -139,49 +179,102 @@ public class AssetSetter {
         }
     }
 
-    public void setEnemy() throws IOException{
-        try(Reader reader = ResourceLoader.getReader(filePathEnemy)) {
+    public void setEnemy() throws IOException {
+        try (Reader reader = ResourceLoader.getReader(filePathEnemy)) {
             Gson gson = new Gson();
 
-            Map<String, List<EnemyStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<EnemyStat>>>() {}.getType());
+            Map<String, List<List<EnemyStat>>> data = gson.fromJson(reader,
+                    new TypeToken< Map<String,List<List<EnemyStat>>> >() {}.getType());
 
-            List<EnemyStat> Enemies = data.get("root");
+            List<List<EnemyStat>> roomList = data.get("room");
 
-            for (EnemyStat enemy : Enemies) {
-                int X = enemy.getPosition().getX();
-                int Y = enemy.getPosition().getY();
-                switch (enemy.getEnemy()) {
-                    case "Mon_Cyborgon":
-                        mp.addObject(new Mon_Cyborgon(mp  , X , Y , enemy.getName()), mp.enemy);
-                        break;
-                    case "Mon_HustGuardian":
-                        mp.addObject(new Mon_HustGuardian(mp , X , Y , enemy.getName()), mp.enemy);
-                        break;
-                    case "Mon_Spectron":
-                        mp.addObject(new Mon_Spectron(mp , X , Y , enemy.getName()), mp.enemy);
-                        break;
-                    case "Mon_Shooter":
-                        if(enemy.getDetection() == null) {
-                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), enemy.getName() ,enemy.getX(), enemy.getY()
-                            ), mp.enemy);
-                        } else
-                        {
-                            Rectangle detect = new Rectangle(enemy.getDetection().getX() , enemy.getDetection().getY() , enemy.getDetection().getWidth() , enemy.getDetection().getHeight());
-                            mp.addObject(new Mon_Shooter(mp, enemy.getDirection(), enemy.getType(), enemy.isAlwaysUp(), enemy.getAttackCycle(), detect , enemy.getName() ,enemy.getX(), enemy.getY()
-                            ), mp.enemy);
-                        };
-                        break;
-                    case "Mon_EffectDealer":
-                        Effect effect = null;
-                        String effectType = enemy.getEffect().getEffectType();
-                        int duration = enemy.getEffect().getDuration();
-                        switch(effectType){
-                            case "Slow": effect = new Slow(mp.player , duration); break;
-                            case "SpeedBoost": effect = new SpeedBoost(mp.player , duration); break;
-                            case "Blind": effect = new Blind(mp.player , duration);
-                        }
-                        mp.addObject(new Mon_EffectDealer(mp , effect ,enemy.getX() , enemy.getY()) , mp.enemy);
+            StringBuilder roomName = new StringBuilder();
+
+            int roomCount = 0;
+
+            for (List<EnemyStat> room : roomList) {
+                roomCount++;
+
+                roomName.setLength(0);
+                roomName.append("Room")
+                        .append(roomCount);
+
+                RoomTask roomTask = new RoomTask(lvl);
+                for (EnemyStat enemy : room) {
+                    int X = enemy.getPosition().getX();
+                    int Y = enemy.getPosition().getY();
+                    Monster mon = null;
+
+                    switch (enemy.getEnemy()) {
+                        case "Mon_Cyborgon":
+                            mon = new Mon_Cyborgon(mp, enemy.getName(), X, Y);
+                            roomTask.addEnemy(mon);
+                            break;
+                        case "Mon_HustGuardian":
+                            mon = new Mon_HustGuardian(mp, enemy.getName(), X, Y);
+                            roomTask.addEnemy(mon);
+                            break;
+                        case "Mon_Spectron":
+                            mon = new Mon_Spectron(mp, enemy.getName(), X, Y);
+                            roomTask.addEnemy(mon);
+                            break;
+                        case "Mon_Shooter":
+                            if (enemy.getDetection() == null) {
+                                mon = new Mon_Shooter(mp, enemy.getDirection(),
+                                        enemy.getType(), enemy.isAlwaysUp(),
+                                        enemy.getAttackCycle(), enemy.getName(),
+                                        X, Y);
+                                roomTask.addEnemy(mon);
+                            } else {
+                                Rectangle detect = new Rectangle(
+                                        enemy.getDetection().getX(),
+                                        enemy.getDetection().getY(),
+                                        enemy.getDetection().getWidth(),
+                                        enemy.getDetection().getHeight()
+                                );
+                                mon = new Mon_Shooter(mp, enemy.getDirection(),
+                                        enemy.getType(), enemy.isAlwaysUp(),
+                                        enemy.getAttackCycle(), detect,
+                                        enemy.getName(), X, Y);
+                                roomTask.addEnemy(mon);
+                            }
+                            break;
+                        case "Mon_EffectDealer":
+                            Effect effect = null;
+                            int W = enemy.getSizeWidth();
+                            int H = enemy.getSizeHeight();
+                            String effectType = enemy.getEffect().getEffectType();
+                            int duration = enemy.getEffect().getDuration();
+                            switch (effectType) {
+                                case "Slow":
+                                    effect = new Slow(mp.player, duration);
+                                    break;
+                                case "SpeedBoost":
+                                    effect = new Speed(mp.player, duration);
+                                    break;
+                                case "Strength":
+                                    effect = new Strength(mp.player, duration);
+                                    break;
+                                case "Blind":
+                                    effect = new Blind(mp.player, duration);
+                                    break;
+                            }
+                            mon = new Mon_EffectDealer(mp, effect, enemy.getName(), X, Y, W, H);
+                            roomTask.addEnemy(mon);
+                            break;
+                        case "Mon_Boss":
+                            PathFinder2 finder = new PathFinder2(mp);
+                            Mon_Boss boss = new Mon_Boss(mp, enemy.getName(), X, Y);
+                            mon = boss;
+                            boss.setPathFinder(finder);
+                            roomTask.addEnemy(boss);
+                            mp.boss = boss;
+                            break;
+                    }
+                    lvl.entityManager.add(mon.idName, mon);
                 }
+
+                lvl.addRoom(roomName.toString(), roomTask);
             }
 
         } catch (Exception e) {

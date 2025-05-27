@@ -2,11 +2,14 @@ package entity.json_stat;
 
 import entity.effect.Effect;
 
+import java.util.List;
+
 public class EnemyStat {
     private String enemy;
     private String name;
     private int type;
     private Position position;
+    private Size size;
     private Effect effect;
     private DetectionRect detection;
     private String direction;
@@ -31,6 +34,10 @@ public class EnemyStat {
     public int getX() { return position.getX(); }
     public int getY() { return position.getY(); }
 
+    public int getSizeWidth() { return size.getWidth(); }
+    public int getSizeHeight() { return size.getHeight(); }
+    public void setSize(Size size) { this.size = size; }
+
     public String getDirection() {return direction;}
 
     public boolean isAlwaysUp() {return isAlwaysUp;}
@@ -38,7 +45,7 @@ public class EnemyStat {
     public int getAttackCycle() {return attackCycle;}
 
     public Effect getEffect(){return effect;}
-    public class Position {
+    public static class Position {
         private int x;
         private int y;
 
@@ -48,7 +55,13 @@ public class EnemyStat {
         public int getY() { return y; }
         public void setY(int y) { this.y = y; }
     }
-    public class DetectionRect{
+    public static class Size{
+        private int width=64;
+        private int height=64;
+        public int getWidth(){return width;}
+        public int getHeight(){return height;}
+    }
+    public static class DetectionRect{
         private int x;
         private int y;
         private int width;
@@ -59,7 +72,7 @@ public class EnemyStat {
         public int getWidth(){return width;}
         public int getHeight(){return height;}
     }
-    public class Effect{
+    public static class Effect{
         private String type;
         private int duration;
 

@@ -1,44 +1,38 @@
 package level.progress.level00;
 
-import entity.Entity;
-import entity.npc.Npc_CorruptedHustStudent;
-import entity.object.Obj_Door;
-import level.EventHandler;
+import level.event.EventHandler;
 import level.Level;
+import main.GamePanel;
+import main.GameState;
+import thread.LoadingService;
 
 import java.util.TimerTask;
 
+import static main.GamePanel.levelProgress;
+
 public class EventHandler00 extends EventHandler {
-    public boolean finishedBeginingDialogue = false;
+    public boolean finishedBeginningDialogue = false;
     public boolean finishedTutorialDialogue = false;
     public EventHandler00(Level lvl) {
         super(lvl);
         setDialogue();
     }
     void checkForTutorialEvent(){
-        for(Entity npc : lvl.map.npc){
-            if(npc != null && npc.idName.equals("Chill Guy")){
-                Npc_CorruptedHustStudent npc_tmp = (Npc_CorruptedHustStudent) npc;
-                finishedTutorialDialogue = npc_tmp.hasTalkYet();
-            }
-        }
+        //Npc_CorruptedHustStudent npc = (Npc_CorruptedHustStudent) mp.findEntityById("NPC001");
+        //finishedTutorialDialogue = npc.hasTalkYet();
     }
 
     void openTutorialDoor(){
-        for(Entity object: lvl.map.activeObj){
-            if(object != null && (object.idName.equals("Begin DoorMap 01") || object.idName.equals("Begin DoorMap 02") || object.idName.equals("Begin DoorMap 03"))){
-                Obj_Door door = (Obj_Door) object;
-                door.canChangeState = true;
-            }
-        }
+       //((Obj_Door) mp.findEntityById("DoorA001")).activate();
+        //((Obj_Door) mp.findEntityById("DoorA002")).activate();
     }
 
     void startingDialogue(){
         TimerTask beginGameDialogue = new TimerTask() {
             @Override
             public void run() {
-                eventMaster.startDialogue(eventMaster , 0);
-                finishedBeginingDialogue = true;
+                eventMaster.submitDialogue(eventMaster , 0);
+                finishedBeginningDialogue = true;
             }
         };
         timer.schedule(beginGameDialogue , 800);
@@ -53,10 +47,15 @@ public class EventHandler00 extends EventHandler {
 
     public void update(){
         checkForTutorialEvent();
-        if(!finishedBeginingDialogue && !lvl.gp.darker && !lvl.gp.lighter) startingDialogue();
+        if(!finishedBeginningDialogue) startingDialogue();
         if(finishedTutorialDialogue) openTutorialDoor();
         lvl.canChangeMap = triggerEvent(lvl.changeMapEventRect1);
-        if(lvl.canChangeMap) lvl.levelFinished = true;
+        if(lvl.canChangeMap){
+            lvl.levelFinished = true;
+            GamePanel.gameState = GameState.LOADING;
+            levelProgress++;
+            LoadingService.loadMap();
+        }
     }
 
 }

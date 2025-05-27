@@ -1,29 +1,37 @@
 package entity;
 
+import ai.PathFinder;
 import entity.projectile.Projectile;
-import main.GameState;
+import graphics.Animation;
+import level.LevelState;
 import main.KeyHandler;
 import map.GameMap;
+import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static main.GamePanel.*;
 
 public class Entity {
-    protected int CURRENT_ACTION;
-    protected int PREVIOUS_ACTION;
-    protected int CURRENT_DIRECTION;
-    protected int CURRENT_FRAME;
+    public PathFinder pFinder;
+    public static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     public String name;
     public String idName = "";
     //POSITION
-    public int worldX, worldY;
-    public int newWorldX, newWorldY;
+    public Vector2D position;
+    public Vector2D newPosition;
+    public Vector2D velocity;
     public String direction;
     public int speed;
-    public int last_speed;
+    public int lastSpeed;
+    //ANIMATION
+    protected Animation currentAnimation;
+    protected Animation lastAnimation;
     //BOOLEAN
     public boolean collisionOn = false;
     public boolean isInteracting = false;
@@ -31,7 +39,7 @@ public class Entity {
     public boolean isInvincible = false;
     public boolean isDying = false;
     public boolean isCollected = false;
-    public boolean canChangeState = false;
+    public boolean canChangeStatus = false;
     public boolean canbeDestroyed = false;
     public boolean onPath = false;
     //SPRITE SIZE
@@ -55,9 +63,10 @@ public class Entity {
     public int currentMana;
     public int exp;
     public int strength;
+    public int lastStrength;
     public int defense;
     public int damage;
-    public String projectile_name;
+    public String projectileName;
     public Projectile projectile;
     public int shootAvailableCounter = 0;
     public int invincibleCounter = 0;
@@ -74,13 +83,15 @@ public class Entity {
     public int dialogueSet = -1;
 
     public Entity() {
+        this.position = new Vector2D();
+        this.newPosition = new Vector2D();
+        this.velocity = new Vector2D();
     }
 
     public Entity(int x, int y) {
-        this.worldX = x;
-        this.worldY = y;
-        this.newWorldX = x;
-        this.newWorldY = y;
+        this.position = new Vector2D(x, y);
+        this.newPosition = new Vector2D(x, y);
+        this.velocity = new Vector2D();
     }
 
     public void setDefaultSolidArea() {
@@ -95,11 +106,12 @@ public class Entity {
         }
     }
 
-    public void startDialogue(Entity entity, int dialogueSet) {
-        KeyHandler.enterPressed = false;
-        gameState = GameState.DIALOGUE_STATE;
-        ui.target = entity;
-        ui.target.dialogueSet = dialogueSet;
+    public void submitDialogue(Entity entity, int dialogueSet) {
+        if(currentLevel.checkState(LevelState.RUNNING)) {
+            KeyHandler.enterPressed = false;
+            currentLevel.setLevelState(LevelState.DIALOGUE);
+            ui.dialogueQueue.add(new KeyPair<>(entity, dialogueSet));
+        }
     }
 
     public void talk() {
@@ -110,6 +122,16 @@ public class Entity {
 
     public void projectileCauseEffect(){
 
+    }
+
+    public String getOppositeDirection(String direction){
+        return  switch (direction) {
+            case "left" -> "right";
+            case "right" -> "left";
+            case "up" -> "down";
+            case "down" -> "up";
+            default -> "";
+        };
     }
 
     public void die() {
@@ -139,6 +161,8 @@ public class Entity {
     }
 
     public void searchPath(int goalCol, int goalRow) {
+        int worldX = (int)position.x;
+        int worldY = (int)position.y;
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
         pFinder.setNodes(startCol,startRow,goalCol,goalRow);
@@ -183,48 +207,60 @@ public class Entity {
                 else if (enTopY > nextY && enLeftX > nextX) {
                     // up or left
                     direction = "up";
-                    newWorldY -= speed;
                     checkCollision();
                     //System.out.println(collisionOn);
                     if (collisionOn) {
                         direction = "left";
                     }
-                    newWorldY += speed;
                 } else if (enTopY > nextY && enLeftX < nextX) {
                     // up or right
                     direction = "up";
-                    newWorldY -= speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "right";
                     }
-                    newWorldY += speed;
                 } else if (enTopY < nextY && enLeftX > nextX) {
                     // down or left
                     direction = "down";
-                    newWorldY += speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "left";
                     }
-                    newWorldY -= speed;
                 } else if (enTopY < nextY && enLeftX < nextX) {
                     // down or right
                     direction = "down";
-                    newWorldY += speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "right";
                     }
-                    newWorldY -= speed;
                 }
             }
         }
     }
 
+    public void decideToMove() {
+        up = down = left = right = false;
+        switch (direction) {
+            case "right":
+                right = true;
+                break;
+            case "left":
+                left = true;
+                break;
+            case "down":
+                down = true;
+                break;
+            case "up":
+                up = true;
+                break;
+        }
+    }
+
     public void update(){};
 
-    public void render(Graphics2D g2){};
+    public void render(Graphics2D g2){
+        currentAnimation.render(g2, (int)position.x - camera.getX(), (int)position.y - camera.getY());
+    }
 
     public void dispose() {
         if (dialogues != null) {
@@ -233,17 +269,15 @@ public class Entity {
                     Arrays.fill(s, null);
                 }
             }
+            dialogues = null;
         }
-    }
 
-    public String getOppositeDirection(String direction){
-        return  switch (direction) {
-            case "left" -> "right";
-            case "right" -> "left";
-            case "up" -> "down";
-            case "down" -> "up";
-            default -> "";
-        };
+        pFinder = null;
+        solidArea1 = null;
+        solidArea2 = null;
+        hitbox = null;
+        projectile = null;
+        name = null;
+        idName = null;
     }
-
 }

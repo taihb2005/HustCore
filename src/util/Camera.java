@@ -3,11 +3,11 @@ package util;
 import java.util.Random;
 
 public class Camera {
-    private int x, y; // Top-left corner of the camera
+    private int x, y;
     private int viewportWidth;
-    private int viewportHeight; // Size of the viewport (visible area)
+    private int viewportHeight;
     private int mapWidth;
-    private int mapHeight; // Size of the map
+    private int mapHeight;
 
     public Camera(){
         this.x = 0;
@@ -45,9 +45,9 @@ public class Camera {
         this.mapHeight = mapHeight;
     }
 
-    public void centerOn(int targetX, int targetY) {
-        x = targetX - viewportWidth / 2 + 32;
-        y = targetY - viewportHeight / 2 + 32;
+    public void centerOn(Vector2D target) {
+        x = (int)target.x - viewportWidth / 2 + 32;
+        y = (int)target.y - viewportHeight / 2 + 32;
 
         clamp();
     }
@@ -60,15 +60,17 @@ public class Camera {
         if (y + viewportHeight > mapHeight) y = mapHeight - viewportHeight;
     }
 
-    public void cameraShake(int targetX , int targetY){
+    public void cameraShake(Vector2D target){
         Random amplitude_generator = new Random();
         int offsetX = -2 + amplitude_generator.nextInt(5);
         int offsetY = -2 + amplitude_generator.nextInt(5);
 
-        x = targetX - viewportWidth / 2 + 32 + offsetX;
-        y = targetY - viewportHeight / 2 + 32 + offsetY;
+        x = (int)target.x - viewportWidth / 2 + 32 + offsetX;
+        y = (int)target.y - viewportHeight / 2 + 32 + offsetY;
 
         clamp();
     }
+
+
 
 }

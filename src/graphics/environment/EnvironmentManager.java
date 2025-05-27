@@ -13,12 +13,17 @@ public class EnvironmentManager {
     {
         this.mp = mp;
     }
+    public void setRadius(int radius){
+        lighting.setLightRadius(radius);
+    }
     public void setup()
     {
         lighting = new Lighting(mp);
     }
-    public void draw(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         lighting.draw(g2);
+    }
+    public void update(){
+        lighting.update();
     }
 }

@@ -2,67 +2,66 @@ package entity.object;
 
 import entity.Entity;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
+import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 import static main.GamePanel.camera;
 
 public class Obj_Tank extends Entity {
-    final private BufferedImage[] obj_filledTank;
-    final private Animation obj_animator_filledTank;
-    private int currentFrames = 0;
-    public int type;
+    private static final HashMap<KeyPair<TankState, Integer>, Sprite> tankSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<TankState, Integer>, Animation> tankAnimations = new HashMap<>();
 
-
-    public Obj_Tank(int type)
-    {
-        super();
-        name = "Filled Tank";
-        super.width = 64;
-        super.height = 128;
-        this.type = type;
-
-        obj_animator_filledTank = new Animation();
-        obj_filledTank = new Sprite("/entity/object/filledtank_id" + type + ".png", width , height).getSpriteArrayRow(0);
-        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
-
-        setDefault();
+    public static void load(){
+        for(TankState state: TankState.values()) {
+            for (int id = 1; id <= 2; id++) {
+                KeyPair<TankState, Integer> key = new KeyPair<>(state, id);
+                tankSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("tank_" + state.name().toLowerCase() + "_id" + id + ".png"), 64, 128));
+                tankAnimations.put(key,
+                        new Animation(tankSpritePool.get(key).getSpriteArrayRow(0), 9, true));
+            }
+        }
     }
-    public Obj_Tank(int type , int x , int y)
-    {
-        super(x , y);
-        name = "Filled Tank";
-        super.width = 64;
-        super.height = 128;
-        this.type = type;
-
-        obj_animator_filledTank = new Animation();
-        obj_filledTank = new Sprite("/entity/object/filledtank_id" + type + ".png", width , height).getSpriteArrayRow(0);
-        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
-
-        setDefault();
-    }
-
-    public Obj_Tank(String state , int type , int x , int y) throws Exception
+    private TankState currentState;
+    public Obj_Tank(String state , int id, int x , int y) throws Exception
     {
         super(x , y);
         name = "Tank";
         super.width = 64;
         super.height = 128;
-        this.type = type;
 
-        if(state.equals("empty") && type != 1){
-            throw new Exception("Cái Tank đã empty rồi thì để type = 1 nhé anh bạn!");
+        if(state.equals("empty") && id != 1){
+            throw new Exception("Cái Tank đã empty rồi thì để id = 1 nhé anh bạn!");
         }
 
-        obj_animator_filledTank = new Animation();
-        obj_filledTank = new Sprite("/entity/object/tank_" + state + "_id"+ type +".png", width , height).getSpriteArrayRow(0);
-        obj_animator_filledTank.setAnimationState(obj_filledTank , 9);
+        currentState = (state.equals("empty")) ? TankState.EMPTY : TankState.FILLED;
+        currentAnimation = tankAnimations.get(new KeyPair<>(currentState, id)).clone();
 
         setDefault();
     }
+
+    public Obj_Tank(String state , int id, String idName, int x , int y) throws Exception
+    {
+        super(x , y);
+        name = "Tank";
+        this.idName = idName;
+        super.width = 64;
+        super.height = 128;
+
+        if(state.equals("empty") && id != 1){
+            throw new Exception("Cái Tank đã empty rồi thì để id = 1 nhé anh bạn!");
+        }
+
+        currentState = (state.equals("empty")) ? TankState.EMPTY : TankState.FILLED;
+        currentAnimation = tankAnimations.get(new KeyPair<>(currentState, id)).clone();
+
+        setDefault();
+    }
+
 
     private void setDefault()
     {
@@ -72,15 +71,17 @@ public class Obj_Tank extends Entity {
     }
 
     @Override
-    public void update() throws NullPointerException{
-        obj_animator_filledTank.update();
-        currentFrames = obj_animator_filledTank.getCurrentFrames();
+    public void update(){
+        currentAnimation.update();
     }
 
     @Override
     public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
-        g2.drawImage(obj_filledTank[currentFrames] , worldX - camera.getX(), worldY - camera.getY()
-                , width , height , null);
+        super.render(g2);
+    }
+
+    private enum TankState{
+        EMPTY, FILLED
     }
 
 }

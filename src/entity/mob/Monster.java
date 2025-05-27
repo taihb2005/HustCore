@@ -1,11 +1,11 @@
 package entity.mob;
 
-import ai.Node;
+import ai.PathFinder;
 import entity.Entity;
 import entity.effect.Effect;
 import entity.object.Obj_Heart;
-import entity.projectile.Projectile;
 import map.GameMap;
+import util.Vector2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,7 +27,6 @@ public class Monster extends Entity {
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
 
-
     public final ArrayList<String> validDirection = new ArrayList<>();
 
     protected int SHOOT_INTERVAL;
@@ -43,28 +42,12 @@ public class Monster extends Entity {
     public Monster(GameMap mp , int x , int y){
         super(x , y);
         this.mp = mp;
+
+        this.pFinder = new PathFinder(mp);
     }
 
     public void projectileCauseEffect(){
-        effectDealByProjectile.add();
-    }
-
-    public void decideToMove() {
-        up = down = left = right = false;
-        switch (direction) {
-            case "right":
-                right = true;
-                break;
-            case "left":
-                left = true;
-                break;
-            case "down":
-                down = true;
-                break;
-            case "up":
-                up = true;
-                break;
-        }
+        effectDealByProjectile.clone().add();
     }
     
     public void reactForDamage(){
@@ -81,54 +64,54 @@ public class Monster extends Entity {
     }
 
     public void facePlayer() {
-        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / 32;
-        int posCol = (worldX + solidArea1.x) / 32;
+        int playerCol = ((int)mp.player.position.x + mp.player.solidArea1.x) / 32;
+        int posCol = ((int)position.x + solidArea1.x) / 32;
 
         if(playerCol > posCol) direction = "right"; else
             direction = "left";
-
     }
 
     public void damagePlayer(){
         boolean contactPlayer = mp.cChecker.checkPlayer(this);
-        if(name.equals("Effect Dealer") && contactPlayer) effectDealOnTouch.add(); else
+        if(name.equals("Effect Dealer") && contactPlayer) effectDealOnTouch.clone().add(); else
         if(contactPlayer && !mp.player.isInvincible){
             mp.player.isInvincible = true;
             mp.player.receiveDamage(this);
-            effectDealOnTouch.add();
+            effectDealOnTouch.clone().add();
         }
     }
 
-    public boolean checkForValidDirection(){
+    public boolean checkForValidDirection() {
         validDirection.clear();
-        newWorldX = worldX;
-        newWorldY = worldY;
-        //UP
-        newWorldY -= speed;
-        checkCollision();
-        if(!collisionOn) validDirection.add("up");
-        newWorldY += speed;
+        newPosition = position.copy();
 
-        //DOWN
-        newWorldY += speed;
+        // UP
+        newPosition.y -= speed;
         checkCollision();
-        if(!collisionOn) validDirection.add("down");
-        newWorldY -= speed;
+        if (!collisionOn) validDirection.add("up");
+        newPosition.y += speed; // reset
 
-        //LEFT
-        newWorldX -=speed;
+        // DOWN
+        newPosition.y += speed;
         checkCollision();
-        if(!collisionOn) validDirection.add("left");
-        newWorldX += speed;
+        if (!collisionOn) validDirection.add("down");
+        newPosition.y -= speed; // reset
 
-        //RIGHT
-        newWorldX += speed;
+        // LEFT
+        newPosition.x -= speed;
         checkCollision();
-        if(!collisionOn) validDirection.add("right");
-        newWorldX -= speed;
+        if (!collisionOn) validDirection.add("left");
+        newPosition.x += speed; // reset
+
+        // RIGHT
+        newPosition.x += speed;
+        checkCollision();
+        if (!collisionOn) validDirection.add("right");
+        newPosition.x -= speed; // reset
 
         return !validDirection.isEmpty();
     }
+
 
     public String getValidDirection(){
         int n = validDirection.size();
@@ -139,186 +122,92 @@ public class Monster extends Entity {
 
     @Override
     public void searchPath(int goalCol, int goalRow) {
-        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
-        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
-        pFinder.setNodes(startCol,startRow,goalCol,goalRow);
-        if(pFinder.search())
-        {
-            //Next WorldX and WorldY
-            if(pFinder.pathList.isEmpty()){
-                onPath = false;
-                up = down = left = right = false;
-            } else {
-                int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
-                int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
+        executor.execute(() -> {
+            float worldX = position.x;
+            float worldY = position.y;
 
+            int startCol = (int)((worldX + solidArea1.x) / GameMap.childNodeSize);
+            int startRow = (int)((worldY + solidArea1.y) / GameMap.childNodeSize);
 
-                //Entity's solidArea position
-                int enLeftX = worldX + solidArea1.x;
-                int enRightX = worldX + solidArea1.x + solidArea1.width;
-                int enTopY = worldY + solidArea1.y;
-                int enBottomY = worldY + solidArea1.y + solidArea1.height;
+            synchronized (pFinder) {
+                pFinder.setNodes(startCol, startRow, goalCol, goalRow);
 
-                // TOP PATH
-                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "up";
-                }
-                // BOTTOM PATH
-                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "down";
-                }
-                // RIGHT - LEFT PATH
-                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
-                    //either left or right
-                    // LEFT PATH
-                    if (enLeftX > nextX) {
-                        direction = "left";
+                if (pFinder.search()) {
+                    if (pFinder.pathList.isEmpty()) {
+                        onPath = false;
+                        up = down = left = right = false;
+                    } else {
+                        int nextX = pFinder.pathList.get(0).col * GameMap.childNodeSize;
+                        int nextY = pFinder.pathList.get(0).row * GameMap.childNodeSize;
+
+                        float enLeftX = worldX + solidArea1.x;
+                        float enRightX = worldX + solidArea1.x + solidArea1.width;
+                        float enTopY = worldY + solidArea1.y;
+                        float enBottomY = worldY + solidArea1.y + solidArea1.height;
+
+                        if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                            direction = "up";
+                        } else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                            direction = "down";
+                        } else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
+                            if (enLeftX > nextX) {
+                                direction = "left";
+                            }
+                            if (enLeftX < nextX) {
+                                direction = "right";
+                            }
+                        } else if (enTopY > nextY && enLeftX > nextX) {
+                            // up or left
+                            direction = "up";
+                            newPosition.y -= speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "left";
+                            }
+                            newPosition.y += speed;
+                        } else if (enTopY > nextY && enLeftX < nextX) {
+                            // up or right
+                            direction = "up";
+                            newPosition.y -= speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "right";
+                            }
+                            newPosition.y += speed;
+                        } else if (enTopY < nextY && enLeftX > nextX) {
+                            // down or left
+                            direction = "down";
+                            newPosition.y += speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "left";
+                            }
+                            newPosition.y -= speed;
+                        } else if (enTopY < nextY && enLeftX < nextX) {
+                            // down or right
+                            direction = "down";
+                            newPosition.y += speed;
+                            checkCollision();
+                            if (collisionOn) {
+                                direction = "right";
+                            }
+                            newPosition.y -= speed;
+                        }
                     }
-                    // RIGHT PATH
-                    if (enLeftX < nextX) {
-                        direction = "right";
-                    }
-                }
-                //OTHER EXCEPTIONS
-                else if (enTopY > nextY && enLeftX > nextX) {
-                    // up or left
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    //System.out.println(collisionOn);
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY > nextY && enLeftX < nextX) {
-                    // up or right
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY < nextY && enLeftX > nextX) {
-                    // down or left
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY -= speed;
-                } else if (enTopY < nextY && enLeftX < nextX) {
-                    // down or right
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY -= speed;
+                } else {
+                    getAggro = false;
+                    onPath = false;
+                    up = down = right = left = false;
+                    isRunning = false;
+                    speed = lastSpeed;
                 }
             }
-        } else {
-            getAggro = false;
-            onPath = false;
-            up = down = right = left = false;
-            isRunning = false;
-            speed = last_speed;
-        }
+        });
     }
 
-    public void searchPathforBoss(int goalCol, int goalRow) {
-        int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
-        int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
-        pFinder2.setNodes(startCol,startRow,goalCol,goalRow);
-        if(pFinder2.search())
-        {
-            //Next WorldX and WorldY
-            if(pFinder2.pathList.isEmpty()){
-                onPath = false;
-                up = down = left = right = false;
-            } else {
-                int nextX = pFinder2.pathList.get(0).col * GameMap.childNodeSize;
-                int nextY = pFinder2.pathList.get(0).row * GameMap.childNodeSize;
-
-
-                //Entity's solidArea position
-                int enLeftX = worldX + solidArea1.x;
-                int enRightX = worldX + solidArea1.x + solidArea1.width;
-                int enTopY = worldY + solidArea1.y;
-                int enBottomY = worldY + solidArea1.y + solidArea1.height;
-
-                // TOP PATH
-                if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "up";
-                }
-                // BOTTOM PATH
-                else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
-                    direction = "down";
-                }
-                // RIGHT - LEFT PATH
-                else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
-                    //either left or right
-                    // LEFT PATH
-                    if (enLeftX > nextX) {
-                        direction = "left";
-                    }
-                    // RIGHT PATH
-                    if (enLeftX < nextX) {
-                        direction = "right";
-                    }
-                }
-                //OTHER EXCEPTIONS
-                else if (enTopY > nextY && enLeftX > nextX) {
-                    // up or left
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    //System.out.println(collisionOn);
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY > nextY && enLeftX < nextX) {
-                    // up or right
-                    direction = "up";
-                    newWorldY -= speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY += speed;
-                } else if (enTopY < nextY && enLeftX > nextX) {
-                    // down or left
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "left";
-                    }
-                    newWorldY -= speed;
-                } else if (enTopY < nextY && enLeftX < nextX) {
-                    // down or right
-                    direction = "down";
-                    newWorldY += speed;
-                    checkCollision();
-                    if (collisionOn) {
-                        direction = "right";
-                    }
-                    newWorldY -= speed;
-                }
-            }
-        } else {
-            getAggro = false;
-            onPath = false;
-            up = down = right = left = false;
-            isRunning = false;
-        }
-    }
     public void spawnHeart() {
         Obj_Heart heart = new Obj_Heart(mp);
-        heart.worldX = worldX + 16; heart.worldY = worldY + 16;
+        heart.position.x = position.x + 16; heart.position.y = position.y + 16;
         mp.addObject(heart, mp.activeObj);
     }
 
@@ -339,26 +228,38 @@ public class Monster extends Entity {
         counter = 0;
     }
 
-    public void renderHPBar(Graphics2D g2 , int offsetX , int offsetY){
-        if(drawHPBar) {
+    public int getCurrentHP(){
+        return currentHP;
+    }
+
+    public void kill(){
+        currentHP = 0;
+    }
+
+    public void renderHPBar(Graphics2D g2, int offsetX, int offsetY) {
+        if (drawHPBar) {
             int maxHpWidth = 30;
             int currentHpWidth = (int) ((double) currentHP / maxHP * maxHpWidth);
+
+            int drawX = (int)(position.x - camera.getX() + offsetX);
+            int drawY = (int)(position.y - camera.getY() + offsetY);
+
             g2.setColor(Color.WHITE);
-            g2.fillRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, maxHpWidth, 5);
+            g2.fillRect(drawX, drawY, maxHpWidth, 5);
+
             g2.setColor(Color.RED);
-            g2.fillRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, currentHpWidth, 5);
+            g2.fillRect(drawX, drawY, currentHpWidth, 5);
+
             g2.setColor(Color.BLACK);
-            g2.drawRect(worldX - camera.getX() + offsetX, worldY - camera.getY() + offsetY, maxHpWidth, 5);
-            if(counterReached(600)) drawHPBar = false;
+            g2.drawRect(drawX, drawY, maxHpWidth, 5);
+
+            if (counterReached(600)) drawHPBar = false;
         }
     }
 
+
     public void render(Graphics2D g2) {
-        int maxHpWidth = 30;
-        int currentHpWidth = (int) ((double) currentHP/maxHP * maxHpWidth);
-        g2.setColor(Color.RED);
-        g2.fillRect(worldX-camera.getX()+17, worldY - camera.getY() , currentHpWidth, 5);
-        g2.setColor(Color.BLACK);
-        g2.drawRect(worldX-camera.getX()+17, worldY - camera.getY() , maxHpWidth, 5);
+        super.render(g2);
     }
+
 }

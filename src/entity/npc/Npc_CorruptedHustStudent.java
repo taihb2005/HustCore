@@ -2,67 +2,98 @@ package entity.npc;
 
 import entity.Actable;
 import entity.Entity;
+import entity.mob.Direction;
 import graphics.Animation;
+import graphics.AssetPool;
 import graphics.Sprite;
-import main.GamePanel;
-import main.GameState;
 import map.GameMap;
+import util.GameTimer;
+import util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.List;
-import java.util.ArrayList;
 
 import static main.GamePanel.camera;
 
 public class Npc_CorruptedHustStudent extends Entity implements Actable {
     GameMap mp;
 
-    //NPC STATS
-    final int IDLE_TYPE1 = 1;
-    final int IDLE_TYPE2 = 2;
-    final int TALK = 3;
+    private static final HashMap<KeyPair<StudentState, Direction>, Sprite> studentSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<StudentState, Direction>, Sprite> studentEffectsSpritePool = new HashMap<>();
+    private static final HashMap<KeyPair<StudentState, Direction>, Animation> studentAnimations = new HashMap<>();
+    private static final HashMap<KeyPair<StudentState, Direction>, Animation> studentEffectsAnimations = new HashMap<>();
 
-    final int RIGHT = 0;
-    final int LEFT = 1;
+    public static void load(){
+        for(StudentState state: StudentState.values()){
+            int speed = switch (state){
+                case IDLE1 -> 5;
+                case IDLE2 -> 14;
+                case TALK -> 30;
+            };
 
-    private int PREVIOUS_ACTION;
-    private int CURRENT_ACTION;
-    private int CURRENT_DIRECTION;
+            boolean loop = switch (state){
+                case IDLE1, TALK -> true;
+                case IDLE2 -> false;
+            };
 
-    //NPC IMAGE
-    private final BufferedImage[][][] npc_corruptedStudent_sprite = new BufferedImage[4][][];
-    private final BufferedImage[][][] npc_corruptedStudentGlowing_sprite = new BufferedImage[4][][];
-    private BufferedImage[][][] currentSprite;
-    private final Animation npc_animator_corruptedStudent;
+            for(Direction direction: Direction.values()) {
+                int row = switch (direction){
+                    case RIGHT -> 0;
+                    case LEFT -> 1;
+                };
+                KeyPair<StudentState, Direction> key = new KeyPair<>(state, direction);
 
-    //NPC BOOLEAN
+                studentSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("npc_corruptedstudent_" + state.name().toLowerCase() + ".png")));
+                studentEffectsSpritePool.put(key,
+                        new Sprite(AssetPool.getImage("npc_corruptedstudent_glowing_" + state.name().toLowerCase() + ".png")));
+                studentAnimations.put(key,
+                        new Animation(studentSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+                studentEffectsAnimations.put(key,
+                        new Animation(studentEffectsSpritePool.get(key).getSpriteArrayRow(row), speed, loop));
+            }
+        }
+    }
+    private boolean isIdle1;
+    private boolean isIdle2;
+
+    private StudentState currentState;
+    private StudentState lastState;
+    private Direction currentDirection;
+    private Direction lastDirection;
+
+    private Animation currentEffectAnimation;
+
+    private GameTimer changeIdleTypeTimer;
+
+    private void setState(){
+        boolean change1 = false;
+        boolean change2 = false;
+        if(lastState != currentState){
+            lastState = currentState;
+            change1 = true;
+        }
+
+        if(lastDirection != currentDirection){
+            lastDirection = currentDirection;
+            change2 = true;
+        }
+
+        if(change1 || change2){
+            currentAnimation = studentAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+            if(isInteracting){
+                currentEffectAnimation = studentEffectsAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+            }
+        }
+    }
+
     private boolean talkOnce;
     private boolean isTalking;
-    private boolean isIdling;
-    private int CURRENT_FRAME;
 
     //NPC RNG
     private final int DESIRED_RNG = 50;
-    private final int randomNumerFrames = 500;
-    private int frameRandom = 0;
     private int rng = 0;
     private final Random generator = new Random();
-
-    public Npc_CorruptedHustStudent(GameMap mp)
-    {
-        super();
-        this.mp = mp;
-        super.width = 64;
-        super.height = 64;
-
-        npc_animator_corruptedStudent = new Animation();
-
-        getNpcImage();
-        setDefault();
-        setDialogue();
-    }
 
     public Npc_CorruptedHustStudent(GameMap mp ,String name ,String direction , StringBuilder[][] dialogue , int x , int y)
     {
@@ -72,110 +103,70 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         super.width = 64;
         super.height = 64;
 
-        npc_animator_corruptedStudent = new Animation();
-
-        getNpcImage();
-        setDefault();
-        setDialogue();
-        this.direction = direction;
-        talkOnce = false;
-        switch(direction){
-            case "left" : CURRENT_DIRECTION = LEFT; break;
-            case "right": CURRENT_DIRECTION = RIGHT ; break;
-            default: CURRENT_DIRECTION = RIGHT ; break;
-        }
         for(int i = 0 ; i < dialogue.length ;i++){
-            for(int j = 0 ; j < dialogue[i].length ; j++){
-                this.dialogues[i][j] = dialogue[i][j];
-            }
+            System.arraycopy(dialogue[i], 0, this.dialogues[i], 0, dialogue[i].length);
         }
-    }
 
-    private void getNpcImage()
-    {
-        npc_corruptedStudent_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_idle1.png" , width , height).getSpriteArray();
-        npc_corruptedStudent_sprite[IDLE_TYPE2] = new Sprite("/entity/npc/npc_corruptedstudent_idle2.png" , width , height).getSpriteArray();
-        npc_corruptedStudent_sprite[TALK]       = new Sprite("/entity/npc/npc_corruptedstudent_talk.png"  , width , height).getSpriteArray();
-
-        npc_corruptedStudentGlowing_sprite[IDLE_TYPE1] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle1.png" , width , height).getSpriteArray();
-        npc_corruptedStudentGlowing_sprite[IDLE_TYPE2] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_idle2.png" , width , height).getSpriteArray();
-        npc_corruptedStudentGlowing_sprite[TALK] = new Sprite("/entity/npc/npc_corruptedstudent_glowing_talk.png" , width , height).getSpriteArray();
-        System.gc();
+        setDefault();
     }
 
     private void setDefault()
     {
-        CURRENT_DIRECTION = RIGHT;
         direction = "right";
+        currentDirection = Direction.RIGHT;
+        lastDirection = Direction.RIGHT;
 
-        CURRENT_ACTION = IDLE_TYPE1;
-        PREVIOUS_ACTION = IDLE_TYPE1;
+        currentState = StudentState.IDLE1;
+        lastState = StudentState.IDLE1;
 
-        CURRENT_FRAME = 0;
-        currentSprite = npc_corruptedStudent_sprite;
-        npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE1][CURRENT_DIRECTION] , 5 );
+        isIdle1 = true;
+        currentAnimation = studentAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
+        currentEffectAnimation = studentEffectsAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
 
         solidArea1 = new Rectangle(20 , 40 , 30 , 14);
         solidArea2 = new Rectangle(27 , 54 , 18 , 7);
         interactionDetectionArea = new Rectangle(5 , 41 , 58 , 12);
-        super.setDefaultSolidArea();
+        setDefaultSolidArea();
 
+        talkOnce = false;
         dialogueIndex = 0;
         dialogueSet = -1;
     }
 
-    @Override
-    public void setDialogue() {
-
-    }
-
-    private void handleRNG(){
-        frameRandom++;
-        if(frameRandom >= randomNumerFrames)
-        {
-            rng = generator.nextInt(100) + 1;
-            frameRandom = 0;
-        } else rng = 0;
-
-        if(rng >= DESIRED_RNG)
-        {
-            isIdling = true;
-            npc_animator_corruptedStudent.playOnce();
+    private void setAction(){
+        if(changeIdleTypeTimer == null){
+            changeIdleTypeTimer = new GameTimer( ()-> {
+                rng = generator.nextInt(100) + 1;
+                isIdle2 = (rng >= DESIRED_RNG);
+                isIdle1 = !isIdle2;
+            },500);
+        } else {
+            changeIdleTypeTimer.update();
         }
     }
 
-    private void changeEffect()
-    {
-        if(GamePanel.gameState == GameState.PLAY_STATE ) isTalking = false;
-        if(isInteracting) currentSprite = npc_corruptedStudentGlowing_sprite; else
-            currentSprite = npc_corruptedStudent_sprite;
-    }
-
-    private void handleAnimationState() {
-        if (isIdling && npc_animator_corruptedStudent.isPlaying()) CURRENT_ACTION = IDLE_TYPE2;
-        else
-        if (isTalking) CURRENT_ACTION = TALK;
-        else{
-            CURRENT_ACTION = IDLE_TYPE1;
-            PREVIOUS_ACTION = IDLE_TYPE1;
-            npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE1][CURRENT_ACTION] , 5);
+    private void handleAnimation() {
+        if(isIdle1){
+            currentState = StudentState.IDLE1;
+        } else if(isIdle2){
+            currentState = StudentState.IDLE2;
+        } else if(isTalking){
+            currentState = StudentState.TALK;
         }
 
-        if (PREVIOUS_ACTION != CURRENT_ACTION) {
-            PREVIOUS_ACTION = CURRENT_ACTION;
-            if (isIdling && !isTalking) npc_animator_corruptedStudent.setAnimationState(currentSprite[IDLE_TYPE2][CURRENT_DIRECTION], 14);
-            if (isTalking) npc_animator_corruptedStudent.setAnimationState(currentSprite[TALK][CURRENT_DIRECTION] , 30);
+        setState();
+
+        if(currentAnimation.isFinished() && isIdle2){
+            isIdle2 = false;
+            isIdle1 = true;
         }
-
-        if (!npc_animator_corruptedStudent.isPlaying()) isIdling = false;
-
     }
 
     private void changeDirection()
     {
         switch (direction){
-            case "left" : CURRENT_DIRECTION = LEFT; break;
-            case "right": CURRENT_DIRECTION = RIGHT; break;
+            case "left" : currentDirection = Direction.LEFT; break;
+            case "right": currentDirection = Direction.RIGHT; break;
         }
     }
 
@@ -208,7 +199,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
             dialogueIndex = 0;
             dialogueSet--;
         }
-        startDialogue(this , dialogueSet);
+        submitDialogue(this , dialogueSet);
     }
 
     @Override
@@ -222,21 +213,27 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     }
 
     @Override
-    public void update() throws NullPointerException {
-        changeEffect();
-        handleRNG();
+    public void update(){
+        setAction();
         changeDirection();
-        handleAnimationState();
-        npc_animator_corruptedStudent.update();
-        CURRENT_FRAME = npc_animator_corruptedStudent.getCurrentFrames();
+        handleAnimation();
+        currentAnimation.update();
+        if(isInteracting) currentEffectAnimation.update();
         isInteracting = false;
     }
 
     @Override
     public void render(Graphics2D g2) {
-        g2.drawImage(currentSprite[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX(), worldY - camera.getY(), null);
+        super.render(g2);
+        if(isInteracting){
+            currentEffectAnimation.render(g2, (int)position.x - camera.getX(), (int)position.y - camera.getY());
+        }
     }
 
     public boolean hasTalkYet(){return talkOnce;}
+
+    private enum StudentState{
+        IDLE1, IDLE2, TALK
+    }
 }
 
