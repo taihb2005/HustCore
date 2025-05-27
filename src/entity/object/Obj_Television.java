@@ -59,7 +59,6 @@ public class Obj_Television extends Entity {
 
     private TelevisionState currentState;
     private TelevisionSize size;
-    private Animation currentAnimation;
 
     public Obj_Television(String state , String size , int initialFrame , int id, int x , int y) throws Exception{
         super(x , y);
@@ -96,7 +95,7 @@ public class Obj_Television extends Entity {
 
     @Override
     public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
     }
 
     public void dispose(){

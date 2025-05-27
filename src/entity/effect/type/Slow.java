@@ -10,11 +10,20 @@ public class Slow extends Effect {
         setEffectDuration(duration);
         id = 1;
         name = "Slow";
+        isNegative = true;
         icon = AssetPool.getImage("slow.png");
     }
 
     public void affect(){
         if(!player.effectManager.containsKey("Speed Boost")) {
+            player.effect.removeIf(e -> {
+                if (e instanceof Speed) {
+                    e.remove();
+                    player.effectManager.remove(e.name);
+                    return true;
+                }
+                return false;
+            });
             player.speed = player.lastSpeed / 2;
         }
     }

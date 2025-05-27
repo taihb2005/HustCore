@@ -13,18 +13,6 @@ public class Obj_Chair extends Entity {
     private final BufferedImage obj_chair;
     public int type;
 
-    public Obj_Chair(String direction , int type , int x , int y)
-    {
-        super(x , y);
-        name = "Chair";
-        super.width = 64;
-        super.height = 64;
-
-        obj_chair = AssetPool.getImage("chair_" + direction + "id_" + type + ".png");
-
-        setDefault();
-    }
-
     public Obj_Chair(String direction , int type , String idName, int x , int y)
     {
         super(x , y);
@@ -50,7 +38,7 @@ public class Obj_Chair extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        g2.drawImage(obj_chair , worldX - camera.getX() , worldY - camera.getY() , width , height ,  null);
+    public void render(Graphics2D g2){
+        g2.drawImage(obj_chair , (int)position.x - camera.getX() , (int)position.y - camera.getY() , width , height ,  null);
     }
 }

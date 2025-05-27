@@ -7,6 +7,7 @@ import entity.Entity;
 import entity.effect.Effect;
 import entity.effect.type.Blind;
 import entity.effect.type.Slow;
+import entity.effect.type.Speed;
 import entity.effect.type.Strength;
 import entity.items.Item_Battery;
 import entity.items.Item_Kit;
@@ -67,56 +68,42 @@ public class AssetSetter {
             for (GameObject obj : inactiveObjects) {
                 int X = obj.getPosition().getX();
                 int Y = obj.getPosition().getY();
-                Entity entity = null;
-                switch (obj.getObject()) {
-                    case "Obj_Tank":
-                        entity = new Obj_Tank(obj.getState(),
-                                obj.getType(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_Television":
-                        entity = new Obj_Television(
-                                obj.getState(),
-                                obj.getSize(),
-                                obj.getFrame(),
-                                obj.getType(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_Chair":
-                        entity = new Obj_Chair(obj.getDirection(),
-                                obj.getType(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_PasswordAuth":
-                        entity = new Obj_PasswordAuth(
-                                obj.getState(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_Bin":
-                        entity = new Obj_Bin(
-                                obj.getType(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_Computer":
-                        entity = new Obj_Computer(
-                                obj.getState(),
-                                obj.getDirection(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                    case "Obj_Vault":
-                        entity = new Obj_Vault(
-                                obj.getState(),
-                                obj.getType(),
-                                obj.getName(),
-                                X, Y);
-                        break;
-                }
+                Entity entity = switch (obj.getObject()) {
+                    case "Obj_Tank" -> new Obj_Tank(obj.getState(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Television" -> new Obj_Television(
+                            obj.getState(),
+                            obj.getSize(),
+                            obj.getFrame(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Chair" -> new Obj_Chair(obj.getDirection(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_PasswordAuth" -> new Obj_PasswordAuth(
+                            obj.getState(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Bin" -> new Obj_Bin(
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Computer" -> new Obj_Computer(
+                            obj.getState(),
+                            obj.getDirection(),
+                            obj.getName(),
+                            X, Y);
+                    case "Obj_Vault" -> new Obj_Vault(
+                            obj.getState(),
+                            obj.getType(),
+                            obj.getName(),
+                            X, Y);
+                    default -> null;
+                };
                 mp.addObject(entity, mp.inactiveObj);
                 lvl.entityManager.add(entity.idName, entity);
             }
@@ -254,11 +241,16 @@ public class AssetSetter {
                             break;
                         case "Mon_EffectDealer":
                             Effect effect = null;
+                            int W = enemy.getSizeWidth();
+                            int H = enemy.getSizeHeight();
                             String effectType = enemy.getEffect().getEffectType();
                             int duration = enemy.getEffect().getDuration();
                             switch (effectType) {
                                 case "Slow":
                                     effect = new Slow(mp.player, duration);
+                                    break;
+                                case "SpeedBoost":
+                                    effect = new Speed(mp.player, duration);
                                     break;
                                 case "Strength":
                                     effect = new Strength(mp.player, duration);
@@ -267,7 +259,7 @@ public class AssetSetter {
                                     effect = new Blind(mp.player, duration);
                                     break;
                             }
-                            mon = new Mon_EffectDealer(mp, effect, enemy.getName(), X, Y);
+                            mon = new Mon_EffectDealer(mp, effect, enemy.getName(), X, Y, W, H);
                             roomTask.addEnemy(mon);
                             break;
                         case "Mon_Boss":

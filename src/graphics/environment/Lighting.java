@@ -68,8 +68,8 @@ public class Lighting {
             else if (fadeOut) blindFadeOut();
         }else if(spotLightIn) startSpotLight();
         else if(spotLightOut) endSpotLight();
-        screenX = mp.player.worldX - camera.getX() + 32;
-        screenY = mp.player.worldY - camera.getY() + 32;
+        screenX = (int)mp.player.position.x - camera.getX() + 32;
+        screenY = (int)mp.player.position.y - camera.getY() + 32;
     }
 
     public void draw(Graphics2D g2) {

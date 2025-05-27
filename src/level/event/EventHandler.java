@@ -21,8 +21,8 @@ public class EventHandler {
     public boolean triggerEvent(EventRectangle e){
         lvl.canChangeMap = false;
 
-        int newSolidAreaX1 = lvl.map.player.worldX + lvl.map.player.solidArea1.x;
-        int newSolidAreaY1 = lvl.map.player.worldY + lvl.map.player.solidArea1.y;
+        int newSolidAreaX1 = (int)lvl.map.player.position.x + lvl.map.player.solidArea1.x;
+        int newSolidAreaY1 = (int)lvl.map.player.position.y + lvl.map.player.solidArea1.y;
 
         Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , lvl.map.player.solidArea1.width , lvl.map.player.solidArea1.height);
         try {

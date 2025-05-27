@@ -10,6 +10,7 @@ public class Stun extends Effect {
         setEffectDuration(100);
         id = 3;
         name = "Stun";
+        isNegative = true;
         icon = AssetPool.getImage("stun.png");
     }
 

@@ -10,6 +10,7 @@ public class Strength extends Effect {
         setEffectDuration(duration);
         id = 4;
         name = "Strength";
+        isNegative = false;
         icon = AssetPool.getImage("strength.png");
     }
 

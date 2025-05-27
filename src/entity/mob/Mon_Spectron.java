@@ -9,6 +9,7 @@ import graphics.Sprite;
 import map.GameMap;
 import util.GameTimer;
 import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -57,7 +58,6 @@ public class Mon_Spectron extends Monster implements Actable {
     private SpectronState lastState;
     private Direction currentDirection;
     private Direction lastDirection;
-    private Animation currentAnimation;
 
     private GameTimer moveTimer;
     private GameTimer shootTimer;
@@ -244,17 +244,25 @@ public class Mon_Spectron extends Monster implements Actable {
     }
 
     public void attack() {
-        projectile.set(worldX , worldY , direction , true , this);
+        projectile.set(position, direction , true , this);
         mp.addObject(projectile , mp.projectiles);
     }
 
 
     public void move(){
         collisionOn = false;
-        if(up && isRunning && !isDying) newWorldY = worldY - speed;
-        if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        velocity = new Vector2D(0, 0);
+
+        if (up && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, -1));
+        if (down && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, 1));
+        if (left && isRunning && !isDying) velocity = velocity.add(new Vector2D(-1, 0));
+        if (right && isRunning && !isDying) velocity = velocity.add(new Vector2D(1, 0));
+
+        if (velocity.length() != 0) {
+            velocity = velocity.normalize().scale(speed);
+        }
+
+        newPosition = position.add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -262,11 +270,9 @@ public class Mon_Spectron extends Monster implements Actable {
 
         if(!collisionOn)
         {
-            worldX = newWorldX;
-            worldY = newWorldY;
+            position = newPosition.copy();
         }
-        newWorldX = worldX;
-        newWorldY = worldY;
+        newPosition = position.copy();
     }
 
 
@@ -285,8 +291,7 @@ public class Mon_Spectron extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
-        //g2.drawImage(mon_spectron[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
+        super.render(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
     }
 

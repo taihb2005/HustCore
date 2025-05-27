@@ -2,10 +2,12 @@ package entity;
 
 import ai.PathFinder;
 import entity.projectile.Projectile;
+import graphics.Animation;
 import level.LevelState;
 import main.KeyHandler;
 import map.GameMap;
 import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -21,11 +23,15 @@ public class Entity {
     public String name;
     public String idName = "";
     //POSITION
-    public int worldX, worldY;
-    public int newWorldX, newWorldY;
+    public Vector2D position;
+    public Vector2D newPosition;
+    public Vector2D velocity;
     public String direction;
     public int speed;
     public int lastSpeed;
+    //ANIMATION
+    protected Animation currentAnimation;
+    protected Animation lastAnimation;
     //BOOLEAN
     public boolean collisionOn = false;
     public boolean isInteracting = false;
@@ -77,13 +83,15 @@ public class Entity {
     public int dialogueSet = -1;
 
     public Entity() {
+        this.position = new Vector2D();
+        this.newPosition = new Vector2D();
+        this.velocity = new Vector2D();
     }
 
     public Entity(int x, int y) {
-        this.worldX = x;
-        this.worldY = y;
-        this.newWorldX = x;
-        this.newWorldY = y;
+        this.position = new Vector2D(x, y);
+        this.newPosition = new Vector2D(x, y);
+        this.velocity = new Vector2D();
     }
 
     public void setDefaultSolidArea() {
@@ -153,6 +161,8 @@ public class Entity {
     }
 
     public void searchPath(int goalCol, int goalRow) {
+        int worldX = (int)position.x;
+        int worldY = (int)position.y;
         int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
         int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
         pFinder.setNodes(startCol,startRow,goalCol,goalRow);
@@ -197,40 +207,32 @@ public class Entity {
                 else if (enTopY > nextY && enLeftX > nextX) {
                     // up or left
                     direction = "up";
-                    newWorldY -= speed;
                     checkCollision();
                     //System.out.println(collisionOn);
                     if (collisionOn) {
                         direction = "left";
                     }
-                    newWorldY += speed;
                 } else if (enTopY > nextY && enLeftX < nextX) {
                     // up or right
                     direction = "up";
-                    newWorldY -= speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "right";
                     }
-                    newWorldY += speed;
                 } else if (enTopY < nextY && enLeftX > nextX) {
                     // down or left
                     direction = "down";
-                    newWorldY += speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "left";
                     }
-                    newWorldY -= speed;
                 } else if (enTopY < nextY && enLeftX < nextX) {
                     // down or right
                     direction = "down";
-                    newWorldY += speed;
                     checkCollision();
                     if (collisionOn) {
                         direction = "right";
                     }
-                    newWorldY -= speed;
                 }
             }
         }
@@ -256,7 +258,9 @@ public class Entity {
 
     public void update(){};
 
-    public void render(Graphics2D g2){};
+    public void render(Graphics2D g2){
+        currentAnimation.render(g2, (int)position.x - camera.getX(), (int)position.y - camera.getY());
+    }
 
     public void dispose() {
         if (dialogues != null) {
@@ -265,6 +269,7 @@ public class Entity {
                     Arrays.fill(s, null);
                 }
             }
+            dialogues = null;
         }
 
         pFinder = null;

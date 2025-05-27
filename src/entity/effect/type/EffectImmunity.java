@@ -9,6 +9,7 @@ public class EffectImmunity extends Effect {
         setEffectDuration(duration);
         id = 5;
         name = "Effect Immunity";
+        isNegative = false;
     }
 
     public void affect(){

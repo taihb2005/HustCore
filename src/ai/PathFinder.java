@@ -182,8 +182,8 @@ public class PathFinder {
         for(int i = 0 ; i < list.length ; i++){
             if(list[i] != null ){
                 if(list[i].solidArea1 != null) {
-                    int worldCol = (list[i].worldX + list[i].solidArea1.x) / mp.childNodeSize;
-                    int worldRow = (list[i].worldY + list[i].solidArea1.y) / mp.childNodeSize;
+                    int worldCol = ((int)list[i].position.x + list[i].solidArea1.x) / mp.childNodeSize;
+                    int worldRow = ((int)list[i].position.y + list[i].solidArea1.y) / mp.childNodeSize;
                     int totalWidth = (list[i].solidArea1.x + list[i].solidArea1.width);
                     int totalHeight = (list[i].solidArea1.y + list[i].solidArea1.height);
                     int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;
@@ -196,8 +196,8 @@ public class PathFinder {
                     }
                 }
                 if(list[i].solidArea2 != null){
-                    int worldCol = (list[i].worldX + list[i].solidArea2.x) / mp.childNodeSize;
-                    int worldRow = (list[i].worldY + list[i].solidArea2.y) / mp.childNodeSize;
+                    int worldCol = ((int)list[i].position.x + list[i].solidArea1.x) / mp.childNodeSize;
+                    int worldRow = ((int)list[i].position.y + list[i].solidArea1.y) / mp.childNodeSize;
                     int totalWidth = (list[i].solidArea2.x + list[i].solidArea2.width);
                     int totalHeight = (list[i].solidArea2.y + list[i].solidArea2.height);
                     int xOffSet = (totalWidth % mp.childNodeSize == 0) ? totalWidth / mp.childNodeSize : totalWidth / mp.childNodeSize + 1;

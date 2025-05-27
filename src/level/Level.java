@@ -50,8 +50,8 @@ public class Level{
     };
 
     public boolean triggerEvent(EventRectangle e){
-        int newSolidAreaX1 = map.player.worldX + map.player.solidArea1.x;
-        int newSolidAreaY1 = map.player.worldY + map.player.solidArea1.y;
+        int newSolidAreaX1 = (int)map.player.position.x + map.player.solidArea1.x;
+        int newSolidAreaY1 = (int)map.player.position.y + map.player.solidArea1.y;
 
         Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , map.player.solidArea1.width , map.player.solidArea1.height);
         try {
@@ -113,6 +113,26 @@ public class Level{
         room.remainingEnemies = enemyIds.size();
         room.lastRemainingEnemies = enemyIds.size();
     }
+
+    protected void configureRoom(String roomName,
+                                List<String> deactivate,
+                                List<String> activate,
+                                EventRectangle zone1,
+                                EventRectangle zone2,
+                                List<String> enemyIds){
+        RoomTask room = rooms.get(roomName);
+        room.addDoorNeedDeactivate(deactivate);
+        room.addDoorNeedActivate(activate);
+        room.setTriggerZone(zone1);
+        room.setFinishZone(zone2);
+        for (String id : enemyIds) {
+            room.addTargetedEnemy(entityManager.get(id, Monster.class));
+        }
+
+        room.remainingEnemies = enemyIds.size();
+        room.lastRemainingEnemies = enemyIds.size();
+    }
+
 
     protected void configureRoom(String roomName,
                                  List<String> deactivate,

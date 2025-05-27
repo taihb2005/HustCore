@@ -27,7 +27,6 @@ public class Obj_Tank extends Entity {
         }
     }
     private TankState currentState;
-    private Animation currentAnimation;
     public Obj_Tank(String state , int id, int x , int y) throws Exception
     {
         super(x , y);
@@ -78,7 +77,7 @@ public class Obj_Tank extends Entity {
 
     @Override
     public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
     }
 
     private enum TankState{

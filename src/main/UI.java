@@ -756,7 +756,7 @@ public class UI {
         g2.setFont(joystix.deriveFont(Font.PLAIN, 20));
         g2.drawString("Nhấn Enter để xác nhận", x + 20, y + 150);
     }
-    public void handlePasswordPressed(){
+    private void handlePasswordPressed(){
         String charPressed = "";
         Level02 currentLevel02 = (Level02) currentLevel;
         if(enterPressed){

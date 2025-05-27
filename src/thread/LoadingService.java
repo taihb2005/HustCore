@@ -11,6 +11,7 @@ import entity.player.Player;
 import entity.projectile.*;
 import graphics.AssetPool;
 import level.LevelState;
+import level.progress.dev_test.DevTestLevel;
 import level.progress.level00.Level00;
 import level.progress.level01.Level01;
 import level.progress.level02.Level02;
@@ -115,18 +116,17 @@ public class LoadingService {
                 gameState = GameState.LOADING;
 
                 if (currentMap != null) {
-                    System.out.println("Map disposed!");
                     currentMap.dispose();
                     currentMap = null;
+                    System.out.println("Map disposed!");
                 }
 
                 if(currentLevel != null){
-                    System.out.println("Level disposed!");
                     currentLevel.dispose();
                     currentLevel = null;
+                    System.out.println("Level disposed!");
                 }
 
-                System.gc();
                 //currentLevel = new DevTestLevel();
                 switch(levelProgress){
                     case 0 : currentLevel = new Level00(); break;
@@ -138,7 +138,9 @@ public class LoadingService {
                 //currentLevel = new DevTestLevel();
                 currentMap = currentLevel.map;
                 previousLevelProgress = levelProgress;
+                System.out.println("Map restarted");
                 currentLevel.map.player.resetValue();;
+                System.out.println("Map restarted figh");
                 Thread.sleep(1000);
 
                 gameState = GameState.PLAY;

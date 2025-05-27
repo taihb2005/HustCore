@@ -12,6 +12,7 @@ public class Effect implements Affectable {
     protected Player player;
     protected int id;
     public String name;
+    protected boolean isNegative;
     protected int effectDuration;
     protected GameTimer effectCounter;
     public boolean effectFinished ;
@@ -28,10 +29,9 @@ public class Effect implements Affectable {
     };
     public void add() {
         setEffectDuration(effectDuration);
+
+        if (player.effectManager.containsKey("Effect Immunity") && isNegative) return;
         affect();
-
-        if (player.effectManager.containsKey("Effect Immunity")) return;
-
         int currentDuration = player.effectManager.getOrDefault(name, -1);
 
         if (currentDuration <= effectDuration) {
@@ -61,7 +61,7 @@ public class Effect implements Affectable {
     }
 
 
-    public Effect clone(){
+    public Effect clone() {
         return null;
     };
 }

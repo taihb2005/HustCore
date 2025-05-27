@@ -21,6 +21,12 @@ import static main.GamePanel.*;
 
 
 public class GameMap {
+    private static final int HORIZONTAL_RENDER_BUFFER = 3 * 64;
+    private static final int VERTICAL_RENDER_BUFFER = 2 * 64;
+
+    private static final int HORIZONTAL_UPDATE_BUFFER = 10 * 64;
+    private static final int VERTICAL_UPDATE_BUFFER = 10 * 64;
+
     public Player player;
     public Mon_Boss boss = null;
 
@@ -81,20 +87,20 @@ public class GameMap {
 
         Collections.sort(objList, (e1, e2) -> {
             int index;
-            index = Integer.compare(e1.worldY, e2.worldY);
+            index = Float.compare(e1.position.y, e2.position.y);
             return index;
         });
 
         mapLayer.get(0).render(g2);
         mapLayer.get(0).render(g2); //Base Layer
         mapLayer.get(1).render(g2);
-        for (Entity mapObject : objList)
+        for (Entity mapObject : new ArrayList<>(objList))
         {
-            if(mapObject != null && !mapObject.isCollected && isInView(mapObject)) mapObject.render(g2);
+            if(mapObject != null && !mapObject.isCollected && isInView(mapObject, HORIZONTAL_RENDER_BUFFER, VERTICAL_RENDER_BUFFER)) mapObject.render(g2);
         }
         for(Entity projectile : projectiles)
         {
-            if(projectile != null && isInView(projectile)) projectile.render(g2);
+            if(projectile != null && isInView(projectile, HORIZONTAL_RENDER_BUFFER, VERTICAL_RENDER_BUFFER)) projectile.render(g2);
         }
         objList.clear();
 
@@ -108,10 +114,10 @@ public class GameMap {
             int y = 20;
             int lineHeight = 20;
             g2.setFont(new Font("Arial", Font.PLAIN, 14));
-            g2.drawString("WorldX: " + player.worldX, x, y);
-            g2.drawString("WorldY: " + player.worldY, x, y + lineHeight);
-            g2.drawString("Row: " + (player.worldY + player.solidArea1.y) / 64, x, y + lineHeight * 2);
-            g2.drawString("Col: " + (player.worldX + player.solidArea1.x) / 64, x, y + lineHeight * 3);
+            g2.drawString("WorldX: " + player.position.x, x, y);
+            g2.drawString("WorldY: " + player.position.y, x, y + lineHeight);
+            g2.drawString("Row: " + (player.position.y + player.solidArea1.y) / 64, x, y + lineHeight * 2);
+            g2.drawString("Col: " + (player.position.x + player.solidArea1.x) / 64, x, y + lineHeight * 3);
         }
 
         //DEBUG HITBOX
@@ -123,32 +129,32 @@ public class GameMap {
             g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
             for (Entity e : objList) {
                 if (e != null) {
-                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                    g2.drawRect(e.solidAreaDefaultX1 + (int)e.position.x - camera.getX(), e.solidAreaDefaultY1 + (int)e.position.y - camera.getY(), e.solidArea1.width, e.solidArea1.height);
                     if (e.solidArea2 != null) {
-                        g2.drawRect(e.solidAreaDefaultX2 + e.worldX - camera.getX(), e.solidAreaDefaultY2 + e.worldY - camera.getY(), e.solidArea2.width, e.solidArea2.height);
+                        g2.drawRect(e.solidAreaDefaultX2 + (int)e.position.x - camera.getX(), e.solidAreaDefaultY2 + (int)e.position.y - camera.getY(), e.solidArea2.width, e.solidArea2.height);
                     }
                 }
             }
             for(Entity e : projectiles){
                 if(e != null){
-                    g2.drawRect(e.solidAreaDefaultX1 + e.worldX - camera.getX(), e.solidAreaDefaultY1 + e.worldY - camera.getY(), e.solidArea1.width, e.solidArea1.height);
+                    g2.drawRect(e.solidAreaDefaultX1 + (int)e.position.x - camera.getX(), e.solidAreaDefaultY1 + (int)e.position.y - camera.getY(), e.solidArea1.width, e.solidArea1.height);
                 }
             }
             g2.setColor(Color.RED);
             for(Entity e : objList){
                 if(e != null){
-                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + (int)e.position.x - camera.getX() , e.hitbox.y + (int)e.position.y - camera.getY() , e.hitbox.width , e.hitbox.height);
                 }
             }
             for(Entity e : projectiles){
                 if(e != null){
-                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + e.worldX - camera.getX() , e.hitbox.y + e.worldY - camera.getY() , e.hitbox.width , e.hitbox.height);
+                    if(e.hitbox != null) g2.drawRect(e.hitbox.x + (int)e.position.x - camera.getX() , e.hitbox.y + (int)e.position.y - camera.getY() , e.hitbox.width , e.hitbox.height);
                 }
             }
             g2.setColor(Color.GREEN);
             for(Entity e : enemy){
                 if(e != null && e.interactionDetectionArea != null){
-                    g2.drawRect(e.interactionDetectionArea.x + e.worldX - camera.getX() , e.interactionDetectionArea.y + e.worldY - camera.getY() , e.interactionDetectionArea.width , e.interactionDetectionArea.height);
+                    g2.drawRect(e.interactionDetectionArea.x + (int)e.position.x - camera.getX() , e.interactionDetectionArea.y + (int)e.position.y - camera.getY() , e.interactionDetectionArea.width , e.interactionDetectionArea.height);
                 }
             }
         }
@@ -158,14 +164,14 @@ public class GameMap {
     {
         //UPDATE ENTITY
         for(int i = 0 ; i < activeObj.length ; i++){
-            if(activeObj[i] != null){
+            if(activeObj[i] != null && isInView(activeObj[i], HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)){
                 if(activeObj[i].canbeDestroyed){
                     activeObj[i] = null;
                 }
             }
         }
         for(int i = 0 ; i < enemy.length ; i++){
-            if(enemy[i] != null){
+            if(enemy[i] != null && isInView(enemy[i], HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)){
                 if(enemy[i].canbeDestroyed) {
                     enemy[i] = null;
                 }
@@ -179,27 +185,26 @@ public class GameMap {
             }
         }
         //UPDATE ITEM
-        for(Entity entity : inactiveObj) if(entity != null) entity.update();
-        for(Entity entity : activeObj) if(entity != null) entity.update();
-        for(Entity entity : npc) if(entity != null) entity.update();
-        for(Entity entity : enemy) if(entity != null) entity.update();
+        for(Entity entity : inactiveObj) if(entity != null && isInView(entity, HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)) entity.update();
+        for(Entity entity : activeObj) if(entity != null && isInView(entity, HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)) entity.update();
+        for(Entity entity : npc) if(entity != null && isInView(entity, HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)) entity.update();
+        for(Entity entity : enemy) if(entity != null && isInView(entity, HORIZONTAL_UPDATE_BUFFER, VERTICAL_UPDATE_BUFFER)) entity.update();
         for(Entity entity : projectiles) if(entity != null) entity.update();
         player.update();
 
         environmentManager.update();
     }
 
-    public boolean isInView(Entity entity) {
-        int tileSize = 64;
-        int left = camera.getX() - tileSize;
-        int right = camera.getX() + windowWidth + tileSize;
-        int top = camera.getY() - tileSize;
-        int bottom = camera.getY() + windowHeight + tileSize;
+    public static boolean isInView(Entity entity, int horizontalBuffer, int verticalBuffer) {
+        int left = camera.getX() - horizontalBuffer;
+        int right = camera.getX() + windowWidth + tileSize + horizontalBuffer;
+        int top = camera.getY() - tileSize - verticalBuffer;
+        int bottom = camera.getY() + windowHeight + tileSize + verticalBuffer;
 
-        return (entity.worldX + entity.width > left &&
-                entity.worldX < right &&
-                entity.worldY + entity.height > top &&
-                entity.worldY < bottom);
+        return (entity.position.x + entity.width > left &&
+                entity.position.x < right &&
+                entity.position.y + entity.height > top &&
+                entity.position.y< bottom);
     }
 
     public void parseWallObject(TileLayer layer){
@@ -216,8 +221,8 @@ public class GameMap {
 
 
                     Obj_Wall wall = new Obj_Wall(layer.tileLayerData[i][j], layer.tileSetList.get(index).objects.get(tileID - 1));
-                    wall.worldX = layer.tileSetList.get(index).getTileWidth() * j;
-                    wall.worldY = layer.tileSetList.get(index).getTileHeight() * i;
+                    wall.position.x = layer.tileSetList.get(index).getTileWidth() * j;
+                    wall.position.y = layer.tileSetList.get(index).getTileHeight() * i;
                     addObject(wall, inactiveObj);
                 }
 //                inactiveObj[inactiveObjIndex] = wall;

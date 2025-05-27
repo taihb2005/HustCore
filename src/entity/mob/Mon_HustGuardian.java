@@ -8,6 +8,7 @@ import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
 import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -55,7 +56,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
     private GuardianState lastState;
     private Direction currentDirection;
     private Direction lastDirection;
-    private Animation currentAnimation;
 
     private void setState(){
         boolean change1 = false;
@@ -221,10 +221,10 @@ public class Mon_HustGuardian extends Monster implements Actable {
     }
 
     private void actionWhenGetAggro(){
-        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
-        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
-        int posCol = (worldX + solidArea1.x) / childNodeSize;
-        int posRow = (worldY + solidArea1.y) / childNodeSize;
+        int playerCol = ((int)mp.player.position.x + mp.player.solidArea1.x) / childNodeSize;
+        int playerRow = ((int)mp.player.position.y + mp.player.solidArea1.y) / childNodeSize;
+        int posCol = ((int)position.x + solidArea1.x) / childNodeSize;
+        int posRow = ((int)position.y + solidArea1.y) / childNodeSize;
 
         searchPath(playerCol , playerRow);
         decideToMove();
@@ -245,10 +245,18 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     public void move() {
         collisionOn = false;
-        if(up && isRunning && !isDying) newWorldY = worldY - speed;
-        if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        velocity = new Vector2D(0, 0);
+
+        if (up && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, -1));
+        if (down && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, 1));
+        if (left && isRunning && !isDying) velocity = velocity.add(new Vector2D(-1, 0));
+        if (right && isRunning && !isDying) velocity = velocity.add(new Vector2D(1, 0));
+
+        if (velocity.length() != 0) {
+            velocity = velocity.normalize().scale(speed);
+        }
+
+        newPosition = position.add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -256,10 +264,10 @@ public class Mon_HustGuardian extends Monster implements Actable {
         mp.cChecker.checkCollisionWithEntity(this , mp.enemy);
         mp.cChecker.checkCollisionPlayer(this);
         if(mp.cChecker.checkInteractPlayer(this)) isInteracting = true;
+
         if(!collisionOn)
         {
-            worldX = newWorldX;
-            worldY = newWorldY;
+            position = newPosition.copy();
         } else {
             if(!onPath){
                 if(checkForValidDirection()){
@@ -269,8 +277,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
                 }
             }
         }
-        newWorldX = worldX;
-        newWorldY = worldY;
+        newPosition = position.copy();
     }
 
     public void setDialogue() {
@@ -283,7 +290,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     public void attack() {
         if(!projectile.active &&shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile.set(worldX, worldY, direction, true, this);
+            projectile.set(position, direction, true, this);
             projectile.setHitbox();
             projectile.setSolidArea();
             mp.addObject(projectile, mp.projectiles);
@@ -310,9 +317,9 @@ public class Mon_HustGuardian extends Monster implements Actable {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
-        currentAnimation.render(g2, worldX- camera.getX(), worldY - camera.getY());
+        super.render(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-        if(isDetectPlayer) g2.drawImage(exclamation , worldX - camera.getX() + 54 , worldY - camera.getY() , null);
+        if(isDetectPlayer) g2.drawImage(exclamation , (int)position.x - camera.getX() + 54 , (int)position.y - camera.getY() , null);
     }
 
     public void dispose(){

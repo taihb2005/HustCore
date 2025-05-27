@@ -35,12 +35,11 @@ public class TileLayer {
 
 
     public void render(Graphics2D g2) {
-        //Gioi han tile can ve
-        int startCols = Math.max((mp.player.worldX - mp.player.screenX) / tileWidth - 10, 0);
-        int endCols = Math.min((mp.player.worldX + mp.player.screenX) / tileWidth + 10, numCols);
+        int startCols = Math.max((int)(mp.player.position.x - mp.player.screenX) / tileWidth - 10, 0);
+        int endCols = Math.min((int)(mp.player.position.x + mp.player.screenX) / tileWidth + 10, numCols);
 
-        int startRows = Math.max((mp.player.worldY - mp.player.screenY) / tileHeight - 8, 0);
-        int endRows = Math.min((mp.player.worldY + mp.player.screenY) / tileHeight + 8, numRows);
+        int startRows = (int) Math.max((mp.player.position.y - mp.player.screenY) / tileHeight - 8, 0);
+        int endRows = (int) Math.min((mp.player.position.y + mp.player.screenY) / tileHeight + 8, numRows);
         for(int i = startRows ; i < endRows ; i++)
         {
             for(int j = startCols; j < endCols ; j++)

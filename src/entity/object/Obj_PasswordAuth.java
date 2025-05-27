@@ -24,7 +24,6 @@ public class Obj_PasswordAuth extends Entity {
         }
     }
     private PasswordAuthState currentState;
-    private Animation currentAnimation;
 
     public Obj_PasswordAuth(String state , int x , int y){
         super(x , y);
@@ -54,8 +53,8 @@ public class Obj_PasswordAuth extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
-        currentAnimation.render(g2, worldX- camera.getX(), worldY - camera.getY());
+    public void render(Graphics2D g2){
+        super.render(g2);
     }
 
     private enum PasswordAuthState{

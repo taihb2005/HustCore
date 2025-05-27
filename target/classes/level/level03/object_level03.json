@@ -2,8 +2,8 @@
   "player": [
     {
       "position": {
-        "x": 880,
-        "y": 1690
+        "x": 926,
+        "y": 1894
       }
     }
   ],
@@ -21,7 +21,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 320,
@@ -33,7 +33,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 512,
@@ -94,7 +94,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 320,
@@ -106,7 +106,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 512,
@@ -118,7 +118,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 1472,
@@ -130,7 +130,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "on",
-      "type": 2,
+      "type": 1,
       "frame": 0,
       "position": {
         "x": 1664,
@@ -178,7 +178,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "off",
-      "type": 3,
+      "type": 2,
       "frame": 0,
       "position": {
         "x": 768,
@@ -190,7 +190,7 @@
       "object": "Obj_Television",
       "size": "small",
       "state": "off",
-      "type": 3,
+      "type": 2,
       "frame": 0,
       "position": {
         "x": 1088,
@@ -294,10 +294,48 @@
   ],
   "active": [
     {
+      "object": "Obj_Chest",
+      "name": "ChestA001",
+      "type": 1,
+      "position": {
+        "x": 224,
+        "y": 1408
+      },
+      "items": [
+        {
+          "name": "Item_Kit",
+          "quantity": 2
+        },
+        {
+          "name": "Item_Potion",
+          "quantity": 2
+        },
+        {
+          "name": "Item_StrengthGem",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "object": "Obj_Chest",
+      "name": "ChestA002",
+      "type": 1,
+      "position": {
+        "x": 64,
+        "y": 64
+      },
+      "items": [
+        {
+          "name": "Item_Kit",
+          "quantity": 1
+        }
+      ]
+    },
+    {
       "object": "Obj_Door",
       "name": "DoorA001",
       "size": "big",
-      "state": "active",
+      "state": "inactive",
       "position": {
         "x": 896,
         "y": 1408

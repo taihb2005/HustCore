@@ -9,6 +9,7 @@ import graphics.AssetPool;
 import graphics.Sprite;
 import map.GameMap;
 import util.KeyPair;
+import util.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +57,6 @@ public class Mon_Cyborgon extends Monster implements Actable {
     private CyborgonState lastState;
     private Direction currentDirection;
     private Direction lastDirection;
-    private Animation currentAnimation;
 
     private BufferedImage radiationImage;
     private int lastRenderedDiameter = -1;
@@ -223,8 +223,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
     }
 
     private void actionWhenGetAggro() {
-        int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
-        int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+        int playerCol = ((int)mp.player.position.x + mp.player.solidArea1.x) / childNodeSize;
+        int playerRow = ((int)mp.player.position.y + mp.player.solidArea1.y) / childNodeSize;
 
         searchPath(playerCol , playerRow);
         decideToMove();
@@ -266,10 +266,18 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
     public void move() {
         collisionOn = false;
-        if(up && isRunning && !isDying) newWorldY = worldY - speed;
-        if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        velocity = new Vector2D(0, 0);
+
+        if (up && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, -1));
+        if (down && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, 1));
+        if (left && isRunning && !isDying) velocity = velocity.add(new Vector2D(-1, 0));
+        if (right && isRunning && !isDying) velocity = velocity.add(new Vector2D(1, 0));
+
+        if (velocity.length() != 0) {
+            velocity = velocity.normalize().scale(speed);
+        }
+
+        newPosition = position.add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -279,8 +287,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
         if(!collisionOn)
         {
-            worldX = newWorldX;
-            worldY = newWorldY;
+            position = newPosition;
         } else {
             if(!onPath){
                 if(checkForValidDirection()){
@@ -290,9 +297,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
                 }
             }
         }
-
-        newWorldX = worldX;
-        newWorldY = worldY;
+        newPosition = position.copy();
     }
 
     public void setDialogue() {
@@ -301,7 +306,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
     public void attack() {
         if(!projectile.active &&shootAvailableCounter == SHOOT_INTERVAL) {
-            projectile.set(worldX, worldY, direction, true, this);
+            projectile.set(position, direction, true, this);
             projectile.setHitbox();
             projectile.setSolidArea();
             mp.addObject(projectile, mp.projectiles);
@@ -331,8 +336,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
         if (getAggro && radiationImage != null) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            int x = (worldX + width / 2 - diameter / 2) - camera.getX() - 6;
-            int y = (worldY + height / 2 - diameter / 2) - camera.getY() - 6;
+            int x = ((int)position.x + width / 2 - diameter / 2) - camera.getX() - 6;
+            int y = ((int)position.y + height / 2 - diameter / 2) - camera.getY() - 6;
             g2.drawImage(radiationImage, x, y, null);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             updateOpacity();
@@ -341,8 +346,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         if (isInvincible && !isDying) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         }
-
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
 
@@ -382,7 +386,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
             }
         }
 
-        if (Math.pow(worldX - mp.player.worldX, 2) + Math.pow(worldY - mp.player.worldY, 2) < diameter * diameter) {
+        if (Math.pow((int)position.x - mp.player.position.x, 2) + Math.pow((int)position.y - mp.player.position.y, 2) < diameter * diameter) {
             exposureTime++;
             if (exposureTime == 300) {
                 mp.player.currentHP = (int) (0.9 * mp.player.currentHP);

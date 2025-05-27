@@ -108,7 +108,6 @@ public class Obj_Door extends Entity{
     private DoorStatus initialStatus;
     private DoorStatus currentStatus;
     private DoorStatus lastStatus;
-    private Animation currentAnimation;
 
     private final BufferedImage effect;
 
@@ -223,9 +222,9 @@ public class Obj_Door extends Entity{
 
     @Override
     public void render(Graphics2D g2)  {
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
         if(isInteracting && (currentStatus == DoorStatus.INACTIVE || currentStatus == DoorStatus.ACTIVE))
-            g2.drawImage(effect, worldX - camera.getX(), worldY - camera.getY(), null);
+            g2.drawImage(effect, (int)position.x - camera.getX(), (int)position.y - camera.getY(), null);
     }
 
     private enum DoorSize{

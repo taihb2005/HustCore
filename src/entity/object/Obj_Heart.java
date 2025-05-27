@@ -29,7 +29,6 @@ public class Obj_Heart extends Entity {
 
     private HeartState currentState;
     private HeartState lastState;
-    private Animation currentAnimation;
 
     private void setState(){
         if(lastState != currentState){
@@ -101,7 +100,7 @@ public class Obj_Heart extends Entity {
 
     @Override
     public void render(Graphics2D g2){// Chỉ vẽ khi chưa thu thập
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
     }
 
     private enum HeartState{

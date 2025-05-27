@@ -1,18 +1,7 @@
 {
   "room": [
     [
-      {
-        "enemy": "Mon_EffectDealer",
-        "name": "EffectDealer001",
-        "effect": {
-          "type": "SpeedBoost",
-          "duration": 1
-        },
-        "position": {
-          "x": 0,
-          "y": 0
-        }
-      }
+
     ]
   ]
 }

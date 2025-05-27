@@ -13,6 +13,7 @@ import graphics.Sprite;
 import map.GameMap;
 import util.GameTimer;
 import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -63,7 +64,6 @@ public class Mon_Boss extends Monster implements Actable {
     private BossState lastState;
     private Direction currentDirection;
     private Direction lastDirection;
-    private Animation currentAnimation;
 
     private GameTimer findPlayerTimer;
     private GameTimer skillCooldownTimer;
@@ -86,7 +86,6 @@ public class Mon_Boss extends Monster implements Actable {
         if(change1 || change2){
             currentAnimation.reset();
             currentAnimation = bossAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
-            System.out.println("Animation changed");
         }
     }
 
@@ -94,11 +93,11 @@ public class Mon_Boss extends Monster implements Actable {
         if (currentSkill == BossSkill.NONE && skillCooldownTimer == null) {
             skillCooldownTimer = new GameTimer(() -> {
                 shootAvailableCounter++;
-                int rand = new Random().nextInt(4);
+                int rand = new Random().nextInt(9);
                 currentSkill = switch (rand) {
-                    case 0 -> BossSkill.HOMING_BULLET;
-                    case 1 -> BossSkill.DEADLY_RING;
-                    case 2 -> BossSkill.FLAME_THROWER;
+                    case 0,3,6 -> BossSkill.HOMING_BULLET;
+                    case 1,5 -> BossSkill.DEADLY_RING;
+                    case 2,4 -> BossSkill.FLAME_THROWER;
                     default -> BossSkill.NONE;
                 };
                 skillCooldownTimer = null;
@@ -132,19 +131,9 @@ public class Mon_Boss extends Monster implements Actable {
         }
     }
 
-
-    private int shootTimer = 0;
-
-    private boolean nearlyDie = false;
-    private boolean fullyDie = false;
-
-    private Projectile projectile1, projectile2, projectile3;
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
-    private boolean shoot3;
-    // Tổng số cột flame
-    private boolean shooting = false;      // Trạng thái đang bắn flame
     private BufferedImage hpFrame;
 
     public Mon_Boss(GameMap mp , int x , int y){
@@ -183,9 +172,6 @@ public class Mon_Boss extends Monster implements Actable {
         speed = 1;
         level = 1;
         defense = 10;
-        projectile1 = new Proj_TrackingPlasma(mp);
-        projectile2 = new Proj_ExplosivePlasma(mp);
-        projectile3 = new Proj_Flame(mp);
         proj = new ArrayList<>();
         effectDealOnTouch = new EffectNone(mp.player);
         effectDealByProjectile = new EffectNone(mp.player);
@@ -195,9 +181,9 @@ public class Mon_Boss extends Monster implements Actable {
 
         setDialogue();
 
-        direction = "right";
-        currentDirection = Direction.RIGHT;
-        lastDirection = Direction.RIGHT;
+        direction = "left";
+        currentDirection = Direction.LEFT;
+        lastDirection = Direction.LEFT;
 
         currentState = BossState.IDLE;
         lastState = BossState.IDLE;
@@ -230,13 +216,8 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     private void updateHP(){
-        if (currentHP <= 0 && fullyDie) {
-            this.submitDialogue(this, 1);
-            fullyDie = true;
-        }
-        else if (2*currentHP < maxHP && !nearlyDie) {
-            this.submitDialogue(this, 0);
-            isStage2 = true;
+        if(currentHP <= 0){
+            isDying = true;
         }
     }
 
@@ -279,10 +260,18 @@ public class Mon_Boss extends Monster implements Actable {
     @Override
     public void move() {
         collisionOn = false;
-        if(up && isRunning && !isDying) newWorldY = worldY - speed;
-        else if(down && isRunning && !isDying) newWorldY = worldY + speed;
-        else if(left && isRunning && !isDying) newWorldX = worldX - speed;
-        else if(right && isRunning && !isDying) newWorldX = worldX + speed;
+        velocity = new Vector2D(0, 0);
+
+        if (up && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, -1));
+        if (down && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, 1));
+        if (left && isRunning && !isDying) velocity = velocity.add(new Vector2D(-1, 0));
+        if (right && isRunning && !isDying) velocity = velocity.add(new Vector2D(1, 0));
+
+        if (velocity.length() != 0) {
+            velocity = velocity.normalize().scale(speed);
+        }
+
+        newPosition = position.add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -293,15 +282,11 @@ public class Mon_Boss extends Monster implements Actable {
 
         if(!collisionOn)
         {
-            worldX = newWorldX;
-            worldY = newWorldY;
+            position = newPosition;
         }
-
-        newWorldX = worldX;
-        newWorldY = worldY;
+        newPosition = position.copy();
     }
 
-    @Override
     public void setDialogue() {
         this.dialogues[0][0] = new StringBuilder("Ngươi cũng mạnh phết đấy.");
         this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ\ngiúp của thuộc hạ rồi.");
@@ -319,13 +304,17 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     public void searchPathForBoss(int goalCol, int goalRow) {
-        executor.execute( () -> {
-            int startCol = (worldX + solidArea1.x) / GameMap.childNodeSize;
-            int startRow = (worldY + solidArea1.y) / GameMap.childNodeSize;
+        executor.execute(() -> {
+            float worldX = position.x;
+            float worldY = position.y;
+
+            int startCol = (int)((worldX + solidArea1.x) / GameMap.childNodeSize);
+            int startRow = (int)((worldY + solidArea1.y) / GameMap.childNodeSize);
+
             synchronized (bossFinder) {
                 bossFinder.setNodes(startCol, startRow, goalCol, goalRow);
+
                 if (bossFinder.search()) {
-                    //Next WorldX and WorldY
                     if (bossFinder.pathList.isEmpty()) {
                         onPath = false;
                         up = down = left = right = false;
@@ -333,74 +322,59 @@ public class Mon_Boss extends Monster implements Actable {
                         int nextX = bossFinder.pathList.get(0).col * GameMap.childNodeSize;
                         int nextY = bossFinder.pathList.get(0).row * GameMap.childNodeSize;
 
+                        float enLeftX = worldX + solidArea1.x;
+                        float enRightX = worldX + solidArea1.x + solidArea1.width;
+                        float enTopY = worldY + solidArea1.y;
+                        float enBottomY = worldY + solidArea1.y + solidArea1.height;
 
-                        //Entity's solidArea position
-                        int enLeftX = worldX + solidArea1.x;
-                        int enRightX = worldX + solidArea1.x + solidArea1.width;
-                        int enTopY = worldY + solidArea1.y;
-                        int enBottomY = worldY + solidArea1.y + solidArea1.height;
-
-                        // TOP PATH
                         if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
                             direction = "up";
-                        }
-                        // BOTTOM PATH
-                        else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
+                        } else if (enTopY < nextY && enLeftX >= nextX && enRightX < nextX + GameMap.childNodeSize) {
                             direction = "down";
-                        }
-                        // RIGHT - LEFT PATH
-                        else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
-                            //either left or right
-                            // LEFT PATH
+                        } else if (enTopY >= nextY && enBottomY < nextY + GameMap.childNodeSize) {
                             if (enLeftX > nextX) {
                                 direction = "left";
                             }
-                            // RIGHT PATH
                             if (enLeftX < nextX) {
                                 direction = "right";
                             }
-                        }
-                        //OTHER EXCEPTIONS
-                        else if (enTopY > nextY && enLeftX > nextX) {
+                        } else if (enTopY > nextY && enLeftX > nextX) {
                             // up or left
                             direction = "up";
-                            newWorldY -= speed;
+                            newPosition.y -= speed;
                             checkCollision();
-                            //System.out.println(collisionOn);
                             if (collisionOn) {
                                 direction = "left";
                             }
-                            newWorldY += speed;
+                            newPosition.y += speed;
                         } else if (enTopY > nextY && enLeftX < nextX) {
                             // up or right
                             direction = "up";
-                            newWorldY -= speed;
+                            newPosition.y -= speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "right";
                             }
-                            newWorldY += speed;
+                            newPosition.y += speed;
                         } else if (enTopY < nextY && enLeftX > nextX) {
                             // down or left
                             direction = "down";
-                            newWorldY += speed;
+                            newPosition.y += speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "left";
                             }
-                            newWorldY -= speed;
+                            newPosition.y -= speed;
                         } else if (enTopY < nextY && enLeftX < nextX) {
                             // down or right
                             direction = "down";
-                            newWorldY += speed;
+                            newPosition.y += speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "right";
                             }
-                            newWorldY -= speed;
+                            newPosition.y -= speed;
                         }
-
-                        System.out.println(direction);
                     }
                 } else {
                     getAggro = false;
@@ -412,11 +386,12 @@ public class Mon_Boss extends Monster implements Actable {
         });
     }
 
+
     private void skillNone(){
         if(findPlayerTimer == null){
             findPlayerTimer = new GameTimer( () -> {
-                int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
-                int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+                int playerCol = ((int)mp.player.position.x + mp.player.solidArea1.x) / childNodeSize;
+                int playerRow = ((int)mp.player.position.y + mp.player.solidArea1.y) / childNodeSize;
                 searchPathForBoss(playerCol, playerRow);
                 decideToMove();
                 isRunning = true;
@@ -428,14 +403,14 @@ public class Mon_Boss extends Monster implements Actable {
         isShooting1 = !isDying;
         isRunning = false;
         Projectile tracking_plasma = new Proj_TrackingPlasma(mp);
-        tracking_plasma.set(worldX+25, worldY+12, direction, true, this);
+        tracking_plasma.set(position.x+25, position.y+12, direction, true, this);
         tracking_plasma.setHitbox();
         tracking_plasma.setSolidArea();
         mp.addObject(tracking_plasma, mp.projectiles);
     }
     public void deadlyRing() {
         Proj_ExplosivePlasma deadlyRing = new Proj_ExplosivePlasma(mp);
-        deadlyRing.set(worldX+78, worldY+60, direction, true, this);
+        deadlyRing.set(position.x+78, position.y+60, direction, true, this);
         deadlyRing.setHitbox();
         deadlyRing.setSolidArea();
         mp.addObject(deadlyRing, mp.projectiles);
@@ -444,7 +419,7 @@ public class Mon_Boss extends Monster implements Actable {
         isRunning = false;
         for (int j = 1; j <= 5; j++) {
             Projectile newFlame = new Proj_Flame(mp);
-            newFlame.set(worldX + 50 * isLeft* currentColumn+50, worldY + 50 * (j-1) - 41, direction, true, this);
+            newFlame.set(position.x+50 * isLeft* currentColumn+50, position.y + 50 * (j-1) - 41, direction, true, this);
             newFlame.setHitbox();
             newFlame.setSolidArea();
             mp.addObject(newFlame, mp.projectiles);
@@ -458,14 +433,25 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     public void actionWhileShootingDeadlyRing() {
-
         isShooting2 = true;
-        if (Math.abs(worldX-mp.player.worldX) > Math.abs(worldY-mp.player.worldY)) {
-            if(worldX < mp.player.worldX)  direction = "right";
-            else if(worldX > mp.player.worldX) direction = "left";
+
+        float dx = Math.abs(position.x - mp.player.position.x);
+        float dy = Math.abs(position.y - mp.player.position.y);
+
+        if (dx > dy) {
+            if (position.x < mp.player.position.x) {
+                direction = "right";
+            } else if (position.x > mp.player.position.x) {
+                direction = "left";
+            }
+        } else {
+            if (position.y < mp.player.position.y) {
+                direction = "down";
+            } else {
+                direction = "up";
+            }
         }
-         else if(worldY < mp.player.worldY) direction = "down"; else
-            direction = "up";
+
         deadlyRing();
         currentSkill = BossSkill.NONE;
         isRunning = !isShooting2 && !isDying;
@@ -486,6 +472,10 @@ public class Mon_Boss extends Monster implements Actable {
         }
     }
 
+    public boolean checkHalfHealth(){
+        return (float) currentHP / maxHP < 0.5;
+    }
+
     @Override
     public void update(){
         setAction();
@@ -503,9 +493,13 @@ public class Mon_Boss extends Monster implements Actable {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         }
 
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
 
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
+
+    public void nextStage(){
+        currentStage = Stage.STAGE2;
     }
 
     public void setPathFinder(PathFinder2 finder){

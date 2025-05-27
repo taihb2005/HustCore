@@ -20,6 +20,7 @@ public class RoomTask {
 
     private Entity eventMaster;
     private EventRectangle triggerZone;
+    private EventRectangle finishZone;
 
     private final ArrayList<Monster> enemy = new ArrayList<>();
     private final ArrayList<Monster> targetedEnemy = new ArrayList<>();
@@ -101,6 +102,14 @@ public class RoomTask {
         return triggerZone;
     }
 
+    public void setFinishZone(EventRectangle finishZone){
+        this.finishZone = finishZone;
+    }
+
+    public EventRectangle getFinishZone(){
+        return finishZone;
+    }
+
     public void createTaskBoard(StringBuilder task){
         eventMaster.dialogues[0][0] = task;
     }
@@ -153,10 +162,6 @@ public class RoomTask {
             mon.dispose();
         }
         targetedEnemy.clear();
-
-        for (Entity entity : targetedEntity) {
-            entity = null;
-        }
         targetedEntity.clear();
 
         doorDeactivate.clear();

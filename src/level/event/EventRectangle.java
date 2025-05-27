@@ -27,16 +27,18 @@ public class EventRectangle extends Rectangle {
 
     public boolean isTriggered(Entity byEntity){
         try{
-        int newSolidAreaX1 = byEntity.worldX + byEntity.solidArea1.x;
-        int newSolidAreaY1 = byEntity.worldY + byEntity.solidArea1.y;
+        int newSolidAreaX1 = (int)byEntity.position.x+ byEntity.solidArea1.x;
+        int newSolidAreaY1 = (int)byEntity.position.y + byEntity.solidArea1.y;
 
         Rectangle tmp1 = new Rectangle(newSolidAreaX1 , newSolidAreaY1 , byEntity.solidArea1.width , byEntity.solidArea1.height);
 
             if (tmp1.intersects(this)) {
+                System.out.println("Event triggered");
                 if (oneTimeOnlyEvent) eventFinished = true;
                 return true;
             }
-        } catch(NullPointerException exception){
+        } catch(Exception e){
+            e.printStackTrace();
             return false;
         }
         return false;

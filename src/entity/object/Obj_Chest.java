@@ -30,7 +30,6 @@ public class Obj_Chest extends Entity implements Actable {
         }
     }
 
-    private Animation currentAnimation;
     private void setState(){
         if(currentState != lastState){
             lastState = currentState;
@@ -133,7 +132,7 @@ public class Obj_Chest extends Entity implements Actable {
 
     @Override
     public void render(Graphics2D g2){
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
     }
 
     @Override

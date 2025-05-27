@@ -10,5 +10,10 @@ public class EffectNone extends Effect {
         super(player);
         id = 0;
         name = "Effect None";
+        isNegative = false;
+    }
+    
+    public Effect clone(){
+        return this;
     }
 }

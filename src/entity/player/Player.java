@@ -17,6 +17,7 @@ import main.KeyHandler;
 import map.GameMap;
 import graphics.Animation;
 import util.KeyPair;
+import util.Vector2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class Player extends Entity {
     private Direction currentDirection;
     private Direction lastDirection;
 
-    private Animation currentAnimation;
+    //private Animation currentAnimation;
     private void setState(){
         boolean change1 = false;
         boolean change2 = false;
@@ -107,6 +108,7 @@ public class Player extends Entity {
 
     private boolean isRunning;
     private boolean isShooting;
+    private boolean confused;
     public boolean isDying = false;
 
     public boolean attackCanceled;
@@ -142,7 +144,7 @@ public class Player extends Entity {
 
     public void setDefaultValue()
     {
-        speed = 3;
+        speed = 2;
         lastSpeed = speed;
 
         projectileName = "Basic Projectile";
@@ -152,6 +154,7 @@ public class Player extends Entity {
         attackCanceled = false;
         up = down = left = right = false;
         direction = "right";
+        confused = false;
 
         currentState = PlayerState.IDLE;
         lastState = PlayerState.IDLE;
@@ -165,7 +168,7 @@ public class Player extends Entity {
     }
 
     public void storeValue(){
-        sManager.setPos(worldX , worldY);
+        sManager.setPos(position);
         sManager.setSavedHP(maxHP);
         sManager.setSavedMana(maxMana);
         sManager.setLevel(level);
@@ -179,9 +182,8 @@ public class Player extends Entity {
         effect.clear();
         level = sManager.getSavedLevel();
         exp = sManager.getSavedExp();
-        worldX = sManager.getWorldX();
-        worldY = sManager.getWorldY();
-        newWorldX = worldX; newWorldY = worldY;
+        position = sManager.getPosition();
+        newPosition = sManager.getPosition();
         sManager.getSavedInventory(inventory);
         set();
     }
@@ -190,8 +192,8 @@ public class Player extends Entity {
         searchPath(goalCol, goalRow);
         decideToMove();
 
-        int currentCol = (worldX + solidArea1.x) / childNodeSize;
-        int currentRow = (worldY + solidArea1.y) / childNodeSize;
+        int currentCol = ((int)position.x + solidArea1.x) / childNodeSize;
+        int currentRow = ((int)position.y + solidArea1.y) / childNodeSize;
 
         if(currentRow == goalRow && currentCol == goalCol){
             isAutoMoving = false;
@@ -274,10 +276,17 @@ public class Player extends Entity {
     }
 
     private void switchDirection(){
-        if(left) direction = "left";
-        else if(right) direction = "right";
-        else if(up) direction = "up";
-        else if(down) direction = "down";
+        if(!confused) {
+            if (left) direction = "left";
+            else if (right) direction = "right";
+            else if (up) direction = "up";
+            else if (down) direction = "down";
+        } else {
+            if (left) direction = "right";
+            else if (right) direction = "left";
+            else if (up) direction = "down";
+            else if (down) direction = "up";
+        }
     }
 
     private void handlePosition() {
@@ -286,43 +295,35 @@ public class Player extends Entity {
         interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
-        if (up && isRunning && !isShooting) {
-            if(right){newWorldX += speed / 2; newWorldY -= speed / 2;} else
-            if(left){newWorldX -= speed / 2 ; newWorldY -= speed / 2;} else
-                if(!down) newWorldY -= speed;
+
+        velocity = new Vector2D(0, 0);
+
+        if (up) velocity = velocity.add(new Vector2D(0, -1));
+        if (down) velocity = velocity.add(new Vector2D(0, 1));
+        if (left) velocity = velocity.add(new Vector2D(-1, 0));
+        if (right) velocity = velocity.add(new Vector2D(1, 0));
+
+        if(confused) velocity = velocity.scale(-1);
+
+        if (velocity.length() != 0) {
+            velocity = velocity.normalize().scale(speed);
         }
-        if (down && isRunning && !isShooting) {
-            if(right){newWorldX += speed / 2; newWorldY += speed / 2;} else
-            if(left){newWorldX -= speed / 2 ; newWorldY += speed / 2;} else
-            if(!up) newWorldY += speed;
-        }
-        if (left && isRunning && !isShooting) {
-            if(up){newWorldX -= speed / 2; newWorldY -= speed / 2;} else
-            if(down){newWorldX -= speed / 2 ; newWorldY += speed / 2;} else
-                if(!right) newWorldX -= speed;
-        }
-        if (right && isRunning && !isShooting) {
-            if(up){newWorldX += speed / 2; newWorldY -= speed / 2;} else
-            if(down){newWorldX += speed / 2 ; newWorldY += speed / 2;} else
-            if(!left) newWorldX += speed;
-        }
+
+        newPosition = position.add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.npc);
         mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
 
-        if(!collisionOn)
-        {
-            worldX = newWorldX;
-            worldY = newWorldY;
+        if(!collisionOn) {
+            position = newPosition.copy();
         }
-        newWorldX = worldX;
-        newWorldY = worldY;
+        newPosition = position.copy();
 
         if(isShooting && !attackCanceled){
-            camera.cameraShake(worldX , worldY);
-        } else camera.centerOn(worldX , worldY);
+            camera.cameraShake(position);
+        } else camera.centerOn(position);
     }
 
     private void handleStatus(){
@@ -364,7 +365,7 @@ public class Player extends Entity {
         checkForMana();
         if(!projectile.active && !isInteracting && shootAvailableCounter == SHOOT_INTERVAL && hasResource()){
             playSE(2);
-            projectile.set(worldX , worldY , direction , true , this);
+            projectile.set(position, direction, true, this);
             projectile.setHitbox();
             projectile.setSolidArea();
             currentMana -= projectile.manaCost;
@@ -472,6 +473,10 @@ public class Player extends Entity {
         setMaxMana();
     }
 
+    public void kill(){
+        currentHP = 0;
+    }
+
     private void setDamage(){
         strength = 10;
         lastStrength = strength;
@@ -531,21 +536,28 @@ public class Player extends Entity {
         if(isInvincible && !isDying){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.6f));
         }
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
-        int positionY = worldY - camera.getY() + 20;
+        int positionY = (int)position.y - camera.getY() + 20;
         if(!effect.isEmpty()){
             for(int i = 0 ; i < effect.size() ; i++){
-                int positionX = worldX - camera.getX() + 35 + 20 * i;
+                int positionX = (int)position.x - camera.getX() + 35 + 20 * i;
                 g2.drawImage(effect.get(i).icon , positionX , positionY , null);
             }
         }
     }
 
     public void setPosition(int x , int y){
-        worldX = x;
-        worldY = y;
-        newWorldX = worldX; newWorldY = worldY;
+        position = new Vector2D(x , y);
+        newPosition = new Vector2D(x, y);
+    }
+
+    public void setConfusedMode(boolean confused){
+        this.confused = confused;
+    }
+
+    public void toggleConfusedMode(){
+        this.confused = !this.confused;
     }
 
     public void setGoal(int goalX, int goalY){

@@ -26,6 +26,7 @@ public class Mon_Shooter extends Monster implements Actable {
     public final static int IDLE = 0;
     public final static int ACTIVE = 1;
 
+
     private static final HashMap<KeyPair<ShooterState, Direction>, Sprite> shooterSpritePool = new HashMap<>();
     private static final HashMap<KeyPair<ShooterState, Direction>, Animation> shooterAnimations = new HashMap<>();
 
@@ -71,7 +72,6 @@ public class Mon_Shooter extends Monster implements Actable {
     private ShooterState currentState;
     private ShooterState lastState;
     private Direction currentDirection;
-    private Animation currentAnimation;
 
     private void setState(){
         boolean change = false;
@@ -143,7 +143,6 @@ public class Mon_Shooter extends Monster implements Actable {
         strength = 10;
         level = 1;
 
-        //getImage();
         setDefault();
         this.direction = direction;
         changeDirection();
@@ -216,7 +215,7 @@ public class Mon_Shooter extends Monster implements Actable {
     public void attack(){
         if(!isDying) {
             Projectile bullet = new Proj_Plasma(mp);
-            bullet.set(worldX , worldY , direction , true , this);
+            bullet.set(position , direction , true , this);
             bullet.setHitbox();
             proj.add(bullet);
             mp.addObject(bullet , mp.projectiles);
@@ -292,7 +291,7 @@ public class Mon_Shooter extends Monster implements Actable {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.3f));
         }
         //g2.drawImage(mon_shooter[CURRENT_ACTION][CURRENT_DIRECTION][CURRENT_FRAME] , worldX - camera.getX() , worldY - camera.getY() , width , height , null);
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 1.0f));
     }
 

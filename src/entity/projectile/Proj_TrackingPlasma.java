@@ -64,8 +64,8 @@ public class Proj_TrackingPlasma extends Projectile {
     @Override
     public void update() {
         if (active) {
-            int playerCol = (mp.player.worldX + mp.player.solidArea1.x) / childNodeSize;
-            int playerRow = (mp.player.worldY + mp.player.solidArea1.y) / childNodeSize;
+            int playerCol = ((int)mp.player.position.x + mp.player.solidArea1.x) / childNodeSize;
+            int playerRow = ((int)mp.player.position.y + mp.player.solidArea1.y) / childNodeSize;
 
             searchPath(playerCol, playerRow);
             move();
@@ -78,38 +78,43 @@ public class Proj_TrackingPlasma extends Projectile {
     private void move() {
         switch (direction) {
             case "up":
-                worldY -= speed;
+                position.y -= speed;
                 break;
             case "down":
-                worldY += speed;
+                position.y += speed;
                 break;
             case "left":
-                worldX -= speed;
+                position.x -= speed;
                 break;
             case "right":
-                worldX += speed;
+                position.x += speed;
                 break;
         }
     }
 
     @Override
     public void searchPath(int goalCol, int goalRow) {
-        executor.execute( () -> {
-            int startCol = (worldX + solidArea1.x) / childNodeSize;
-            int startRow = (worldY + solidArea1.y) / childNodeSize;
+        executor.execute(() -> {
+            float worldX = position.x;
+            float worldY = position.y;
+
+            int startCol = (int)((worldX + solidArea1.x) / childNodeSize);
+            int startRow = (int)((worldY + solidArea1.y) / childNodeSize);
 
             synchronized (pFinder) {
                 pFinder.setNodes(startCol, startRow, goalCol, goalRow);
+
                 if (pFinder.search()) {
                     onPath = true;
+
                     if (!pFinder.pathList.isEmpty()) {
                         int nextX = pFinder.pathList.get(0).col * childNodeSize;
                         int nextY = pFinder.pathList.get(0).row * childNodeSize;
 
-                        int enLeftX = worldX + solidArea1.x;
-                        int enRightX = worldX + solidArea1.x + solidArea1.width;
-                        int enTopY = worldY + solidArea1.y;
-                        int enBottomY = worldY + solidArea1.y + solidArea1.height;
+                        float enLeftX = worldX + solidArea1.x;
+                        float enRightX = worldX + solidArea1.x + solidArea1.width;
+                        float enTopY = worldY + solidArea1.y;
+                        float enBottomY = worldY + solidArea1.y + solidArea1.height;
 
                         if (enTopY > nextY && enLeftX >= nextX && enRightX < nextX + childNodeSize) {
                             direction = "up";
@@ -123,36 +128,36 @@ public class Proj_TrackingPlasma extends Projectile {
                             }
                         } else if (enTopY > nextY && enLeftX > nextX) {
                             direction = "up";
-                            worldY -= speed;
+                            position.y -= speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "left";
                             }
-                            worldY += speed;
+                            position.y += speed;
                         } else if (enTopY > nextY && enLeftX < nextX) {
                             direction = "up";
-                            worldY -= speed;
+                            position.y -= speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "right";
                             }
-                            worldY += speed;
+                            position.y += speed;
                         } else if (enTopY < nextY && enLeftX > nextX) {
                             direction = "down";
-                            worldY += speed;
+                            position.y += speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "left";
                             }
-                            worldY -= speed;
+                            position.y -= speed;
                         } else if (enTopY < nextY && enLeftX < nextX) {
                             direction = "down";
-                            worldY += speed;
+                            position.y += speed;
                             checkCollision();
                             if (collisionOn) {
                                 direction = "right";
                             }
-                            worldY -= speed;
+                            position.y -= speed;
                         }
                     }
                 } else {
@@ -160,6 +165,6 @@ public class Proj_TrackingPlasma extends Projectile {
                 }
             }
         });
-
     }
+
 }

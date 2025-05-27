@@ -15,20 +15,21 @@ public class Mon_EffectDealer extends Monster{
 
         setDefault();
     }
-    public Mon_EffectDealer(GameMap mp, Effect eff ,int x, int y) {
-        super(mp, x, y);
-        name = "Effect Dealer";
-        width = 64; height = 64;
-
-        setDefault();
-        this.effectDealOnTouch = eff;
-    }
 
     public Mon_EffectDealer(GameMap mp, Effect eff, String idName, int x, int y) {
         super(mp, x, y);
         name = "Effect Dealer";
         this.idName = idName;
         width = 64; height = 64;
+
+        setDefault();
+        this.effectDealOnTouch = eff;
+    }
+    public Mon_EffectDealer(GameMap mp, Effect eff, String idName, int x, int y, int width, int height) {
+        super(mp, x, y);
+        name = "Effect Dealer";
+        this.idName = idName;
+        this.width = width; this.height = height;
 
         setDefault();
         this.effectDealOnTouch = eff;
@@ -46,12 +47,12 @@ public class Mon_EffectDealer extends Monster{
         effectDealByProjectile = new EffectNone(mp.player);
 
         solidArea1 = new Rectangle(0 , 0 , 0 , 0);
-        hitbox = new Rectangle(0 , 0 , 64 , 64);
+        hitbox = new Rectangle(0 , 0 , width , height);
         //solidArea2 = new Rectangle(0 , 0 , 0 ,0);
         super.setDefaultSolidArea();
     }
 
-    public void update() throws NullPointerException{
+    public void update(){
         damagePlayer();
     }
 

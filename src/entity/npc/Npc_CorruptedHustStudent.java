@@ -62,7 +62,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private Direction currentDirection;
     private Direction lastDirection;
 
-    private Animation currentAnimation;
     private Animation currentEffectAnimation;
 
     private GameTimer changeIdleTypeTimer;
@@ -109,7 +108,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         }
 
         setDefault();
-        setDialogue();
     }
 
     private void setDefault()
@@ -133,11 +131,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         talkOnce = false;
         dialogueIndex = 0;
         dialogueSet = -1;
-    }
-
-    @Override
-    public void setDialogue() {
-
     }
 
     private void setAction(){
@@ -231,9 +224,9 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
 
     @Override
     public void render(Graphics2D g2) {
-        currentAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+        super.render(g2);
         if(isInteracting){
-            currentEffectAnimation.render(g2, worldX - camera.getX(), worldY - camera.getY());
+            currentEffectAnimation.render(g2, (int)position.x - camera.getX(), (int)position.y - camera.getY());
         }
     }
 

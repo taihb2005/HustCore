@@ -16,6 +16,7 @@ public class Blind extends Effect {
         id = 2;
         name = "Blind";
         icon = AssetPool.getImage("blind.png");
+        isNegative = true;
     }
 
     public void remove(){

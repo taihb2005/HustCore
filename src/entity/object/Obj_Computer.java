@@ -26,7 +26,6 @@ public class Obj_Computer extends Entity {
         }
     }
 
-    private final Animation currentAnimation;
     private final ComputerState currentState;
     private final ComputerDirection currentDirection;
 
@@ -69,7 +68,7 @@ public class Obj_Computer extends Entity {
 
     @Override
     public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
-        currentAnimation.render(g2, worldX - camera.getX() , worldY - camera.getY());
+        super.render(g2);
     }
 
     private enum ComputerDirection{
