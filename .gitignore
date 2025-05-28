@@ -3,6 +3,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+#IDE
+.idea/
+*.iml
+
 ### Maven ###
 target
 
