@@ -66,6 +66,8 @@ public class Level02 extends Level {
         };
 
         onFinishLevel = () -> {
+
+
             eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ hai");
             eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Bắc để\ntiếp tục!");
 

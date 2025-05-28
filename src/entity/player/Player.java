@@ -480,7 +480,7 @@ public class Player extends Entity {
     private void setDamage(){
         strength = 10;
         lastStrength = strength;
-        damage = projectile.baseDamage + strength * level ;
+        damage = (projectile.baseDamage + strength * level) * strengthScalar ;
     }
     private void setDefense(){
         defense = level * 10;

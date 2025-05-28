@@ -327,7 +327,6 @@ public class Mon_HustGuardian extends Monster implements Actable {
         solidArea2 = null;
         hitbox = null;
         interactionDetectionArea = null;
-        exclamation.flush();
         exclamation = null;
         projectile = null;
         projectileName = null;

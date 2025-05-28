@@ -4,6 +4,7 @@ import entity.Entity;
 import graphics.Animation;
 import graphics.AssetPool;
 import graphics.Sprite;
+import level.LevelState;
 import main.KeyHandler;
 import util.KeyTriple;
 
@@ -12,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import static main.GamePanel.camera;
+import static main.GamePanel.currentLevel;
 
 public class Obj_Door extends Entity{
     private static final HashMap<KeyTriple<DoorSize, DoorState, DoorStatus>, Sprite> doorSpritePool = new HashMap<>();
@@ -146,7 +148,7 @@ public class Obj_Door extends Entity{
     }
 
     public void open(){
-        if (KeyHandler.enterPressed) {
+        if (currentLevel.checkState(LevelState.RUNNING) && KeyHandler.enterPressed) {
             KeyHandler.enterPressed = false;
             if(isInteracting && currentStatus == DoorStatus.ACTIVE && currentState == DoorState.CLOSED){
                 currentState = DoorState.OPENING;

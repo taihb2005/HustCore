@@ -68,19 +68,7 @@ public class LoadingService {
             try {
                 gameState = GameState.LOADING;
 
-                if (currentMap != null) {
-                    System.out.println("Map disposed!");
-                    currentMap.dispose();
-                    currentMap = null;
-                }
-
-                if(currentLevel != null){
-                    System.out.println("Level disposed!");
-                    currentLevel.dispose();
-                    currentLevel = null;
-                }
-
-                System.gc();
+                dispose();
 
                 //currentLevel = new DevTestLevel();
                 switch(levelProgress){
@@ -115,17 +103,7 @@ public class LoadingService {
             try {
                 gameState = GameState.LOADING;
 
-                if (currentMap != null) {
-                    currentMap.dispose();
-                    currentMap = null;
-                    System.out.println("Map disposed!");
-                }
-
-                if(currentLevel != null){
-                    currentLevel.dispose();
-                    currentLevel = null;
-                    System.out.println("Level disposed!");
-                }
+                dispose();
 
                 //currentLevel = new DevTestLevel();
                 switch(levelProgress){
@@ -138,9 +116,7 @@ public class LoadingService {
                 //currentLevel = new DevTestLevel();
                 currentMap = currentLevel.map;
                 previousLevelProgress = levelProgress;
-                System.out.println("Map restarted");
                 currentLevel.map.player.resetValue();;
-                System.out.println("Map restarted figh");
                 Thread.sleep(1000);
 
                 gameState = GameState.PLAY;
@@ -150,6 +126,22 @@ public class LoadingService {
                 e.printStackTrace();
             }
         });
+    }
+
+    private static void dispose(){
+        if (currentMap != null) {
+            currentMap.dispose();
+            currentMap = null;
+            System.out.println("Map disposed!");
+        }
+
+        if(currentLevel != null){
+            currentLevel.dispose();
+            currentLevel = null;
+            System.out.println("Level disposed!");
+        }
+
+        System.gc();
     }
 
     public static void shutdown() {

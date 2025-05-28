@@ -64,6 +64,8 @@ public class Entity {
     public int exp;
     public int strength;
     public int lastStrength;
+    public int strengthScalar = 1;
+    public int defaultStrengthScalar = 1;
     public int defense;
     public int damage;
     public String projectileName;

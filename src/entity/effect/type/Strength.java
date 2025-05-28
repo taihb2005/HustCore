@@ -15,11 +15,11 @@ public class Strength extends Effect {
     }
 
     public void affect(){
-        player.strength = player.lastStrength * 3;
+        player.strengthScalar =  2;
     }
 
     public void remove(){
-        player.strength = player.lastStrength;
+        player.strengthScalar = player.defaultStrengthScalar;
     }
 
     public Strength clone(){

@@ -308,7 +308,7 @@ public class Mon_Shooter extends Monster implements Actable {
         hitbox = null;
         interactionDetectionArea = null;
         projectile = null;
-        proj.clear();
+        if(proj != null )proj.clear();
         proj = null;
         projectileName = null;
         effectDealByProjectile = null;

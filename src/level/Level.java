@@ -16,7 +16,7 @@ import static main.GamePanel.*;
 
 public class Level{
     public GameMap map;
-    protected AssetSetter setter;
+    protected static AssetSetter setter;
     protected EntityManager entityManager;
     protected EventManager eventManager;
 

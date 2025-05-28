@@ -764,6 +764,7 @@ public class UI {
             if (currentLevel02.enteredPassword.equals(currentLevel02.correctPassword)) {
                 currentLevel.levelFinished = true;
                 checkPassword = Color.GREEN;
+                currentLevel02.getRoom("Room3").finish();
             } else {
                 checkPassword = Color.RED;
                 currentLevel02.enteredPassword = "";
