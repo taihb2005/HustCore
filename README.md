@@ -78,6 +78,6 @@ Giờ đây bạn đã có thể chạy được mã nguồn. Hãy mở IDE ưa 
 ## ⚠️ Quyền sử dụng tài nguyên (Asset License)
 
 - Mã nguồn được phát hành theo giấy phép [MIT](https://choosealicense.com/licenses/mit/)
-- **Tuy nhiên**, tất cả hình ảnh, âm thanh, và tài nguyên đồ họa trong thư mục `res/` **không được phép sử dụng lại** nếu không có sự cho phép rõ ràng từ tác giả. Đọc **NOTICE.md** trong `res/` để thêm thông tin.
+- **Tuy nhiên**, tất cả hình ảnh, âm thanh, và tài nguyên đồ họa trong thư mục `res/` **không được phép sử dụng lại** nếu không có sự cho phép rõ ràng từ tác giả.
 - Hãy liên hệ với tác giả nếu muốn sử dụng tài nguyên trong repository này!
 
