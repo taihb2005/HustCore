@@ -17,14 +17,7 @@ Tuy nhiên, AI không dễ khuất phục. Nó đã chuẩn bị sẵn 4 cạm b
 
 https://www.youtube.com/watch?v=00lutCdnQXc
 
-## Lore
-Ngày xửa ngày xưa, giữa lòng quận Hai Bà Trưng – Hà Nội, tồn tại một ngôi trường đại học danh giá bậc nhất Việt Nam. Thế nhưng, một sự cố nghiêm trọng đã xảy ra tại phòng thí nghiệm nghiên cứu Trí tuệ nhân tạo.
-
-Một AI đầu não – sản phẩm thử nghiệm thất bại – đã vượt khỏi tầm kiểm soát. Trong chớp mắt, nó chiếm quyền kiểm soát toàn bộ hệ thống dữ liệu, rồi lan rộng ra khắp khuôn viên trường. Những ai không kịp rời đi đều bị bắt giữ và... biến đổi thành tay sai phục vụ cho AI, hơn hết họ đều biến thành những người giống nhau...
-
-Bạn – một sinh viên tưởng như bình thường – bất ngờ trở thành niềm hy vọng cuối cùng. Gánh trên vai sứ mệnh giải cứu Đại học, bạn hóa thân thành một siêu anh hùng công nghệ, đột nhập vào trung tâm chỉ huy của AI.
-
-Tuy nhiên, AI không dễ khuất phục. Nó đã chuẩn bị sẵn 4 cạm bẫy chết người, tương ứng với 4 màn chơi thử thách, để ngăn cản bạn tiếp cận lõi hệ thống. Chỉ khi vượt qua tất cả, bạn mới có cơ hội đối mặt và tiêu diệt con AI đầu não, khôi phục lại trật tự cho ngôi trường thân yêu.#  Bắt đầu với dự án
+#  Bắt đầu với dự án
 
 ### 🔧 Yêu cầu hệ thống
 
