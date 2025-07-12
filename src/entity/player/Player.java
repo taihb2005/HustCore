@@ -85,7 +85,6 @@ public class Player extends Entity {
     private Direction currentDirection;
     private Direction lastDirection;
 
-    //private Animation currentAnimation;
     private void setState(){
         boolean change1 = false;
         boolean change2 = false;
@@ -124,7 +123,7 @@ public class Player extends Entity {
     public HashMap<String , Integer> effectManager = new HashMap<>();
     public ArrayList<Effect> effect = new ArrayList<>();
     public Item [] inventory = new Item[5];
-    public ItemHandler iHandler = new ItemHandler();
+    public static ItemHandler iHandler = new ItemHandler();
 
     public Player(GameMap mp) {
         super();
@@ -222,7 +221,7 @@ public class Player extends Entity {
         if(gameState == GameState.PLAY) attackCanceled = false;
         if(currentLevel.checkState(LevelState.DIALOGUE)) attackCanceled = true;
         //SHOOT
-        if (KeyHandler.enterPressed) {
+        if (currentLevel.checkState(LevelState.RUNNING) && KeyHandler.enterPressed) {
             if (!attackCanceled && !isRunning && shootAvailableCounter == SHOOT_INTERVAL) {
                 isShooting = true;
                 shootProjectile();
@@ -296,20 +295,21 @@ public class Player extends Entity {
         interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
 
-        velocity = new Vector2D(0, 0);
+        velocity.clear();
 
-        if (up) velocity = velocity.add(new Vector2D(0, -1));
-        if (down) velocity = velocity.add(new Vector2D(0, 1));
-        if (left) velocity = velocity.add(new Vector2D(-1, 0));
-        if (right) velocity = velocity.add(new Vector2D(1, 0));
+        if (up) velocity = velocity.add(UP_DIR);
+        if (down) velocity = velocity.add(DOWN_DIR);
+        if (left) velocity = velocity.add(LEFT_DIR);
+        if (right) velocity = velocity.add(RIGHT_DIR);
 
-        if(confused) velocity = velocity.scale(-1);
+        if(confused) velocity.scale(-1);
 
         if (velocity.length() != 0) {
-            velocity = velocity.normalize().scale(speed);
+            velocity.normalize().scale(speed);
         }
 
-        newPosition = position.add(velocity);
+        newPosition.set(position)
+                .add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -317,9 +317,9 @@ public class Player extends Entity {
         mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
 
         if(!collisionOn) {
-            position = newPosition.copy();
+            position.set(newPosition);
         }
-        newPosition = position.copy();
+        newPosition.set(position);
 
         if(isShooting && !attackCanceled){
             camera.cameraShake(position);

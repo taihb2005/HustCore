@@ -245,18 +245,19 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
     public void move() {
         collisionOn = false;
-        velocity = new Vector2D(0, 0);
+        velocity.clear();
 
-        if (up && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, -1));
-        if (down && isRunning && !isDying) velocity = velocity.add(new Vector2D(0, 1));
-        if (left && isRunning && !isDying) velocity = velocity.add(new Vector2D(-1, 0));
-        if (right && isRunning && !isDying) velocity = velocity.add(new Vector2D(1, 0));
+        if (up && isRunning && !isDying) velocity.add(UP_DIR);
+        if (down && isRunning && !isDying) velocity.add(DOWN_DIR);
+        if (left && isRunning && !isDying) velocity.add(LEFT_DIR);
+        if (right && isRunning && !isDying) velocity.add(RIGHT_DIR);
 
         if (velocity.length() != 0) {
-            velocity = velocity.normalize().scale(speed);
+            velocity.normalize().scale(speed);
         }
 
-        newPosition = position.add(velocity);
+        newPosition.set(position)
+                .add(velocity);
 
         mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
         mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
@@ -267,7 +268,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
 
         if(!collisionOn)
         {
-            position = newPosition.copy();
+            position.set(newPosition);
         } else {
             if(!onPath){
                 if(checkForValidDirection()){
@@ -277,7 +278,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
                 }
             }
         }
-        newPosition = position.copy();
+        newPosition.set(position);
     }
 
     public void setDialogue() {

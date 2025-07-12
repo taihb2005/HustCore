@@ -46,18 +46,21 @@ public class StatusManager {
     {
         for(int i = 0 ; i < item.length ; i++){
             if(item[i] == null) continue;
+
+            int quantity = item[i].getQuantity();
             Item i_tmp;
-            StringBuilder name = item[i].getName();
-            if(name.compareTo(new StringBuilder("Pin năng lượng")) == 0){
+
+            if (item[i] instanceof Item_Battery) {
                 i_tmp = new Item_Battery();
-            } else
-            if(name.compareTo(new StringBuilder("Bộ cứu thương")) == 0){
+            } else if (item[i] instanceof Item_Kit) {
                 i_tmp = new Item_Kit();
-            } else
-            if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
+            } else if (item[i] instanceof Item_Potion) {
                 i_tmp = new Item_Potion();
-            } else i_tmp = new Item_StrengthGem();
-            i_tmp.setQuantity(item[i].getQuantity());
+            } else {
+                i_tmp = new Item_StrengthGem();
+            }
+
+            i_tmp.setQuantity(quantity);
             savedInventory[i] = i_tmp;
         }
     }
@@ -71,22 +74,28 @@ public class StatusManager {
     public int getSavedLevel(){return savedLevel;}
     public int getSavedExp(){return savedExp;}
     public void getSavedInventory(Item[] item){
-        for(int i = 0 ; i < savedInventory.length ; i++){
-            if(savedInventory[i] == null) continue;
-            Item i_tmp;
-            StringBuilder name = savedInventory[i].getName();
-            if(name.compareTo(new StringBuilder("Pin năng lượng")) == 0){
-                i_tmp = new Item_Battery();
-            } else
-            if(name.compareTo(new StringBuilder("Bộ cứu thương")) == 0){
-                i_tmp = new Item_Kit();
-            } else
-            if(name.compareTo(new StringBuilder("Thuốc giải")) == 0){
-                i_tmp = new Item_Potion();
-            } else i_tmp = new Item_StrengthGem();
-            i_tmp.setQuantity(savedInventory[i].getQuantity());
-            item[i] = i_tmp;
+        for (int i = 0; i < savedInventory.length; i++) {
+            if (savedInventory[i] == null) continue;
+
+            Item original = savedInventory[i];
+            Item copy;
+
+            if (original instanceof Item_Battery) {
+                copy = new Item_Battery();
+            } else if (original instanceof Item_Kit) {
+                copy = new Item_Kit();
+            } else if (original instanceof Item_Potion) {
+                copy = new Item_Potion();
+            } else if (original instanceof Item_StrengthGem) {
+                copy = new Item_StrengthGem();
+            } else {
+                copy = new Item_StrengthGem();
+            }
+
+            copy.setQuantity(original.getQuantity());
+            item[i] = copy;
         }
+
     }
     public String getDirection(){return direction;}
 

@@ -141,6 +141,8 @@ public class LoadingService {
             System.out.println("Level disposed!");
         }
 
+        ui.dispose();
+
         System.gc();
     }
 

@@ -1,9 +1,7 @@
 package main;
 
 // awt library
-import graphics.environment.EnvironmentManager;
 import level.Level;
-import level.LevelState;
 import map.*;
 import status.StatusManager;
 import util.Camera;

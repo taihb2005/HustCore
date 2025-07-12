@@ -8,7 +8,10 @@ import level.event.EventManager;
 import level.event.EventRectangle;
 import level.Level;
 import level.event.Event;
+import main.GamePanel;
+import main.GameState;
 import map.MapParser;
+import thread.LoadingService;
 
 import java.awt.*;
 import java.util.Random;
@@ -16,12 +19,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.List;
 
-import static main.GamePanel.playMusic;
-import static main.GamePanel.stopMusic;
+import static main.GamePanel.*;
 
 public class Level02 extends Level {
-    public String enteredPassword = "";
-    public String correctPassword ;
     private int hintNums = 0;
     public Level02() {
         map = MapParser.loadMap("/map/map2.tmx");
@@ -30,18 +30,8 @@ public class Level02 extends Level {
         setter.setFilePathNpc("/level/level02/npc_level02.json");
         setter.setFilePathEnemy("/level/level02/enemy_level02.json");
         setter.loadAll();
-
-        Timer timer = new Timer();
-
-        TimerTask play = new TimerTask() {
-            @Override
-            public void run() {
-                stopMusic();
-                stopMusic();
-                playMusic(6);
-            }
-        };
-        timer.schedule(play , 200);
+        stopMusic();
+        playMusic(6);
 
         setup();
 
@@ -66,11 +56,8 @@ public class Level02 extends Level {
         };
 
         onFinishLevel = () -> {
-
-
             eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ hai");
             eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Bắc để\ntiếp tục!");
-
             eventMaster.submitDialogue(eventMaster, 0);
         };
 
@@ -107,11 +94,11 @@ public class Level02 extends Level {
         changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
         changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);
         generatePassword();
-        enteredPassword = "";
+        enteredPassword = new StringBuffer();
 
         configureRoom("Room1",
                 List.of(),
-                List.of("DoorA004"),
+                List.of("DoorA003"),
                 new EventRectangle(0, 0 ,0 ,0),
                 List.of("Cyborgon001", "Cyborgon002", "Cyborgon003", "Cyborgon004", "Cyborgon005",
                         "Cyborgon006", "HustGuardian007", "HustGuardian008", "HustGuardian009", "HustGuardian010",
@@ -121,7 +108,7 @@ public class Level02 extends Level {
 
         configureRoom("Room2",
                 List.of(),
-                List.of(),
+                List.of("DoorA001", "DoorA002"),
                 new EventRectangle(822, 694, 74, 74, false),
                 List.of()
         );
@@ -151,5 +138,30 @@ public class Level02 extends Level {
                 () -> currentState = LevelState.PASSWORD
         ));
 
+        eventManager.register((new Event(
+                () -> {
+                    if(canCheckPassword){
+                        isCorrect = checkPassword();
+                        canCheckPassword = false;
+                        return isCorrect;
+                    }
+                    return false;
+                },
+                () -> getRoom("Room2").finish()
+        )));
+
+        eventManager.register(new Event(
+                () -> changeMapEventRect1.isTriggered(map.player) || changeMapEventRect2.isTriggered(map.player),
+                () -> {
+                    GamePanel.gameState = GameState.LOADING;
+                    levelProgress++;
+                    LoadingService.loadMap();
+                    map.player.storeValue();
+                }
+        ));
+    }
+
+    private boolean checkPassword(){
+        return enteredPassword.toString().equals(correctPassword);
     }
 }

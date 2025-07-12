@@ -29,6 +29,10 @@ public class Level{
 
     protected HashMap<String, RoomTask> rooms = new HashMap<>();
     protected Queue<RoomTask> roomTaskQueue = new LinkedList<>();
+    protected StringBuffer enteredPassword ;
+    protected String correctPassword ;
+    protected boolean canCheckPassword;
+    public boolean isCorrect;
 
     protected RoomTask previousRoomTask;
     protected RoomTask currentRoomTask;
@@ -257,6 +261,30 @@ public class Level{
 
     protected void configureRoomOrder(List<RoomTask> roomList){
         roomTaskQueue.addAll(roomList);
+    }
+
+    public void appendChar(String s){
+        enteredPassword.append(s);
+    }
+
+    public void popChar(){
+        enteredPassword.deleteCharAt(enteredPassword.length()-1);
+    }
+
+    public void clearPassword(){
+        enteredPassword.delete(0, enteredPassword.length());
+    }
+
+    public String getEnteredPassword(){
+        return enteredPassword.toString();
+    }
+
+    public String getCorrectPassword(){
+        return correctPassword;
+    }
+
+    public void enableCheckPassword(boolean canCheckPassword) {
+        this.canCheckPassword = canCheckPassword;
     }
 
     protected boolean isLevelFinished(){

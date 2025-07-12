@@ -490,7 +490,7 @@
     },
     {
       "object": "Obj_Door",
-      "name": "DoorA003",
+      "name": "DoorA002",
       "size": "big",
       "state": "inactive",
       "position": {
@@ -500,7 +500,7 @@
     },
     {
       "object": "Obj_Door",
-      "name": "DoorA004",
+      "name": "DoorA003",
       "size": "small",
       "state": "inactive",
       "position": {

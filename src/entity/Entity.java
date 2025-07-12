@@ -20,6 +20,11 @@ public class Entity {
     public PathFinder pFinder;
     public static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
+    protected static final Vector2D UP_DIR = new Vector2D(0, -1);
+    protected static final Vector2D DOWN_DIR = new Vector2D(0, 1);
+    protected static final Vector2D LEFT_DIR = new Vector2D(-1, 0);
+    protected static final Vector2D RIGHT_DIR = new Vector2D(1, 0);
+
     public String name;
     public String idName = "";
     //POSITION

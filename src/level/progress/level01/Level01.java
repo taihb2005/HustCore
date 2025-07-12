@@ -153,6 +153,7 @@ public class Level01 extends Level {
                     GamePanel.gameState = GameState.LOADING;
                     levelProgress++;
                     LoadingService.loadMap();
+                    map.player.storeValue();
                 }
         ));
     }

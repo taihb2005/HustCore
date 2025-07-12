@@ -29,11 +29,11 @@ public class UI {
 
     public Queue<KeyPair<Entity, Integer>> dialogueQueue = new LinkedList<>();
     private KeyPair<Entity, Integer> currentPairEntity;
-    StringBuilder currentDialogue = new StringBuilder();  // Dòng hội thoại hiện tại đầy đủ
-    String displayedText = "";    // Dòng hội thoại đang được hiển thị dần
-    int textIndex = 0;            // Chỉ số của ký tự đang được hiển thị
-    double textSpeed = 0.1;       // Tốc độ hiển thị từng ký tự (càng nhỏ càng nhanh)
-    int frameCounter = 0;         // Đếm số frame để điều khiển tốc độ hiển thị
+    StringBuilder currentDialogue = new StringBuilder();
+    String displayedText = "";
+    int textIndex = 0;
+    double textSpeed = 0.1;
+    int frameCounter = 0;
     int subState = 0;
     boolean isInventoryOpen = false;
     int inventoryX = tileSize / 4;
@@ -45,7 +45,6 @@ public class UI {
     int slotHeight = 50;
     public int selectedOption = -1;
     public final int correctAnswer = 3;
-    private BufferedImage gameOverBackground;
     Color checkPassword = new Color(0 , 0 , 0);
     String maskedPassword;
 
@@ -56,11 +55,11 @@ public class UI {
 
     public Entity currentSpeaker;
 
+    private static BufferedImage gameOverBackground;
     private static BufferedImage hpFrame, manaFrame, boss_hpFrame;
     public static BufferedImage titleBackground;
     private static BufferedImage quizImage;
 
-    public Entity npc;
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -612,7 +611,7 @@ public class UI {
     public void update(){
         if(currentLevel.checkState(LevelState.PASSWORD)){
             handlePasswordPressed();
-            maskedPassword = "*".repeat(((Level02)currentLevel).enteredPassword.length());
+            maskedPassword = "*".repeat(currentLevel.getEnteredPassword().length());
         }
 //        if(gameState == GameState.PASSWORD){
 //            handlePasswordPressed();
@@ -734,7 +733,6 @@ public class UI {
         g2.drawString("ENTER", textX, textY);
     }
     private void drawPasswordInputBox() {
-        Level02 currentLevel02 = (Level02) currentLevel;
         int x = 100;
         int y = 100;
         int width = gp.getWidth() - tileSize * 4;
@@ -747,9 +745,9 @@ public class UI {
         g2.drawString("Nhập mật khẩu:", x + 20, y + 80);
         drawSubWindow(x+300,y+55,200,30);
 
-        if(currentLevel02.enteredPassword.isEmpty()) checkPassword = Color.white;
+        if(currentLevel.getEnteredPassword().isEmpty()) checkPassword = Color.WHITE;
         g2.setColor(checkPassword);
-        maskedPassword = "*".repeat(currentLevel02.enteredPassword.length());
+        maskedPassword = "*".repeat(currentLevel.getEnteredPassword().length());
         g2.drawString(maskedPassword, x + 310, y + 75);
 
         g2.setColor(Color.WHITE);
@@ -758,16 +756,13 @@ public class UI {
     }
     private void handlePasswordPressed(){
         String charPressed = "";
-        Level02 currentLevel02 = (Level02) currentLevel;
         if(enterPressed){
             enterPressed = false;
-            if (currentLevel02.enteredPassword.equals(currentLevel02.correctPassword)) {
-                currentLevel.levelFinished = true;
+            currentLevel.enableCheckPassword(true);
+            if (currentLevel.isCorrect) {
                 checkPassword = Color.GREEN;
-                currentLevel02.getRoom("Room3").finish();
             } else {
                 checkPassword = Color.RED;
-                currentLevel02.enteredPassword = "";
             }
         }
         if(key0pressed) {charPressed = "0"; key0pressed = false;} else
@@ -781,14 +776,33 @@ public class UI {
         if(key8pressed) {charPressed = "8"; key8pressed = false;} else
         if(key9pressed) {charPressed = "9"; key9pressed = false;}
 
-        if(currentLevel02.enteredPassword.length() < 12) currentLevel02.enteredPassword += charPressed;
+        if(currentLevel.getEnteredPassword().length() < 12) {
+            currentLevel.appendChar(charPressed);
+            checkPassword = Color.WHITE;
+        }
 
         if (keyBackspacepressed) {
             keyBackspacepressed = false;
-            if (!currentLevel02.enteredPassword.isEmpty()) {
-                currentLevel02.enteredPassword = currentLevel02.enteredPassword.substring(0, currentLevel02.enteredPassword.length() - 1);
+            if (!currentLevel.getEnteredPassword().isEmpty()) {
+                currentLevel.popChar();
+                checkPassword = Color.WHITE;
             }
         }
-        if(keyEscpressed) currentLevel.setLevelState(LevelState.RUNNING);
+        if(keyEscpressed) {
+            currentLevel.clearPassword();
+            currentLevel.setLevelState(LevelState.RUNNING);
+            currentLevel.enableCheckPassword(false);
+        }
     }
+
+    public void dispose() {
+        currentPairEntity = null;
+        currentDialogue = null;
+        displayedText = null;
+
+        maskedPassword = null;
+
+        currentSpeaker = null;
+    }
+
 }

@@ -86,16 +86,15 @@ public class Level00 extends Level {
 
     @Override
     public void dispose() {
-        super.dispose(); // gọi hàm hủy từ lớp Level
+        super.dispose();
 
         if (eventManager != null) {
-            eventManager.clear(); // nếu bạn có hàm clear() trong EventManager
+            eventManager.clear();
             eventManager = null;
         }
 
         changeMapEventRect1 = null;
 
-        // Huỷ toàn bộ reference khác nếu cần
         onCreateLevel = null;
         onFinishLevel = null;
     }

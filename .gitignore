@@ -8,7 +8,7 @@ out/
 *.iml
 
 ### Maven ###
-target
+/target/
 
 ### Eclipse ###
 .apt_generated
