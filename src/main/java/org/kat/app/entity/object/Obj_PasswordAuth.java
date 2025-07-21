@@ -1,0 +1,60 @@
+package org.kat.app.entity.object;
+
+import org.kat.app.entity.Entity;
+import org.kat.app.graphics.Animation;
+import org.kat.app.graphics.AssetPool;
+import org.kat.app.graphics.Sprite;
+
+import java.awt.*;
+import java.util.HashMap;
+
+public class Obj_PasswordAuth extends Entity {
+    private static final HashMap<PasswordAuthState, Sprite> passwordAuthSpritePool = new HashMap<>();
+    private static final HashMap<PasswordAuthState, Animation> passwordAuthAnimations = new HashMap<>();
+
+    public static void load(){
+        for(PasswordAuthState state: PasswordAuthState.values()){
+            passwordAuthSpritePool.put(state,
+                    new Sprite(AssetPool.getImage("password_authentication_" + state.name().toLowerCase() + ".png")));
+            passwordAuthAnimations.put(state,
+                    new Animation(passwordAuthSpritePool.get(state).getSpriteArrayRow(0), 20, true));
+        }
+    }
+    private PasswordAuthState currentState;
+
+    public Obj_PasswordAuth(String state , int x , int y){
+        super(x , y);
+        name = "Password Authentication";
+        width = 64;
+        height = 64;
+
+        currentState = (state.equals("inactive")) ? PasswordAuthState.INACTIVE : PasswordAuthState.ACTIVE;
+        currentAnimation = passwordAuthAnimations.get(currentState).clone();
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
+    }
+
+    public Obj_PasswordAuth(String state, String idName, int x , int y){
+        super(x , y);
+        name = "Password Authentication";
+        this.idName = idName;
+        width = 64;
+        height = 64;
+
+        currentState = (state.equals("inactive")) ? PasswordAuthState.INACTIVE : PasswordAuthState.ACTIVE;
+        currentAnimation = passwordAuthAnimations.get(currentState).clone();
+        solidArea1 = new Rectangle(0 , 0 , 0 , 0);
+    }
+    @Override
+    public void update() throws NullPointerException{
+        currentAnimation.update();
+    }
+
+    @Override
+    public void render(Graphics2D g2){
+        super.render(g2);
+    }
+
+    private enum PasswordAuthState{
+        INACTIVE, ACTIVE
+    }
+}

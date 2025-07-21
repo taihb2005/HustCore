@@ -1,0 +1,6 @@
+package org.kat.app.ui;
+
+public enum Alignment{
+    HORIZONTAL_LEFT, HORIZONTAL_CENTER, HORIZONTAL_RIGHT,
+    VERTICAL_TOP, VERTICAL_CENTER, VERTICAL_BOTTOM
+}

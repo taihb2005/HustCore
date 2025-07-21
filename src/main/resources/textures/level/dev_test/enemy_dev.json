@@ -1,0 +1,54 @@
+{
+  "room": [
+    [
+      {
+        "enemy": "Mon_EffectDealer",
+        "name": "EffectDealer001",
+        "effect": {
+          "type": "Slow",
+          "duration": 1800
+        },
+        "position": {
+          "x": 1152,
+          "y": 1984
+        },
+        "size": {
+          "width": 64,
+          "height": 64
+        }
+      },
+      {
+        "enemy": "Mon_EffectDealer",
+        "name": "EffectDealer002",
+        "effect": {
+          "type": "SpeedBoost",
+          "duration": 120
+        },
+        "position": {
+          "x": 1024,
+          "y": 1984
+        },
+        "size": {
+          "width": 64,
+          "height": 64
+        }
+      },
+      {
+        "enemy": "Mon_EffectDealer",
+        "name": "EffectDealer003",
+        "effect": {
+          "type": "Strength",
+          "duration": 120
+        },
+        "position": {
+          "x": 1088,
+          "y": 1984
+        },
+        "size": {
+          "width": 64,
+          "height": 64
+        }
+      }
+    ]
+  ]
+}

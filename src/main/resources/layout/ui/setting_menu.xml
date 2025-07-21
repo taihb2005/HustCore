@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageView id="root" x="0" y="0" width="800" height="600" image="Background.png">
+    <SubWindow
+            id="settingContainer"
+            x="192"
+            y="48"
+            width="384"
+            height="480"
+             />
+
+    <GameButton
+            id="startBtn"
+            x="300"
+            y="200"
+            width="200"
+            height="60"
+            text="Bắt đầu"
+            fontSize="30"
+            color="#FFFFFF"
+            roundRadius="30"/>
+
+    <GameButton
+            id="settingsBtn"
+            x="300"
+            y="300"
+            width="200"
+            height="60"
+            text="Cài đặt"
+            fontSize="30"
+            color="#FFFFFF"
+            roundRadius="30"/>
+
+    <GameButton
+            id="exitBtn"
+            x="300"
+            y="400"
+            width="200"
+            height="60"
+            text="Thoát"
+            fontSize="30"
+            color="#FFFFFF"
+            roundRadius="30"/>
+</ImageView>
