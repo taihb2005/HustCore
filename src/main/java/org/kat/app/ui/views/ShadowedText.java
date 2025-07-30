@@ -18,7 +18,7 @@ final public class ShadowedText extends Text{
     @Override
     public void render(Graphics2D g2) {
         g2.setFont(baseFont.deriveFont(fontSize));
-        int textWidth = g2.getFontMetrics().stringWidth(content);
+        int textWidth = g2.getFontMetrics().stringWidth(content.toString());
         int textHeight = g2.getFontMetrics().getAscent();
 
         int drawX = switch (hAlign) {
@@ -36,9 +36,9 @@ final public class ShadowedText extends Text{
         };
 
         g2.setColor(SHADOW_COLOR);
-        g2.drawString(content, drawX + OFFSET_X, drawY + OFFSET_Y);
+        g2.drawString(content.toString(), drawX + OFFSET_X, drawY + OFFSET_Y);
 
         g2.setColor(color);
-        g2.drawString(content, drawX, drawY);
+        g2.drawString(content.toString(), drawX, drawY);
     }
 }

@@ -5,7 +5,9 @@ import org.kat.app.entity.projectile.Projectile;
 import org.kat.app.graphics.Animation;
 import org.kat.app.level.LevelState;
 import org.kat.app.main.KeyHandler;
+import org.kat.app.main.UI;
 import org.kat.app.map.GameMap;
+import org.kat.app.ui.hustcore.SpeechDisplay;
 import org.kat.app.util.KeyPair;
 import org.kat.app.util.Vector2D;
 
@@ -117,7 +119,8 @@ public class Entity {
         if(currentLevel.checkState(LevelState.RUNNING)) {
             KeyHandler.enterPressed = false;
             currentLevel.setLevelState(LevelState.DIALOGUE);
-            ui.dialogueQueue.add(new KeyPair<>(entity, dialogueSet));
+            ((SpeechDisplay) UI._UIManager.findUIScreenByName("speech_display")).add(new KeyPair<>(entity, dialogueSet));
+            //ui.dialogueQueue.add(new KeyPair<>(entity, dialogueSet));
         }
     }
 

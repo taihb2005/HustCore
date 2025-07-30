@@ -4,16 +4,13 @@ import org.kat.app.entity.Entity;
 import org.kat.app.graphics.AssetPool;
 import org.kat.app.level.LevelState;
 import org.kat.app.ui.UIBuilder;
-import org.kat.app.ui.hustcore.MainMenu;
-import org.kat.app.ui.hustcore.SettingsMenu;
-import org.kat.app.ui.views.ImageView;
+import org.kat.app.ui.hustcore.*;
 import org.kat.app.ui.views.UIManager;
 import org.kat.app.ui.views.UIScreen;
 import org.kat.app.ui.views.View;
 import org.kat.app.util.KeyPair;
 import org.kat.app.util.Tree;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -21,7 +18,6 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.jar.Manifest;
 
 import static org.kat.app.main.GamePanel.*;
 import static org.kat.app.main.KeyHandler.*;
@@ -88,13 +84,6 @@ public class UI {
             e.printStackTrace();
         }
 
-
-//            hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/hpFrame.png")));
-//            manaFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/manaFrame.png")));
-//            titleBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/Background.png")));
-//            gameOverBackground = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/robotInvasion.png")));
-//            quizImage  = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/quiz.png")));
-//            boss_hpFrame = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/textures/ui/boss_hpFrame.png")));
         hpFrame = AssetPool.getImage("hpFrame.png");
         manaFrame = AssetPool.getImage("manaFrame.png");
         titleBackground = AssetPool.getImage("Background.png");
@@ -102,13 +91,23 @@ public class UI {
         quizImage = AssetPool.getImage("quiz.png");
         boss_hpFrame = AssetPool.getImage("boss_hpFrame.png");
 
-        Tree<View> test = UIBuilder.buildFromXML("/layout/ui/main_menu.xml");
+        Tree<View> mainTree = UIBuilder.buildFromXML("/layout/ui/main_menu.xml");
         Tree<View> settingsTree = UIBuilder.buildFromXML("/layout/ui/setting_menu.xml");
-        UIScreen MAIN_MENU = new MainMenu("main_menu", test);
+        Tree<View> loadingTree = UIBuilder.buildFromXML("/layout/ui/loading_menu.xml");
+        Tree<View> instructionTree = UIBuilder.buildFromXML("/layout/ui/instruction_menu.xml");
+        Tree<View> speechDisplayTree = UIBuilder.buildFromXML("/layout/ui/speech_display.xml");
+
+        UIScreen MAIN_MENU = new MainMenu("main_menu", mainTree);
         UIScreen SETTINGS_MENU = new SettingsMenu("setting_menu", settingsTree);
+        UIScreen LOADING_MENU = new LoadingMenu("loading_menu", loadingTree);
+        UIScreen SPEECH_DISPLAY = new SpeechDisplay("speech_display", speechDisplayTree);
+        UIScreen INSTRUCTION_MENU = new InstructionMenu("instruction_menu", instructionTree);
 
         _UIManager.registerUIScreen(MAIN_MENU);
         _UIManager.registerUIScreen(SETTINGS_MENU);
+        _UIManager.registerUIScreen(LOADING_MENU);
+        _UIManager.registerUIScreen(SPEECH_DISPLAY);
+        _UIManager.registerUIScreen(INSTRUCTION_MENU);
 
         _UIManager.setCurrentScreen("main_menu");
 
@@ -127,7 +126,6 @@ public class UI {
         int width = gp.getWidth() - tileSize * 4;
         int height = tileSize * 4;
 
-        // Nếu chưa có speaker hiện tại, lấy từ hàng đợi
         if (currentSpeaker == null && !dialogueQueue.isEmpty()) {
             currentPairEntity = dialogueQueue.poll();
             currentSpeaker = currentPairEntity.key1();
@@ -154,11 +152,9 @@ public class UI {
                 if (KeyHandler.enterPressed) {
                     KeyHandler.enterPressed = false;
                     if (textIndex < currentDialogue.length()) {
-                        // Skip đến hết câu nếu chưa hiển thị xong
                         textIndex = currentDialogue.length();
                         displayedText = currentDialogue.toString();
                     } else {
-                        // Chuyển sang dialogue tiếp theo của nhân vật
                         currentSpeaker.dialogueIndex++;
                         textIndex = 0;
                         displayedText = "";
@@ -170,7 +166,6 @@ public class UI {
                     }
                 }
 
-                // Vẽ dòng thoại
                 x += tileSize - 10;
                 y += tileSize;
                 for (String line : displayedText.split("\n")) {
@@ -182,7 +177,6 @@ public class UI {
                 currentSpeaker = null;
             }
         } else {
-            // Hết hàng đợi
             currentLevel.setLevelState(LevelState.RUNNING);
         }
     }
@@ -197,57 +191,6 @@ public class UI {
         g2.setColor(c);
         g2.setStroke(new BasicStroke(5));
         g2.drawRoundRect(x, y, width, height, 25, 25);
-    }
-    // Hàm vẽ thử
-
-    public void drawTitleScreen(){
-        g2.drawImage(titleBackground,0, 0, windowWidth, windowHeight, null);
-
-        //Title name
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 80f));
-        String text = "HUST Core";
-        int x = getXForCenteredText(text);
-        int y = windowHeight / 4;
-
-        //Shadow
-        g2.setColor(Color.black);
-        g2.drawString(text,x+5,y+5);
-
-        //Colour
-        g2.setColor(Color.white);
-        g2.drawString(text , x , y );
-
-        //Draw Picture
-
-        //Menu
-        g2.setFont(joystix.deriveFont(Font.PLAIN, 30f));
-
-        text = "Bắt đầu";
-        x = getXForCenteredText(text);
-        y = windowHeight*3/5 - tileSize;
-        g2.drawString(text, x, y - 5);
-        int length    = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40 , tileSize + 10, 30, 30);
-        if(commandNum == 0){
-            g2.drawString(">",x- tileSize, y);
-        }
-
-        text = "Cài đặt";
-        y = windowHeight*7/10 + 20 - tileSize;
-        g2.drawString(text, x, y - 8);
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
-        if(commandNum == 1){
-            g2.drawString(">",x- tileSize, y);
-        }
-
-        text = "Thoát";
-        //x = getXForCenteredText(text);
-        y = windowHeight*4/5 + 40 - tileSize;
-        g2.drawString(text, x + 20, y - 8);
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + 40, tileSize + 10, 30, 30);
-        if(commandNum == 2){
-            g2.drawString(">",x- tileSize, y);
-        }
     }
 
     private int dotCount = 0;
@@ -585,7 +528,7 @@ public class UI {
             drawHPBarForBoss();
             if(levelState != null) {
                 switch (levelState) {
-                    case DIALOGUE -> drawDialogueScreen();
+                    case DIALOGUE -> _UIManager.setCurrentScreen("speech_display");
                     case PASSWORD -> drawPasswordInputBox();
                     case QUIZ -> drawQuiz();
                 }

@@ -6,7 +6,6 @@ import org.kat.app.level.Level;
 import org.kat.app.level.LevelState;
 import org.kat.app.level.event.Event;
 import org.kat.app.level.event.EventManager;
-import org.kat.app.map.MapParser;
 
 import static org.kat.app.main.GamePanel.*;
 
@@ -15,48 +14,64 @@ public class Level04 extends Level {
     Mon_Boss boss;
 
     public Level04() {
-        map = MapParser.loadMap("/textures/map/map4.tmx");
-        init();
-        setter.setFilePathObject("/textures/level/level04/object_level04.json");
-        setter.setFilePathEnemy("/textures/level/level04/enemy_level04.json");
-        setter.loadAll();
-
-        setup();
-
-        onCreateLevel = () -> {
-            stopMusic();
-            playMusic(5);
-            currentRoomTask = getNextRoomTask();
-            setLevelState(LevelState.CUTSCENE);
-            map.player.setGoal(448, 640);
-        };
-
-        onBeginLevel = () -> {
-            map.addObject(new Obj_Door(
-                    "big",
-                    "inactive",
-                    "Temporary",
-                    192, 64
-            ), map.activeObj);
-
-            eventMaster.dialogues[0][0] = new StringBuilder("Boss: Ngươi giỏi lắm mới đến \nđược đây");
-            eventMaster.dialogues[0][1] = new StringBuilder("Boss: Ngắm gà khoả thân mau!");
-
-            eventMaster.dialogues[1][0] = new StringBuilder("Boss: Không ngờ ngươi lại mạnh\nđến vậy!");
-
-            eventMaster.dialogues[2][0] = new StringBuilder("Boss: Ta sẽ còn quay lại.");
-            eventMaster.dialogues[2][1] = new StringBuilder("Boss: Hãy đợi đấy!!!!!");
-            eventMaster.submitDialogue(eventMaster, 0);
-
-            getRoom("Room1").start();
-        };
-
-        onFinishLevel = () -> {
-            gameCompleted = true;
-        };
-
-        onCreateLevel.run();
+        super();
     }
+
+    @Override
+    public void onCreate() {
+        stopMusic();
+        playMusic(5);
+        currentRoomTask = getNextRoomTask();
+        setLevelState(LevelState.CUTSCENE);
+        map.player.setGoal(448, 640);
+    }
+
+    @Override
+    public void onBegin() {
+        map.addObject(new Obj_Door(
+                "big",
+                "inactive",
+                "Temporary",
+                192, 64
+        ), map.activeObj);
+
+        eventMaster.dialogues[0][0] = new StringBuilder("Boss: Ngươi giỏi lắm mới đến \nđược đây");
+        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Ngắm gà khoả thân mau!");
+
+        eventMaster.dialogues[1][0] = new StringBuilder("Boss: Không ngờ ngươi lại mạnh\nđến vậy!");
+
+        eventMaster.dialogues[2][0] = new StringBuilder("Boss: Ta sẽ còn quay lại.");
+        eventMaster.dialogues[2][1] = new StringBuilder("Boss: Hãy đợi đấy!!!!!");
+        eventMaster.submitDialogue(eventMaster, 0);
+
+        getRoom("Room1").start();
+    }
+
+    @Override
+    public void onFinish() {
+        gameCompleted = true;
+    }
+
+    @Override
+    public String getMapPath() {
+        return "/data/map/map4.tmx";
+    }
+
+    @Override
+    public String getObjectJsonPath() {
+        return "/data/level/level04/object_level04.json";
+    }
+
+    @Override
+    public String getEnemyJsonPath() {
+        return "/data/level/level04/enemy_level04.json";
+    }
+
+    @Override
+    public int getMusicFile() {
+        return 5;
+    }
+
     public void update() {
         eventManager.update();
     }
@@ -66,7 +81,8 @@ public class Level04 extends Level {
         super.dispose();
     }
 
-    private void setup(){
+    @Override
+    public void setup(){
         levelFinished = false;
         canChangeMap = false;
 
@@ -85,7 +101,7 @@ public class Level04 extends Level {
                 () -> {
                     getRoom("Room1").finish();
                     getRoom("Room2").finish();
-                    onFinishLevel.run();
+                    onFinish();
                 }
         ));
     }

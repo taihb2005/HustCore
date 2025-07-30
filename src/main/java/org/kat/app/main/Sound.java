@@ -12,23 +12,23 @@ public class Sound {
     FloatControl fc;
     int volumeScale = 6;
     float volume;
-    int volumePercentage = 40;
+    public int volumePercentage = 40;
     long savedPos = 0;
     public Sound()
     {
-        soundURL[0] = getClass().getResource("/textures/sound/TitleScreen2.wav");
-        soundURL[1] = getClass().getResource("/textures/sound/speak.wav");
-        soundURL[2] = getClass().getResource("/textures/sound/shoot.wav");
-        soundURL[3] = getClass().getResource("/textures/sound/levelup.wav");
-        soundURL[4] = getClass().getResource("/textures/sound/Thua.wav");
-        soundURL[5] = getClass().getResource("/textures/sound/Boss.wav");
-        soundURL[6] = getClass().getResource("/textures/sound/NhacLevel.wav");
-        soundURL[7] = getClass().getResource("/textures/sound/Quizz.wav");
-        soundURL[8] = getClass().getResource("/textures/sound/creditMusic.wav");
-        soundURL[9] = getClass().getResource("/textures/sound/fanfare.wav");
-        soundURL[10] = getClass().getResource("/textures/sound/ultimatebattle.wav");
-        soundURL[11] = getClass().getResource("/textures/sound/cursor.wav");
-        soundURL[12] = getClass().getResource("/textures/sound/gong.wav");
+        soundURL[0] = getClass().getResource("/sound/TitleScreen2.wav");
+        soundURL[1] = getClass().getResource("/sound/speak.wav");
+        soundURL[2] = getClass().getResource("/sound/shoot.wav");
+        soundURL[3] = getClass().getResource("/sound/levelup.wav");
+        soundURL[4] = getClass().getResource("/sound/Thua.wav");
+        soundURL[5] = getClass().getResource("/sound/Boss.wav");
+        soundURL[6] = getClass().getResource("/sound/NhacLevel.wav");
+        soundURL[7] = getClass().getResource("/sound/Quizz.wav");
+        soundURL[8] = getClass().getResource("/sound/creditMusic.wav");
+        soundURL[9] = getClass().getResource("/sound/fanfare.wav");
+        soundURL[10] = getClass().getResource("/sound/ultimatebattle.wav");
+        soundURL[11] = getClass().getResource("/sound/cursor.wav");
+        soundURL[12] = getClass().getResource("/sound/gong.wav");
     }
 
     public void setFile(int index)  {

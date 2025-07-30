@@ -6,33 +6,40 @@ import java.awt.*;
 import static org.kat.app.main.UI.joystix;
 
 public class Text{
+    protected static final int DEFAULT_FONT_SIZE = 18;
+    protected static final int DEFAULT_LINE_SPACING = 20;
+    protected static final float DEFAULT_FACTOR = 1.2f;
     private static final Font DEFAULT_FONT = joystix;
     private static final Color DEFAULT_COLOR = Color.WHITE;
 
     protected int parentX, parentY;
     protected int parentWidth, parentHeight;
-    protected String content;
-    protected Color color;
+    protected StringBuffer content;
+    protected Color color = DEFAULT_COLOR;
     protected Font baseFont;
-    protected float fontSize;
+    protected float fontSize = DEFAULT_FONT_SIZE;
+
+    protected int lineNums;
+    protected float factor = DEFAULT_FACTOR;
+    protected int lineSpacing = DEFAULT_LINE_SPACING;
 
     protected Alignment hAlign = Alignment.HORIZONTAL_CENTER;
     protected Alignment vAlign = Alignment.VERTICAL_CENTER;
+
+    private boolean buildOnce;
 
     public Text(){
 
     }
 
     public Text(String content){
-        this.content = content;
+        this.content = new StringBuffer(content);
 
         baseFont = DEFAULT_FONT;
-        color = DEFAULT_COLOR;
-
     }
 
     public Text(String content, Color color, Font baseFont, float fontSize) {
-        this.content = content;
+        this.content = new StringBuffer(content);
         this.color = color;
         this.baseFont = baseFont;
         this.fontSize = fontSize;
@@ -40,7 +47,18 @@ public class Text{
 
     // ===== Setter =====
     public void setText(String content) {
-        this.content = content;
+        this.content.delete(0, this.content.length());
+        this.content.append(content);
+
+    }
+
+    public void setProperties(Text text){
+        this.baseFont = text.baseFont;
+        this.color = text.color;
+        this.fontSize = text.fontSize;
+
+        this.lineNums = text.lineNums;
+        setAlignment(text.hAlign, text.vAlign);
     }
 
     public void setColor(Color color) {
@@ -55,17 +73,40 @@ public class Text{
         this.fontSize = size;
     }
 
+    public void setLineSpacing(float factor) {
+        this.factor = factor;
+    }
+
+    public void append(char c){
+        this.content.append(c);
+    }
+    public void append(Text text){
+        content.append(text.getText());
+    }
+    public void append(String textContent){
+        this.content.append(textContent);
+    }
+    public void delete(int start, int end){
+        content.delete(start, end);
+    }
     public void setHorizontalAlignment(Alignment hAlignment) {
         this.hAlign = hAlignment;
     }
-
     public void setVerticalAlignment(Alignment vAlignment) {
         this.vAlign = vAlignment;
     }
-
     public void setAlignment(Alignment hAlignment, Alignment vAlignment){
         this.hAlign = hAlignment;
         this.vAlign = vAlignment;
+    }
+    public void setLineAt(int line){
+        this.lineNums = line;
+    }
+    public Alignment getHorizontalAlignment(){
+        return hAlign;
+    }
+    public Alignment getVerticalAlignment(){
+        return vAlign;
     }
 
     public void attach(View view){
@@ -75,17 +116,49 @@ public class Text{
         this.parentHeight = view.height - view.padding.pTop - view.padding.pBottom;
     }
 
+    public void clear(){
+        content.delete(0, this.content.length());
+    }
+
+    public boolean isEmpty(){
+        return content.isEmpty();
+    }
+
+    public boolean equals(Text others){
+        return content.toString()
+                .equals(others.getText());
+    }
+
     // ===== Getter =====
-    public String getText() { return content; }
+    public int length(){
+        return content.length();
+    }
+    public char getTextAt(int index){
+        return content.charAt(index);
+    }
+    public String subtext(int start, int end){
+        return content.substring(start, end);
+    }
+    public String getText() { return content.toString(); }
     public Color getColor() { return color; }
     public Font getFont() { return baseFont.deriveFont(fontSize); }
     public float getFontSize() { return fontSize; }
 
+    public int getParentX() { return parentX; }
+    public int getParentY() { return parentY; }
+    public int getParentWidth() { return parentWidth; }
+    public int getParentHeight() { return parentHeight; }
+
     // ===== Update and Render=====
     public void render(Graphics2D g2) {
+        if(!buildOnce){
+            buildOnce = true;
+            lineSpacing = (int) (g2.getFontMetrics().getHeight() * factor);
+        }
+
         g2.setColor(color);
         g2.setFont(baseFont.deriveFont(fontSize));
-        int textWidth = g2.getFontMetrics().stringWidth(content);
+        int textWidth = g2.getFontMetrics().stringWidth(content.toString());
         int textHeight = g2.getFontMetrics().getAscent();
 
         int drawX = switch (hAlign) {
@@ -102,7 +175,9 @@ public class Text{
             default -> 0;
         };
 
-        g2.drawString(content, drawX, drawY);
+        drawY += lineNums * lineSpacing;
+
+        g2.drawString(content.toString(), drawX, drawY);
     }
 }
 

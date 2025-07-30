@@ -2,42 +2,76 @@
 <ImageView id="root" x="0" y="0" width="800" height="600" image="Background.png">
     <SubWindow
             id="settingContainer"
-            x="192"
-            y="48"
-            width="384"
-            height="480"
-             />
+            x="192" y="48" width="384" height="480">
+        <TextView
+                id="settingText"
+                x="192" y="48" width="384" height="100"
+                text="Tùy chọn"
+                shadow="true"
+                alignment="center"
+                fontSize="30"
+                color="#FFFFFF" />
 
-    <GameButton
-            id="startBtn"
-            x="300"
-            y="200"
-            width="200"
-            height="60"
-            text="Bắt đầu"
-            fontSize="30"
-            color="#FFFFFF"
-            roundRadius="30"/>
+        <TextView
+                id="settingTextNum1"
+                x="215" y="198" width="100" height="50"
+                text="Nhạc"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" >
 
-    <GameButton
-            id="settingsBtn"
-            x="300"
-            y="300"
-            width="200"
-            height="60"
-            text="Cài đặt"
-            fontSize="30"
-            color="#FFFFFF"
-            roundRadius="30"/>
+        </TextView>
 
-    <GameButton
-            id="exitBtn"
-            x="300"
-            y="400"
-            width="200"
-            height="60"
-            text="Thoát"
-            fontSize="30"
-            color="#FFFFFF"
-            roundRadius="30"/>
+        <TextView
+                id="settingTextNum2"
+                x="215" y="273" width="100" height="50"
+                text="SFX"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" >
+
+        </TextView>
+
+        <ValueAdjuster
+                id="volumeAdjusterMusic"
+                x="400"
+                y="198"
+                width="70"
+                height="50"
+                value="40"
+                lowerThreshold="0"
+                upperThreshold="100"
+                fontSize="18"
+                color="#FFFFFF"
+                roundRadius="30"/>
+
+        <ValueAdjuster
+                id="volumeAdjusterSFX"
+                x="400"
+                y="273"
+                width="70"
+                height="50"
+                value="40"
+                lowerThreshold="0"
+                upperThreshold="100"
+                fontSize="18"
+                color="#FFFFFF"
+                roundRadius="30"/>
+
+        <GameButton
+                id="instructionButton"
+                x="284" y="343" width="200" height="60"
+                text="Cách chơi"
+                fontSize="19"
+                color="#FFFFFF" />
+
+        <GameButton
+                id="goBackButton"
+                x="284" y="423" width="200" height="60"
+                text="Trở về"
+                fontSize="19"
+                color="#FFFFFF" />
+
+    </SubWindow>
+
 </ImageView>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageView id="root" x="0" y="0" width="800" height="600" image="Background.png">
+    <SubWindow
+            id="settingContainer"
+            x="64" y="48" width="640" height="480">
+
+        <TextView
+                id="instructionTitle"
+                x="192" y="48" width="384" height="100"
+                text="Hướng dẫn"
+                shadow="true"
+                alignment="center"
+                fontSize="30"
+                color="#FFFFFF" />
+
+        <TextView
+                id="moveInstruction"
+                x="76" y="128" width="100" height="50"
+                text="Di chuyển"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" />
+
+        <TextView
+                id="attackInstruction"
+                x="76" y="218" width="100" height="50"
+                text="Tấn công"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" />
+
+        <TextView
+                id="inventoryInstruction"
+                x="76" y="308" width="100" height="50"
+                text="Túi đồ"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" />
+
+        <TextView
+                id="itemInstruction"
+                x="76" y="398" width="100" height="50"
+                text="Vật phẩm"
+                alignment="right|center"
+                fontSize="19"
+                color="#FFFFFF" />
+
+        <GameButton
+                id="goBackInstructionButton"
+                x="284" y="444" width="200" height="60"
+                text="Trở về"
+                fontSize="19"
+                color="#FFFFFF" />
+
+
+    </SubWindow>
+
+</ImageView>

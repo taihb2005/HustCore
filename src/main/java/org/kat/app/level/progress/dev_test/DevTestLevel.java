@@ -5,38 +5,55 @@ import org.kat.app.level.LevelState;
 import org.kat.app.level.event.Event;
 import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
-import org.kat.app.map.MapParser;
 
 import java.util.List;
-
-import static org.kat.app.main.GamePanel.*;
 
 public class DevTestLevel extends Level {
 
     public DevTestLevel() {
-        ;
-        map = MapParser.loadMap("/textures/map/map0.tmx");
-        //map.gp = gp;
-
-        init();
-        setter.setFilePathObject("/textures/level/dev_test/enemy_dev.json");
-        setter.setFilePathObject("/textures/level/dev_test/object_dev.json");
-        setter.setFilePathEnemy("/textures/level/dev_test/enemy_dev.json");
-        setter.setFilePathNpc(null);
-        setter.loadAll();
-
-        setup();
-
-        stopMusic();
-        playMusic(6);
-
-        onCreateLevel = () -> {
-          currentState = LevelState.RUNNING;
-        };
-
-        onCreateLevel.run();
+        super();
     }
 
+
+    @Override
+    public void onCreate() {
+        currentState = LevelState.RUNNING;
+    }
+
+    @Override
+    public void onBegin() {
+
+    }
+
+    @Override
+    public void onFinish() {
+
+    }
+
+    @Override
+    public String getMapPath() {
+        return "/data/map/map0.tmx";
+    }
+
+    @Override
+    public String getObjectJsonPath() {
+        return "/data/level/dev_test/object_dev.json";
+    }
+
+    @Override
+    public String getEnemyJsonPath() {
+        return "/data/level/dev_test/enemy_dev.json";
+    }
+
+    @Override
+    public String getNPCJsonPath() {
+        return "/data/level/dev_test/npc_dev.json";
+    }
+
+    @Override
+    public int getMusicFile() {
+        return 6;
+    }
 
     public void update(){
         eventManager.update();
@@ -48,7 +65,8 @@ public class DevTestLevel extends Level {
         changeMapEventRect1 = null;
     }
 
-    private void setup(){
+    @Override
+    public void setup(){
         levelFinished = false;
         eventManager = new EventManager();
 

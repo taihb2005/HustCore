@@ -23,6 +23,8 @@ abstract public class View {
     protected Alignment hAlign = Alignment.HORIZONTAL_CENTER;
     protected Alignment vAlign = Alignment.VERTICAL_CENTER;
 
+    protected Visibility currentVisibility = Visibility.VISIBLE;
+    protected Visibility lastVisibility = Visibility.INVISIBLE;
     // ======Getter========
     public void setX(int x){
         this.x = x;
@@ -66,6 +68,14 @@ abstract public class View {
         this.vAlign = vAlignment;
     }
 
+    public void show(){
+        currentVisibility = Visibility.VISIBLE;
+    }
+
+    public void hide(){
+        currentVisibility = Visibility.INVISIBLE;
+    }
+
     public int getX(){
         return x;
     }
@@ -84,6 +94,10 @@ abstract public class View {
 
     public String getId(){
         return id;
+    }
+
+    public boolean isVisible(){
+        return currentVisibility == Visibility.VISIBLE;
     }
 
     public void attach(View view){

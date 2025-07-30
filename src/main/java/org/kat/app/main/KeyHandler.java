@@ -59,35 +59,8 @@ public class KeyHandler implements KeyListener{
                 if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
                 if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
                 if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
-                if (keyCode == KeyEvent.VK_ESCAPE) GamePanel.gameState = GameState.PAUSE;
+                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
                 if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-//                playSE(11);
-//                if (keyCode == KeyEvent.VK_W) {
-//                    GamePanel.ui.commandNum--;
-//                    if (GamePanel.ui.commandNum < 0) {
-//                        GamePanel.ui.commandNum = 2;
-//                    }
-//                }
-//                if (keyCode == KeyEvent.VK_S) {
-//                    GamePanel.ui.commandNum++;
-//                    if (GamePanel.ui.commandNum > 2) {
-//                        GamePanel.ui.commandNum = 0;
-//                    }
-//                }
-//                if (keyCode == KeyEvent.VK_ENTER) {
-//                    if (GamePanel.ui.commandNum == 0) {
-//                        disableKey();
-//                        LoadingService.loadResource();
-//                        LoadingService.loadMap();
-//                    }
-//                    if (GamePanel.ui.commandNum == 1) {
-//                        GamePanel.gameState = GameState.SETTING;
-//                    }
-//
-//                    if (GamePanel.ui.commandNum == 2) {
-//                        System.exit(0);
-//                    }
-//                }
             }
 
             if (GamePanel.gameState == GameState.PLAY) {

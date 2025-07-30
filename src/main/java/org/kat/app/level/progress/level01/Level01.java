@@ -9,7 +9,6 @@ import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
 import org.kat.app.main.GamePanel;
 import org.kat.app.main.GameState;
-import org.kat.app.map.MapParser;
 import org.kat.app.thread.LoadingService;
 
 import java.util.List;
@@ -18,71 +17,70 @@ import static org.kat.app.main.GamePanel.*;
 
 public class Level01 extends Level {
     public Level01(){
-        map = MapParser.loadMap("/textures/map/map1.tmx");
-        init();
-        setter.setFilePathObject("/textures/level/level01/object_level01.json");
-        setter.setFilePathEnemy("/textures/level/level01/enemy_level01.json");
-        setter.setFilePathNpc("/textures/level/level01/npc_level01.json");
-        setter.loadAll();
-
-        stopMusic();
-        playMusic(6);
-
-        setup();
-
-        onCreateLevel = () -> {
-            currentRoomTask = getNextRoomTask();
-            setLevelState(LevelState.CUTSCENE);
-            map.player.setGoal(768, 128);
-        };
-
-        onBeginLevel = () -> {
-            eventMaster.dialogues[0][0] = new StringBuilder("Player: Lại gặp một gã nữa...");
-            eventMaster.dialogues[0][1] = new StringBuilder("Player: Đến nói chuyện xem sao!");
-
-            map.addObject(new Obj_Door(
-                    "big",
-                    "inactive",
-                    "Temporary Door",
-                    768, 0
-            ), map.activeObj);
-
-            eventMaster.submitDialogue(eventMaster, 0);
-        };
-
-        onFinishLevel = () -> {
-          eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
-          eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
-          eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
-          eventMaster.submitDialogue(eventMaster, 0);
-        };
-
-        onCreateLevel.run();
-    }
-
-    public void update(){
-        eventManager.update();
-        if(!isLevelFinished()) {
-            if (currentRoomTask.isRunning()) {
-                currentRoomTask.update();
-            } else if(currentRoomTask.isFinished()){
-                currentRoomTask = getNextRoomTask();
-            }
-        }
+        super();
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
-        //eventHandler01.dispose();
+    public void onCreate() {
+        currentRoomTask = getNextRoomTask();
+        setLevelState(LevelState.CUTSCENE);
+        map.player.setGoal(768, 128);
     }
 
-    private void setup(){
+    @Override
+    public void onBegin() {
+        eventMaster.dialogues[0][0] = new StringBuilder("Player: Lại gặp một gã nữa...");
+        eventMaster.dialogues[0][1] = new StringBuilder("Player: Đến nói chuyện xem sao!");
+
+        map.addObject(new Obj_Door(
+                "big",
+                "inactive",
+                "Temporary Door",
+                768, 0
+        ), map.activeObj);
+
+        eventMaster.submitDialogue(eventMaster, 0);
+    }
+
+    @Override
+    public void onFinish() {
+        eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
+        eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
+        eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
+        eventMaster.submitDialogue(eventMaster, 0);
+    }
+
+    @Override
+    public String getMapPath() {
+        return "/data/map/map1.tmx";
+    }
+
+    @Override
+    public String getObjectJsonPath() {
+        return "/data/level/level01/object_level01.json";
+    }
+
+    @Override
+    public String getEnemyJsonPath() {
+        return "/data/level/level01/enemy_level01.json";
+    }
+
+    @Override
+    public String getNPCJsonPath() {
+        return "/data/level/level01/npc_level01.json";
+    }
+
+    @Override
+    public int getMusicFile(){
+        return 6;
+    }
+
+    @Override
+    public void setup(){
         levelFinished = false;
         canChangeMap = false;
 
         changeMapEventRect1 = new EventRectangle(768 , 1888 , 128 , 32 , false);
-
         eventManager = new EventManager();
 
         configureRoom(
@@ -144,7 +142,7 @@ public class Level01 extends Level {
 
         eventManager.register((new Event(
                 () -> isLevelFinished() && currentLevel == null,
-                () -> onFinishLevel.run()
+                this::onFinish
         )));
 
         eventManager.register(new Event(
@@ -156,5 +154,22 @@ public class Level01 extends Level {
                     map.player.storeValue();
                 }
         ));
+    }
+
+    public void update(){
+        eventManager.update();
+        if(!isLevelFinished()) {
+            if (currentRoomTask.isRunning()) {
+                currentRoomTask.update();
+            } else if(currentRoomTask.isFinished()){
+                currentRoomTask = getNextRoomTask();
+            }
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        //eventHandler01.dispose();
     }
 }

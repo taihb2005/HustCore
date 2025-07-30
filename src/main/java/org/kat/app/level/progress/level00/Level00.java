@@ -8,7 +8,6 @@ import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
 import org.kat.app.main.GamePanel;
 import org.kat.app.main.GameState;
-import org.kat.app.map.MapParser;
 import org.kat.app.thread.LoadingService;
 
 import java.util.List;
@@ -18,46 +17,68 @@ import java.util.TimerTask;
 import static org.kat.app.main.GamePanel.*;
 
 public class Level00 extends Level {
-    public Level00(){;
-        map = MapParser.loadMap("/textures/map/map0.tmx");
+    public Level00(){
+        super();
+    }
 
-        init();
-        setter.setFilePathObject("/textures/level/level00/object_level00.json");
-        setter.setFilePathNpc("/textures/level/level00/npc_level00.json");
-        setter.setFilePathEnemy("/textures/level/level00/enemy_level00.json");
-        setter.loadAll();
-        stopMusic();
-        playMusic(6);
+    @Override
+    public void onCreate() {
+        currentState = LevelState.RUNNING;
 
-        setup();
-
-        onCreateLevel = () -> {
-            currentState = LevelState.RUNNING;
-            TimerTask beginGameDialogue = new TimerTask() {
-                @Override
-                public void run() {
-                    eventMaster.submitDialogue(eventMaster , 0);
-                    finishedBeginningDialogue = true;
-                }
-            };
-            new Timer().schedule(beginGameDialogue , 800);
+        TimerTask beginGameDialogue = new TimerTask() {
+            @Override
+            public void run() {
+                eventMaster.submitDialogue(eventMaster , 0);
+                finishedBeginningDialogue = true;
+            }
         };
-
-        onCreateLevel.run();
+        new Timer().schedule(beginGameDialogue , 800);
     }
 
-    public void update(){
-        eventManager.update();
+    @Override
+    public void onBegin() {
+
     }
 
-    private void setup(){
+    @Override
+    public void onFinish() {
+
+    }
+
+    @Override
+    public String getMapPath() {
+        return "/data/map/map0.tmx";
+    }
+
+    @Override
+    public int getMusicFile(){
+        return 6;
+    }
+
+    @Override
+    public String getObjectJsonPath() {
+        return "/data/level/level00/object_level00.json";
+    }
+
+    @Override
+    public String getEnemyJsonPath() {
+        return "/data/level/level00/enemy_level00.json";
+    }
+
+    @Override
+    public String getNPCJsonPath() {
+        return "/data/level/level00/npc_level00.json";
+    }
+
+    @Override
+    public void setup(){
         levelFinished = false;
         eventManager = new EventManager();
 
         changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
 
-        eventMaster.dialogues[0][0] = new StringBuilder("Năm 2700, bạn nhận được nhiệm vụ\ngiải cứu một đại học...");
-        eventMaster.dialogues[0][1] = new StringBuilder("Nhưng ngay sau khi nhận nhiệm vụ\nbạn thấy mình nằm trong một căn\nphòng kì lạ!");
+        eventMaster.dialogues[0][0] = new StringBuilder("Năm 2700, bạn nhận được nhiệm vụ giải cứu một đại học... edthgfhgdtffertgtsffggweretgcvdwerttyhhffdgfgfgfgfgfgffgfg");
+        eventMaster.dialogues[0][1] = new StringBuilder("Nhưng ngay sau khi nhận nhiệm vụ bạn thấy mình nằm trong một căn phòng kì lạ!");
         eventMaster.dialogues[0][2] = new StringBuilder("...Cùng với một gã lạ mặt....");
         eventMaster.dialogues[0][3] = new StringBuilder("Thử đến nói chuyện xem sao.");
 
@@ -84,6 +105,10 @@ public class Level00 extends Level {
         ));
     }
 
+    public void update(){
+        eventManager.update();
+    }
+
     @Override
     public void dispose() {
         super.dispose();
@@ -94,9 +119,6 @@ public class Level00 extends Level {
         }
 
         changeMapEventRect1 = null;
-
-        onCreateLevel = null;
-        onFinishLevel = null;
     }
 
 }

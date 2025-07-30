@@ -197,7 +197,7 @@ public class Player extends Entity {
         if(currentRow == goalRow && currentCol == goalCol){
             isAutoMoving = false;
             currentLevel.setLevelState(LevelState.RUNNING);
-            currentLevel.onBeginLevel.run();
+            currentLevel.onBegin();
         }
     }
 
@@ -291,8 +291,8 @@ public class Player extends Entity {
     private void handlePosition() {
         isRunning = up | down | left | right;
         isInteracting = false;
-        interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
-        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
+//        interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
+//        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
 
         velocity.clear();
@@ -311,10 +311,10 @@ public class Player extends Entity {
         newPosition.set(position)
                 .add(velocity);
 
-        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
-        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
-        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
-        mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
+//        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+//        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+//        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
+//        mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
 
         if(!collisionOn) {
             position.set(newPosition);

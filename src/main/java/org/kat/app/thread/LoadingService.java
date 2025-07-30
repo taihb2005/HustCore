@@ -12,6 +12,7 @@ import org.kat.app.level.progress.level02.Level02;
 import org.kat.app.level.progress.level03.Level03;
 import org.kat.app.level.progress.level04.Level04;
 import org.kat.app.main.GameState;
+import org.kat.app.main.UI;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -25,8 +26,8 @@ public class LoadingService {
     public static void loadResource() {
         threadPool.submit(() -> {
             try {
-                gameState = GameState.LOADING;
-
+                UI._UIManager.setCurrentScreen("loading_menu");
+                
                 AssetPool.loadAll(AssetPool.SPRITE_FOLDER);
                 Player.loadPlayer();
                 Obj_Door.load();
@@ -64,8 +65,8 @@ public class LoadingService {
     public static void loadMap() {
         threadPool.submit(() -> {
             try {
-                gameState = GameState.LOADING;
-
+                UI._UIManager.clearFromScreenStack();
+                UI._UIManager.addToScreenStack("loading_menu");
                 dispose();
 
                 //currentLevel = new DevTestLevel();
@@ -86,11 +87,12 @@ public class LoadingService {
 
                 Thread.sleep(1000);
 
+                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
+                    UI._UIManager.clearFromScreenStack();
+                }
+
                 gameState = GameState.PLAY;
-
-                System.out.println("Map loaded.");
-
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -99,8 +101,8 @@ public class LoadingService {
     public static void restart(){
         threadPool.submit(() -> {
             try {
-                gameState = GameState.LOADING;
-
+                UI._UIManager.clearFromScreenStack();
+                UI._UIManager.addToScreenStack("loading_menu");
                 dispose();
 
                 //currentLevel = new DevTestLevel();
@@ -117,9 +119,11 @@ public class LoadingService {
                 currentLevel.map.player.resetValue();;
                 Thread.sleep(1000);
 
+                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
+                    UI._UIManager.clearFromScreenStack();
+                }
+
                 gameState = GameState.PLAY;
-
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

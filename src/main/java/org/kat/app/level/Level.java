@@ -5,6 +5,7 @@ import org.kat.app.entity.mob.Monster;
 import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
 import org.kat.app.map.GameMap;
+import org.kat.app.map.MapParser;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.Queue;
 
 import static org.kat.app.main.GamePanel.*;
 
-public class Level{
+public abstract class Level implements ILevel{
     public GameMap map;
     protected static AssetSetter setter;
     protected EntityManager entityManager;
@@ -38,12 +39,17 @@ public class Level{
     protected RoomTask currentRoomTask;
     protected RoomTask nextRoomTask;
 
-    public Runnable onCreateLevel;
-    public Runnable onBeginLevel;
-    public Runnable onFinishLevel;
 
     public boolean levelFinished;
     public boolean finishedBeginningDialogue = false;
+
+    public Level(){
+        map = MapParser.loadMap(getMapPath());
+        init();
+
+        setup();
+        onCreate();
+    }
 
     public void init(){
         camera.setCamera(windowWidth , windowHeight , map.getMapWidth() ,map.getMapHeight());
@@ -51,6 +57,15 @@ public class Level{
         entityManager = new EntityManager();
         canChangeMap = false;
         levelFinished = false;
+        setter.setFilePathObject(getObjectJsonPath());
+        setter.setFilePathNpc(getNPCJsonPath());
+        setter.setFilePathEnemy(getEnemyJsonPath());
+        setter.loadAll();
+
+        stopMusic();
+        if(getMusicFile() != -1){
+            playMusic(getMusicFile());
+        }
     };
 
     public boolean triggerEvent(EventRectangle e){
@@ -320,10 +335,6 @@ public class Level{
         previousRoomTask = null;
         currentRoomTask = null;
         nextRoomTask = null;
-
-        onCreateLevel = null;
-        onBeginLevel = null;
-        onFinishLevel = null;
 
         eventMaster.dispose();
         eventMaster = null;

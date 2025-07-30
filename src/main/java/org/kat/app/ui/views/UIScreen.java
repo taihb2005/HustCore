@@ -1,21 +1,24 @@
 package org.kat.app.ui.views;
 
-import org.kat.app.ui.UIKeyboardNavigator;
+import org.kat.app.main.KeyHandler;
 import org.kat.app.ui.Updatable;
 import org.kat.app.ui.components.Button;
 import org.kat.app.util.Tree;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public abstract class UIScreen implements UIKeyboardNavigator {
+public abstract class UIScreen{
     protected String id;
     protected Tree<View> viewTree;
 
+    protected Visibility currentVisibility;
+    protected Visibility lastVisibility;
     protected List<Button> buttonList;
     protected int buttonsNum;
-    protected Cursor cursor;
+    protected int defaultPos;
     protected int currentPos;
 
 
@@ -23,14 +26,24 @@ public abstract class UIScreen implements UIKeyboardNavigator {
         this.id = id;
         this.viewTree = viewTree;
 
+        lastVisibility = Visibility.INVISIBLE;
+        currentVisibility = Visibility.INVISIBLE;
         buttonList = getButtonList();
         buttonsNum = getButtonCount();
-        cursor = getCursor();
         currentPos = getDefaultCursorPos();
+        defaultPos = getDefaultCursorPos();
 
-        buttonList.get(currentPos)
-                .setHover();
-        getCursor().attach(buttonList.get(currentPos));
+        if(buttonList != null && !buttonList.isEmpty()) {
+            buttonList.get(currentPos)
+                    .setHover();
+            getCursor().attach(buttonList.get(currentPos));
+        }
+
+        viewTree.inOrderTraverse(viewTree.getRoot(),
+                (node) -> {
+                    View currentView = node.getData();
+                    currentView.show();
+                });
 
         onCreate();
     }
@@ -59,35 +72,167 @@ public abstract class UIScreen implements UIKeyboardNavigator {
         this.viewTree = viewTree;
     }
 
-    @Override
-    public int getCurrentPos(){
-        return currentPos;
-    }
-
-    @Override
-    public void setCurrentPos(int currentPos){
-        this.currentPos = currentPos;
-    }
-
     protected abstract void onCreate();
+    protected void onShow(){
+        currentPos = 0;
+
+        for (Button btn : buttonList) {
+            btn.setIdle();
+        }
+
+        Button defaultButton = buttonList.get(currentPos);
+        defaultButton.setHover();
+
+        getCursor().attach(defaultButton);
+        getCursor().hold();
+    }
+    protected void onLeave(){
+
+    }
+
+    public void show(){
+        currentVisibility = Visibility.VISIBLE;
+        lastVisibility = Visibility.INVISIBLE;
+    }
+
+    public void hide(){
+        currentVisibility = Visibility.INVISIBLE;
+        lastVisibility = Visibility.VISIBLE;
+    }
+
+    public List<Button> getButtonList(){
+        if(this.buttonList == null){
+            List<Button> buttons = new ArrayList<>();
+
+            List<View> list = viewTree.getAll(viewTree.getRoot(),
+                    (node) -> node.getData() instanceof Button);
+
+            for(View v: list){
+                buttons.add((Button) v);
+            }
+
+            return buttons;
+        } else return this.buttonList;
+    }
+
+    public int getButtonCount(){
+        if(getButtonList() == null)
+            return 0;
+        return getButtonList().size();
+    }
+
+    public Cursor getCursor(){
+        return buttonList.get(currentPos).getCursor();
+    };
+
+    public int getDefaultCursorPos(){
+        return 0;
+    }
+
+    public int getCurrentCursorPos(){
+        return this.currentPos;
+    };
+    public void setCursorPos(int pos){
+        this.currentPos = pos;
+    };
+
+    private void handleKeyNavigation() {
+        int cursorPos = getCurrentCursorPos();
+
+        if (KeyHandler.downPressed) {
+            KeyHandler.downPressed = false;
+
+            Button button = buttonList.get(cursorPos);
+            button.setIdle();
+            getCursor().release();
+
+            cursorPos = getNextEnabledButtonPos(cursorPos);
+
+            setCursorPos(cursorPos);
+            getCursor().release();
+        }
+        else if (KeyHandler.upPressed) {
+            KeyHandler.upPressed = false;
+
+            Button button = buttonList.get(cursorPos);
+            button.setIdle();
+            getCursor().release();
+
+            cursorPos = getPreviousEnabledButtonPos(cursorPos);
+
+            setCursorPos(cursorPos);
+            getCursor().release();
+        } else if(KeyHandler.keyEscpressed) {
+            KeyHandler.keyEscpressed = false;
+            onLeave();
+        }
+
+        Button button = buttonList.get(cursorPos);
+        button.setHover();
+        getCursor().attach(button);
+        getCursor().hold();
+    }
+
+    private int getNextEnabledButtonPos(int cursorPos){
+        List<Button> buttons = getButtonList();
+        int attempts = 0;
+        do {
+            cursorPos++;
+            if (cursorPos >= buttons.size()) {
+                cursorPos = 0;
+            }
+            attempts++;
+        } while (buttons.get(cursorPos).currentStateIs(Button.ButtonState.DISABLE)
+                && attempts <= buttons.size());
+
+        return cursorPos;
+    }
+
+    private int getPreviousEnabledButtonPos(int cursorPos){
+        List<Button> buttons = getButtonList();
+        int attempts = 0;
+        do {
+            cursorPos--;
+            if (cursorPos < 0) {
+                cursorPos = buttons.size() - 1;
+            }
+            attempts++;
+        } while (buttons.get(cursorPos).currentStateIs(Button.ButtonState.DISABLE)
+                && attempts <= buttons.size());
+
+        return cursorPos;
+    }
 
     public void update(){
+        if(lastVisibility == Visibility.INVISIBLE && currentVisibility == Visibility.VISIBLE){
+            lastVisibility = Visibility.VISIBLE;
+            onShow();
+        } else if(lastVisibility == Visibility.VISIBLE && currentVisibility == Visibility.INVISIBLE){
+            lastVisibility = Visibility.INVISIBLE;
+        }
         handleKeyNavigation();
         viewTree.inOrderTraverse(viewTree.getRoot(),
                 (node) -> {
                     View currentView = node.getData();
                     if(currentView instanceof Updatable updatable) updatable.update();
                 });
+
+        Cursor cursor = getCursor();
+        if(cursor != null) {
+            cursor.update();
+        }
     }
 
     public void render(Graphics2D g2){
         viewTree.inOrderTraverse(viewTree.getRoot(),
                 (node) -> {
                     View currentView = node.getData();
-                    currentView.render(g2);
+                    if(currentView.isVisible()) currentView.render(g2);
                 });
 
-        if(cursor != null) cursor.render(g2);
+        Cursor cursor = getCursor();
+        if(cursor != null){
+            cursor.render(g2);
+        }
     }
-
 }

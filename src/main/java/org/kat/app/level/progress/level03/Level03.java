@@ -10,7 +10,6 @@ import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
 import org.kat.app.main.GamePanel;
 import org.kat.app.main.GameState;
-import org.kat.app.map.MapParser;
 import org.kat.app.thread.LoadingService;
 
 import java.awt.*;
@@ -24,60 +23,76 @@ public class Level03 extends Level {
     private boolean enterFirstRoom = false;
 
     public Level03() {
-        map = MapParser.loadMap("/textures/map/map3.tmx");
-        init();
-        setter.setFilePathObject("/textures/level/level03/object_level03.json");
-        setter.setFilePathEnemy("/textures/level/level03/enemy_level03.json");
-        setter.setFilePathNpc("/textures/level/level03/npc_level03.json");
-        setter.loadAll();
-
-        setup();
-
-        levelFinished = false;
-
-        onCreateLevel = () -> {
-            stopMusic();
-            playMusic(6);
-            currentRoomTask = getNextRoomTask();
-            setLevelState(LevelState.CUTSCENE);
-            map.player.setGoal(926, 1608);
-        };
-
-        onBeginLevel = () -> {
-            map.addObject(new Obj_Door(
-                    "big",
-                    "inactive",
-                    "Temporary",
-                    896, 1856
-            ), map.activeObj);
-
-            eventMaster.dialogues[0][0] = new StringBuilder("Player: Chuyện gì vậy?");
-            eventMaster.dialogues[0][1] = new StringBuilder("Boss: Chào mừng ngươi đến với\n" +
-                    "tầng hầm đặc biệt của BK.");
-            eventMaster.dialogues[0][2] = new StringBuilder("Boss: Một khi ngươi bước vào thì\n" +
-                    "gần như ngươi không thể thoát ra \n" +
-                    "ngoài...");
-            eventMaster.dialogues[0][3] = new StringBuilder("Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!");
-            eventMaster.dialogues[0][4] = new StringBuilder("Player: Haha! Ngươi đang trêu \nngươi ta phải không?");
-            eventMaster.dialogues[0][5] = new StringBuilder("Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.");
-            eventMaster.dialogues[0][6] = new StringBuilder("Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định.");
-            eventMaster.dialogues[0][7] = new StringBuilder("Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này.");
-            eventMaster.dialogues[0][8] = new StringBuilder("Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n");
-
-            eventMaster.submitDialogue(eventMaster, 0);
-        };
-
-        onFinishLevel = () -> {
-            eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ ba");
-            eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Nam để\ntiếp tục!");
-
-            eventMaster.submitDialogue(eventMaster, 0);
-            map.player.getEnvironmentManager().lighting.transit = true;
-            map.player.getEnvironmentManager().lighting.fadeOut = true;
-        };
-
-        onCreateLevel.run();
+        super();
     }
+
+    @Override
+    public void onCreate() {
+        currentRoomTask = getNextRoomTask();
+        setLevelState(LevelState.CUTSCENE);
+        map.player.setGoal(926, 1608);
+    }
+
+    @Override
+    public void onBegin() {
+        map.addObject(new Obj_Door(
+                "big",
+                "inactive",
+                "Temporary",
+                896, 1856
+        ), map.activeObj);
+
+        eventMaster.dialogues[0][0] = new StringBuilder("Player: Chuyện gì vậy?");
+        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Chào mừng ngươi đến với\n" +
+                "tầng hầm đặc biệt của BK.");
+        eventMaster.dialogues[0][2] = new StringBuilder("Boss: Một khi ngươi bước vào thì\n" +
+                "gần như ngươi không thể thoát ra \n" +
+                "ngoài...");
+        eventMaster.dialogues[0][3] = new StringBuilder("Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!");
+        eventMaster.dialogues[0][4] = new StringBuilder("Player: Haha! Ngươi đang trêu \nngươi ta phải không?");
+        eventMaster.dialogues[0][5] = new StringBuilder("Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.");
+        eventMaster.dialogues[0][6] = new StringBuilder("Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định.");
+        eventMaster.dialogues[0][7] = new StringBuilder("Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này.");
+        eventMaster.dialogues[0][8] = new StringBuilder("Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n");
+
+        eventMaster.submitDialogue(eventMaster, 0);
+    }
+
+    @Override
+    public void onFinish() {
+        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ ba");
+        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Nam để\ntiếp tục!");
+
+        eventMaster.submitDialogue(eventMaster, 0);
+        map.player.getEnvironmentManager().lighting.transit = true;
+        map.player.getEnvironmentManager().lighting.fadeOut = true;
+    }
+
+    @Override
+    public String getMapPath() {
+        return "/data/map/map3.tmx";
+    }
+
+    @Override
+    public String getObjectJsonPath() {
+        return "/data/level/level03/object_level03.json";
+    }
+
+    @Override
+    public String getEnemyJsonPath() {
+        return "/data/level/level03/enemy_level03.json";
+    }
+
+    @Override
+    public String getNPCJsonPath() {
+        return "/data/level/level03/npc_level03.json";
+    }
+
+    @Override
+    public int getMusicFile() {
+        return 6;
+    }
+
     public void update() {
         eventManager.update();
         if(enterFirstRoom) onEnterFirstRoom.run();
@@ -88,7 +103,8 @@ public class Level03 extends Level {
         super.dispose();
     }
 
-    private void setup(){
+    @Override
+    public void setup(){
         levelFinished = false;
         canChangeMap = false;
         changeMapEventRect1 = new EventRectangle(1536 , 1888 , 128 , 32 , false);
@@ -236,7 +252,7 @@ public class Level03 extends Level {
                 },
                 () -> {
                     getRoom("Room5").finish();
-                    onFinishLevel.run();
+                    onFinish();
                 }
         ));
 

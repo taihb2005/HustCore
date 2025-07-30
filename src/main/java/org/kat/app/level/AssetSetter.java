@@ -20,7 +20,7 @@ import org.kat.app.entity.json_stat.NpcStat;
 import org.kat.app.entity.mob.*;
 import org.kat.app.entity.npc.Npc_CorruptedHustStudent;
 import org.kat.app.entity.object.*;
-import org.kat.app.main.ResourceLoader;
+import org.kat.app.util.ResourceLoader;
 import org.kat.app.map.GameMap;
 
 import java.awt.*;

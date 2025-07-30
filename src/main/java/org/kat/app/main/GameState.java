@@ -6,6 +6,7 @@ public enum GameState {
      PLAY,
      PASSWORD,
      PAUSE,
+     UI_INGAME_OPENED,
      DIALOGUE,
      LEVELUP,
      LOSE,

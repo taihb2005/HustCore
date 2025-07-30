@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SubWindow
+        id="speechDisplayContainer"
+        x="96" y="24" width="576" height="192">
+
+    <WrappedTextView
+            id="speechContent"
+            x="106" y="34" width="576" height="192"
+            text=" "
+            alignment="left|top"
+            fontSize="25"
+            color="#FFFFFF" />
+
+    <GameButton
+            id="nextPage"
+            x="556" y="172" width="20" height="20"
+            text=">"
+            fontSize="15"
+            color="#FFFFFF"
+            roundRadius="30"/>
+
+</SubWindow>
