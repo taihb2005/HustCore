@@ -48,7 +48,7 @@ public abstract class UIScreen{
         onCreate();
     }
 
-    protected View findViewById(String id){
+    public View findViewById(String id){
         View view = viewTree.get(viewTree.getRoot(),
                 (node) -> node.getData().getId().equals(id))
                 .getData();
@@ -73,6 +73,10 @@ public abstract class UIScreen{
     }
 
     protected abstract void onCreate();
+    protected void onLeave(){
+
+    }
+
     protected void onShow(){
         currentPos = 0;
 
@@ -86,18 +90,23 @@ public abstract class UIScreen{
         getCursor().attach(defaultButton);
         getCursor().hold();
     }
-    protected void onLeave(){
-
+    protected void onHide(){
     }
 
     public void show(){
         currentVisibility = Visibility.VISIBLE;
-        lastVisibility = Visibility.INVISIBLE;
     }
 
     public void hide(){
         currentVisibility = Visibility.INVISIBLE;
-        lastVisibility = Visibility.VISIBLE;
+    }
+
+    public boolean isVisible(){
+        return !(currentVisibility == Visibility.INVISIBLE && lastVisibility == Visibility.INVISIBLE);
+    }
+
+    public boolean isNotVisible(){
+        return currentVisibility == Visibility.INVISIBLE && lastVisibility == Visibility.INVISIBLE;
     }
 
     public List<Button> getButtonList(){
@@ -136,7 +145,15 @@ public abstract class UIScreen{
         this.currentPos = pos;
     };
 
-    private void handleKeyNavigation() {
+    public void handleKeyNavigation() {
+        if(KeyHandler.keyEscpressed) {
+            KeyHandler.keyEscpressed = false;
+            onLeave();
+        }
+
+        if(buttonList == null || buttonList.isEmpty()) {
+            return;
+        }
         int cursorPos = getCurrentCursorPos();
 
         if (KeyHandler.downPressed) {
@@ -162,9 +179,6 @@ public abstract class UIScreen{
 
             setCursorPos(cursorPos);
             getCursor().release();
-        } else if(KeyHandler.keyEscpressed) {
-            KeyHandler.keyEscpressed = false;
-            onLeave();
         }
 
         Button button = buttonList.get(cursorPos);
@@ -209,6 +223,7 @@ public abstract class UIScreen{
             onShow();
         } else if(lastVisibility == Visibility.VISIBLE && currentVisibility == Visibility.INVISIBLE){
             lastVisibility = Visibility.INVISIBLE;
+            onHide();
         }
         handleKeyNavigation();
         viewTree.inOrderTraverse(viewTree.getRoot(),
@@ -216,10 +231,11 @@ public abstract class UIScreen{
                     View currentView = node.getData();
                     if(currentView instanceof Updatable updatable) updatable.update();
                 });
-
-        Cursor cursor = getCursor();
-        if(cursor != null) {
-            cursor.update();
+        if(buttonList != null && !buttonList.isEmpty()) {
+            Cursor cursor = getCursor();
+            if (cursor != null) {
+                cursor.update();
+            }
         }
     }
 

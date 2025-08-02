@@ -62,11 +62,11 @@ public class LoadingService {
     }
 
 
-    public static void loadMap() {
+    public static void loadLevel() {
         threadPool.submit(() -> {
             try {
-                UI._UIManager.clearFromScreenStack();
-                UI._UIManager.addToScreenStack("loading_menu");
+//                UI._UIManager.clearFromScreenStack();
+//                UI._UIManager.setCurrentScreen("loading_menu");
                 dispose();
 
                 //currentLevel = new DevTestLevel();
@@ -87,11 +87,11 @@ public class LoadingService {
 
                 Thread.sleep(1000);
 
-                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
-                    UI._UIManager.clearFromScreenStack();
-                }
-
-                gameState = GameState.PLAY;
+//                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
+//                    UI._UIManager.clearFromScreenStack();
+//                }
+//
+//                gameState = GameState.PLAY;
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -45,7 +45,7 @@ public class RoomTask {
             }
 
             if(eventMaster.dialogues != null)
-                eventMaster.submitDialogue(eventMaster, 0);
+                eventMaster.submitDialogue(0);
         };
 
         onComplete= () -> {
@@ -111,7 +111,8 @@ public class RoomTask {
     }
 
     public void createTaskBoard(StringBuilder task){
-        eventMaster.dialogues[0][0] = task;
+        eventMaster.setDialogueAt(0, 0, task.toString());
+        eventMaster.buildDialogue();
     }
 
     public boolean checkEnemyDifferent(int difference){

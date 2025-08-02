@@ -2,8 +2,8 @@
   "player": [
     {
       "position": {
-        "x": 1088,
-        "y": 2174
+        "x": 990,
+        "y": 1674
       }
     }
   ],
@@ -1262,16 +1262,6 @@
     }
   ],
   "active": [
-    {
-      "object": "Obj_Door",
-      "name": "DoorA001",
-      "size": "small",
-      "state": "inactive",
-      "position": {
-        "x": 832,
-        "y": 1792
-      }
-    },
     {
       "object": "Obj_Door",
       "name": "DoorA002",

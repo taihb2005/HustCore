@@ -10,6 +10,7 @@ import org.kat.app.util.Tree;
 import org.kat.app.util.TreeNode;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
@@ -69,6 +70,27 @@ public class UIBuilder {
                 BufferedImage image = AssetPool.getImage(imagePath);
 
                 res = new ImageView(x, y, width, height, image);
+            }
+
+            case "Bar" -> {
+                String imagePath = getAttr(e, "image", "null");
+                BufferedImage image = AssetPool.getImage(imagePath);
+
+                int barX = getIntAttr(e, "barX", 0);
+                int barY = getIntAttr(e, "barY", 0);
+                int barWidth = getIntAttr(e, "barWidth", 0);
+                int barHeight = getIntAttr(e, "barHeight", 0);
+                String barColor = getAttr(e, "barColor", "#FF0000");
+                Color color = Color.decode(barColor);
+
+                res = new Bar(x, y, width, height,
+                        barX, barY, barWidth, barHeight,
+                        image);
+                ((Bar) res).setFillColor(color);
+            }
+
+            case "Inventory" -> {
+                res = new Inventory(x, y, width, height);
             }
 
             case "TextView" -> {

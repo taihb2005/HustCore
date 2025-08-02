@@ -8,6 +8,9 @@ import org.kat.app.main.KeyHandler;
 import org.kat.app.main.UI;
 import org.kat.app.map.GameMap;
 import org.kat.app.ui.hustcore.SpeechDisplay;
+import org.kat.app.ui.views.Text;
+import org.kat.app.ui.views.View;
+import org.kat.app.ui.views.WrappedTextView;
 import org.kat.app.util.KeyPair;
 import org.kat.app.util.Vector2D;
 
@@ -26,6 +29,9 @@ public class Entity {
     protected static final Vector2D DOWN_DIR = new Vector2D(0, 1);
     protected static final Vector2D LEFT_DIR = new Vector2D(-1, 0);
     protected static final Vector2D RIGHT_DIR = new Vector2D(1, 0);
+
+    private static final int MAX_DIALOGUE_SET = 5;
+    private static final int MAX_DIALOGUE_COUNT = 30;
 
     public String name;
     public String idName = "";
@@ -86,7 +92,8 @@ public class Entity {
     public boolean left;
     public boolean right;
 
-    public StringBuilder[][] dialogues = new StringBuilder[5][30];
+    public StringBuilder[][] dialogues = new StringBuilder[MAX_DIALOGUE_SET][MAX_DIALOGUE_COUNT];
+    public WrappedTextView[][] shownDialogues = new WrappedTextView[MAX_DIALOGUE_SET][MAX_DIALOGUE_COUNT];
 
     public int dialogueIndex;
     public int dialogueSet = -1;
@@ -115,12 +122,57 @@ public class Entity {
         }
     }
 
-    public void submitDialogue(Entity entity, int dialogueSet) {
+    public void submitDialogue(int dialogueSet) {
         if(currentLevel.checkState(LevelState.RUNNING)) {
             KeyHandler.enterPressed = false;
             currentLevel.setLevelState(LevelState.DIALOGUE);
-            ((SpeechDisplay) UI._UIManager.findUIScreenByName("speech_display")).add(new KeyPair<>(entity, dialogueSet));
+            ((SpeechDisplay) UI._UIManager.findUIScreenByName("speech_display")).add(new KeyPair<>(this, dialogueSet));
+            UI._UIManager.setCurrentScreen("speech_display");
             //ui.dialogueQueue.add(new KeyPair<>(entity, dialogueSet));
+        }
+    }
+
+    public StringBuilder getDialogueAt(int dialogueSet, int dialogueIndex) {
+        return this.dialogues[dialogueSet][dialogueIndex];
+    }
+
+    public WrappedTextView getShownDialogueAt(int dialogueSet, int dialogueIndex) {
+        return this.shownDialogues[dialogueSet][dialogueIndex];
+    }
+
+    public void setDialogueAt(int dialogueSet, int dialogueIndex, String dialogue){
+        if(dialogueSet > MAX_DIALOGUE_SET || dialogueIndex > MAX_DIALOGUE_COUNT){
+            throw new IllegalArgumentException("Dialogue set is out of bounds");
+        }
+
+        if(dialogues[dialogueSet][dialogueIndex] == null){
+            dialogues[dialogueSet][dialogueIndex] = new StringBuilder();
+        } else dialogues[dialogueSet][dialogueIndex].setLength(0);
+
+        dialogues[dialogueSet][dialogueIndex].append(dialogue);
+    }
+
+    public void buildDialogue() {
+        WrappedTextView parent = (WrappedTextView) UI._UIManager
+                .findUIScreenByName("speech_display")
+                .findViewById("speechContent");
+
+        for(int i = 0; i < dialogues.length; i++) {
+            for(int j = 0; j < dialogues[i].length; j++) {
+                if(dialogues[i][j] == null) continue;
+                if(shownDialogues[i][j] == null){
+                    Text t = new Text(dialogues[i][j].toString());
+                    t.setProperties(parent.getText());
+                    shownDialogues[i][j] = new WrappedTextView(t, parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight())
+                            .enableDisplayCharByChar()
+                            .build();
+                } else {
+                    shownDialogues[i][j].clear()
+                            .setText(dialogues[i][j].toString())
+                            .enableDisplayCharByChar()
+                            .build();
+                }
+            }
         }
     }
 

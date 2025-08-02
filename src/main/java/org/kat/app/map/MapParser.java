@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class MapParser {
 
-//    public static void loadMap(String id , String filepath)
+//    public static void loadLevel(String id , String filepath)
 //    {
 //        parseMap(id , filepath);
 //    }

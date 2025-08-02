@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextView
+    id="root" x="0" y="0" width="800" height="600" >
+    <Bar
+            id="hpBar"
+            x="28" y="456" width="300" height="72"
+            barX="100" barY="496" barWidth="159" barHeight="12"
+            barColor="#FF3B30"
+            image="hpFrameTech.png"/>
+
+    <Bar
+            id="manaBar"
+            x="48" y="512" width="186" height="48"
+            barX="99" barY="531" barWidth="101" barHeight="8"
+            barColor="#4A90E2"
+            image="manaFrameTech.png"/>
+
+    <Inventory
+            id="inventory"
+            x="12" y="92" width="78" height="320"/>
+</TextView>

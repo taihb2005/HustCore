@@ -4,6 +4,8 @@ import org.kat.app.entity.Entity;
 import org.kat.app.entity.mob.Monster;
 import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
+import org.kat.app.main.GameState;
+import org.kat.app.main.UI;
 import org.kat.app.map.GameMap;
 import org.kat.app.map.MapParser;
 
@@ -44,11 +46,22 @@ public abstract class Level implements ILevel{
     public boolean finishedBeginningDialogue = false;
 
     public Level(){
+        UI._UIManager.clearFromScreenStack();
+        UI._UIManager.setCurrentScreen("loading_menu");
+
+        //========Loading=========
         map = MapParser.loadMap(getMapPath());
         init();
-
         setup();
+        onLoad();
+        //========After the level has loaded==========
         onCreate();
+
+        if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
+            UI._UIManager.clearFromScreenStack();
+        }
+
+        gameState = GameState.PLAY;
     }
 
     public void init(){

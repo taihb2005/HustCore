@@ -27,6 +27,11 @@ public class Level03 extends Level {
     }
 
     @Override
+    public void onLoad(){
+
+    }
+
+    @Override
     public void onCreate() {
         currentRoomTask = getNextRoomTask();
         setLevelState(LevelState.CUTSCENE);
@@ -42,28 +47,30 @@ public class Level03 extends Level {
                 896, 1856
         ), map.activeObj);
 
-        eventMaster.dialogues[0][0] = new StringBuilder("Player: Chuyện gì vậy?");
-        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Chào mừng ngươi đến với\n" +
-                "tầng hầm đặc biệt của BK.");
-        eventMaster.dialogues[0][2] = new StringBuilder("Boss: Một khi ngươi bước vào thì\n" +
-                "gần như ngươi không thể thoát ra \n" +
-                "ngoài...");
-        eventMaster.dialogues[0][3] = new StringBuilder("Boss: trừ khi ngươi có thể vượt \nqua các nhiệm vụ đặc biệt ở mỗi \ncửa ngươi bước vào!");
-        eventMaster.dialogues[0][4] = new StringBuilder("Player: Haha! Ngươi đang trêu \nngươi ta phải không?");
-        eventMaster.dialogues[0][5] = new StringBuilder("Boss: Không đơn giản như ngươi \nnghĩ đâu, căn phòng này được \nthiết kế đặc biệt.");
-        eventMaster.dialogues[0][6] = new StringBuilder("Boss: Ánh sáng càng ngày càng \ngiảm sau 1 khoảng thời gian \nnhất định.");
-        eventMaster.dialogues[0][7] = new StringBuilder("Boss: từ đó nếu ngươi không thể\nthoát khi ánh sáng còn, ngươi sẽ \nbị nhốt vĩnh viễn ở nơi này.");
-        eventMaster.dialogues[0][8] = new StringBuilder("Boss: Vì vậy ta chúc ngươi may \nmắn, tên nhóc liều mạng của ta ….\n");
+        eventMaster.setDialogueAt(0, 0, "Player: Chuyện gì vậy?");
+        eventMaster.setDialogueAt(0, 1, "Boss: Chào mừng ngươi đến với tầng hầm đặc biệt của BK.");
+        eventMaster.setDialogueAt(0, 2, "Boss: Một khi ngươi bước vào thì gần như ngươi không thể thoát ra ngoài...");
+        eventMaster.setDialogueAt(0, 3, "Boss: trừ khi ngươi có thể vượt qua các nhiệm vụ đặc biệt ở mỗi cửa ngươi bước vào!");
+        eventMaster.setDialogueAt(0, 4, "Player: Haha! Ngươi đang trêu ngươi ta phải không?");
+        eventMaster.setDialogueAt(0, 5, "Boss: Không đơn giản như ngươi nghĩ đâu, căn phòng này được thiết kế đặc biệt.");
+        eventMaster.setDialogueAt(0, 6, "Boss: Ánh sáng càng ngày càng giảm sau 1 khoảng thời gian nhất định.");
+        eventMaster.setDialogueAt(0, 7, "Boss: từ đó nếu ngươi không thể thoát khi ánh sáng còn, ngươi sẽ bị nhốt vĩnh viễn ở nơi này.");
+        eventMaster.setDialogueAt(0, 8, "Boss: Vì vậy ta chúc ngươi may mắn, tên nhóc liều mạng của ta ….");
 
-        eventMaster.submitDialogue(eventMaster, 0);
+        eventMaster.setDialogueAt(1, 0, "Bạn đã hoàn thành thử thách thứ ba");
+        eventMaster.setDialogueAt(1, 1, "Hãy đến cửa phía Nam để tiếp tục!");
+        eventMaster.buildDialogue();
+
+
+        eventMaster.submitDialogue(0);
     }
 
     @Override
     public void onFinish() {
-        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ ba");
-        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Nam để\ntiếp tục!");
+//        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ ba");
+//        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Nam để\ntiếp tục!");
 
-        eventMaster.submitDialogue(eventMaster, 0);
+        eventMaster.submitDialogue(0);
         map.player.getEnvironmentManager().lighting.transit = true;
         map.player.getEnvironmentManager().lighting.fadeOut = true;
     }
@@ -292,7 +299,7 @@ public class Level03 extends Level {
                 () -> {
                     GamePanel.gameState = GameState.LOADING;
                     levelProgress++;
-                    LoadingService.loadMap();
+                    LoadingService.loadLevel();
                     map.player.storeValue();
                 }
         ));

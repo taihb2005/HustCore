@@ -1,10 +1,15 @@
 package org.kat.app.ui.views;
 
+import org.kat.app.main.GameState;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static org.kat.app.main.GamePanel.gameState;
+
 public class UIManager {
+    public static UIScreen playScreen;
     UIScreen currentScreen;
 
     private static final Stack<UIScreen> screenStack = new Stack<UIScreen>();
@@ -16,6 +21,13 @@ public class UIManager {
 
     public UIScreen findUIScreenByName(String name){
         return UIMap.get(name);
+    }
+
+    public void setPlayScreen(String name){
+        if(playScreen != null)
+            playScreen.hide();
+        playScreen = findUIScreenByName(name);
+        playScreen.show();
     }
 
     public void setCurrentScreen(String name){
@@ -41,6 +53,10 @@ public class UIManager {
 
     public void clearFromScreenStack(){
         screenStack.clear();
+        if(currentScreen != null) {
+            currentScreen.hide();
+        }
+
         currentScreen = null;
     }
 
@@ -53,14 +69,22 @@ public class UIManager {
     }
 
     public void update(){
+        if(playScreen != null){
+            if(playScreen.isVisible() && (gameState == GameState.PLAY || gameState == GameState.PAUSE))
+                playScreen.update();
+        }
         if(currentScreen != null){
-            currentScreen.update();
+            if(currentScreen.isVisible()) currentScreen.update();
         }
     }
 
     public void render(Graphics2D g2){
+        if(playScreen != null){
+            if(playScreen.isVisible() && (gameState == GameState.PLAY || gameState == GameState.PAUSE))
+                playScreen.render(g2);
+        }
         if(currentScreen != null){
-            currentScreen.render(g2);
+            if(currentScreen.isVisible()) currentScreen.render(g2);
         }
     }
 }

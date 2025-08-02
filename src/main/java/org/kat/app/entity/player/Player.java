@@ -15,7 +15,10 @@ import org.kat.app.graphics.environment.EnvironmentManager;
 import org.kat.app.level.LevelState;
 import org.kat.app.main.GameState;
 import org.kat.app.main.KeyHandler;
+import org.kat.app.main.UI;
 import org.kat.app.map.GameMap;
+import org.kat.app.ui.hustcore.PlayUI;
+import org.kat.app.ui.views.UIManager;
 import org.kat.app.util.KeyPair;
 import org.kat.app.util.Vector2D;
 
@@ -139,6 +142,11 @@ public class Player extends Entity {
         screenY = windowHeight/2 - 32;
 
         setDefaultValue();
+        setDialogueAt(0,0,
+                "Lên cấp! Bạn lên cấp " + level + " Chỉ số của bạn đều được tăng!");
+        setDialogueAt(1, 0,
+                "Không đủ mana! Bạn cần " + projectile.manaCost + " mana(s) để bắn");
+        buildDialogue();
     }
 
     public void setDefaultValue()
@@ -291,8 +299,8 @@ public class Player extends Entity {
     private void handlePosition() {
         isRunning = up | down | left | right;
         isInteracting = false;
-//        interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
-//        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
+        interactNpc(mp.cChecker.checkInteractEntity(this , true , mp.npc));
+        interactObject(mp.cChecker.checkInteractWithActiveObject(this , true));
         collisionOn = false;
 
         velocity.clear();
@@ -311,10 +319,10 @@ public class Player extends Entity {
         newPosition.set(position)
                 .add(velocity);
 
-//        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
-//        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
-//        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
-//        mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
+        mp.cChecker.checkCollisionWithEntity(this , mp.inactiveObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.activeObj);
+        mp.cChecker.checkCollisionWithEntity(this , mp.npc);
+        mp.cChecker.checkCollisionWithEntity(this, mp.enemy);
 
         if(!collisionOn) {
             position.set(newPosition);
@@ -424,11 +432,15 @@ public class Player extends Entity {
             isRunning = false;
             isDying = true;
         }
+
+        ((PlayUI) UIManager.playScreen).setCurrentPlayerHP(currentHP);
     }
 
     private void updateMana(){
         if(currentMana > maxMana) currentMana = maxMana;
         if(currentMana < 0) currentMana = 0;
+
+        ((PlayUI) UIManager.playScreen).setCurrentPlayerMana(currentMana);
     }
 
     private void updateEffect(){
@@ -447,8 +459,7 @@ public class Player extends Entity {
     private void checkForMana(){
         if(!hasResource() && isShooting){
             isShooting = false;
-            dialogues[0][0] = new StringBuilder("Không đủ mana!\nBạn cần " + projectile.manaCost + " mana(s) để bắn");
-            submitDialogue(this , 0);
+            submitDialogue(1);
             KeyHandler.enterPressed = false;
         }
     }
@@ -471,6 +482,8 @@ public class Player extends Entity {
         setDefense();
         setMaxHP();
         setMaxMana();
+
+        ((PlayUI) UIManager.playScreen).setPlayerInventory(inventory);
     }
 
     public void kill(){
@@ -488,10 +501,14 @@ public class Player extends Entity {
     private void setMaxHP(){
         maxHP = 150 + (level - 1) * 40;
         currentHP = maxHP;
+
+        ((PlayUI) UIManager.playScreen).setMaxPlayerHP(maxHP);
     }
     private void setMaxMana(){
         maxMana = 100 + (level - 1) * 15;
         currentMana = maxMana;
+
+        ((PlayUI) UIManager.playScreen).setMaxPlayerMana(maxMana);
     }
     public void checkForLevelUp(){
         if(exp >= nextLevelUp)
@@ -505,8 +522,7 @@ public class Player extends Entity {
             if(level == 4) nextLevelUp = 700; else
             if(level == 5) nextLevelUp = 999999999;
             playSE(3);
-            dialogues[0][0] = new StringBuilder("Lên cấp!\nBạn lên cấp " + level + "\nChỉ số của bạn đều được tăng!");
-            submitDialogue(this , 0);
+            submitDialogue(0);
         }
     }
 

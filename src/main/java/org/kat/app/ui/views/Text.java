@@ -2,21 +2,22 @@ package org.kat.app.ui.views;
 import org.kat.app.ui.Alignment;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static org.kat.app.main.UI.joystix;
 
 public class Text{
     protected static final int DEFAULT_FONT_SIZE = 18;
     protected static final int DEFAULT_LINE_SPACING = 20;
-    protected static final float DEFAULT_FACTOR = 1.2f;
+    protected static final float DEFAULT_FACTOR = 1.23f;
     private static final Font DEFAULT_FONT = joystix;
     private static final Color DEFAULT_COLOR = Color.WHITE;
 
     protected int parentX, parentY;
     protected int parentWidth, parentHeight;
-    protected StringBuffer content;
+    protected StringBuilder content;
     protected Color color = DEFAULT_COLOR;
-    protected Font baseFont;
+    protected Font baseFont = DEFAULT_FONT;
     protected float fontSize = DEFAULT_FONT_SIZE;
 
     protected int lineNums;
@@ -26,23 +27,23 @@ public class Text{
     protected Alignment hAlign = Alignment.HORIZONTAL_CENTER;
     protected Alignment vAlign = Alignment.VERTICAL_CENTER;
 
-    private boolean buildOnce;
-
     public Text(){
-
+        build();
     }
 
     public Text(String content){
-        this.content = new StringBuffer(content);
+        this.content = new StringBuilder(content);
 
-        baseFont = DEFAULT_FONT;
+        build();
     }
 
     public Text(String content, Color color, Font baseFont, float fontSize) {
-        this.content = new StringBuffer(content);
+        this.content = new StringBuilder(content);
         this.color = color;
         this.baseFont = baseFont;
         this.fontSize = fontSize;
+
+        build();
     }
 
     // ===== Setter =====
@@ -116,6 +117,17 @@ public class Text{
         this.parentHeight = view.height - view.padding.pTop - view.padding.pBottom;
     }
 
+    private void build(){
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = image.createGraphics();
+
+        g2.setFont(baseFont.deriveFont(fontSize));
+        lineSpacing = (int) (g2.getFontMetrics().getHeight() * factor);
+
+        g2.dispose();
+        image.flush();
+    }
+
     public void clear(){
         content.delete(0, this.content.length());
     }
@@ -151,11 +163,10 @@ public class Text{
 
     // ===== Update and Render=====
     public void render(Graphics2D g2) {
-        if(!buildOnce){
-            buildOnce = true;
-            lineSpacing = (int) (g2.getFontMetrics().getHeight() * factor);
-        }
-
+//        if(!buildOnce){
+//            buildOnce = true;
+//            lineSpacing = (int) (g2.getFontMetrics().getHeight() * factor);
+//        }
         g2.setColor(color);
         g2.setFont(baseFont.deriveFont(fontSize));
         int textWidth = g2.getFontMetrics().stringWidth(content.toString());

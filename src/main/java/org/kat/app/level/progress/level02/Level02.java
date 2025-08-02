@@ -37,6 +37,11 @@ public class Level02 extends Level {
     }
 
     @Override
+    public void onLoad(){
+
+    }
+
+    @Override
     public void onCreate() {
         currentRoomTask = getNextRoomTask();
         setLevelState(LevelState.CUTSCENE);
@@ -45,8 +50,11 @@ public class Level02 extends Level {
 
     @Override
     public void onBegin() {
-        eventMaster.dialogues[0][0] = new StringBuilder("Player: Lại gặp một gã nữa...");
-        eventMaster.dialogues[0][1] = new StringBuilder("Player: Đến nói chuyện xem sao!");
+        eventMaster.setDialogueAt(0, 0, "Player: Lại gặp một gã nữa...");
+        eventMaster.setDialogueAt(0, 1, "Player: Đến nói chuyện xem sao!");
+        eventMaster.setDialogueAt(1, 0, "Bạn đã hoàn thành thử thách thứ hai");
+        eventMaster.setDialogueAt(1, 1, "Hãy đến cửa phía Bắc để tiếp tục!");
+        eventMaster.buildDialogue();
 
         map.addObject(new Obj_Door(
                 "small",
@@ -55,14 +63,14 @@ public class Level02 extends Level {
                 832, 0
         ), map.activeObj);
 
-        eventMaster.submitDialogue(eventMaster, 0);
+        eventMaster.submitDialogue(0);
     }
 
     @Override
     public void onFinish() {
-        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ hai");
-        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Bắc để\ntiếp tục!");
-        eventMaster.submitDialogue(eventMaster, 0);
+//        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ hai");
+//        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Bắc để\ntiếp tục!");
+        eventMaster.submitDialogue(1);
     }
 
     @Override
@@ -143,7 +151,7 @@ public class Level02 extends Level {
                 () -> {
                     eventMaster.dialogues[0][1] = null;
                     eventMaster.dialogues[0][0] = new StringBuilder("Gọi ý cho mật khẩu:\n" + correctPassword.charAt(hintNums));
-                    eventMaster.submitDialogue(eventMaster, 0);
+                    eventMaster.submitDialogue(0);
                     hintNums++;
                 }
         ,true ));
@@ -170,7 +178,7 @@ public class Level02 extends Level {
                 () -> {
                     GamePanel.gameState = GameState.LOADING;
                     levelProgress++;
-                    LoadingService.loadMap();
+                    LoadingService.loadLevel();
                     map.player.storeValue();
                 }
         ));

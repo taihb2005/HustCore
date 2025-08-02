@@ -18,6 +18,11 @@ public class Level04 extends Level {
     }
 
     @Override
+    public void onLoad(){
+
+    }
+
+    @Override
     public void onCreate() {
         stopMusic();
         playMusic(5);
@@ -35,14 +40,17 @@ public class Level04 extends Level {
                 192, 64
         ), map.activeObj);
 
-        eventMaster.dialogues[0][0] = new StringBuilder("Boss: Ngươi giỏi lắm mới đến \nđược đây");
-        eventMaster.dialogues[0][1] = new StringBuilder("Boss: Ngắm gà khoả thân mau!");
+        eventMaster.setDialogueAt(0, 0, "Boss: Ngươi giỏi lắm mới đến được đây");
+        eventMaster.setDialogueAt(0, 1, "Boss: Ngắm gà khoả thân mau!");
 
-        eventMaster.dialogues[1][0] = new StringBuilder("Boss: Không ngờ ngươi lại mạnh\nđến vậy!");
+        eventMaster.setDialogueAt(1, 0, "Boss: Không ngờ ngươi lại mạnh đến vậy!");
 
-        eventMaster.dialogues[2][0] = new StringBuilder("Boss: Ta sẽ còn quay lại.");
-        eventMaster.dialogues[2][1] = new StringBuilder("Boss: Hãy đợi đấy!!!!!");
-        eventMaster.submitDialogue(eventMaster, 0);
+        eventMaster.setDialogueAt(2, 0, "Boss: Ta sẽ còn quay lại.");
+        eventMaster.setDialogueAt(2, 1, "Boss: Hãy đợi đấy!!!!!");
+
+        eventMaster.buildDialogue();
+
+        eventMaster.submitDialogue(0);
 
         getRoom("Room1").start();
     }
@@ -91,7 +99,7 @@ public class Level04 extends Level {
         eventManager.register(new Event(
                 () -> entityManager.get("Boss000", Mon_Boss.class).checkHalfHealth(),
                 () -> {
-                    eventMaster.submitDialogue(eventMaster, 1);
+                    eventMaster.submitDialogue(1);
                     getRoom("Room2").start();
                 }
         ));

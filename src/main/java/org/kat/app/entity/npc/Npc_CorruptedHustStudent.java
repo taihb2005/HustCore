@@ -107,6 +107,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
         for(int i = 0 ; i < dialogue.length ;i++){
             System.arraycopy(dialogue[i], 0, this.dialogues[i], 0, dialogue[i].length);
         }
+        buildDialogue();
 
         setDefault();
     }
@@ -200,7 +201,7 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
             dialogueIndex = 0;
             dialogueSet--;
         }
-        submitDialogue(this , dialogueSet);
+        submitDialogue(dialogueSet);
     }
 
     @Override

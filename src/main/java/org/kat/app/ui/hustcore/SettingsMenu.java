@@ -22,6 +22,7 @@ public class SettingsMenu extends UIScreen {
     @Override
     protected void onCreate() {
         ValueAdjuster volumeAdjusterMusic =  (ValueAdjuster) findViewById("volumeAdjusterMusic");
+        volumeAdjusterMusic.setValue(GamePanel.music.volumePercentage);
         volumeAdjusterMusic.setListener(new UIComponentListener() {
             @Override
             public void onPress() {
@@ -50,6 +51,7 @@ public class SettingsMenu extends UIScreen {
         });
 
         ValueAdjuster volumeAdjusterSFX =  (ValueAdjuster) findViewById("volumeAdjusterSFX");
+        volumeAdjusterSFX.setValue(GamePanel.se.volumePercentage);
         volumeAdjusterSFX.setListener(new UIComponentListener() {
             @Override
             public void onPress() {
@@ -62,7 +64,7 @@ public class SettingsMenu extends UIScreen {
                     GamePanel.se.volumePercentage += 10;
                     GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
 
-                    ((ValueAdjuster)volumeAdjusterSFX).setValue(GamePanel.se.volumePercentage);
+                    volumeAdjusterSFX.setValue(GamePanel.se.volumePercentage);
                 }
             }
 
@@ -72,7 +74,7 @@ public class SettingsMenu extends UIScreen {
                     GamePanel.se.volumePercentage -= 10;
                     GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
 
-                    ((ValueAdjuster)volumeAdjusterSFX).setValue(GamePanel.se.volumePercentage);
+                    volumeAdjusterSFX.setValue(GamePanel.se.volumePercentage);
                 }
             }
         });

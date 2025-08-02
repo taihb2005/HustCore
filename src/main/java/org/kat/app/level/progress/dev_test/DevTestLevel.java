@@ -14,6 +14,10 @@ public class DevTestLevel extends Level {
         super();
     }
 
+    @Override
+    public void onLoad(){
+
+    }
 
     @Override
     public void onCreate() {

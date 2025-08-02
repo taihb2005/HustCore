@@ -202,7 +202,8 @@ public class Obj_Door extends Entity{
     }
 
     private void setDialogue(){
-        dialogues[0][0] = new StringBuilder("Hmm... Nó đã bị khóa!");
+        setDialogueAt(0, 0, "Hmm... Nó đã bị khóa!");
+        buildDialogue();
     }
 
     public void talk(){
@@ -211,7 +212,7 @@ public class Obj_Door extends Entity{
             dialogueIndex = 0;
             dialogueSet--;
         }
-        submitDialogue(this , dialogueSet);
+        submitDialogue(dialogueSet);
     }
 
 

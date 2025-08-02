@@ -60,7 +60,8 @@ public class Obj_Heart extends Entity {
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
 
-        dialogues[0][0] = new StringBuilder("Bạn đã được hồi " + hpReward + " máu!");
+        setDialogueAt(0, 0, "Bạn đã được hồi " + hpReward + " máu!");
+        buildDialogue();
     }
 
     private void handleAnimation() {
@@ -87,7 +88,7 @@ public class Obj_Heart extends Entity {
             dialogueIndex = 0;
             dialogueSet--;
         }
-        submitDialogue(this , dialogueSet);
+        submitDialogue(dialogueSet);
     }
 
     @Override

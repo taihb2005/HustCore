@@ -6,12 +6,9 @@ import org.kat.app.thread.LoadingService;
 import org.kat.app.ui.UIComponentListener;
 import org.kat.app.ui.components.Button;
 import org.kat.app.ui.views.*;
-import org.kat.app.ui.views.Cursor;
 import org.kat.app.util.Tree;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.System.exit;
 
@@ -27,7 +24,7 @@ public class MainMenu extends UIScreen {
             @Override
             public void onPress() {
                 LoadingService.loadResource();
-                LoadingService.loadMap();
+                LoadingService.loadLevel();
             }
         });
 

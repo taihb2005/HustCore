@@ -138,7 +138,7 @@ public class GamePanel extends JPanel implements Runnable {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
             if (gameState == GameState.PLAY || gameState == GameState.DIALOGUE || gameState == GameState.PAUSE || gameState == GameState.PASSWORD) {
-                currentMap.render(g2);
+                if(currentMap != null) currentMap.render(g2);
             }
             if (currentLevel != null) currentLevel.render(g2);
             ui.render(g2);

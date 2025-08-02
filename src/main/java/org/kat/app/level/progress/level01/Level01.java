@@ -21,6 +21,11 @@ public class Level01 extends Level {
     }
 
     @Override
+    public void onLoad(){
+
+    }
+
+    @Override
     public void onCreate() {
         currentRoomTask = getNextRoomTask();
         setLevelState(LevelState.CUTSCENE);
@@ -29,8 +34,13 @@ public class Level01 extends Level {
 
     @Override
     public void onBegin() {
-        eventMaster.dialogues[0][0] = new StringBuilder("Player: Lại gặp một gã nữa...");
-        eventMaster.dialogues[0][1] = new StringBuilder("Player: Đến nói chuyện xem sao!");
+        eventMaster.setDialogueAt(0, 0, "Player: Lại gặp một gã nữa...");
+        eventMaster.setDialogueAt(0, 1, "Player: Đến nói chuyện xem sao!");
+
+        eventMaster.setDialogueAt(1, 0, "Chúc mừng bạn đã hoàn thành thử thách đầu tiên!");
+        eventMaster.setDialogueAt(1, 1, "Đi xuống căn phòng dưới để nhận thêm vật phẩm!");
+        eventMaster.setDialogueAt(1, 2, "Sau đó hãy ra cửa phía nam để sang phòng khác!");
+        eventMaster.buildDialogue();
 
         map.addObject(new Obj_Door(
                 "big",
@@ -39,15 +49,15 @@ public class Level01 extends Level {
                 768, 0
         ), map.activeObj);
 
-        eventMaster.submitDialogue(eventMaster, 0);
+        eventMaster.submitDialogue(0);
     }
 
     @Override
     public void onFinish() {
-        eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
-        eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
-        eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
-        eventMaster.submitDialogue(eventMaster, 0);
+//        eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
+//        eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
+//        eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
+        eventMaster.submitDialogue(1);
     }
 
     @Override
@@ -150,7 +160,7 @@ public class Level01 extends Level {
                 () -> {
                     GamePanel.gameState = GameState.LOADING;
                     levelProgress++;
-                    LoadingService.loadMap();
+                    LoadingService.loadLevel();
                     map.player.storeValue();
                 }
         ));

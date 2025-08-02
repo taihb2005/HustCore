@@ -50,11 +50,12 @@ public class TextView extends View implements Updatable {
         return text;
     }
 
-    public void setText(String text){
+    public TextView setText(String text){
         this.text.setText(text);
+        return this;
     }
 
-    public void enableDisplayCharByChar(){
+    public TextView enableDisplayCharByChar(){
         this.displayCharByChar = true;
         this.textIndex = 0;
         this.lastState = TextState.PLAYING;
@@ -82,6 +83,7 @@ public class TextView extends View implements Updatable {
                     }, 1, true
             );
         }
+        return this;
     }
 
     public void skipDisplaying(){
@@ -119,7 +121,7 @@ public class TextView extends View implements Updatable {
         } else {
             text.render(g2);
         }
-        //g2.drawRect(x, y, width, height);
+//        g2.drawRect(x, y, width, height);
     }
 
     public enum TextState{

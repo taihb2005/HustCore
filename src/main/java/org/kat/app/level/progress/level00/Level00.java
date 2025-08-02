@@ -11,8 +11,6 @@ import org.kat.app.main.GameState;
 import org.kat.app.thread.LoadingService;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static org.kat.app.main.GamePanel.*;
 
@@ -22,22 +20,20 @@ public class Level00 extends Level {
     }
 
     @Override
-    public void onCreate() {
-        currentState = LevelState.RUNNING;
+    public void onLoad(){
 
-        TimerTask beginGameDialogue = new TimerTask() {
-            @Override
-            public void run() {
-                eventMaster.submitDialogue(eventMaster , 0);
-                finishedBeginningDialogue = true;
-            }
-        };
-        new Timer().schedule(beginGameDialogue , 800);
+    }
+
+    @Override
+    public void onCreate() {
+        setLevelState(LevelState.CUTSCENE);
+        map.player.setGoal(834, 1854);
     }
 
     @Override
     public void onBegin() {
-
+        eventMaster.submitDialogue(0);
+        finishedBeginningDialogue = true;
     }
 
     @Override
@@ -77,14 +73,17 @@ public class Level00 extends Level {
 
         changeMapEventRect1 = new EventRectangle(1088 , 2280 , 64 , 32);
 
-        eventMaster.dialogues[0][0] = new StringBuilder("Năm 2700, bạn nhận được nhiệm vụ giải cứu một đại học... edthgfhgdtffertgtsffggweretgcvdwerttyhhffdgfgfgfgfgfgffgfg");
-        eventMaster.dialogues[0][1] = new StringBuilder("Nhưng ngay sau khi nhận nhiệm vụ bạn thấy mình nằm trong một căn phòng kì lạ!");
-        eventMaster.dialogues[0][2] = new StringBuilder("...Cùng với một gã lạ mặt....");
-        eventMaster.dialogues[0][3] = new StringBuilder("Thử đến nói chuyện xem sao.");
+        eventMaster.setDialogueAt(0, 0,
+                "Năm 2700, bạn nhận được nhiệm vụ giải cứu một đại học...");
+        eventMaster.setDialogueAt(0, 1 ,
+                "Nhưng ngay sau khi nhận nhiệm vụ bạn thấy mình nằm trong một căn phòng kì lạ cùng với một gã lạ mặt nào đó trông rất giống những người bạn đã từng gặp!");
+        eventMaster.setDialogueAt(0, 2,
+                "Thử đến nói chuyện xem sao!");
+        eventMaster.buildDialogue();
 
         configureRoom("Room1",
                 List.of(),
-                List.of("DoorA001", "DoorA002"),
+                List.of("DoorA002"),
                 null,
                 List.of(),
                 List.of()
@@ -100,7 +99,7 @@ public class Level00 extends Level {
                 () -> {
                     GamePanel.gameState = GameState.LOADING;
                     levelProgress++;
-                    LoadingService.loadMap();
+                    LoadingService.loadLevel();
                 }
         ));
     }

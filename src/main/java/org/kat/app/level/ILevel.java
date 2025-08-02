@@ -1,6 +1,7 @@
 package org.kat.app.level;
 
 public interface ILevel {
+    void onLoad();
     void onCreate();
     void onBegin();
     void onFinish();

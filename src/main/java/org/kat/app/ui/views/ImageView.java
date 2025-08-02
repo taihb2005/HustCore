@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import static org.kat.app.main.GamePanel.windowHeight;
 import static org.kat.app.main.GamePanel.windowWidth;
 
-final public class ImageView extends View{
+public class ImageView extends View{
     private final static BufferedImage filter = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
 
     static{
@@ -15,7 +15,7 @@ final public class ImageView extends View{
         g2.fillRect(0, 0, windowWidth, windowHeight);
         g2.dispose();
     }
-    private final BufferedImage image;
+    protected final BufferedImage image;
 
     public ImageView(int x, int y, int width, int height, BufferedImage image){
         this.x = x;
