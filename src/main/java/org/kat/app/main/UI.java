@@ -87,31 +87,6 @@ public class UI {
         return windowWidth / 2 - length / 2;
     }
 
-    public void drawHPBarForBoss() {
-        if(currentMap != null && currentMap.boss != null) {
-            int fullHPWidth = 205;
-            int hpBarHeight = 12;
-            int x = windowWidth - 250;
-            int y = windowHeight - 92;
-            int currentHPWidth;
-            try {
-                currentHPWidth = (int) ((double) currentMap.boss.currentHP / currentMap.boss.maxHP * fullHPWidth);
-            } catch (NullPointerException e) {
-                currentHPWidth = 0;
-            }
-            // Vẽ nền (màu xám) cho thanh HP
-            //g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
-            g2.setFont(joystix.deriveFont(Font.PLAIN, 19f));
-            g2.drawString("AI đầu não", x, y - 8);
-
-            // Vẽ thanh HP hiện tại (màu đỏ)
-            g2.setColor(new Color(255, 0, 255));
-            g2.fillRect(x + 209 - currentHPWidth, y + 12, currentHPWidth, hpBarHeight);
-        }
-    }
-
-
-
     public void render(Graphics2D g2) {
         this.g2 = g2;
         _UIManager.render(g2);

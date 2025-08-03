@@ -18,4 +18,23 @@
     <Inventory
             id="inventory"
             x="12" y="92" width="78" height="320"/>
+
+    <TextView
+            id="bossBarName"
+            x="334" y="8"
+            width="100" height="20"
+            text="AI đầu não"
+            shadow="true"
+            alignment="center"
+            fontSize="14"
+            color="#FFFFFF"/>
+
+    <Bar
+            id="bossHpBar"
+            x="324" y="20"
+            width="121" height="18"
+            barX="328" barY="24"
+            barWidth="113" barHeight="10"
+            barColor="#FF4500"
+            image="boss_hpFrame.png"/>
 </TextView>

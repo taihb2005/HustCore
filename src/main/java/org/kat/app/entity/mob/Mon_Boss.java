@@ -3,6 +3,7 @@ package org.kat.app.entity.mob;
 import org.kat.app.ai.PathFinder2;
 import org.kat.app.entity.Actable;
 import org.kat.app.entity.effect.type.EffectNone;
+import org.kat.app.entity.player.Player;
 import org.kat.app.entity.projectile.Proj_ExplosivePlasma;
 import org.kat.app.entity.projectile.Proj_Flame;
 import org.kat.app.entity.projectile.Proj_TrackingPlasma;
@@ -10,7 +11,9 @@ import org.kat.app.entity.projectile.Projectile;
 import org.kat.app.graphics.Animation;
 import org.kat.app.graphics.AssetPool;
 import org.kat.app.graphics.Sprite;
+import org.kat.app.main.UI;
 import org.kat.app.map.GameMap;
+import org.kat.app.ui.hustcore.PlayUI;
 import org.kat.app.util.GameTimer;
 import org.kat.app.util.KeyPair;
 
@@ -169,6 +172,7 @@ public class Mon_Boss extends Monster implements Actable {
         invincibleDuration = 30;
         maxHP = 1700;
         currentHP = maxHP;
+        ((PlayUI)UI._UIManager.findUIScreenByName("play_ui")).setMaxBossHP(maxHP);
         strength = 50;
         speed = 1;
         level = 1;
@@ -220,6 +224,8 @@ public class Mon_Boss extends Monster implements Actable {
         if(currentHP <= 0){
             isDying = true;
         }
+
+        ((PlayUI)UI._UIManager.findUIScreenByName("play_ui")).setCurrentBossHP(currentHP);
     }
 
     private void handleAnimation() {
