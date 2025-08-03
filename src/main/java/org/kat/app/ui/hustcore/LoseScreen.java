@@ -1,12 +1,12 @@
 package org.kat.app.ui.hustcore;
 
-import org.kat.app.ui.components.Button;
-import org.kat.app.ui.views.Cursor;
+import org.kat.app.main.UI;
+import org.kat.app.thread.LoadingService;
+import org.kat.app.ui.UIComponentListener;
+import org.kat.app.ui.components.GameButton;
 import org.kat.app.ui.views.UIScreen;
 import org.kat.app.ui.views.View;
 import org.kat.app.util.Tree;
-
-import java.util.List;
 
 public class LoseScreen extends UIScreen {
     public LoseScreen(String id, Tree<View> viewTree) {
@@ -15,31 +15,21 @@ public class LoseScreen extends UIScreen {
 
     @Override
     protected void onCreate() {
+        ((GameButton) findViewById("tryAgainBtn")).setListener(new UIComponentListener() {
+            @Override
+            public void onPress() {
+                LoadingService.restart();
+            }
+        });
 
+        ((GameButton) findViewById("mainMenuBtn")).setListener(new UIComponentListener() {
+            @Override
+            public void onPress() {
+                LoadingService.dispose();
+                UI._UIManager.setCurrentScreen("main_menu");
+            }
+        });
     }
 
-    @Override
-    public List<Button> getButtonList() {
-        return List.of();
-    }
 
-    @Override
-    public Cursor getCursor() {
-        return null;
-    }
-
-    @Override
-    public int getDefaultCursorPos() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentCursorPos() {
-        return 0;
-    }
-
-    @Override
-    public void setCursorPos(int pos) {
-
-    }
 }

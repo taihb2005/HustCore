@@ -267,6 +267,7 @@ public class Player extends Entity {
         if (currentAnimation.isFinished() && isDying){
             isDying = false;
             gameState = GameState.LOSE;
+            UI._UIManager.setCurrentScreen("lose_menu");
             stopMusic();
             playMusic(4);
         }
@@ -585,6 +586,23 @@ public class Player extends Entity {
 
     public EnvironmentManager getEnvironmentManager(){
         return mp.getEnvironmentManager();
+    }
+
+    @Override
+    public void dispose(){
+        super.dispose();
+        for(Item item: inventory){if(item != null) item.dispose();}
+        if(effectManager != null) effectManager.clear();
+        if(effect != null) {
+            for (Effect _effect : effect) {
+                _effect.dispose();
+            }
+            effect.clear();
+        }
+
+        effectManager = null;
+        effect = null;
+        mp = null;
     }
 
 }

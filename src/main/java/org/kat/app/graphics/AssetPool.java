@@ -55,4 +55,8 @@ public class AssetPool {
         return assetPool.get(name);
     }
 
+    public static void dispose(){
+        _assetPool.clear();
+    }
+
 }

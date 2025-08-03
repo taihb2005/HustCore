@@ -298,6 +298,8 @@ public class Mon_Spectron extends Monster implements Actable {
         projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+
+        super.dispose();
     }
 
     private enum SpectronState{

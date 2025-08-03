@@ -1,6 +1,7 @@
 package org.kat.app.ui.hustcore;
 
 import org.kat.app.entity.items.Item;
+import org.kat.app.level.LevelState;
 import org.kat.app.main.GameState;
 import org.kat.app.main.KeyHandler;
 import org.kat.app.main.UI;
@@ -12,6 +13,7 @@ import org.kat.app.util.Tree;
 
 import java.awt.*;
 
+import static org.kat.app.main.GamePanel.currentLevel;
 import static org.kat.app.main.GamePanel.gameState;
 import static org.kat.app.main.KeyHandler.*;
 
@@ -32,8 +34,10 @@ public class PlayUI extends UIScreen {
 
     @Override
     public void onLeave(){
-        UI._UIManager.setCurrentScreen("setting_pause");
-        gameState = GameState.PAUSE;
+        if(currentLevel.checkState(LevelState.RUNNING) && gameState == GameState.PLAY) {
+            gameState = GameState.PAUSE;
+            UI._UIManager.setCurrentScreen("setting_pause");
+        }
     }
 
     @Override

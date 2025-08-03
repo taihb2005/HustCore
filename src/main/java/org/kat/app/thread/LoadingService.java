@@ -82,16 +82,6 @@ public class LoadingService {
                 currentMap = currentLevel.map;
                 previousLevelProgress = levelProgress;
 
-//                currentLevel.setLevelState(LevelState.CUTSCENE);
-//                currentLevel.map.player.setGoal(768, 128);
-
-                Thread.sleep(1000);
-
-//                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
-//                    UI._UIManager.clearFromScreenStack();
-//                }
-//
-//                gameState = GameState.PLAY;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,8 +91,6 @@ public class LoadingService {
     public static void restart(){
         threadPool.submit(() -> {
             try {
-                UI._UIManager.clearFromScreenStack();
-                UI._UIManager.addToScreenStack("loading_menu");
                 dispose();
 
                 //currentLevel = new DevTestLevel();
@@ -119,18 +107,13 @@ public class LoadingService {
                 currentLevel.map.player.resetValue();;
                 Thread.sleep(1000);
 
-                if(UI._UIManager.getCurrentScreen().getId().equals("loading_menu")){
-                    UI._UIManager.clearFromScreenStack();
-                }
-
-                gameState = GameState.PLAY;
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
-    private static void dispose(){
+    public static void dispose(){
         if (currentMap != null) {
             currentMap.dispose();
             currentMap = null;
@@ -149,6 +132,7 @@ public class LoadingService {
     }
 
     public static void shutdown() {
+        AssetPool.dispose();
         threadPool.shutdown();
     }
 }

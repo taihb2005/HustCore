@@ -206,9 +206,6 @@ public class WrappedTextView extends TextView{
         } else {
             if(textLine != null)
                 textLine.forEach(text -> text.render(g2));
-            else {
-                System.out.println("null");
-            }
         }
 
 //        g2.drawRect(x, y, width, height);

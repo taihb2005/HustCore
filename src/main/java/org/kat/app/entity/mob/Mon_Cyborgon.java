@@ -424,6 +424,8 @@ public class Mon_Cyborgon extends Monster implements Actable {
         interactionDetectionArea = null;
         projectile = null;
         projectileName = null;
+
+        super.dispose();
     }
 
     private enum CyborgonState{

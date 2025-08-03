@@ -332,6 +332,8 @@ public class Mon_HustGuardian extends Monster implements Actable {
         projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+
+        super.dispose();
     }
 
     private enum GuardianState{

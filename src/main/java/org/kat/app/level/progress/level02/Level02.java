@@ -10,7 +10,9 @@ import org.kat.app.level.event.EventManager;
 import org.kat.app.level.event.EventRectangle;
 import org.kat.app.main.GamePanel;
 import org.kat.app.main.GameState;
+import org.kat.app.main.UI;
 import org.kat.app.thread.LoadingService;
+import org.kat.app.ui.hustcore.PasswordInput;
 
 import java.awt.*;
 import java.util.List;
@@ -46,6 +48,8 @@ public class Level02 extends Level {
         currentRoomTask = getNextRoomTask();
         setLevelState(LevelState.CUTSCENE);
         map.player.setGoal(828, 128);
+
+        eventMaster.buildDialogue();
     }
 
     @Override
@@ -54,6 +58,11 @@ public class Level02 extends Level {
         eventMaster.setDialogueAt(0, 1, "Player: Đến nói chuyện xem sao!");
         eventMaster.setDialogueAt(1, 0, "Bạn đã hoàn thành thử thách thứ hai");
         eventMaster.setDialogueAt(1, 1, "Hãy đến cửa phía Bắc để tiếp tục!");
+        for(int i = 0 ; i < correctPassword.length(); i++){
+            char c = correctPassword.charAt(i);
+            eventMaster.setDialogueAt(2, i,
+                    "Gợi ý cho mật khẩu: " + c);
+        }
         eventMaster.buildDialogue();
 
         map.addObject(new Obj_Door(
@@ -106,9 +115,6 @@ public class Level02 extends Level {
             currentRoomTask = getNextRoomTask();
         }
     }
-    public void render(Graphics2D g2){
-
-    }
 
     @Override
     public void setup(){
@@ -117,6 +123,7 @@ public class Level02 extends Level {
         changeMapEventRect1 = new EventRectangle(192, 0, 128, 32 , true);
         changeMapEventRect2 = new EventRectangle(1280 , 0 , 120 , 9 , true);
         generatePassword();
+        ((PasswordInput) UI._UIManager.findUIScreenByName("password_input")).setCorrectPassword(correctPassword);
         enteredPassword = new StringBuffer();
 
         configureRoom("Room1",
@@ -147,18 +154,18 @@ public class Level02 extends Level {
         ));
 
         eventManager.register(new Event(
-                () -> currentRoomTask.checkEnemyDifferent(5),
+                () -> currentRoomTask.checkEnemyDifference(20),
                 () -> {
-                    eventMaster.dialogues[0][1] = null;
-                    eventMaster.dialogues[0][0] = new StringBuilder("Gọi ý cho mật khẩu:\n" + correctPassword.charAt(hintNums));
-                    eventMaster.submitDialogue(0);
-                    hintNums++;
+                    eventMaster.submitDialogue(2);
                 }
         ,true ));
 
         eventManager.register(new Event(
                 () -> getRoom("Room2").getTriggerZone().isTriggered(map.player),
-                () -> currentState = LevelState.PASSWORD
+                () -> {
+                    currentLevel.setLevelState(LevelState.PASSWORD);
+                    UI._UIManager.setCurrentScreen("password_input");
+                }
         ));
 
         eventManager.register((new Event(
@@ -170,7 +177,11 @@ public class Level02 extends Level {
                     }
                     return false;
                 },
-                () -> getRoom("Room2").finish()
+                () -> {
+                    getRoom("Room2").finish();
+                    UI._UIManager.clearFromScreenStack();
+                    currentLevel.setLevelState(LevelState.RUNNING);
+                }
         )));
 
         eventManager.register(new Event(

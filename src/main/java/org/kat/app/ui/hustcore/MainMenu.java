@@ -38,6 +38,7 @@ public class MainMenu extends UIScreen {
         ((Button) findViewById("exitBtn")).setListener(new UIComponentListener() {
             @Override
             public void onPress() {
+                LoadingService.shutdown();
                 exit(0);
             }
         });

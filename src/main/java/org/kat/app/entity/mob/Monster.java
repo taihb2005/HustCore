@@ -26,7 +26,7 @@ public class Monster extends Entity {
     public Effect effectDealOnTouch;
     public Effect effectDealByProjectile;
 
-    public final ArrayList<String> validDirection = new ArrayList<>();
+    public ArrayList<String> validDirection = new ArrayList<>();
 
     protected int SHOOT_INTERVAL;
     int counter = 0;
@@ -259,6 +259,16 @@ public class Monster extends Entity {
 
     public void render(Graphics2D g2) {
         super.render(g2);
+    }
+
+    @Override
+    public void dispose() {
+        effectDealOnTouch = null;
+        effectDealByProjectile = null;
+        if(validDirection != null) validDirection.clear();
+        validDirection = null;
+
+        mp = null;
     }
 
 }

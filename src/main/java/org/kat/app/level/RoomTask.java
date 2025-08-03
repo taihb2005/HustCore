@@ -115,7 +115,7 @@ public class RoomTask {
         eventMaster.buildDialogue();
     }
 
-    public boolean checkEnemyDifferent(int difference){
+    public boolean checkEnemyDifference(int difference){
         remainingEnemies = targetedEnemy.size();
         if((lastRemainingEnemies - remainingEnemies) == difference){
             lastRemainingEnemies = remainingEnemies;

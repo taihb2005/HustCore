@@ -58,8 +58,13 @@ public class Effect implements Affectable {
         effectCounter.setPeriod(duration);
     }
 
-
     public Effect clone() {
         return null;
     };
+
+    public void dispose(){
+        name = null;
+        effectCounter = null;
+        player = null;
+    }
 }

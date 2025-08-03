@@ -311,6 +311,8 @@ public class Mon_Shooter extends Monster implements Actable {
         projectileName = null;
         effectDealByProjectile = null;
         effectDealOnTouch = null;
+
+        super.dispose();
     }
 
     private enum ShooterState{

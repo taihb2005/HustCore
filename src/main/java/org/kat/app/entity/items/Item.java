@@ -40,4 +40,10 @@ public class Item extends Entity{
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity;}
     public BufferedImage getIcon() { return icon; }
+
+    public void dispose(){
+        name = null;
+        description = null;
+        icon = null;
+    }
 }

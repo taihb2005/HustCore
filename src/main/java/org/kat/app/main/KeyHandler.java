@@ -23,7 +23,6 @@ public class KeyHandler implements KeyListener{
     public static boolean showDebugMenu = false;
     public static boolean showHitbox = false;
     public static boolean godModeOn = false;
-    public static boolean keyEpressed = false;
     public static boolean keyEscpressed;
     public static boolean key0pressed;
     public static boolean key1pressed;
@@ -35,6 +34,8 @@ public class KeyHandler implements KeyListener{
     public static boolean key7pressed;
     public static boolean key8pressed;
     public static boolean key9pressed;
+    public static boolean keyEpressed = false;
+
     public static boolean keyBackspacepressed;
     private final Timer timer = new Timer();
 
@@ -52,219 +53,12 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if(!gameCompleted) {
-            if (GamePanel.gameState == GameState.MENU)
-            {
-                if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
-                if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
-                if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
-                if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
-                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-            }
+        if (gameCompleted) return;
 
-            if (GamePanel.gameState == GameState.PLAY) {
-                LevelState levelState = currentLevel.getLevelState();
-                if(levelState == LevelState.RUNNING) {
-                    if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
-                    if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
-                    if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
-                    if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
-                    if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                    if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-                    if (keyCode == KeyEvent.VK_E) keyEpressed = true;
-                    if (keyCode == KeyEvent.VK_1) key1pressed = true;
-                    if (keyCode == KeyEvent.VK_2) key2pressed = true;
-                    if (keyCode == KeyEvent.VK_3) key3pressed = true;
-                    if (keyCode == KeyEvent.VK_4) key4pressed = true;
-                    if (keyCode == KeyEvent.VK_5) key5pressed = true;
-                    if (keyCode == KeyEvent.VK_F3) showDebugMenu = true;
-                    if (keyCode == KeyEvent.VK_F2) godModeOn = true;
-                } else if (levelState == LevelState.DIALOGUE){
-                    if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-                    if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
-                    if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
-                } else if (levelState == LevelState.PASSWORD){
-                    if (keyCode == KeyEvent.VK_0) key0pressed = true;
-                    if (keyCode == KeyEvent.VK_1) key1pressed = true;
-                    if (keyCode == KeyEvent.VK_2) key2pressed = true;
-                    if (keyCode == KeyEvent.VK_3) key3pressed = true;
-                    if (keyCode == KeyEvent.VK_4) key4pressed = true;
-                    if (keyCode == KeyEvent.VK_5) key5pressed = true;
-                    if (keyCode == KeyEvent.VK_6) key6pressed = true;
-                    if (keyCode == KeyEvent.VK_7) key7pressed = true;
-                    if (keyCode == KeyEvent.VK_8) key8pressed = true;
-                    if (keyCode == KeyEvent.VK_9) key9pressed = true;
-                    if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                    if (keyCode == KeyEvent.VK_ENTER) enterPressed = true;
-                    if (keyCode == KeyEvent.VK_BACK_SPACE) keyBackspacepressed = true;
-                } else if (levelState == LevelState.QUIZ){
-                    if (GamePanel.ui.selectedOption < 4) {
-                        if (keyCode == KeyEvent.VK_A) {
-                            GamePanel.ui.selectedOption = 0; // Đáp án A
-                        } else if (keyCode == KeyEvent.VK_B) {
-                            GamePanel.ui.selectedOption = 1; // Đáp án B
-                        } else if (keyCode == KeyEvent.VK_C) {
-                            GamePanel.ui.selectedOption = 2; // Đáp án C
-                        } else if (keyCode == KeyEvent.VK_D) {
-                            GamePanel.ui.selectedOption = 3; // Đáp án D
-                        }
-                    }
-
-                    if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
-                        GamePanel.gameState = GameState.PLAY;
-                        Timer timer = new Timer();
-
-                        TimerTask play = new TimerTask() {
-                            @Override
-                            public void run() {
-                                stopMusic();
-                                stopMusic();
-                                playMusic(10);
-                            }
-                        };
-                        timer.schedule(play , 200);
-                    }
-
-                    if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
-                        stopMusic();
-                        playSE(12);
-                        if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
-                            GamePanel.ui.selectedOption = 4;
-                        } else {
-                            GamePanel.ui.selectedOption = 5;
-                        }
-                    }
-                }
-            } else if (GamePanel.gameState == GameState.PAUSE) {
-                if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
-                if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
-                if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
-                if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
-                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-            } else if (GamePanel.gameState == GameState.DIALOGUE) {
-                if (keyCode == KeyEvent.VK_ENTER) {
-                    enterPressed = true;
-                }
-            } else if (GamePanel.gameState == GameState.LOSE) {
-                if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) downPressed = true;
-                if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) upPressed = true;
-                if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) rightPressed = true;
-                if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) leftPressed = true;
-                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
-                if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) enterPressed = true;
-            } else if (GamePanel.gameState == GameState.SETTING) {
-                playSE(11);
-                if (keyCode == KeyEvent.VK_ESCAPE) {
-                    if (GamePanel.ui.subState == 0) {
-                        GamePanel.gameState = GameState.MENU;
-                        GamePanel.ui.commandNum = 1;
-                    }
-                    if (GamePanel.ui.subState == 1) {
-                        GamePanel.ui.subState = 0;
-
-                    }
-
-                }
-                // FOR OPTIONS
-                int maxCommandNum = 0;
-                switch (GamePanel.ui.subState) {
-                    case 0:
-                        maxCommandNum = 3;
-                    case 1:
-                        maxCommandNum = 5;
-                }
-
-                if (keyCode == KeyEvent.VK_W) {
-                    GamePanel.ui.commandNum--;
-                    if (GamePanel.ui.commandNum < 0) {
-                        GamePanel.ui.commandNum = 3;
-                    }
-
-                }
-                if (keyCode == KeyEvent.VK_S) {
-                    GamePanel.ui.commandNum++;
-                    if (GamePanel.ui.commandNum > 3) {
-                        GamePanel.ui.commandNum = 0;
-                    }
-
-                }
-                if (keyCode == KeyEvent.VK_A) {
-                    if (GamePanel.ui.subState == 0) {
-                        if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage > 0) {
-                            GamePanel.music.volumePercentage -= 10;
-                            GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
-                        }
-                        if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage > 0) {
-                            GamePanel.se.volumePercentage -= 10;
-                            GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
-                        }
-                    }
-                }
-                if (keyCode == KeyEvent.VK_D) {
-                    if (GamePanel.ui.subState == 0) {
-                        if (GamePanel.ui.commandNum == 0 && GamePanel.music.volumePercentage < 100) {
-                            GamePanel.music.volumePercentage += 10;
-                            GamePanel.music.checkVolume(GamePanel.music.volumePercentage);
-                        }
-                        if (GamePanel.ui.commandNum == 1 && GamePanel.se.volumePercentage < 100) {
-                            GamePanel.se.volumePercentage += 10;
-                            GamePanel.se.checkVolume(GamePanel.se.volumePercentage);
-                        }
-                    }
-                }
-                if (keyCode == KeyEvent.VK_ENTER) {
-                    if (GamePanel.ui.subState == 0) {
-                        if (GamePanel.ui.commandNum == 2) {
-                            GamePanel.ui.subState = 1;
-                        }
-                        if (GamePanel.ui.commandNum == 3) {
-                            GamePanel.gameState = GameState.MENU;
-                            GamePanel.ui.commandNum = 0;
-                        }
-                    }
-                }
-            } else if (GamePanel.gameState == GameState.QUIZ) {
-                if (GamePanel.ui.selectedOption < 4) {
-                    if (keyCode == KeyEvent.VK_A) {
-                        GamePanel.ui.selectedOption = 0; // Đáp án A
-                    } else if (keyCode == KeyEvent.VK_B) {
-                        GamePanel.ui.selectedOption = 1; // Đáp án B
-                    } else if (keyCode == KeyEvent.VK_C) {
-                        GamePanel.ui.selectedOption = 2; // Đáp án C
-                    } else if (keyCode == KeyEvent.VK_D) {
-                        GamePanel.ui.selectedOption = 3; // Đáp án D
-                    }
-                }
-
-                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption >= 4) {
-                    GamePanel.gameState = GameState.PLAY;
-                    Timer timer = new Timer();
-
-                    TimerTask play = new TimerTask() {
-                        @Override
-                        public void run() {
-                            stopMusic();
-                            stopMusic();
-                            playMusic(10);
-                        }
-                    };
-                    timer.schedule(play , 200);
-                }
-
-                if (keyCode == KeyEvent.VK_ENTER && GamePanel.ui.selectedOption != -1 && GamePanel.ui.selectedOption < 4) {
-                    stopMusic();
-                    playSE(12);
-                    if (GamePanel.ui.selectedOption == GamePanel.ui.correctAnswer) {
-                        GamePanel.ui.selectedOption = 4;
-                    } else {
-                        GamePanel.ui.selectedOption = 5;
-                    }
-                }
-            }
+        switch (GamePanel.gameState) {
+            case MENU, PAUSE, LOSE -> handleMenuLikeStates(keyCode);
+            case PLAY -> handlePlayState(keyCode);
         }
-
     }
 
     @Override
@@ -294,6 +88,61 @@ public class KeyHandler implements KeyListener{
         }
     }
 
+    private void handleMenuLikeStates(int keyCode) {
+        if (isUp(keyCode)) upPressed = true;
+        if (isDown(keyCode)) downPressed = true;
+        if (isLeft(keyCode)) leftPressed = true;
+        if (isRight(keyCode)) rightPressed = true;
+        if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
+        if (isConfirm(keyCode)) enterPressed = true;
+    }
+
+    private void handlePlayState(int keyCode) {
+        switch (currentLevel.getLevelState()) {
+            case RUNNING -> {
+                if (isUp(keyCode)) upPressed = true;
+                if (isDown(keyCode)) downPressed = true;
+                if (isLeft(keyCode)) leftPressed = true;
+                if (isRight(keyCode)) rightPressed = true;
+                if (keyCode == KeyEvent.VK_ESCAPE) keyEscpressed = true;
+                if (isConfirm(keyCode)) enterPressed = true;
+                if (keyCode == KeyEvent.VK_E) keyEpressed = true;
+
+                switch (keyCode) {
+                    case KeyEvent.VK_1 -> key1pressed = true;
+                    case KeyEvent.VK_2 -> key2pressed = true;
+                    case KeyEvent.VK_3 -> key3pressed = true;
+                    case KeyEvent.VK_4 -> key4pressed = true;
+                    case KeyEvent.VK_5 -> key5pressed = true;
+                    case KeyEvent.VK_F3 -> showDebugMenu = true;
+                    case KeyEvent.VK_F2 -> godModeOn = true;
+                }
+            }
+            case DIALOGUE -> {
+                if (isConfirm(keyCode)) enterPressed = true;
+                if (isUp(keyCode)) upPressed = true;
+                if (isDown(keyCode)) downPressed = true;
+            }
+            case PASSWORD -> {
+                switch (keyCode) {
+                    case KeyEvent.VK_0 -> key0pressed = true;
+                    case KeyEvent.VK_1 -> key1pressed = true;
+                    case KeyEvent.VK_2 -> key2pressed = true;
+                    case KeyEvent.VK_3 -> key3pressed = true;
+                    case KeyEvent.VK_4 -> key4pressed = true;
+                    case KeyEvent.VK_5 -> key5pressed = true;
+                    case KeyEvent.VK_6 -> key6pressed = true;
+                    case KeyEvent.VK_7 -> key7pressed = true;
+                    case KeyEvent.VK_8 -> key8pressed = true;
+                    case KeyEvent.VK_9 -> key9pressed = true;
+                    case KeyEvent.VK_BACK_SPACE -> keyBackspacepressed = true;
+                    case KeyEvent.VK_ESCAPE -> keyEscpressed = true;
+                    case KeyEvent.VK_ENTER -> enterPressed = true;
+                }
+            }
+        }
+    }
+
     public static void disableKey(){
         upPressed = false;
         downPressed = false;
@@ -315,4 +164,61 @@ public class KeyHandler implements KeyListener{
         key8pressed = false;
         key9pressed = false;
     }
+
+    private boolean isUp(int key) {
+        return key == KeyEvent.VK_W || key == KeyEvent.VK_UP;
+    }
+
+    private boolean isDown(int key) {
+        return key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN;
+    }
+
+    private boolean isLeft(int key) {
+        return key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT;
+    }
+
+    private boolean isRight(int key) {
+        return key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT;
+    }
+
+    private boolean isConfirm(int key) {
+        return key == KeyEvent.VK_ENTER || key == KeyEvent.VK_SPACE;
+    }
+
+    private boolean isExit(int key){
+        return key == KeyEvent.VK_ESCAPE;
+    }
+
+    private boolean isNumber(int key){
+        return (key >= KeyEvent.VK_0 && key <= KeyEvent.VK_9) ||
+                (key >= KeyEvent.VK_NUMPAD0 && key <= KeyEvent.VK_NUMPAD9);
+    }
+
+    public boolean isChar(char c) {
+        return Character.isLetterOrDigit(c) || isVietnameseChar(c) || isSymbol(c) || c == ' ';
+    }
+
+
+    private static boolean isSymbol(char c) {
+        return "!@#$%^&*()-_=+[{]}|;:'\",<.>/?`~".indexOf(c) != -1;
+    }
+
+    private static boolean isVietnameseChar(char c) {
+        String vietnamese = "ăâđêôơưĂÂĐÊÔƠƯáàảãạấầẩẫậắằẳẵặ" +
+                "éèẻẽẹếềểễệ" +
+                "íìỉĩị" +
+                "óòỏõọốồổỗộớờởỡợ" +
+                "úùủũụứừửữự" +
+                "ýỳỷỹỵ" +
+                "ÁÀẢÃẠẤẦẨẪẬẮẰẲẴẶ" +
+                "ÉÈẺẼẸẾỀỂỄỆ" +
+                "ÍÌỈĨỊ" +
+                "ÓÒỎÕỌỐỒỔỖỘỚỜỞỠỢ" +
+                "ÚÙỦŨỤỨỪỬỮỰ" +
+                "ÝỲỶỸỴ";
+
+        return vietnamese.indexOf(c) != -1;
+    }
+
+
 }

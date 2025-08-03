@@ -237,5 +237,12 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     private enum StudentState{
         IDLE1, IDLE2, TALK
     }
+
+    @Override
+    public void dispose(){
+        super.dispose();
+        changeIdleTypeTimer = null;
+        mp = null;
+    }
 }
 

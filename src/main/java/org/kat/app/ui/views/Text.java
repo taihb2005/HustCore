@@ -11,7 +11,7 @@ public class Text{
     protected static final int DEFAULT_LINE_SPACING = 20;
     protected static final float DEFAULT_FACTOR = 1.23f;
     private static final Font DEFAULT_FONT = joystix;
-    private static final Color DEFAULT_COLOR = Color.WHITE;
+    public static final Color DEFAULT_COLOR = Color.WHITE;
 
     protected int parentX, parentY;
     protected int parentWidth, parentHeight;

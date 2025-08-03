@@ -1,11 +1,13 @@
 package org.kat.app.ui.views;
 
+import org.kat.app.level.LevelState;
 import org.kat.app.main.GameState;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static org.kat.app.main.GamePanel.currentLevel;
 import static org.kat.app.main.GamePanel.gameState;
 
 public class UIManager {
@@ -69,8 +71,8 @@ public class UIManager {
     }
 
     public void update(){
-        if(playScreen != null){
-            if(playScreen.isVisible() && (gameState == GameState.PLAY || gameState == GameState.PAUSE))
+        if(playScreen != null && currentLevel != null){
+            if(playScreen.isVisible() && (gameState == GameState.PLAY || gameState == GameState.PAUSE) && currentLevel.checkState(LevelState.RUNNING))
                 playScreen.update();
         }
         if(currentScreen != null){

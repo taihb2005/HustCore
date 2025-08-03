@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageView id="root" x="0" y="0" width="768" height="576" image="robotInvasion.png">
+    <TextView
+            id="loseText"
+            x="0" y="0" width="767" height="200"
+            text="Thua"
+            shadow="true"
+            alignment="center"
+            fontSize="80"
+            color="#FFFFFF" />
+
+    <GameButton
+            id="tryAgainBtn"
+            x="250"
+            y="250"
+            width="300"
+            height="60"
+            text="Thử lại"
+            fontSize="30"
+            color="#FFFFFF"
+            roundRadius="30"/>
+
+
+    <GameButton
+            id="mainMenuBtn"
+            x="200"
+            y="350"
+            width="400"
+            height="60"
+            text="Màn hình chính"
+            fontSize="30"
+            color="#FFFFFF"
+            roundRadius="30"/>
+</ImageView>

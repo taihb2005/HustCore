@@ -268,6 +268,8 @@ public class GameMap {
         disposeEntityArray(activeObj);
         disposeEntityArray(enemy);
         disposeEntityArray(projectiles);
+        if(player != null)player.dispose();
+        if(playerAttack != null)playerAttack.dispose();
 
         Arrays.fill(inactiveObj, null);
         Arrays.fill(activeObj, null);

@@ -115,6 +115,29 @@ public class UIBuilder {
                 res = new TextView(text, x, y, width, height);
             }
 
+            case  "EditPassword" -> {
+                int maxLength = getIntAttr(e, "maxLength", 20);
+                String content = e.getAttribute("text");
+                boolean shouldShadow = getBooleanAttr(e, "shadow", false);
+                Text text = (shouldShadow) ? new ShadowedText(content) : new Text(content);
+                text.setFontSize(getIntAttr(e, "fontSize", 0));
+
+                String[] alignments = getAttr(e, "alignment", "center").split("\\|");
+                Alignment hAlign =  switch(alignments[0].trim()){
+                    case "left" -> Alignment.HORIZONTAL_LEFT;
+                    case "right" -> Alignment.HORIZONTAL_RIGHT;
+                    default -> Alignment.HORIZONTAL_CENTER;
+                };
+                Alignment vAlign = switch((alignments.length > 1 ? alignments[1] : "center").trim()){
+                    case "top" -> Alignment.VERTICAL_TOP;
+                    case "bottom" -> Alignment.VERTICAL_BOTTOM;
+                    default -> Alignment.VERTICAL_CENTER;
+                };
+                text.setAlignment(hAlign, vAlign);
+
+                res = new EditPassword(text, x, y, width, height, maxLength);
+            }
+
             case "WrappedTextView" -> {
                 String content = e.getAttribute("text");
                 boolean shouldShadow = getBooleanAttr(e, "shadow", false);
