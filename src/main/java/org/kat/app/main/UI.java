@@ -19,28 +19,12 @@ import static org.kat.app.main.GamePanel.*;
 import static org.kat.app.main.KeyHandler.*;
 
 public class UI {
-    private GamePanel gp;
     public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
     public static Font bitcrusher;
 
-    int subState = 0;
-    public int selectedOption = -1;
-    public final int correctAnswer = 3;
-    Color checkPassword = new Color(0 , 0 , 0);
-    String maskedPassword;
-
-    int selectedSlot = -1;
-
-    public int commandNum = 0;
-
     public final static UIManager _UIManager = new UIManager();
-
-    private static BufferedImage gameOverBackground;
-    private static BufferedImage hpFrame, manaFrame, boss_hpFrame;
-    public static BufferedImage titleBackground;
-    private static BufferedImage quizImage;
 
     static{
         try {
@@ -50,8 +34,7 @@ public class UI {
         }
     }
 
-    public UI(GamePanel gp) {
-        this.gp = gp;
+    public UI() {
         try {
             InputStream is1 = getClass().getResourceAsStream("/textures/font/joystix monospace.otf");
             InputStream is2 = getClass().getResourceAsStream("/textures/font/MaruMonica.ttf");
@@ -63,12 +46,6 @@ public class UI {
             e.printStackTrace();
         }
 
-        hpFrame = AssetPool.getImage("hpFrame.png");
-        manaFrame = AssetPool.getImage("manaFrame.png");
-        titleBackground = AssetPool.getImage("Background.png");
-        gameOverBackground = AssetPool.getImage("gameOverBackground.png");
-        quizImage = AssetPool.getImage("quiz.png");
-        boss_hpFrame = AssetPool.getImage("boss_hpFrame.png");
 
         Tree<View> mainTree = UIBuilder.buildFromXML("/layout/ui/main_menu.xml");
         Tree<View> settingsTree = UIBuilder.buildFromXML("/layout/ui/setting_menu.xml");
@@ -123,7 +100,7 @@ public class UI {
                 currentHPWidth = 0;
             }
             // Vẽ nền (màu xám) cho thanh HP
-            g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
+            //g2.drawImage(boss_hpFrame, x, y, 242, 36, null);
             g2.setFont(joystix.deriveFont(Font.PLAIN, 19f));
             g2.drawString("AI đầu não", x, y - 8);
 
@@ -133,64 +110,6 @@ public class UI {
         }
     }
 
-
-        public void drawGameOverScreen() {
-        //BACKGROUND
-        g2.drawImage(gameOverBackground, 0, 0, windowWidth, windowHeight, null);
-        //MENU
-        g2.setFont(joystix.deriveFont(Font.BOLD, 30f));
-
-        String text = "MÀN HÌNH CHÍNH";
-        int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        int x = getXForCenteredText(text);
-
-        g2.setColor(Color.WHITE);
-        text = "THUA";
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 50f));
-
-        g2.setColor(Color.BLACK);
-        g2.drawString(text , getXForCenteredText(text) - 2 ,windowHeight / 4 + 5);
-        g2.setColor(Color.WHITE);
-        g2.drawString(text , getXForCenteredText(text) - 7 ,windowHeight / 4);
-
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD , 30f));
-        text = "THỬ LẠI";
-        int y = windowHeight / 2;
-        g2.drawString(text, x + tileSize * 2, y-5);
-        //BOUND
-        g2.setColor(Color.darkGray);
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
-
-        if(commandNum == 0) {
-            g2.setColor(Color.white);
-            g2.drawString(">", x - tileSize - 10, y);
-        }
-
-        g2.setColor(Color.WHITE);
-
-        text = "MÀN HÌNH CHÍNH";
-        y += tileSize + 20;
-        g2.drawString(text, x, y);
-        //BOUND
-            g2.setColor(Color.darkGray);
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
-        if(commandNum == 1) {
-            g2.setColor(Color.WHITE);
-            g2.drawString(">", x - tileSize - 10, y);
-        }
-
-        g2.setColor(Color.WHITE);
-        text = "THOÁT";
-        y += tileSize + 20;
-        g2.drawString(text, x + tileSize * 3 - 20, y);
-        //BOUND
-            g2.setColor(Color.darkGray);
-        g2.drawRoundRect(x - tileSize / 2, y - tileSize, length + tileSize, tileSize + 10, 40, 40);
-        if(commandNum == 2) {
-            g2.setColor(Color.white);
-            g2.drawString(">", x - tileSize - 10, y);
-        }
-    }
 
 
     public void render(Graphics2D g2) {
@@ -202,9 +121,7 @@ public class UI {
         _UIManager.update();
     }
 
-
-
     public void dispose() {
-        maskedPassword = null;
+
     }
 }

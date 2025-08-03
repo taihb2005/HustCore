@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
         stopMusic();
         setup();
         credit = new Credit(this);
-        ui = new UI(this);
+        ui = new UI();
     }
 
 
