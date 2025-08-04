@@ -469,7 +469,7 @@ public class Player extends Entity {
         manaHealCounter++;
         if(manaHealCounter >= manaHealInterval){
             manaHealCounter = 0;
-            currentMana += 20;
+            currentMana += 5;
         }
         updateMana();
     }
@@ -492,7 +492,7 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 1000;
+        strength = 10;
         lastStrength = strength;
         damage = (projectile.baseDamage + strength * level) * strengthScalar ;
     }
