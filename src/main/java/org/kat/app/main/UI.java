@@ -56,6 +56,7 @@ public class UI {
         Tree<View> playUI = UIBuilder.buildFromXML("/layout/ui/play_ui.xml");
         Tree<View> passwordInputTree = UIBuilder.buildFromXML("/layout/ui/password_input.xml");
         Tree<View> loseTree = UIBuilder.buildFromXML("/layout/ui/lose_menu.xml");
+        Tree<View> creditTree = UIBuilder.buildFromXML("/layout/ui/end_credit.xml");
 
         UIScreen MAIN_MENU = new MainMenu("main_menu", mainTree);
         UIScreen SETTINGS_MENU = new SettingsMenu("setting_menu", settingsTree);
@@ -66,6 +67,7 @@ public class UI {
         UIScreen PLAY_UI = new PlayUI("play_ui", playUI);
         UIScreen PASSWORD_INPUT = new PasswordInput("password_input", passwordInputTree);
         UIScreen LOSE_MENU = new LoseScreen("lose_menu", loseTree);
+        UIScreen END_CREDIT = new CreditScreen("end_credit", creditTree);
 
         _UIManager.registerUIScreen(MAIN_MENU);
         _UIManager.registerUIScreen(SETTINGS_MENU);
@@ -76,15 +78,10 @@ public class UI {
         _UIManager.registerUIScreen(PLAY_UI);
         _UIManager.registerUIScreen(PASSWORD_INPUT);
         _UIManager.registerUIScreen(LOSE_MENU);
+        _UIManager.registerUIScreen(END_CREDIT);
 
         _UIManager.setCurrentScreen("main_menu");
         _UIManager.setPlayScreen("play_ui");
-    }
-
-    public int getXForCenteredText(String text)
-    {
-        int length = (int)g2.getFontMetrics().getStringBounds(text , g2).getWidth();
-        return windowWidth / 2 - length / 2;
     }
 
     public void render(Graphics2D g2) {

@@ -50,6 +50,7 @@ public class Entity {
     public boolean isInteracting = false;
     public boolean isOpening = false;
     public boolean isInvincible = false;
+    public boolean isImmortal = false;
     public boolean isDying = false;
     public boolean isCollected = false;
     public boolean canChangeStatus = false;
@@ -202,7 +203,7 @@ public class Entity {
     }
 
     public void updateInvincibility() {
-        if (isInvincible) {
+        if (isInvincible && !isImmortal) {
             invincibleCounter++;
             if (invincibleCounter >= invincibleDuration) {
                 invincibleCounter = 0;

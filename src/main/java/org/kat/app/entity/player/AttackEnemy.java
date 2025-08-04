@@ -57,10 +57,6 @@ public class AttackEnemy {
         //do nothing;
     }
 
-    public void damageSpectron(int index){
-
-    }
-
     public void dispose(){
         player = null;
         mp = null;

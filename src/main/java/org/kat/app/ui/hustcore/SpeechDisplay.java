@@ -50,9 +50,6 @@ public class SpeechDisplay extends UIScreen {
                             } else {
                                 currentLevel.setLevelState(LevelState.RUNNING);
                                 hide();
-//                        if(UI._UIManager.getCurrentScreen().getId().equals("speech_display")){
-//                            UI._UIManager.clearFromScreenStack();
-//                        }
                             }
                         }
                     }
@@ -60,14 +57,11 @@ public class SpeechDisplay extends UIScreen {
                     if(!dialogueQueue.isEmpty()){
                         currentPairEntity = dialogueQueue.poll();
                         currentSpeaker = currentPairEntity.key1();
-                        currentSpeaker.dialogueSet = currentPairEntity.key2();
+                        currentSpeaker.submitDialogue(currentPairEntity.key2());
                     } else {
                         speechContent = null;
                         currentLevel.setLevelState(LevelState.RUNNING);
                         hide();
-//                        if(UI._UIManager.getCurrentScreen().getId().equals("speech_display")){
-//                            UI._UIManager.clearFromScreenStack();
-//                        }
                     }
                 }
             }

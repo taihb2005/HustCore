@@ -14,13 +14,6 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
-/*
-Mô tả:
-+Di chuyển: Di chuyển một cách ngẫu nhiên trên bản đồ
-+Tấn công: Tấn công một cách ngẫu nhiên
-+Kĩ năng: Có thể bay qua các vật thể một cách dễ dàng
-*/
-
 public class Mon_Spectron extends Monster implements Actable {
     private static final HashMap<KeyPair<SpectronState, Direction>, Sprite> spectronSpritePool = new HashMap<>();
     private static final HashMap<KeyPair<SpectronState, Direction>, Animation> spectronAnimations = new HashMap<>();
@@ -76,9 +69,6 @@ public class Mon_Spectron extends Monster implements Actable {
             currentAnimation = spectronAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
     }
 
-
-    private int actionLockCounter = 0;
-    private int attackLockCounter = 0;
     private int changeDirCounter = 120;
     private int shootInterval = 90;
 

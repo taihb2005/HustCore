@@ -26,10 +26,6 @@ public class Obj_Bin extends Entity {
         solidArea2 = new Rectangle(24 , 58 , 14 , 6);
         setDefaultSolidArea();
     }
-    @Override
-    public void update() {
-
-    }
 
     @Override
     public void render(Graphics2D g2){

@@ -20,12 +20,13 @@ public class EditPassword extends TextView implements Updatable {
     private StringBuilder charPressed;
 
     private PasswordState currentState;
-    private PasswordState lastState;
+    private PasswordState finalState;
     public EditPassword(Text text) {
         super(text);
 
         charPressed = new StringBuilder();
         currentState = PasswordState.IDLE;
+        finalState = PasswordState.IDLE;
     }
 
     public EditPassword(Text text, int x, int y, int width, int height, int maxLength) {
@@ -33,27 +34,32 @@ public class EditPassword extends TextView implements Updatable {
 
         charPressed = new StringBuilder();
         currentState = PasswordState.IDLE;
+        finalState = PasswordState.IDLE;
         this.maxLength = maxLength;
     }
 
     public void check(Text correctPassword){
         if(text.equals(correctPassword)){
             currentState = PasswordState.CORRECT;
+            finalState = PasswordState.CORRECT;
         } else {
             currentState = PasswordState.INCORRECT;
+            finalState = PasswordState.INCORRECT;
         }
     }
 
     public void check(String correctPassword){
         if(text.getText().equals(correctPassword)){
             currentState = PasswordState.CORRECT;
+            finalState = PasswordState.CORRECT;
         } else {
             currentState = PasswordState.INCORRECT;
+            finalState = PasswordState.INCORRECT;
         }
     }
 
     public boolean isCorrect(){
-        return currentState == PasswordState.CORRECT;
+        return finalState == PasswordState.CORRECT;
     }
 
     public void handleKeyInput(){

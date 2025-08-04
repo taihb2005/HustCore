@@ -9,6 +9,7 @@ import static org.kat.app.main.GamePanel.windowWidth;
 public class ImageView extends View{
     private final static BufferedImage filter = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_RGB);
 
+    private float alpha = 1.0f;
     static{
         Graphics2D g2 = filter.createGraphics();
         g2.setColor(new Color(0, 0, 0, 100));
@@ -29,7 +30,7 @@ public class ImageView extends View{
             this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
             Graphics2D g2 = this.image.createGraphics();
-            g2.setColor(new Color(0, 0, 0, 100));
+            g2.setColor(new Color(0f, 0f, 0f, 0f));
             g2.fillRect(0, 0, width, height);
             g2.dispose();
         }
@@ -37,6 +38,16 @@ public class ImageView extends View{
 
     @Override
     public void render(Graphics2D g2){
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.drawImage(image, x, y, null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
+
+    public void setAlpha(float alpha){
+        this.alpha = alpha;
+    }
+
+    public BufferedImage getImage(){
+        return image;
     }
 }

@@ -4,6 +4,7 @@
       "name": "NPC001",
       "dialogue": [
                     [
+                      "Chúc mừng bạn đã hoàn thành trò chơi!"
                     ]
                   ],
       "direction": "right",

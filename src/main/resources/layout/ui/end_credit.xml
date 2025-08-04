@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageView
+    id="root"
+    x="0" y="0" width="768" height="576"
+    image="null">
+    <WrappedTextView
+        id="endGameText"
+        x="0" y="0" width="768" height="500"
+        text=""
+        shadow="false"
+        alignment="center"
+        fontSize="18"
+        color="#FFFFFF"/>
+    <TextView
+        id="gameTitleText"
+        x="0" y="0" width="768" height="576"
+        text=""
+        shadow="false"
+        alignment="center"
+        fontSize="40"
+        color="#FFFFFF"/>
+    <WrappedTextView
+        id="creditText"
+        x="0" y="768" width="768" height="1500"
+        text=""
+        shadow="false"
+        alignment="center|top"
+        fontSize="19"
+        color="#FFFFFF"/>
+</ImageView>

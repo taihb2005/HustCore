@@ -45,7 +45,7 @@ public class Obj_PasswordAuth extends Entity {
         solidArea1 = new Rectangle(0 , 0 , 0 , 0);
     }
     @Override
-    public void update() throws NullPointerException{
+    public void update(){
         currentAnimation.update();
     }
 

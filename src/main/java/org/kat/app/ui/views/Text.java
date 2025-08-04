@@ -12,12 +12,14 @@ public class Text{
     protected static final float DEFAULT_FACTOR = 1.23f;
     private static final Font DEFAULT_FONT = joystix;
     public static final Color DEFAULT_COLOR = Color.WHITE;
+    public static final float DEFAULT_ALPHA = 1f;
 
     protected int parentX, parentY;
     protected int parentWidth, parentHeight;
     protected StringBuilder content;
     protected Color color = DEFAULT_COLOR;
     protected Font baseFont = DEFAULT_FONT;
+    protected float alpha = DEFAULT_ALPHA;
     protected float fontSize = DEFAULT_FONT_SIZE;
 
     protected int lineNums;
@@ -73,6 +75,8 @@ public class Text{
     public void setFontSize(float size) {
         this.fontSize = size;
     }
+
+    public void setAlpha(float alpha) {this.alpha = alpha;}
 
     public void setLineSpacing(float factor) {
         this.factor = factor;
@@ -163,10 +167,7 @@ public class Text{
 
     // ===== Update and Render=====
     public void render(Graphics2D g2) {
-//        if(!buildOnce){
-//            buildOnce = true;
-//            lineSpacing = (int) (g2.getFontMetrics().getHeight() * factor);
-//        }
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.setColor(color);
         g2.setFont(baseFont.deriveFont(fontSize));
         int textWidth = g2.getFontMetrics().stringWidth(content.toString());
@@ -189,6 +190,7 @@ public class Text{
         drawY += lineNums * lineSpacing;
 
         g2.drawString(content.toString(), drawX, drawY);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 }
 

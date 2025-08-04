@@ -14,11 +14,6 @@ import java.util.HashMap;
 
 public class MapParser {
 
-//    public static void loadLevel(String id , String filepath)
-//    {
-//        parseMap(id , filepath);
-//    }
-
     public static GameMap loadMap(String filepath)
     {
         try

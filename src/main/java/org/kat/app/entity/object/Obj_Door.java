@@ -167,13 +167,13 @@ public class Obj_Door extends Entity{
         if(currentState == DoorState.OPENED){
             currentState = DoorState.CLOSING;
             if(currentSize == DoorSize.BIG) {
-                solidArea1 = new Rectangle(0 , 17 , 128 , 47);
-                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-                interactionDetectionArea = new Rectangle(0, 11, 128, 64);
+                solidArea1.setBounds(0, 17, 128, 47);
+                solidArea2.setBounds(0, 0, 0, 0);
+                interactionDetectionArea.setBounds(0, 11, 128, 64);
             } else {
-                solidArea1 = new Rectangle(0 , 17 , 64 , 47);
-                solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-                interactionDetectionArea = new Rectangle(0, 11, 64, 57);
+                solidArea1.setBounds(0, 17, 64, 47);
+                solidArea2.setBounds(0, 0, 0, 0);
+                interactionDetectionArea.setBounds(0, 11, 64, 57);
             }
         }
     }
@@ -184,11 +184,11 @@ public class Obj_Door extends Entity{
         if(currentAnimation.isFinished() && currentState == DoorState.OPENING){
             currentState = DoorState.OPENED;
             if(currentSize == DoorSize.SMALL) {
-                solidArea1 = new Rectangle(0, 17, 14, 47);
-                solidArea2 = new Rectangle(52, 17, 12, 47);
+                solidArea1.setBounds(0, 17, 14, 47);
+                solidArea2.setBounds(52, 17, 12, 47);
             } else {
-                solidArea1 = new Rectangle(0, 17, 28, 47);
-                solidArea2 = new Rectangle(102, 17, 26, 47);
+                solidArea1.setBounds(0, 17, 28, 47);
+                solidArea2.setBounds(102, 17, 26, 47);
             }
             interactionDetectionArea = new Rectangle(0, 0, 0, 0);
             setDefaultSolidArea();
@@ -217,7 +217,7 @@ public class Obj_Door extends Entity{
 
 
     @Override
-    public void update() throws  NullPointerException{
+    public void update(){
         if(isInteracting) open();
         handleAnimation();
         currentAnimation.update();

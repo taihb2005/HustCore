@@ -58,17 +58,6 @@ public class Obj_Television extends Entity {
     private TelevisionState currentState;
     private TelevisionSize size;
 
-    public Obj_Television(String state , String size , int initialFrame , int id, int x , int y) throws Exception{
-        super(x , y);
-        name = "Television";
-
-        this.size = (size.equals("big"))? TelevisionSize.BIG: TelevisionSize.SMALL;
-        this.currentState = (state.equals("on"))? TelevisionState.ON: TelevisionState.OFF;
-        this.currentAnimation = televisionAnimation.get(new KeyTriple<>(this.size, currentState, id)).clone(initialFrame);
-
-        setDefault();
-    }
-
     public Obj_Television(String state , String size , int initialFrame , int id, String idName, int x , int y) throws Exception{
         super(x , y);
         name = "Television";
@@ -87,12 +76,12 @@ public class Obj_Television extends Entity {
     }
 
     @Override
-    public void update() throws NullPointerException{
+    public void update() {
         currentAnimation.update();
     }
 
     @Override
-    public void render(Graphics2D g2) throws NullPointerException , ArrayIndexOutOfBoundsException{
+    public void render(Graphics2D g2){
         super.render(g2);
     }
 

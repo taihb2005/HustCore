@@ -5,11 +5,11 @@
       "dialogue": [
         [
           "Xin chào!",
-          "Đây là thử thách đầu tiên dành\ncho bạn.",
-          "Hãy đi đến từng căn phòng và\nhoàn thành nhiệm vụ của từng\nphòng.",
-          "Căn phòng ngay sau tôi có\nmột số món đồ mà bạn có thể thấy\nhữu ích.",
-          "Nếu bạn gặp ai giống tôi, hãy\nnói chuyện với họ. Họ sẽ đưa\nra lời khuyên hữu ích.",
-          "Tiếc là tôi không thể cung\ncấp thông tin gì thêm.",
+          "Đây là thử thách đầu tiên dành cho bạn.",
+          "Hãy đi đến từng căn phòng và hoàn thành nhiệm vụ của từng phòng.",
+          "Căn phòng ngay sau tôi có một số món đồ mà bạn có thể thấy hữu ích.",
+          "Nếu bạn gặp ai giống tôi, hãy nói chuyện với họ. Họ sẽ đưa ra lời khuyên hữu ích.",
+          "Tiếc là tôi không thể cung cấp thông tin gì thêm.",
           "Chúc may mắn!"
         ]
 
@@ -21,11 +21,11 @@
       "name": "Chill Guy",
       "dialogue": [
         [
-          "Thử thách ở đây theo thứ tự\ntừ căn phòng 1 đến 4.",
-          "Hoàn thành thử thách thì căn\nphòng tiếp theo sẽ mở ra.",
-          "Căn phòng đầu tiên là ngay dưới\nđây.Hãy mở cửa và bước vào, nhiệm\nvụ sẽ hiện lên.",
-          "Có một lời khuyên dành cho bạn:\nTrụ súng của kẻ địch\nkhá mạnh.",
-          "Nếu không phải tiêu diệt chúng\nthì đừng phí thời gian tiêu diệt\nchúng.Mà hãy né đạn của chúng."
+          "Thử thách ở đây theo thứ tự từ căn phòng 1 đến 4.",
+          "Hoàn thành thử thách thì căn phòng tiếp theo sẽ mở ra.",
+          "Căn phòng đầu tiên là ngay dưới đây.Hãy mở cửa và bước vào, nhiệm vụ sẽ hiện lên.",
+          "Có một lời khuyên dành cho bạn:Trụ súng của kẻ địch khá mạnh.",
+          "Nếu không phải tiêu diệt chúngthì đừng phí thời gian tiêu diệt chúng.Mà hãy né đạn của chúng."
         ]
       ],
       "direction": "right",
@@ -35,8 +35,8 @@
       "name": "Chill Guy",
       "dialogue": [
         [
-          "Trụ súng chỉ có thể nhận sát\nthương nếu bạn bắn trước mặt\nchúng",
-          "Đừng bao giờ đụng đến lính canh\nNếu không bạn sẽ phải hối hận."
+          "Trụ súng chỉ có thể nhận sát thương nếu bạn bắn trước mặt chúng",
+          "Đừng bao giờ đụng đến lính canh Nếu không bạn sẽ phải hối hận."
         ]
       ],
       "direction": "left",

@@ -1,7 +1,5 @@
 package org.kat.app.main;
 
-// awt library
-
 import org.kat.app.level.Level;
 import org.kat.app.map.GameMap;
 import org.kat.app.map.MapManager;
@@ -30,15 +28,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound se = new Sound();
-    public static Credit credit;
     public final KeyHandler keyHandler = new KeyHandler(this);
     public static Camera camera = new Camera();
 
     public static GameState gameState;
 
     public static StatusManager sManager = new StatusManager();
-    public static int previousLevelProgress = 0;
-    public static int levelProgress = 0;
+    public static int previousLevelProgress = 3;
+    public static int levelProgress = 3;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
@@ -60,7 +57,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         stopMusic();
         setup();
-        credit = new Credit(this);
         ui = new UI();
     }
 
@@ -120,7 +116,7 @@ public class GamePanel extends JPanel implements Runnable {
         ui.update();
 
         switch (gameState) {
-            case PLAY, WIN -> {
+            case PLAY -> {
                 if (!music.clip.isRunning() && !gameCompleted) {
                     resumeMusic();
                 }
@@ -129,6 +125,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             case PAUSE -> pauseMusic();
+            case CREDIT -> disableKey();
         }
     }
 
@@ -137,16 +134,12 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
-            if (gameState == GameState.PLAY || gameState == GameState.DIALOGUE || gameState == GameState.PAUSE || gameState == GameState.PASSWORD) {
+            if (gameState == GameState.PLAY || gameState == GameState.PAUSE || gameState == GameState.CREDIT) {
                 if(currentMap != null) currentMap.render(g2);
             }
             if (currentLevel != null) currentLevel.render(g2);
             ui.render(g2);
             drawDarkness(g2);
-            if (gameCompleted) {
-                disableKey();
-                credit.render(g2);
-            }
             g2.dispose();
     }
 

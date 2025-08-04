@@ -55,6 +55,11 @@ public class TextView extends View implements Updatable {
         return this;
     }
 
+    public void setAlpha(float alpha){
+        text.setAlpha(alpha);
+        if(currentDisplayText != null) currentDisplayText.setAlpha(alpha);
+    }
+
     public TextView enableDisplayCharByChar(){
         this.displayCharByChar = true;
         this.textIndex = 0;

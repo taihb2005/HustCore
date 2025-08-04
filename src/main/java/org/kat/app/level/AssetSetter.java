@@ -13,10 +13,10 @@ import org.kat.app.entity.items.Item_Battery;
 import org.kat.app.entity.items.Item_Kit;
 import org.kat.app.entity.items.Item_Potion;
 import org.kat.app.entity.items.Item_StrengthGem;
-import org.kat.app.entity.json_stat.EnemyStat;
-import org.kat.app.entity.json_stat.GameObject;
-import org.kat.app.entity.json_stat.ItemStat;
-import org.kat.app.entity.json_stat.NpcStat;
+import org.kat.app.entity.json_serializable.EnemyStat;
+import org.kat.app.entity.json_serializable.GameObject;
+import org.kat.app.entity.json_serializable.ItemStat;
+import org.kat.app.entity.json_serializable.NpcStat;
 import org.kat.app.entity.mob.*;
 import org.kat.app.entity.npc.Npc_CorruptedHustStudent;
 import org.kat.app.entity.object.*;
@@ -34,14 +34,9 @@ import static org.kat.app.main.GamePanel.sManager;
 public class AssetSetter {
     GameMap mp;
     Level lvl;
-    String filePathObject;
-    String filePathEnemy;
-    String filePathNpc;
-    int phaseCount;
-    public AssetSetter(GameMap mp)
-    {
-        this.mp = mp;
-    }
+    StringBuilder filePathObject;
+    StringBuilder filePathEnemy;
+    StringBuilder filePathNpc;
 
     public AssetSetter(GameMap mp, Level lvl)
     {
@@ -51,7 +46,7 @@ public class AssetSetter {
 
     public void setObject() throws IOException
     {
-        try (Reader reader = ResourceLoader.getReader(filePathObject)) {
+        try (Reader reader = ResourceLoader.getReader(filePathObject.toString())) {
             Gson gson = new Gson();
 
             Map<String, List<GameObject>> data = gson.fromJson(reader, new TypeToken<Map<String, List<GameObject>>>() {
@@ -155,7 +150,7 @@ public class AssetSetter {
 
     public void setNpc() throws IOException
     {
-        try(Reader reader = ResourceLoader.getReader(filePathNpc)){
+        try(Reader reader = ResourceLoader.getReader(filePathNpc.toString())){
             Gson gson = new Gson();
             Map<String, List<NpcStat>> data = gson.fromJson(reader, new TypeToken<Map<String, List<NpcStat>>>() {}.getType());
 
@@ -179,7 +174,7 @@ public class AssetSetter {
     }
 
     public void setEnemy() throws IOException {
-        try (Reader reader = ResourceLoader.getReader(filePathEnemy)) {
+        try (Reader reader = ResourceLoader.getReader(filePathEnemy.toString())) {
             Gson gson = new Gson();
 
             Map<String, List<List<EnemyStat>>> data = gson.fromJson(reader,
@@ -267,7 +262,6 @@ public class AssetSetter {
                             mon = boss;
                             boss.setPathFinder(finder);
                             roomTask.addEnemy(boss);
-                            mp.boss = boss;
                             break;
                     }
                     lvl.entityManager.add(mon.idName, mon);
@@ -292,13 +286,37 @@ public class AssetSetter {
         }
     }
 
-    public void setFilePathObject(String filePathObject){this.filePathObject = filePathObject;}
-    public String getFilePathObject(){return filePathObject;}
-    public void setFilePathEnemy(String filePathEnemy){this.filePathEnemy = filePathEnemy;}
-    public String getFilePathEnemy(){return filePathEnemy;}
-    public void setFilePathNpc(String filePathNpc){this.filePathNpc = filePathNpc;}
-    public String getFilePathNpc(){return filePathNpc;}
+    public void setFilePathObject(String filePathObject){
+        if(this.filePathObject == null){
+            this.filePathObject = new StringBuilder();
+        } else {
+            this.filePathObject.setLength(0);
+        }
+        this.filePathObject.append(filePathObject);
+    }
+    public String getFilePathObject(){return filePathObject.toString();}
+    public void setFilePathEnemy(String filePathEnemy){
+        if(this.filePathEnemy == null){
+            this.filePathEnemy = new StringBuilder();
+        } else {
+            this.filePathEnemy.setLength(0);
+        }
+        this.filePathEnemy.append(filePathEnemy);
+    }
+    public String getFilePathEnemy(){return filePathEnemy.toString();}
+    public void setFilePathNpc(String filePathNpc){
+        if(this.filePathNpc == null){
+            this.filePathNpc = new StringBuilder();
+        } else {
+            this.filePathNpc.setLength(0);
+        }
+        this.filePathNpc.append(filePathNpc);
+    }
 
-    public void setPhase(int p){this.phaseCount = p;}
-    public int getPhase(){return phaseCount;}
+    public void dispose(){
+        this.filePathObject = null;
+        this.filePathNpc = null;
+        this.filePathEnemy = null;
+        mp = null;
+    }
 }

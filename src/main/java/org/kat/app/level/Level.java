@@ -19,7 +19,7 @@ import static org.kat.app.main.GamePanel.*;
 
 public abstract class Level implements ILevel{
     public GameMap map;
-    protected static AssetSetter setter;
+    protected AssetSetter setter;
     protected EntityManager entityManager;
     protected EventManager eventManager;
 
@@ -291,35 +291,14 @@ public abstract class Level implements ILevel{
         roomTaskQueue.addAll(roomList);
     }
 
-    public void appendChar(String s){
-        enteredPassword.append(s);
-    }
-
-    public void popChar(){
-        enteredPassword.deleteCharAt(enteredPassword.length()-1);
-    }
-
-    public void clearPassword(){
-        enteredPassword.delete(0, enteredPassword.length());
-    }
-
-    public String getEnteredPassword(){
-        return enteredPassword.toString();
-    }
-
-    public String getCorrectPassword(){
-        return correctPassword;
-    }
-
-    public void enableCheckPassword(boolean canCheckPassword) {
-        this.canCheckPassword = canCheckPassword;
-    }
-
     protected boolean isLevelFinished(){
         return roomTaskQueue.isEmpty() && currentRoomTask == null;
     }
 
     public void dispose() {
+        setter.dispose();
+        setter = null;
+
         if (map != null) {
             map.dispose();
             map = null;
@@ -356,6 +335,7 @@ public abstract class Level implements ILevel{
         finishedBeginningDialogue = false;
 
         currentState = null;
+        map = null;
     }
 }
 

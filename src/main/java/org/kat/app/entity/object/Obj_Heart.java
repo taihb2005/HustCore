@@ -65,11 +65,10 @@ public class Obj_Heart extends Entity {
     }
 
     private void handleAnimation() {
-        // Chỉ xử lý khi trái tim chưa được thu thập
-        if (isInteracting) {  // Kiểm tra nếu nhân vật đang tương tác với đối tượng
+        if (isInteracting) {
             currentState = HeartState.TOUCHED;
-            if (KeyHandler.enterPressed) {// Đánh dấu là đã thu thập
-                collect();  // Gọi hàm thu thập để hiển thị phần thưởng
+            if (KeyHandler.enterPressed) {
+                collect();
                 canbeDestroyed = true;
             }
         } else {
@@ -92,7 +91,7 @@ public class Obj_Heart extends Entity {
     }
 
     @Override
-    public void update() throws NullPointerException{
+    public void update(){
         handleAnimation();
         currentAnimation.update();
     }
@@ -100,6 +99,12 @@ public class Obj_Heart extends Entity {
     @Override
     public void render(Graphics2D g2){// Chỉ vẽ khi chưa thu thập
         super.render(g2);
+    }
+
+    @Override
+    public void dispose(){
+        super.dispose();
+        mp = null;
     }
 
     private enum HeartState{

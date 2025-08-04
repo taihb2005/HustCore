@@ -73,7 +73,7 @@ public class Monster extends Entity {
     public void damagePlayer(){
         boolean contactPlayer = mp.cChecker.checkPlayer(this);
         if(this instanceof Mon_EffectDealer && contactPlayer) effectDealOnTouch.clone().add(); else
-        if(contactPlayer && !mp.player.isInvincible){
+        if(contactPlayer && !mp.player.isInvincible && !mp.player.isImmortal){
             mp.player.isInvincible = true;
             mp.player.receiveDamage(this);
             effectDealOnTouch.clone().add();

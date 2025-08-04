@@ -1,14 +1,9 @@
 package org.kat.app.main;
 
-import org.kat.app.level.LevelState;
-import org.kat.app.thread.LoadingService;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import static java.lang.System.exit;
 import static org.kat.app.main.GamePanel.*;
 
 public class KeyHandler implements KeyListener{

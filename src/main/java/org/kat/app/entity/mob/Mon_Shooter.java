@@ -14,12 +14,7 @@ import org.kat.app.util.KeyPair;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-/*
-Type of monster only attack in one direction
-Only attack at a certain of time, but deal massive damage when the projectile hits and blind player
-This thing only take damage when the player shoots in front of it, and when the player is 2 tiles away.
-Sleeps when no player is nearby, goes active when the player in its detection range
- */
+
 public class Mon_Shooter extends Monster implements Actable {
     public final static int IDLE = 0;
     public final static int ACTIVE = 1;
@@ -185,20 +180,6 @@ public class Mon_Shooter extends Monster implements Actable {
         }
     }
 
-    public void move() {
-        //No movement
-    }
-
-    public void setDialogue() {
-
-    }
-
-    public void loot() {
-
-    }
-    /*
-    Phương thức tấn công: Tấn công theo chu kì
-     */
     public void updateAttackCycle() {
         if(currentState == ShooterState.ACTIVE && !isDying){
             proj.removeIf(pr -> !pr.active);

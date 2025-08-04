@@ -27,21 +27,6 @@ public class Obj_Computer extends Entity {
     private final ComputerState currentState;
     private final ComputerDirection currentDirection;
 
-    public Obj_Computer(String state , String direction , int x , int y){
-        super(x , y);
-        name = "Computer";
-        width = 64;
-        height = 64;
-
-        currentState = (state.equals("off")) ? ComputerState.OFF : ComputerState.ON;
-        currentDirection = (direction.equals("front")) ? ComputerDirection.FRONT : ComputerDirection.BACK;
-
-        currentAnimation = computerAnimations.get(new KeyPair<>(currentState, currentDirection)).clone();
-        solidArea1 = new Rectangle(8 , 32 , 48 , 28);
-        solidArea2 = new Rectangle(0 , 0 , 0 , 0);
-        setDefaultSolidArea();
-    }
-
     public Obj_Computer(String state , String direction , String idName, int x , int y){
         super(x , y);
         name = "Computer";
@@ -65,7 +50,7 @@ public class Obj_Computer extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
+    public void render(Graphics2D g2){
         super.render(g2);
     }
 

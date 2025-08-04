@@ -18,12 +18,11 @@ public class TileSet {
     final private int numCols;
     final private int numTiles;
 
-    private final String imgPath;
+    private StringBuilder imgPath;
 
     private BufferedImage tileSetSprite;
 
     HashMap<Integer , Rectangle[]> objects = new HashMap<>();
-
 
     public TileSet(int firstID , int lastID , int tileWidth ,
                    int tileHeight , int numRows ,
@@ -36,7 +35,7 @@ public class TileSet {
         this.numRows = numRows;
         this.numCols = numCols;
         this.numTiles = lastID - firstID + 1;
-        this.imgPath = imgPath;
+        this.imgPath = new StringBuilder(imgPath);
 
         loadTileSheet(imgPath);
     };
@@ -53,7 +52,7 @@ public class TileSet {
         this.numCols = numCols;
         this.numTiles = lastID - firstID + 1;
         this.objects = objects;
-        this.imgPath = imgPath;
+        this.imgPath = new StringBuilder(imgPath);
 
         loadTileSheet(imgPath);
     };
@@ -76,8 +75,8 @@ public class TileSet {
 
     public void dispose(){
         objects.clear();
-        tileSetSprite.flush();
         tileSetSprite = null;
+        imgPath = null;
     }
 
 
@@ -88,7 +87,7 @@ public class TileSet {
     public int getNumCols(){return numCols;};
     public int getNumTiles(){return numTiles;};
 
-    public String getImgPath(){return imgPath;};
+    public String getImgPath(){return imgPath.toString();};
     public BufferedImage getTileSetSprite(){return tileSetSprite;};
 
     public int getTileWidth() {

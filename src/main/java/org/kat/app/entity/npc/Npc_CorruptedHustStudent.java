@@ -182,16 +182,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
     }
 
     @Override
-    public void move() {
-
-    }
-
-    @Override
-    public void set() {
-
-    }
-
-    @Override
     public void talk() {
         talkOnce = true;
         facePlayer();
@@ -202,16 +192,6 @@ public class Npc_CorruptedHustStudent extends Entity implements Actable {
             dialogueSet--;
         }
         submitDialogue(dialogueSet);
-    }
-
-    @Override
-    public void attack() {
-
-    }
-
-    @Override
-    public void loot() {
-
     }
 
     @Override

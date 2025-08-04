@@ -65,11 +65,9 @@ public class LoadingService {
     public static void loadLevel() {
         threadPool.submit(() -> {
             try {
-//                UI._UIManager.clearFromScreenStack();
-//                UI._UIManager.setCurrentScreen("loading_menu");
+
                 dispose();
 
-                //currentLevel = new DevTestLevel();
                 switch(levelProgress){
                     case 0 : currentLevel = new Level00(); break;
                     case 1 : currentLevel = new Level01(); break;
@@ -114,21 +112,23 @@ public class LoadingService {
     }
 
     public static void dispose(){
-        if (currentMap != null) {
-            currentMap.dispose();
-            currentMap = null;
-            System.out.println("Map disposed!");
+        try {
+            if (currentMap != null) {
+                currentMap.dispose();
+                currentMap = null;
+                System.out.println("Map disposed!");
+            }
+
+            if (currentLevel != null) {
+                currentLevel.dispose();
+                currentLevel = null;
+                System.out.println("Level disposed!");
+            }
+
+            ui.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if(currentLevel != null){
-            currentLevel.dispose();
-            currentLevel = null;
-            System.out.println("Level disposed!");
-        }
-
-        ui.dispose();
-
-        System.gc();
     }
 
     public static void shutdown() {

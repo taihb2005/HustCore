@@ -1,21 +1,18 @@
 package org.kat.app.map;
 
 import org.kat.app.entity.Entity;
-import org.kat.app.entity.mob.Mon_Boss;
 import org.kat.app.entity.mob.Monster;
 import org.kat.app.entity.object.Obj_Wall;
 import org.kat.app.entity.player.AttackEnemy;
 import org.kat.app.entity.player.Player;
 import org.kat.app.entity.projectile.Projectile;
 import org.kat.app.graphics.environment.EnvironmentManager;
-import org.kat.app.level.event.EventRectangle;
 import org.kat.app.main.KeyHandler;
 import org.kat.app.util.CollisionHandler;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static org.kat.app.main.GamePanel.*;
 
@@ -28,7 +25,6 @@ public class GameMap {
     private static final int VERTICAL_UPDATE_BUFFER = 10 * 64;
 
     public Player player;
-    public Mon_Boss boss = null;
 
     private final EnvironmentManager environmentManager;
     public CollisionHandler cChecker = new CollisionHandler(this);
@@ -85,7 +81,7 @@ public class GameMap {
         for (Entity entity : npc) if(entity != null) objList.add(entity);
         for (Entity entity : enemy) if(entity != null) objList.add(entity);
 
-        Collections.sort(objList, (e1, e2) -> {
+        objList.sort((e1, e2) -> {
             int index;
             index = Float.compare(e1.position.y, e2.position.y);
             return index;
@@ -125,8 +121,6 @@ public class GameMap {
         {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(1));
-            EventRectangle x = new EventRectangle(896 , 1408 , 128, 64 , true);
-            g2.drawRect(x.x - camera.getX(), x.y - camera.getY(), x.width, x.height);
             for (Entity e : objList) {
                 if (e != null) {
                     g2.drawRect(e.solidAreaDefaultX1 + (int)e.position.x - camera.getX(), e.solidAreaDefaultY1 + (int)e.position.y - camera.getY(), e.solidArea1.width, e.solidArea1.height);

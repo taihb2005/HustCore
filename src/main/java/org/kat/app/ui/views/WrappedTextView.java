@@ -99,9 +99,23 @@ public class WrappedTextView extends TextView{
     }
 
     @Override
+    public void setDimensions(int x, int y, int width, int height) {
+        super.setDimensions(x, y, width, height);
+        if(textLine != null){
+            textLine.forEach(text -> text.attach(this));
+        }
+    }
+
+    @Override
     public WrappedTextView setText(String text) {
         super.setText(text);
         return this;
+    }
+
+    @Override
+    public void setAlpha(float alpha) {
+        super.setAlpha(alpha);
+        textLine.forEach(text -> text.setAlpha(alpha));
     }
 
     public void setTextAt(String text, int lineNums){

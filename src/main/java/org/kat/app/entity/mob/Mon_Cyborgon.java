@@ -300,10 +300,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
         newPosition.set(position);
     }
 
-    public void setDialogue() {
-
-    }
-
+    @Override
     public void attack() {
         if(!projectile.active &&shootAvailableCounter == SHOOT_INTERVAL) {
             projectile.set(position, direction, true, this);
@@ -312,10 +309,6 @@ public class Mon_Cyborgon extends Monster implements Actable {
             mp.addObject(projectile, mp.projectiles);
             shootAvailableCounter = 0;
         }
-    }
-
-    public void loot() {
-
     }
 
     @Override

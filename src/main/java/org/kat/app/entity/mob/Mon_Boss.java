@@ -3,7 +3,6 @@ package org.kat.app.entity.mob;
 import org.kat.app.ai.PathFinder2;
 import org.kat.app.entity.Actable;
 import org.kat.app.entity.effect.type.EffectNone;
-import org.kat.app.entity.player.Player;
 import org.kat.app.entity.projectile.Proj_ExplosivePlasma;
 import org.kat.app.entity.projectile.Proj_Flame;
 import org.kat.app.entity.projectile.Proj_TrackingPlasma;
@@ -18,12 +17,10 @@ import org.kat.app.util.GameTimer;
 import org.kat.app.util.KeyPair;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.kat.app.main.GamePanel.*;
 import static org.kat.app.map.GameMap.childNodeSize;
 
 public class Mon_Boss extends Monster implements Actable {
@@ -138,19 +135,7 @@ public class Mon_Boss extends Monster implements Actable {
     ArrayList<Projectile> proj;
     private int currentColumn = 1;
     private boolean isShooting1, isShooting2, isShooting3;
-    private BufferedImage hpFrame;
 
-    public Mon_Boss(GameMap mp , int x , int y){
-        super(mp , x , y);
-        name = "Boss";
-        width = 128;
-        height = 128;
-
-        hpFrame = AssetPool.getImage("boss_hpFrame.png");
-
-        //getImage();
-        setDefault();
-    }
     public Mon_Boss(GameMap mp , String idName, int x , int y){
         super(mp , x , y);
         name = "Boss";
@@ -158,9 +143,6 @@ public class Mon_Boss extends Monster implements Actable {
         width = 128;
         height = 128;
 
-        hpFrame = AssetPool.getImage("boss_hpFrame.png");
-
-        //getImage();
         setDefault();
     }
     private void setDefault(){
@@ -211,7 +193,7 @@ public class Mon_Boss extends Monster implements Actable {
 
     private void setAction() {
 
-        setSkill();
+        attack();
 
         if(isStage2){
             currentStage = Stage.STAGE2;
@@ -296,19 +278,18 @@ public class Mon_Boss extends Monster implements Actable {
     }
 
     public void setDialogue() {
-        this.dialogues[0][0] = new StringBuilder("Ngươi cũng mạnh phết đấy.");
-        this.dialogues[0][1] = new StringBuilder("Xem ra ta phải nhờ đến sự trợ\ngiúp của thuộc hạ rồi.");
-        this.dialogues[1][0] = new StringBuilder("Á hự... Không thể tin ngươi đã đánh bại được ta...");
-        this.dialogues[1][1] = new StringBuilder("Huhuhu...");
+        setDialogueAt(0, 0,
+                "Ngươi cũng mạnh phết đấy." );
+        setDialogueAt(0, 1,
+                "Xem ra ta phải nhờ đến sự trợ\ngiúp của thuộc hạ rồi." );
+        setDialogueAt(1, 0,
+                "Á hự... Không thể tin ngươi đã đánh bại được ta..." );
+        buildDialogue();
     }
 
     @Override
     public void attack() {
-    }
-
-    @Override
-    public void loot() {
-
+        setSkill();
     }
 
     public void searchPathForBoss(int goalCol, int goalRow) {

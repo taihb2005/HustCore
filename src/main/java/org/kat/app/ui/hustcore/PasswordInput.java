@@ -18,6 +18,10 @@ public class PasswordInput extends UIScreen {
         super(id, viewTree);
     }
 
+    public boolean isCorrect(){
+        return editPassword.isCorrect();
+    }
+
     @Override
     protected void onCreate() {
         editPassword = (EditPassword) findViewById("editPassword");

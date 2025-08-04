@@ -9,22 +9,6 @@ import org.kat.app.map.GameMap;
 import java.awt.*;
 
 public class Mon_EffectDealer extends Monster{
-    public Mon_EffectDealer(GameMap mp, int x, int y) {
-        super(mp, x, y);
-        width = 64; height = 64;
-
-        setDefault();
-    }
-
-    public Mon_EffectDealer(GameMap mp, Effect eff, String idName, int x, int y) {
-        super(mp, x, y);
-        name = "Effect Dealer";
-        this.idName = idName;
-        width = 64; height = 64;
-
-        setDefault();
-        this.effectDealOnTouch = eff;
-    }
     public Mon_EffectDealer(GameMap mp, Effect eff, String idName, int x, int y, int width, int height) {
         super(mp, x, y);
         name = "Effect Dealer";

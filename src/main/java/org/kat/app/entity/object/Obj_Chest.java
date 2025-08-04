@@ -151,6 +151,12 @@ public class Obj_Chest extends Entity implements Actable {
         return currentState == ChestState.OPENED;
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        mp = null;
+    }
+
     private enum ChestState{
         OPENED, CLOSED
     }

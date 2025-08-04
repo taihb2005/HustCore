@@ -12,7 +12,6 @@ import java.util.List;
 public class RoomTask {
     Level lvl;
 
-    String nameId;
     RoomState currentState = RoomState.PENDING;
 
     int remainingEnemies;
@@ -172,8 +171,7 @@ public class RoomTask {
 
         eventMaster.dispose();
         eventMaster = null;
-
-        System.gc();
+        lvl = null;
     }
 
 

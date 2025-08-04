@@ -492,7 +492,7 @@ public class Player extends Entity {
     }
 
     private void setDamage(){
-        strength = 10;
+        strength = 1000;
         lastStrength = strength;
         damage = (projectile.baseDamage + strength * level) * strengthScalar ;
     }
@@ -550,7 +550,7 @@ public class Player extends Entity {
     @Override
     public void render(Graphics2D g2)
     {
-        if(isInvincible && !isDying){
+        if(isInvincible && !isDying && !isImmortal){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER , 0.6f));
         }
         super.render(g2);

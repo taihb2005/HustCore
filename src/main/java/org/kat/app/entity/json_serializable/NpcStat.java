@@ -1,4 +1,4 @@
-package org.kat.app.entity.json_stat;
+package org.kat.app.entity.json_serializable;
 
 public class NpcStat {
     private String npc;

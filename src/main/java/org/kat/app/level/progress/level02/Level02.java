@@ -21,7 +21,6 @@ import java.util.Random;
 import static org.kat.app.main.GamePanel.*;
 
 public class Level02 extends Level {
-    private int hintNums = 0;
     public Level02() {
         super();
     }
@@ -56,6 +55,7 @@ public class Level02 extends Level {
     public void onBegin() {
         eventMaster.setDialogueAt(0, 0, "Player: Lại gặp một gã nữa...");
         eventMaster.setDialogueAt(0, 1, "Player: Đến nói chuyện xem sao!");
+
         eventMaster.setDialogueAt(1, 0, "Bạn đã hoàn thành thử thách thứ hai");
         eventMaster.setDialogueAt(1, 1, "Hãy đến cửa phía Bắc để tiếp tục!");
         for(int i = 0 ; i < correctPassword.length(); i++){
@@ -77,8 +77,6 @@ public class Level02 extends Level {
 
     @Override
     public void onFinish() {
-//        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ hai");
-//        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Bắc để\ntiếp tục!");
         eventMaster.submitDialogue(1);
     }
 
@@ -169,14 +167,7 @@ public class Level02 extends Level {
         ));
 
         eventManager.register((new Event(
-                () -> {
-                    if(canCheckPassword){
-                        isCorrect = checkPassword();
-                        canCheckPassword = false;
-                        return isCorrect;
-                    }
-                    return false;
-                },
+                () -> ((PasswordInput) UI._UIManager.findUIScreenByName("password_input")).isCorrect(),
                 () -> {
                     getRoom("Room2").finish();
                     UI._UIManager.clearFromScreenStack();

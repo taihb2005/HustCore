@@ -35,27 +35,26 @@ public class TileLayer {
 
 
     public void render(Graphics2D g2) {
-        int startCols = Math.max((int)(mp.player.position.x - mp.player.screenX) / tileWidth - 10, 0);
-        int endCols = Math.min((int)(mp.player.position.x + mp.player.screenX) / tileWidth + 10, numCols);
+        if(mp != null) {
+            int startCols = Math.max((int) (mp.player.position.x - mp.player.screenX) / tileWidth - 10, 0);
+            int endCols = Math.min((int) (mp.player.position.x + mp.player.screenX) / tileWidth + 10, numCols);
 
-        int startRows = (int) Math.max((mp.player.position.y - mp.player.screenY) / tileHeight - 8, 0);
-        int endRows = (int) Math.min((mp.player.position.y + mp.player.screenY) / tileHeight + 8, numRows);
-        for(int i = startRows ; i < endRows ; i++)
-        {
-            for(int j = startCols; j < endCols ; j++)
-            {
-                if(tileLayerData[i][j] != null){
-                    BufferedImage tile = tileLayerData[i][j];
+            int startRows = (int) Math.max((mp.player.position.y - mp.player.screenY) / tileHeight - 8, 0);
+            int endRows = (int) Math.min((mp.player.position.y + mp.player.screenY) / tileHeight + 8, numRows);
+            for (int i = startRows; i < endRows; i++) {
+                for (int j = startCols; j < endCols; j++) {
+                    if (tileLayerData[i][j] != null) {
+                        BufferedImage tile = tileLayerData[i][j];
 
-                    int worldX = j * tileWidth;
-                    int worldY = i * tileHeight;
+                        int worldX = j * tileWidth;
+                        int worldY = i * tileHeight;
 
-                    g2.drawImage(tile, worldX - camera.getX() , worldY - camera.getY(), tileWidth, tileHeight, null);
+                        g2.drawImage(tile, worldX - camera.getX(), worldY - camera.getY(), tileWidth, tileHeight, null);
+                    }
+
                 }
-
             }
         }
-
     }
 
     public void update() {
@@ -64,7 +63,6 @@ public class TileLayer {
 
 
     int getIndexTileSet(int data) {
-
         int index = 0;
 
         for (int i = 0; i < tileSetList.size(); i++) {
@@ -114,6 +112,8 @@ public class TileLayer {
                 img.flush();
             }
         }
+
+        mp = null;
     }
 
     public int getNumCols()

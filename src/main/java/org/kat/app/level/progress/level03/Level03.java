@@ -61,16 +61,12 @@ public class Level03 extends Level {
         eventMaster.setDialogueAt(1, 1, "Hãy đến cửa phía Nam để tiếp tục!");
         eventMaster.buildDialogue();
 
-
         eventMaster.submitDialogue(0);
     }
 
     @Override
     public void onFinish() {
-//        eventMaster.dialogues[0][0] = new StringBuilder("Bạn đã hoàn thành thử thách\nthứ ba");
-//        eventMaster.dialogues[0][1] = new StringBuilder("Hãy đến cửa phía Nam để\ntiếp tục!");
-
-        eventMaster.submitDialogue(0);
+        eventMaster.submitDialogue(1);
         map.player.getEnvironmentManager().lighting.transit = true;
         map.player.getEnvironmentManager().lighting.fadeOut = true;
     }

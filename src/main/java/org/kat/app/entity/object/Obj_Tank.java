@@ -25,22 +25,6 @@ public class Obj_Tank extends Entity {
         }
     }
     private TankState currentState;
-    public Obj_Tank(String state , int id, int x , int y) throws Exception
-    {
-        super(x , y);
-        name = "Tank";
-        super.width = 64;
-        super.height = 128;
-
-        if(state.equals("empty") && id != 1){
-            throw new Exception("Cái Tank đã empty rồi thì để id = 1 nhé anh bạn!");
-        }
-
-        currentState = (state.equals("empty")) ? TankState.EMPTY : TankState.FILLED;
-        currentAnimation = tankAnimations.get(new KeyPair<>(currentState, id)).clone();
-
-        setDefault();
-    }
 
     public Obj_Tank(String state , int id, String idName, int x , int y) throws Exception
     {
@@ -74,7 +58,7 @@ public class Obj_Tank extends Entity {
     }
 
     @Override
-    public void render(Graphics2D g2) throws ArrayIndexOutOfBoundsException , NullPointerException {
+    public void render(Graphics2D g2) {
         super.render(g2);
     }
 

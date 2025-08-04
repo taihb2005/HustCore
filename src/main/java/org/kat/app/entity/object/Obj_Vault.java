@@ -25,12 +25,7 @@ public class Obj_Vault extends Entity {
     }
 
     @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void render(Graphics2D g2) throws  ArrayIndexOutOfBoundsException{
+    public void render(Graphics2D g2){
         g2.drawImage(obj_vault , (int)position.x - camera.getX() , (int)position.y - camera.getY() , width , height , null);
     }
 

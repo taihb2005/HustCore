@@ -54,9 +54,6 @@ public class Level01 extends Level {
 
     @Override
     public void onFinish() {
-//        eventMaster.dialogues[0][0] = new StringBuilder("Chúc mừng bạn đã hoàn thành\nthử thách đầu tiên!");
-//        eventMaster.dialogues[0][1] = new StringBuilder("Đi xuống căn phòng dưới để\nnhận thêm vật phẩm!");
-//        eventMaster.dialogues[0][2] = new StringBuilder("Sau đó hãy ra cửa phía nam\nđể sang phòng khác!");
         eventMaster.submitDialogue(1);
     }
 
