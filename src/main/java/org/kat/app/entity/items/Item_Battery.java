@@ -6,7 +6,7 @@ import org.kat.app.graphics.Sprite;
 
 public class Item_Battery extends Item {
     private static final Sprite batterySprite = new Sprite(AssetPool.getImage("ITEM_battery.png"),32 ,32);
-    private final int manaReward = 50;
+    private final int manaReward = 80;
     public Item_Battery(){
         super(1, batterySprite.getSprite(0,0));
         name = new StringBuilder("Pin năng lượng");
