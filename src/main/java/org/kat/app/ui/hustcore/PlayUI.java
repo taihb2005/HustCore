@@ -49,22 +49,7 @@ public class PlayUI extends UIScreen {
 
     @Override
     public void handleKeyNavigation(){
-        if (key1pressed) {
-            key1pressed = false;
-            playerInventory.setSelectedSlot(0);
-        } else if (key2pressed) {
-            key2pressed = false;
-            playerInventory.setSelectedSlot(1);
-        } else if (KeyHandler.key3pressed) {
-            KeyHandler.key3pressed = false;
-            playerInventory.setSelectedSlot(2);
-        } else if (KeyHandler.key4pressed) {
-            KeyHandler.key4pressed = false;
-            playerInventory.setSelectedSlot(3);
-        } else if (KeyHandler.key5pressed) {
-            KeyHandler.key5pressed = false;
-            playerInventory.setSelectedSlot(4);
-        } else if(keyEpressed){
+        if(keyEpressed){
             keyEpressed = false;
             playerInventory.toggle();
         }

@@ -20,12 +20,14 @@ import org.kat.app.entity.json_serializable.NpcStat;
 import org.kat.app.entity.mob.*;
 import org.kat.app.entity.npc.Npc_CorruptedHustStudent;
 import org.kat.app.entity.object.*;
+import org.kat.app.graphics.AssetPool;
 import org.kat.app.util.ResourceLoader;
 import org.kat.app.map.GameMap;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -247,7 +249,7 @@ public class AssetSetter {
                                     effect = new Speed(mp.player, duration);
                                     break;
                                 case "Strength":
-                                    effect = new Strength(mp.player, duration);
+                                    effect = new Strength(mp.player, duration, 2);
                                     break;
                                 case "Blind":
                                     effect = new Blind(mp.player, duration);
@@ -311,6 +313,11 @@ public class AssetSetter {
             this.filePathNpc.setLength(0);
         }
         this.filePathNpc.append(filePathNpc);
+    }
+
+    public static boolean isJar(){
+        URL url = AssetPool.class.getResource(AssetPool.class.getSimpleName() + ".class");
+        return url != null && url.getProtocol().equals("jar");
     }
 
     public void dispose(){

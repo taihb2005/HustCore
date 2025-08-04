@@ -42,9 +42,6 @@ public class RoomTask {
             for(String idName: doorDeactivate){
                 lvl.entityManager.get(idName, Obj_Door.class).close();
             }
-
-            if(eventMaster.dialogues != null)
-                eventMaster.submitDialogue(0);
         };
 
         onComplete= () -> {

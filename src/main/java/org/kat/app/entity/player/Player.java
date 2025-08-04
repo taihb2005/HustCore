@@ -469,7 +469,7 @@ public class Player extends Entity {
         manaHealCounter++;
         if(manaHealCounter >= manaHealInterval){
             manaHealCounter = 0;
-            currentMana += 5;
+            currentMana += 10;
         }
         updateMana();
     }

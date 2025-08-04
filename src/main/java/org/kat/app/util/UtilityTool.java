@@ -2,6 +2,7 @@ package org.kat.app.util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 
 public class UtilityTool {
 
@@ -12,6 +13,11 @@ public class UtilityTool {
 
     public static double distance(int x1 , int y1 , int x2 , int y2){
         return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+
+    public static boolean isJar(){
+        URL url = UtilityTool.class.getResource(UtilityTool.class.getSimpleName() + ".class");
+        return url != null && url.getProtocol().equals("jar");
     }
 
     public static BufferedImage scaleImage(BufferedImage original, int width, int height)

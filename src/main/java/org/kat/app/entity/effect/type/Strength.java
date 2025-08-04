@@ -26,7 +26,7 @@ public class Strength extends Effect {
     }
 
     public Strength clone(){
-        return new Strength(player, effectDuration);
+        return new Strength(player, effectDuration, damageMultiplier);
     }
 
 }

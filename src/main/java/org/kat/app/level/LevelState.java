@@ -9,5 +9,4 @@ public enum LevelState {
     TRANSITIONING,
     DIALOGUE,
     PASSWORD,
-    QUIZ
 }

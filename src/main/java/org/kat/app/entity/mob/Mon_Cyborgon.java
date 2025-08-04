@@ -111,7 +111,7 @@ public class Mon_Cyborgon extends Monster implements Actable {
 
         isActive = false;
         invincibleDuration = 40;
-        maxHP = 300;
+        maxHP = 250;
         currentHP = maxHP;
         strength = 10;
         level = 1;

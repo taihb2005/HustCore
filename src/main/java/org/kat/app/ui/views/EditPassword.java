@@ -1,10 +1,12 @@
 package org.kat.app.ui.views;
 
+import org.kat.app.level.LevelState;
 import org.kat.app.ui.Updatable;
 import org.kat.app.ui.hustcore.PasswordInput;
 
 import java.awt.*;
 
+import static org.kat.app.main.GamePanel.currentLevel;
 import static org.kat.app.main.KeyHandler.*;
 import static org.kat.app.main.KeyHandler.key2pressed;
 import static org.kat.app.main.KeyHandler.key3pressed;
@@ -92,6 +94,8 @@ public class EditPassword extends TextView implements Updatable {
 
     @Override
     public void update(){
+        if(!currentLevel.checkState(LevelState.PASSWORD))
+            return;
         handleKeyInput();
 
         switch(currentState){

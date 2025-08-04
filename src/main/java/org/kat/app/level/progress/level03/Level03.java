@@ -66,6 +66,7 @@ public class Level03 extends Level {
 
     @Override
     public void onFinish() {
+        onEnterFirstRoom = null;
         eventMaster.submitDialogue(1);
         map.player.getEnvironmentManager().lighting.transit = true;
         map.player.getEnvironmentManager().lighting.fadeOut = true;
@@ -98,9 +99,8 @@ public class Level03 extends Level {
 
     public void update() {
         eventManager.update();
-        if(enterFirstRoom) onEnterFirstRoom.run();
+        if(enterFirstRoom && onEnterFirstRoom != null) onEnterFirstRoom.run();
     }
-    public void render(Graphics2D g2){}
 
     public void dispose() {
         super.dispose();
@@ -113,7 +113,7 @@ public class Level03 extends Level {
         changeMapEventRect1 = new EventRectangle(1536 , 1888 , 128 , 32 , false);
 
         eventManager = new EventManager();
-        remainingTime = 5000;
+        remainingTime = 4000;
 
         EventRectangle panicModeRect_1 = new EventRectangle(704, 1974, 128, 10, false);
         EventRectangle panicModeRect_2 = new EventRectangle(1088, 1974, 128, 10,false);
