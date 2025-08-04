@@ -7,6 +7,7 @@ import org.kat.app.graphics.Sprite;
 
 public class Item_StrengthGem extends Item{
     private static final Sprite strengthGemSprite = new Sprite(AssetPool.getImage("ITEM_strengthgem.png"),32, 32);
+    private static final int DAMAGE_MULTIPLIER = 2;
     public Item_StrengthGem() {
         super( 4, strengthGemSprite.getSpriteSheet());
         name = new StringBuilder("Ngọc sức mạnh");
@@ -15,7 +16,7 @@ public class Item_StrengthGem extends Item{
 
     public void use(Player player){
         quantity--;
-        Strength strength = new Strength(player, 300);
+        Strength strength = new Strength(player, 300, DAMAGE_MULTIPLIER);
         strength.add();
     }
 }

@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class Obj_Heart extends Entity {
+    private static final int HP_REWARD = 30;
     GameMap mp;
 
     private static final HashMap<HeartState, Sprite> heartSpritePool = new HashMap<>();
@@ -36,8 +37,6 @@ public class Obj_Heart extends Entity {
 
     }
 
-    int hpReward = 60;
-
     public Obj_Heart(GameMap mp) {
         super();
         this.mp = mp;
@@ -60,7 +59,7 @@ public class Obj_Heart extends Entity {
         interactionDetectionArea = new Rectangle(3 , 7 , 26 , 23);
         super.setDefaultSolidArea();
 
-        setDialogueAt(0, 0, "Bạn đã được hồi " + hpReward + " máu!");
+        setDialogueAt(0, 0, "Bạn đã được hồi " + HP_REWARD + " máu!");
         buildDialogue();
     }
 
@@ -81,7 +80,7 @@ public class Obj_Heart extends Entity {
     }
 
     private void collect() {
-        mp.player.currentHP += hpReward;
+        mp.player.currentHP += HP_REWARD;
         dialogueSet++;
         if(dialogues[dialogueSet][0] == null) {
             dialogueIndex = 0;

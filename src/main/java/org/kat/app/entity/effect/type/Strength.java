@@ -5,17 +5,20 @@ import org.kat.app.entity.player.Player;
 import org.kat.app.graphics.AssetPool;
 
 public class Strength extends Effect {
-    public Strength(Player player , int duration) {
+    private int damageMultiplier = 2;
+    public Strength(Player player , int duration, int damageMultiplier) {
         super(player);
         setEffectDuration(duration);
         id = 4;
         name = "Strength";
         isNegative = false;
         icon = AssetPool.getImage("strength.png");
+
+        this.damageMultiplier = damageMultiplier;
     }
 
     public void affect(){
-        player.strengthScalar =  2;
+        player.strengthScalar =  damageMultiplier;
     }
 
     public void remove(){
