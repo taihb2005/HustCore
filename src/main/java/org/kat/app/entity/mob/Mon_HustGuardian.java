@@ -104,7 +104,7 @@ public class Mon_HustGuardian extends Monster implements Actable {
         invincibleDuration = 40;
         maxHP = 200;
         currentHP = maxHP;
-        strength = 80;
+        strength = 40;
         level = 1;
         defense = 10;
         projectile = new Proj_GuardianProjectile(mp);

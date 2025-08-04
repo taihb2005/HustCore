@@ -119,7 +119,7 @@ public class Player extends Entity {
     public int SHOOT_INTERVAL ;
     public int nextLevelUp = 60;
     //PLAYER STATUS
-    public int blindRadius = 200;
+    public int blindRadius = 170;
     private final int invincibleDuration = 60;
     private final int manaHealInterval = 180;
     private int manaHealCounter = 0;
