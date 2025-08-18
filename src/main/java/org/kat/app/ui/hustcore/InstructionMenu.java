@@ -25,4 +25,9 @@ public class InstructionMenu extends UIScreen {
         });
     }
 
+    @Override
+    protected void onLeave(){
+        UI._UIManager.setCurrentScreen("setting_menu");
+    }
+
 }

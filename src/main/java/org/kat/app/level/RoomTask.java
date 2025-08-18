@@ -3,7 +3,6 @@ package org.kat.app.level;
 import org.kat.app.entity.Entity;
 import org.kat.app.entity.mob.Monster;
 import org.kat.app.entity.object.Obj_Door;
-import org.kat.app.level.event.EventHandler;
 import org.kat.app.level.event.EventRectangle;
 
 import java.util.ArrayList;
@@ -60,10 +59,6 @@ public class RoomTask {
         } else {
             targetedEnemy.removeIf(enemy -> enemy.canbeDestroyed);
         }
-    }
-
-    boolean trigger(EventHandler handler) {
-        return !triggerZone.eventFinished && handler.triggerEvent(triggerZone);
     }
 
     public void addEnemy(Monster monster){

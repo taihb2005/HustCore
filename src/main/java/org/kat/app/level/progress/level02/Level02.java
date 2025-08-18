@@ -21,6 +21,7 @@ import java.util.Random;
 import static org.kat.app.main.GamePanel.*;
 
 public class Level02 extends Level {
+    private String correctPassword ;
     public Level02() {
         super();
     }
@@ -34,7 +35,6 @@ public class Level02 extends Level {
             correctPassword_tmp.append(nextChar);
         }
         correctPassword = correctPassword_tmp.toString();
-
     }
 
     @Override

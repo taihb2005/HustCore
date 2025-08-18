@@ -101,6 +101,7 @@ public class AssetSetter {
                     default -> null;
                 };
                 mp.addObject(entity, mp.inactiveObj);
+                assert entity != null;
                 lvl.entityManager.add(entity.idName, entity);
             }
 //
@@ -142,11 +143,11 @@ public class AssetSetter {
                         break;
                 }
                 mp.addObject(entity, mp.activeObj);
+                assert entity != null;
                 lvl.entityManager.add(entity.idName, entity);
             }
         } catch (Exception e) {
             System.out.println("Nào, sai tên file hay sai gì đó trong file json rồi kìa!");
-            e.printStackTrace();
         }
     }
 
@@ -160,7 +161,7 @@ public class AssetSetter {
             for(NpcStat npc : Npc){
                 int X = npc.getX();
                 int Y = npc.getY();
-                Npc_CorruptedHustStudent entity = null;
+                Npc_CorruptedHustStudent entity;
                 entity = new Npc_CorruptedHustStudent(mp,
                         npc.getName(),
                         npc.getDirection(),
@@ -241,20 +242,13 @@ public class AssetSetter {
                             int H = enemy.getSizeHeight();
                             String effectType = enemy.getEffect().getEffectType();
                             int duration = enemy.getEffect().getDuration();
-                            switch (effectType) {
-                                case "Slow":
-                                    effect = new Slow(mp.player, duration);
-                                    break;
-                                case "SpeedBoost":
-                                    effect = new Speed(mp.player, duration);
-                                    break;
-                                case "Strength":
-                                    effect = new Strength(mp.player, duration, 2);
-                                    break;
-                                case "Blind":
-                                    effect = new Blind(mp.player, duration);
-                                    break;
-                            }
+                            effect = switch (effectType) {
+                                case "Slow" -> new Slow(mp.player, duration);
+                                case "SpeedBoost" -> new Speed(mp.player, duration);
+                                case "Strength" -> new Strength(mp.player, duration, 2);
+                                case "Blind" -> new Blind(mp.player, duration);
+                                default -> effect;
+                            };
                             mon = new Mon_EffectDealer(mp, effect, enemy.getName(), X, Y, W, H);
                             roomTask.addEnemy(mon);
                             break;
@@ -266,6 +260,7 @@ public class AssetSetter {
                             roomTask.addEnemy(boss);
                             break;
                     }
+                    assert mon != null;
                     lvl.entityManager.add(mon.idName, mon);
                 }
 
@@ -313,11 +308,6 @@ public class AssetSetter {
             this.filePathNpc.setLength(0);
         }
         this.filePathNpc.append(filePathNpc);
-    }
-
-    public static boolean isJar(){
-        URL url = AssetPool.class.getResource(AssetPool.class.getSimpleName() + ".class");
-        return url != null && url.getProtocol().equals("jar");
     }
 
     public void dispose(){

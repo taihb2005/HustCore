@@ -26,7 +26,7 @@ public class Proj_Flame extends Projectile {
         }
     }
 
-    Direction lastDirection = null;
+    Direction lastDirection;
 
     private void setState(){
         if(currentDirection != lastDirection){

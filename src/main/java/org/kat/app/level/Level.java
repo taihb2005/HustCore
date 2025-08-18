@@ -33,9 +33,6 @@ public abstract class Level implements ILevel{
     protected HashMap<String, RoomTask> rooms = new HashMap<>();
     protected Queue<RoomTask> roomTaskQueue = new LinkedList<>();
     protected StringBuffer enteredPassword ;
-    protected String correctPassword ;
-    protected boolean canCheckPassword;
-    public boolean isCorrect;
 
     protected RoomTask previousRoomTask;
     protected RoomTask currentRoomTask;
@@ -79,7 +76,7 @@ public abstract class Level implements ILevel{
         if(getMusicFile() != -1){
             playMusic(getMusicFile());
         }
-    };
+    }
 
     public boolean triggerEvent(EventRectangle e){
         int newSolidAreaX1 = (int)map.player.position.x + map.player.solidArea1.x;
@@ -98,7 +95,7 @@ public abstract class Level implements ILevel{
     }
 
     public void update(){}
-    public void render(Graphics2D g2){};
+    public void render(Graphics2D g2){}
 
     public void setLevelState(LevelState state){
         this.currentState = state;

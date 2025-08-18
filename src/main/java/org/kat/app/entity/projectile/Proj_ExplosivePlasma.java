@@ -28,7 +28,7 @@ public class Proj_ExplosivePlasma extends Projectile{
         }
     }
 
-    Direction lastDirection = null;
+    Direction lastDirection;
 
     private void setState(){
         if(currentDirection != lastDirection){

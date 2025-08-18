@@ -96,8 +96,12 @@ public class UIBuilder {
             case "TextView" -> {
                 String content = e.getAttribute("text");
                 boolean shouldShadow = getBooleanAttr(e, "shadow", false);
-                Text text = (shouldShadow) ? new ShadowedText(content) : new Text(content);
-                text.setFontSize(getIntAttr(e, "fontSize", 0));
+                Text text = new Text(content);
+                text.setShadow(shouldShadow);
+
+                String color = getAttr(e, "color", "#FFFFFF");
+                text.setColor(Color.decode(color));
+                text.setFontSize(getIntAttr(e, "fontSize", 19));
 
                 String[] alignments = getAttr(e, "alignment", "center").split("\\|");
                 Alignment hAlign =  switch(alignments[0].trim()){
@@ -119,7 +123,8 @@ public class UIBuilder {
                 int maxLength = getIntAttr(e, "maxLength", 20);
                 String content = e.getAttribute("text");
                 boolean shouldShadow = getBooleanAttr(e, "shadow", false);
-                Text text = (shouldShadow) ? new ShadowedText(content) : new Text(content);
+                Text text = new Text(content);
+                text.setShadow(shouldShadow);
                 text.setFontSize(getIntAttr(e, "fontSize", 0));
 
                 String[] alignments = getAttr(e, "alignment", "center").split("\\|");
@@ -141,8 +146,12 @@ public class UIBuilder {
             case "WrappedTextView" -> {
                 String content = e.getAttribute("text");
                 boolean shouldShadow = getBooleanAttr(e, "shadow", false);
-                Text text = (shouldShadow) ? new ShadowedText(content) : new Text(content);
-                text.setFontSize(getIntAttr(e, "fontSize", 0));
+                Text text = new Text(content);
+                text.setShadow(shouldShadow);
+                text.setFontSize(getIntAttr(e, "fontSize", 19));
+
+                String color = getAttr(e, "color", "#FFFFFF");
+                text.setColor(Color.decode(color));
 
                 String[] alignments = getAttr(e, "alignment", "center").split("\\|");
                 Alignment hAlign =  switch(alignments[0].trim()){

@@ -25,7 +25,7 @@ public class Proj_Plasma extends Projectile{
                     new Animation(sprite.getSpriteArrayRow(row), 10, true));
         }
     }
-    Direction lastDirection = null;
+    Direction lastDirection;
 
     private void setState(){
         if(currentDirection != lastDirection){

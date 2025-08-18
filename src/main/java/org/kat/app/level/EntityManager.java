@@ -29,6 +29,4 @@ public class EntityManager {
         }
         return clazz.cast(entity);
     }
-
-
 }

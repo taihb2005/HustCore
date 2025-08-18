@@ -13,6 +13,9 @@ public class Text{
     private static final Font DEFAULT_FONT = joystix;
     public static final Color DEFAULT_COLOR = Color.WHITE;
     public static final float DEFAULT_ALPHA = 1f;
+    private static final int OFFSET_X = 6;
+    private static final int OFFSET_Y = 4;
+    private static final Color SHADOW_COLOR = new Color(0, 0, 0, 150);
 
     protected int parentX, parentY;
     protected int parentWidth, parentHeight;
@@ -29,6 +32,8 @@ public class Text{
     protected Alignment hAlign = Alignment.HORIZONTAL_CENTER;
     protected Alignment vAlign = Alignment.VERTICAL_CENTER;
 
+    private boolean shadow = false;
+
     public Text(){
         build();
     }
@@ -44,6 +49,16 @@ public class Text{
         this.color = color;
         this.baseFont = baseFont;
         this.fontSize = fontSize;
+
+        build();
+    }
+
+    public Text(String content, Color color, Font baseFont, float fontSize, boolean shadow) {
+        this.content = new StringBuilder(content);
+        this.color = color;
+        this.baseFont = baseFont;
+        this.fontSize = fontSize;
+        this.shadow = shadow;
 
         build();
     }
@@ -81,6 +96,8 @@ public class Text{
     public void setLineSpacing(float factor) {
         this.factor = factor;
     }
+
+    public void setShadow(boolean shadow) {this.shadow = shadow;}
 
     public void append(char c){
         this.content.append(c);
@@ -189,6 +206,12 @@ public class Text{
 
         drawY += lineNums * lineSpacing;
 
+        if(shadow){
+            g2.setColor(SHADOW_COLOR);
+            g2.drawString(content.toString(), drawX + OFFSET_X, drawY + OFFSET_Y);
+        }
+
+        g2.setColor(color);
         g2.drawString(content.toString(), drawX, drawY);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }

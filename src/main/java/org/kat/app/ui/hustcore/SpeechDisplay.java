@@ -98,6 +98,16 @@ public class SpeechDisplay extends UIScreen {
         }
     }
 
+    @Override
+    public void onLeave(){
+        skip();
+        if(UI._UIManager.getCurrentScreen().getId().equals("speech_display")) {
+            UI._UIManager.clearFromScreenStack();
+        }
+
+        currentLevel.setLevelState(LevelState.RUNNING);
+    }
+
     public void add(KeyPair<Entity, Integer> pair) {
         dialogueQueue.add(pair);
     }

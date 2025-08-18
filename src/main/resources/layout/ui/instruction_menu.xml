@@ -2,11 +2,11 @@
 <ImageView id="root" x="0" y="0" width="800" height="600" image="Background.png">
     <SubWindow
             id="settingContainer"
-            x="64" y="48" width="640" height="480">
+            x="44" y="28" width="680" height="520">
 
         <TextView
                 id="instructionTitle"
-                x="192" y="48" width="384" height="100"
+                x="192" y="18" width="384" height="100"
                 text="Hướng dẫn"
                 shadow="true"
                 alignment="center"
@@ -14,40 +14,72 @@
                 color="#FFFFFF" />
 
         <TextView
-                id="moveInstruction"
-                x="76" y="128" width="100" height="50"
+                id="moveInstructionTitle"
+                x="116" y="118" width="100" height="50"
                 text="Di chuyển"
                 alignment="right|center"
                 fontSize="19"
                 color="#FFFFFF" />
 
         <TextView
-                id="attackInstruction"
-                x="76" y="218" width="100" height="50"
+                id="moveInstruction"
+                x="424" y="118" width="216" height="50"
+                text="Mũi tên / WASD"
+                alignment="center|center"
+                fontSize="17"
+                color="#FFFFFF"/>
+
+        <TextView
+                id="attackInstructionTitle"
+                x="116" y="208" width="100" height="50"
                 text="Tấn công"
                 alignment="right|center"
                 fontSize="19"
                 color="#FFFFFF" />
 
         <TextView
-                id="inventoryInstruction"
-                x="76" y="308" width="100" height="50"
+                id="attackInstruction"
+                x="424" y="208" width="216" height="50"
+                text="Enter / SPACE"
+                alignment="center|center"
+                fontSize="17"
+                color="#FFFFFF"/>
+
+        <TextView
+                id="inventoryInstructionTitle"
+                x="116" y="298" width="100" height="50"
                 text="Túi đồ"
                 alignment="right|center"
                 fontSize="19"
                 color="#FFFFFF" />
 
         <TextView
-                id="itemInstruction"
-                x="76" y="398" width="100" height="50"
+                id="inventoryInstruction"
+                x="424" y="298" width="216" height="50"
+                text="E"
+                alignment="center|center"
+                fontSize="17"
+                color="#FFFFFF"/>
+
+        <TextView
+                id="itemInstructionTitle"
+                x="116" y="398" width="100" height="50"
                 text="Vật phẩm"
                 alignment="right|center"
                 fontSize="19"
                 color="#FFFFFF" />
 
+        <TextView
+                id="itemInstruction"
+                x="424" y="398" width="216" height="50"
+                text="1, 2, 3, 4, 5"
+                alignment="center|center"
+                fontSize="17"
+                color="#FFFFFF"/>
+
         <GameButton
                 id="goBackInstructionButton"
-                x="284" y="444" width="200" height="60"
+                x="284" y="466" width="200" height="60"
                 text="Trở về"
                 fontSize="19"
                 color="#FFFFFF" />

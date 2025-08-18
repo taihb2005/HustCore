@@ -18,7 +18,6 @@ public class Obj_Bin extends Entity {
         width = 64;
         height = 64;
 
-
         if(type > 2 || type <= 0) throw new Exception("Xem lại id của nó mau, id <= 2");
 
         obj_bin = AssetPool.getImage("bin_id" + type + ".png");

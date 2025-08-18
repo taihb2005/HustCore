@@ -37,7 +37,7 @@ public class TileSet {
         this.imgPath = new StringBuilder(imgPath);
 
         loadTileSheet(imgPath);
-    };
+    }
 
     public TileSet(int firstID , int lastID , int tileWidth ,
                    int tileHeight , int numRows ,
@@ -54,7 +54,7 @@ public class TileSet {
         this.imgPath = new StringBuilder(imgPath);
 
         loadTileSheet(imgPath);
-    };
+    }
 
     private void loadTileSheet(String imageName)
     {
@@ -80,14 +80,14 @@ public class TileSet {
 
 
 
-    public int getFirstID(){return firstID;};
-    public int getLastID(){return  lastID;};
-    public int getNumRows(){return numRows;};
-    public int getNumCols(){return numCols;};
-    public int getNumTiles(){return numTiles;};
+    public int getFirstID(){return firstID;}
+    public int getLastID(){return  lastID;}
+    public int getNumRows(){return numRows;}
+    public int getNumCols(){return numCols;}
+    public int getNumTiles(){return numTiles;}
 
-    public String getImgPath(){return imgPath.toString();};
-    public BufferedImage getTileSetSprite(){return tileSetSprite;};
+    public String getImgPath(){return imgPath.toString();}
+    public BufferedImage getTileSetSprite(){return tileSetSprite;}
 
     public int getTileWidth() {
         return tileWidth;

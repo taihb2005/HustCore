@@ -37,8 +37,6 @@ public class Proj_TrackingPlasma extends Projectile {
         }
     }
 
-    private boolean onPath = false; // Kiểm tra xem viên đạn có đang di chuyển theo đường tìm được không
-    private int timeCount = 0;
     public Proj_TrackingPlasma(GameMap mp) {
         super(mp);
         name = "TrackingPlasma";

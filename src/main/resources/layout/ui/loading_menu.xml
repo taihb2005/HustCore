@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ImageView id="root" x="0" y="0" width="800" height="600" image="Background.png">
+<ImageView id="root" x="0" y="0" width="768" height="576" image="Background.png">
     <TextView
             id="loadingText"
-            x="0" y="0" width="800" height="600"
+            x="0" y="0" width="768" height="576"
             text="Đang tải"
             shadow="true"
             alignment="center"
