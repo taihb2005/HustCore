@@ -19,7 +19,6 @@ import static org.kat.app.main.GamePanel.*;
 import static org.kat.app.main.KeyHandler.*;
 
 public class UI {
-    public Graphics2D g2;
     public static Font joystix;
     public static Font maru;
     public static Font bitcrusher;
@@ -85,7 +84,6 @@ public class UI {
     }
 
     public void render(Graphics2D g2) {
-        this.g2 = g2;
         _UIManager.render(g2);
     }
 
@@ -93,7 +91,5 @@ public class UI {
         _UIManager.update();
     }
 
-    public void dispose() {
-
-    }
+    public void dispose() {}
 }

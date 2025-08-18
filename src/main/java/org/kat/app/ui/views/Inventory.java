@@ -5,7 +5,7 @@ import org.kat.app.ui.Updatable;
 
 import java.awt.*;
 
-import static org.kat.app.main.GamePanel.tileSize;
+import static org.kat.app.main.GamePanel.TILE_SIZE;
 import static org.kat.app.main.UI.maru;
 
 public class Inventory extends View implements Updatable {
@@ -64,7 +64,7 @@ public class Inventory extends View implements Updatable {
         inventoryContainer.render(g2);
 
         int slotY = y + 12;
-        int slotSize = tileSize / 4;
+        int slotSize = TILE_SIZE / 4;
 
         for (int i = 0; i < 5; i++) {
             int currentSlotY = slotY + i * (slotSize + 50);

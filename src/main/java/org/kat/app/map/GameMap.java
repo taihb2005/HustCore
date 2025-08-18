@@ -191,9 +191,9 @@ public class GameMap {
 
     public static boolean isInView(Entity entity, int horizontalBuffer, int verticalBuffer) {
         int left = camera.getX() - horizontalBuffer;
-        int right = camera.getX() + windowWidth + tileSize + horizontalBuffer;
-        int top = camera.getY() - tileSize - verticalBuffer;
-        int bottom = camera.getY() + windowHeight + tileSize + verticalBuffer;
+        int right = camera.getX() + windowWidth + TILE_SIZE + horizontalBuffer;
+        int top = camera.getY() - TILE_SIZE - verticalBuffer;
+        int bottom = camera.getY() + windowHeight + TILE_SIZE + verticalBuffer;
 
         return (entity.position.x + entity.width > left &&
                 entity.position.x < right &&

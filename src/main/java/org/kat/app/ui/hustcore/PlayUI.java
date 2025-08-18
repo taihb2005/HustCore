@@ -3,6 +3,7 @@ package org.kat.app.ui.hustcore;
 import org.kat.app.entity.items.Item;
 import org.kat.app.level.LevelState;
 import org.kat.app.level.progress.level04.Level04;
+import org.kat.app.main.GamePanel;
 import org.kat.app.main.GameState;
 import org.kat.app.main.KeyHandler;
 import org.kat.app.main.UI;
@@ -10,6 +11,7 @@ import org.kat.app.ui.views.*;
 import org.kat.app.util.Tree;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static org.kat.app.main.GamePanel.currentLevel;
 import static org.kat.app.main.GamePanel.gameState;
@@ -21,6 +23,7 @@ public class PlayUI extends UIScreen {
     private Bar bossHPBar;
     private TextView bossBarName;
     private Inventory playerInventory;
+
     public PlayUI(String id, Tree<View> viewTree) {
         super(id, viewTree);
     }
@@ -32,6 +35,8 @@ public class PlayUI extends UIScreen {
         bossHPBar = (Bar) findViewById("bossHpBar");
         bossBarName = (TextView) findViewById("bossBarName");
         playerInventory = (Inventory) findViewById("inventory");
+
+        setDarknessFilter(true);
     }
 
     @Override

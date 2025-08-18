@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 
 public class MapParser {
-
     public static GameMap loadMap(String filepath)
     {
         try

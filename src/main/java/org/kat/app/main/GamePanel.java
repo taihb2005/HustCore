@@ -8,46 +8,34 @@ import org.kat.app.util.Camera;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 import static org.kat.app.main.KeyHandler.disableKey;
 
 public class GamePanel extends JPanel implements Runnable {
-    final private int FPS = 60;
+    public static final int FPS = 60;
     public int currentFPS;
 
-    final static public int originalTileSize = 16; // A character usually has 16x16 size
-    final static public int scale = 3; // Use to scale the objects which appear on the screen
-    final static public int tileSize = originalTileSize * scale;
+    public static final int TILE_SIZE = 48;
+    public static final int maxWindowCols = 16;
+    public static final int maxWindowRows = 12;
+    public static final int windowWidth = maxWindowCols * 48;
+    public static final int windowHeight = maxWindowRows * 48;
 
-    final static public int maxWindowCols = 16;
-    final static public int maxWindowRows = 12;
+    public static final Sound music = new Sound();
+    public static final Sound se = new Sound();
+    public static final KeyHandler keyHandler = new KeyHandler();
+    public static final Camera camera = new Camera();
+    public static final StatusManager sManager = new StatusManager();
+    public static final UI ui = new UI();
 
-    final static public int windowWidth = maxWindowCols * 48;
-    final static public int windowHeight = maxWindowRows * 48;
-
-    public static Sound music = new Sound();
-    public static Sound se = new Sound();
-    public final KeyHandler keyHandler = new KeyHandler(this);
-    public static Camera camera = new Camera();
-
-    public static GameState gameState;
-
-    public static StatusManager sManager = new StatusManager();
     public static int previousLevelProgress = 0;
     public static int levelProgress = 0;
+    public static GameState gameState;
     public static Level currentLevel;
     public static GameMap currentMap;
     public static boolean gameCompleted;
 
-    public static BufferedImage darknessFilter;
-    private float darknessOpacity = 0.0f;
-    public boolean darker = false;
-    public boolean lighter = false;
-
     Thread gameThread;
-
-    public static UI ui;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(windowWidth, windowHeight));
@@ -57,7 +45,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         stopMusic();
         setup();
-        ui = new UI();
     }
 
 
@@ -68,7 +55,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread() {
-        //new LoadResourceThread().start();
         gameState = GameState.MENU;
         gameThread = new Thread(this);
         gameThread.start();
@@ -112,7 +98,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-        updateDarkness();
         ui.update();
 
         switch (gameState) {
@@ -134,46 +119,16 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
-            if (gameState == GameState.PLAY || gameState == GameState.PAUSE || gameState == GameState.CREDIT) {
+            if (gameState == GameState.PLAY ||
+                    gameState == GameState.PAUSE ||
+                    gameState == GameState.CREDIT
+            ) {
                 if(currentMap != null) currentMap.render(g2);
             }
-            if (currentLevel != null) currentLevel.render(g2);
             ui.render(g2);
-            drawDarkness(g2);
             g2.dispose();
     }
 
-
-    public void drawDarkness(Graphics2D g2) {
-        BufferedImage darknessFilter = new BufferedImage(GamePanel.windowWidth, GamePanel.windowHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = (Graphics2D) darknessFilter.getGraphics();
-
-        g.setColor(new Color(0, 0, 0, darknessOpacity)); // Black with transparency
-        g.fillRect(0, 0, GamePanel.windowWidth, GamePanel.windowHeight);
-
-        g2.drawImage(darknessFilter, 0, 0, null);
-    }
-
-    private void updateDarkness(){
-        if(darker) increaseDarkness(); else
-            if(lighter) decreaseDarkness();
-    }
-
-    public void increaseDarkness() {
-        darknessOpacity += 0.025f;
-        if (darknessOpacity > 1.0f) {
-            darker = false;
-            darknessOpacity = 1.0f;
-        }
-    }
-
-    public void decreaseDarkness(){
-        darknessOpacity -= 0.025f;
-        if (darknessOpacity < 0.0f) {
-            lighter = false;
-            darknessOpacity = 0.0f;
-        }
-    }
 
     public static void playMusic(int index)
     {
@@ -181,6 +136,7 @@ public class GamePanel extends JPanel implements Runnable {
         music.play();
         music.loop();
     }
+
     public static void pauseMusic(){
         music.pause();
     }
@@ -196,7 +152,6 @@ public class GamePanel extends JPanel implements Runnable {
         se.setFile(index);
         se.play();
     }
-
 
     private void dispose()
     {

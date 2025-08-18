@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import static org.kat.app.main.GamePanel.camera;
 
 public class TileLayer {
-
     GameMap mp;
 
     BufferedImage[][] tileLayerData;

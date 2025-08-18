@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static org.kat.app.main.GamePanel.playSE;
+
 
 public class WrappedTextView extends TextView{
     private ArrayList<Text> textLine;
@@ -164,6 +166,7 @@ public class WrappedTextView extends TextView{
                         Text currentText = currentDisplayList.get(currentLine);
                         currentText.append(textLine.get(currentLine).getTextAt(textIndex));
                         textIndex++;
+                        playSE(1);
 
                         if(currentText.equals(textLine.get(currentLine))){
                             currentLine++;

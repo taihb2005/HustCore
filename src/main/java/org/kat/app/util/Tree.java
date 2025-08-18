@@ -11,11 +11,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public interface Tree<T extends View>{
-    void add(T data, String id);
+public interface Tree<T>{
+    default void add(T data, String id){};
     default void add(T data){};
     default void remove(TreeNode<T> root){
-        postOrderTraverse(root, (node) -> node.remove());
+        postOrderTraverse(root, TreeNode::remove);
     };
 
     void clear();
@@ -38,26 +38,6 @@ public interface Tree<T extends View>{
         }
 
         return null;
-    }
-
-    default List<View> getAll(TreeNode<T> root, Predicate<TreeNode<T>> predicate) {
-        List<View> viewList = new ArrayList<>();
-
-        inOrderTraverse(root,
-                (node) -> {
-                    if(predicate.test(node)) viewList.add(node.getData());
-                });
-
-        return viewList;
-    }
-
-    default <K extends View> int getComponentCount(TreeNode<T> root, Class<K> clazz){
-        AtomicInteger count = new AtomicInteger();
-        inOrderTraverse(root,
-                (node) -> {
-                        if(clazz.isInstance(root.getData())) count.getAndIncrement();
-                });
-        return count.get();
     }
 
     default void inOrderTraverse(TreeNode<T> root, Consumer<TreeNode<T>> consumer){

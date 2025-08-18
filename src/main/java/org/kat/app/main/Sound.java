@@ -95,7 +95,7 @@ public class Sound {
 
 
         if (fc != null) {
-            fc.setValue(volume); // Cài đặt âm lượng cho FloatControl
+            fc.setValue(volume);
         } else {
             System.out.println("FloatControl is not initialized.");
         }

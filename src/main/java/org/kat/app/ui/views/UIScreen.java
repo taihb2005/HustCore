@@ -1,16 +1,22 @@
 package org.kat.app.ui.views;
 
+import org.kat.app.main.GamePanel;
 import org.kat.app.main.KeyHandler;
 import org.kat.app.ui.Updatable;
 import org.kat.app.ui.components.Button;
+import org.kat.app.util.GenericViewTree;
 import org.kat.app.util.Tree;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public abstract class UIScreen{
+    private static final BufferedImage DARKNESS_FILTER;
+    private static float DARKNESS_OPACITY = 0.0f;
+
     protected String id;
     protected Tree<View> viewTree;
 
@@ -21,6 +27,21 @@ public abstract class UIScreen{
     protected int defaultPos;
     protected int currentPos;
 
+    private boolean drawDarknessFilter = false;
+    private boolean darker = false;
+    private boolean lighter = false;
+
+    static{
+        DARKNESS_FILTER = new BufferedImage(GamePanel.windowWidth, GamePanel.windowHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = (Graphics2D) DARKNESS_FILTER.getGraphics();
+
+        g2.setColor(new Color(0, 0, 0, DARKNESS_OPACITY)); // Black with transparency
+        g2.fillRect(0, 0, GamePanel.windowWidth, GamePanel.windowHeight);
+
+        g2.drawImage(DARKNESS_FILTER, 0, 0, null);
+
+        g2.dispose();
+    }
 
     public UIScreen(String id, Tree<View> viewTree){
         this.id = id;
@@ -113,7 +134,7 @@ public abstract class UIScreen{
         if(this.buttonList == null){
             List<Button> buttons = new ArrayList<>();
 
-            List<View> list = viewTree.getAll(viewTree.getRoot(),
+            List<View> list = ((GenericViewTree<View>)viewTree).getAll(viewTree.getRoot(),
                     (node) -> node.getData() instanceof Button);
 
             for(View v: list){
@@ -217,6 +238,42 @@ public abstract class UIScreen{
         return cursorPos;
     }
 
+    public UIScreen setDarknessFilter(boolean darknessMode){
+        drawDarknessFilter = darknessMode;
+        return this;
+    }
+
+    public UIScreen lightDarker(){
+        darker = true;
+        return this;
+    }
+
+    public UIScreen lightBrighter(){
+        lighter = true;
+        return this;
+    }
+
+    private void updateDarkness(){
+        if(darker) increaseDarkness(); else
+        if(lighter) decreaseDarkness();
+    }
+
+    private void increaseDarkness() {
+        DARKNESS_OPACITY += 0.025f;
+        if (DARKNESS_OPACITY > 1.0f) {
+            darker = false;
+            DARKNESS_OPACITY = 1.0f;
+        }
+    }
+
+    private void decreaseDarkness(){
+        DARKNESS_OPACITY -= 0.025f;
+        if (DARKNESS_OPACITY < 0.0f) {
+            lighter = false;
+            DARKNESS_OPACITY = 0.0f;
+        }
+    }
+
     public void update(){
         if(lastVisibility == Visibility.INVISIBLE && currentVisibility == Visibility.VISIBLE){
             lastVisibility = Visibility.VISIBLE;
@@ -225,6 +282,7 @@ public abstract class UIScreen{
             lastVisibility = Visibility.INVISIBLE;
             onHide();
         }
+        if(drawDarknessFilter) updateDarkness();
         handleKeyNavigation();
         viewTree.inOrderTraverse(viewTree.getRoot(),
                 (node) -> {
@@ -240,6 +298,7 @@ public abstract class UIScreen{
     }
 
     public void render(Graphics2D g2){
+        if(drawDarknessFilter) g2.drawImage(DARKNESS_FILTER, 0, 0, null);
         viewTree.inOrderTraverse(viewTree.getRoot(),
                 (node) -> {
                     View currentView = node.getData();

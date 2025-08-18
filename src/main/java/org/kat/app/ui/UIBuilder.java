@@ -5,7 +5,7 @@ import org.kat.app.ui.components.GameButton;
 import org.kat.app.ui.components.ValueAdjuster;
 import org.kat.app.ui.views.*;
 import org.kat.app.ui.views.Text;
-import org.kat.app.util.GenericTree;
+import org.kat.app.util.GenericViewTree;
 import org.kat.app.util.Tree;
 import org.kat.app.util.TreeNode;
 import org.w3c.dom.*;
@@ -28,7 +28,7 @@ public class UIBuilder {
             Element rootElement = doc.getDocumentElement();
 
             View rootView = createView(rootElement);
-            Tree<View> tree = new GenericTree<>(new TreeNode<>(rootView));
+            Tree<View> tree = new GenericViewTree<>(new TreeNode<>(rootView));
 
             buildChildren(tree.getRoot(), rootElement);
 

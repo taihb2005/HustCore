@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class TileSet {
-
     final private int firstID;
     final private int lastID;
     final private int tileWidth;
