@@ -1,0 +1,46 @@
+name: Java CI (Maven)
+
+on:
+  push:
+    branches: [ "HustCorev1.1" ]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+  pull_request:
+    branches: [ "HustCorev1.1" ]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build & test
+        run: mvn -B -DskipTests=false clean verify
+
+      - name: Upload app JAR
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: "**/target/*.jar"
